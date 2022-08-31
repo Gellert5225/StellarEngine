@@ -1,7 +1,6 @@
 #include "stlrpch.h"
 
 #include "Stellar/Log.h"
-#include "Stellar/Render/Vulkan/VulkanCommon.h"
 #include "VulkanRendererContext.h"
 #include "Stellar/Render/Vulkan/Device/VulkanDevice.h"
 #include "Stellar/Render/Vulkan/SwapChain/VulkanSurface.h"
