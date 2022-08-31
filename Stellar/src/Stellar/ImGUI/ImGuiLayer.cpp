@@ -101,7 +101,9 @@ namespace Stellar {
     }
 
     void ImGuiLayer::onEvent(Event& e) {
-
+        ImGuiIO& io = ImGui::GetIO();
+        e.handled |= e.isInCategory(EventCategory::Mouse) & io.WantCaptureMouse;
+        e.handled |= e.isInCategory(EventCategory::Keyboard) & io.WantCaptureKeyboard;
     }
 
     void ImGuiLayer::begin() const {

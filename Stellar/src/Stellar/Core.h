@@ -29,3 +29,4 @@
 #define STLR_ASSERT(x, ...) { if(!(x)) { STLR_ERROR("Assertion Failed: {0}", __VA_ARGS__); DEBUG_BREAK;} }
 #define STLR_CORE_ASSERT(x, ...) { if(!(x)) { STLR_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); DEBUG_BREAK;} }
 #define BIT(x) (1 << x)
+#define BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)

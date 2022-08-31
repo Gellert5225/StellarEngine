@@ -12,3 +12,6 @@ macOS/StellarEngine.app/Contents/MacOS/*
 # precompiled headers
 *.gch
 *h.d
+
+# imgui
+imgui_log.txt

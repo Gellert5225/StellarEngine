@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Stellar/Layer.h"
+#include "Stellar/Events/KeyEvent.h"
+#include "Stellar/Events/MouseEvent.h"
+#include "Stellar/Events/ApplicationEvent.h"
 
 namespace Stellar {
     class STLR_API ImGuiLayer: public Layer {

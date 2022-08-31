@@ -4,8 +4,6 @@
 #include "Log.h"
 
 namespace Stellar {
-    #define BIND_EVENT_FN(X) std::bind(&X, this, std::placeholders::_1)
-
     Application* Application::s_Instance = nullptr;
 
     Application::Application() {

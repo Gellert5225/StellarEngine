@@ -5,12 +5,12 @@
 namespace Stellar {
     class STLR_API KeyEvent : public Event {
     public:
-        [[nodiscard]] inline int getKeyCode() const { return m_KeyCode; }
+        [[nodiscard]] inline unsigned int getKeyCode() const { return m_KeyCode; }
         EVENT_CLASS_CATEGORY(Keyboard | Input)
     protected:
-        explicit KeyEvent(int keyCode)
+        explicit KeyEvent(unsigned int keyCode)
             : m_KeyCode(keyCode) {}
-        int m_KeyCode;
+        unsigned int m_KeyCode;
     };
 
     class STLR_API KeyPressedEvent : public KeyEvent {
@@ -41,5 +41,18 @@ namespace Stellar {
         }
 
         EVENT_CLASS_TYPE(KeyReleased)
+    };
+
+    class STLR_API KeyTypedEvent : public KeyEvent {
+    public:
+        explicit KeyTypedEvent(unsigned int keyCode)
+                : KeyEvent(keyCode) {}
+
+        [[nodiscard]] std::string toString() const override {
+            std::stringstream ss;
+            ss << "KeyTypedEvent: " << m_KeyCode;
+            return ss.str();
+        }
+        EVENT_CLASS_TYPE(KeyTyped)
     };
 }
