@@ -1,6 +1,6 @@
 .idea
 *.log
-.DS_store
+.DS_Store
 # build files
 bin/
 build/
