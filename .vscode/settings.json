@@ -1,0 +1,20 @@
+{
+    "makefile.extensionOutputFolder": "./.vscode",
+    "makefile.launchConfigurations": [
+      {
+        "cwd": "/home/gellert/Documents/Projects/StellarEngine-Vulkan/Sandbox/bin",
+        "binaryPath": "/home/gellert/Documents/Projects/StellarEngine-Vulkan/Sandbox/bin/Sandbox",
+        "binaryArgs": []
+      }
+    ],
+    "files.associations": {
+      "*.ejs": "html",
+      "*.env.*": "env",
+      "*.S": "nasm",
+      "charconv": "cpp",
+      "chrono": "cpp",
+      "forward_list": "cpp",
+      "optional": "cpp",
+      "xlocmon": "cpp"
+    }
+}
