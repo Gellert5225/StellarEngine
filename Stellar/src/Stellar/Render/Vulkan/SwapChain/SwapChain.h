@@ -6,6 +6,9 @@
 
 #include <vulkan/vulkan.h>
 
+#include <vector>
+#include <memory>
+
 namespace Stellar {
     class STLR_API SwapChain {
     public:
