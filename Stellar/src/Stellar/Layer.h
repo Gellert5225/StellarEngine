@@ -2,7 +2,6 @@
 
 #include "Core.h"
 #include "Events/Event.h"
-#include <vulkan/vulkan.h>
 
 namespace Stellar {
     class STLR_API Layer {

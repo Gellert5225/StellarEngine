@@ -12,7 +12,10 @@ public:
     }
 
     void onEvent(Stellar::Event& event) override {
-        STLR_TRACE("{0}", event);
+        if (event.getEventType() == Stellar::EventType::KeyPressed) {
+            auto& e = (Stellar::KeyPressedEvent&)(event);
+            STLR_TRACE("{0}", e.getKeyCode());
+        }
     }
 
     void onImGuiRender() override {

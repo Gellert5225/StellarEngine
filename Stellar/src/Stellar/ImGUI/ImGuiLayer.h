@@ -5,6 +5,8 @@
 #include "Stellar/Events/MouseEvent.h"
 #include "Stellar/Events/ApplicationEvent.h"
 
+#include <vulkan/vulkan.h>
+
 namespace Stellar {
     class STLR_API ImGuiLayer: public Layer {
     public:

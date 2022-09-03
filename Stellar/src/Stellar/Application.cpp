@@ -2,6 +2,7 @@
 #include "Application.h"
 
 #include "Log.h"
+#include "Input.h"
 
 namespace Stellar {
     Application* Application::s_Instance = nullptr;
