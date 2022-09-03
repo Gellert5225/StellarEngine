@@ -30,6 +30,9 @@ namespace Stellar {
         ImGuiIO& io = ImGui::GetIO();
         io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
         io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
         VkDescriptorPool descriptorPool;
         VkDescriptorPoolSize pool_sizes[] = {
@@ -96,15 +99,11 @@ namespace Stellar {
         ImGui::DestroyContext();
     }
 
-    void ImGuiLayer::onUpdate() {
-
-    }
-
-    void ImGuiLayer::onEvent(Event& e) {
-        ImGuiIO& io = ImGui::GetIO();
-        e.handled |= e.isInCategory(EventCategory::Mouse) & io.WantCaptureMouse;
-        e.handled |= e.isInCategory(EventCategory::Keyboard) & io.WantCaptureKeyboard;
-    }
+//    void ImGuiLayer::onEvent(Event& e) {
+//        ImGuiIO& io = ImGui::GetIO();
+//        e.handled |= e.isInCategory(EventCategory::Mouse) & io.WantCaptureMouse;
+//        e.handled |= e.isInCategory(EventCategory::Keyboard) & io.WantCaptureKeyboard;
+//    }
 
     void ImGuiLayer::begin() const {
         ImGui_ImplVulkan_NewFrame();
@@ -121,6 +120,11 @@ namespace Stellar {
         io.DeltaTime = m_Time > 0.0 ? (time - m_Time) : (1.0f / 60.0f);
 
         ImGui::Render();
+        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+            ImGui::UpdatePlatformWindows();
+            ImGui::RenderPlatformWindowsDefault();
+        }
+
 //
 //        auto context = Application::Get().getRendererContext();
 //
