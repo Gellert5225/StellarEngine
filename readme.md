@@ -46,7 +46,6 @@ Now you just need to build the Sandbox project:
 
 ## ToDo
 
-- [x] macOS support
 - [x] Window abstraction
 - [x] Layer
 - [x] Events
@@ -55,8 +54,10 @@ Now you just need to build the Sandbox project:
 - [x] Shader library
 - [ ] Texture
 - [x] Renderer
-- [ ] Networking
+- [ ] Metal-cpp
+- [ ] macOS support
 - [ ] Load model
 - [ ] PBR
 - [ ] IBL
 - [ ] Deferred rendering
+- [ ] Networking

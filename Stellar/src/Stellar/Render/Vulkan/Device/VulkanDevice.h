@@ -11,11 +11,12 @@ namespace Stellar {
     class STLR_API VulkanDevice {
     public:
         static VulkanDevice* GetInstance();
+        ~VulkanDevice();
 
         void init(VkSurfaceKHR);
 
-        [[nodiscard]] VkQueue& getGraphicsQueue() { return graphicsQueue; }
-        [[nodiscard]] VkQueue& getPresentQueue() { return presentQueue; }
+        [[nodiscard]] VkQueue& getGraphicsQueue() { return m_GraphicsQueue; }
+        [[nodiscard]] VkQueue& getPresentQueue() { return m_PresentQueue; }
         [[nodiscard]] Queue::QueueFamilyIndices getIndices() const;
         [[nodiscard]] VkCommandPool getCommandPool() const;
 
@@ -25,17 +26,19 @@ namespace Stellar {
         [[nodiscard]] SwapChain::SwapChainSupportDetails getSwapChainSupport() const;
 
         [[nodiscard]] VkPhysicalDeviceProperties getDeviceProperties() const;
-        ~VulkanDevice();
+
+        VkCommandBuffer beginSingleTimeCommands();
+        void endSingleTimeCommands(VkCommandBuffer);
     private:
         static VulkanDevice* s_Instance;
 
         VkPhysicalDevice m_PhysicalDevice = VK_NULL_HANDLE;
         VkDevice m_LogicalDevice = VK_NULL_HANDLE;
 
-        VkQueue graphicsQueue = VK_NULL_HANDLE;
-        VkQueue presentQueue = VK_NULL_HANDLE;
+        VkQueue m_GraphicsQueue = VK_NULL_HANDLE;
+        VkQueue m_PresentQueue = VK_NULL_HANDLE;
 
-        VkSurfaceKHR surface = VK_NULL_HANDLE;
+        VkSurfaceKHR m_Surface = VK_NULL_HANDLE;
 
         VkCommandPool m_CommandPool = VK_NULL_HANDLE;
 

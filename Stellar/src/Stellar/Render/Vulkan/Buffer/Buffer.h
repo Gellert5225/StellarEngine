@@ -36,17 +36,19 @@ namespace Stellar {
         }
     };
 
-    class STLR_API VertexBuffer {
+    class STLR_API Buffer {
     public:
-        VertexBuffer(const std::vector<Vertex>*);
-        ~VertexBuffer();
+        explicit Buffer(VkDeviceSize size,
+                              VkCommandBufferUsageFlags usage,
+                              VkMemoryPropertyFlags property,
+                              const void* data = nullptr);
+        ~Buffer();
 
-        [[nodiscard]] VkBuffer getVertexBuffer() const;
-        const std::vector<Vertex>* getVertices();
+        [[nodiscard]] VkBuffer getBuffer() const;
     private:
-        VkBuffer vertexBuffer = VK_NULL_HANDLE;
-        VkDeviceMemory vertexBufferMemory = VK_NULL_HANDLE;
+        VkBuffer buffer = VK_NULL_HANDLE;
+        VkDeviceSize size;
+        VkDeviceMemory bufferMemory = VK_NULL_HANDLE;
         uint32_t findMemoryType(uint32_t, VkMemoryPropertyFlags);
-        const std::vector<Vertex>* vertices;
     };
 }

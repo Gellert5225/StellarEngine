@@ -80,11 +80,12 @@ namespace Stellar {
         ImGui_ImplVulkan_Init(&init_info,
                               Application::Get().getRendererContext()->getSwapChainRenderPass());
 
-        VkCommandBuffer commandBuffer = VulkanRendererContext::beginSingleTimeCommands();
+        auto device = VulkanDevice::GetInstance();
+        VkCommandBuffer commandBuffer = device->beginSingleTimeCommands();
         ImGui_ImplVulkan_CreateFontsTexture(commandBuffer);
-        VulkanRendererContext::endSingleTimeCommands(commandBuffer);
+        device->endSingleTimeCommands(commandBuffer);
 
-        //VK_CHECK_RESULT(vkDeviceWaitIdle(VulkanDevice::GetInstance()->logicalDevice()));
+        VK_CHECK_RESULT(vkDeviceWaitIdle(VulkanDevice::GetInstance()->logicalDevice()));
         ImGui_ImplVulkan_DestroyFontUploadObjects();
 //
 //        uint32_t framesInFlight = SwapChain::MAX_FRAMES_IN_FLIGHT;

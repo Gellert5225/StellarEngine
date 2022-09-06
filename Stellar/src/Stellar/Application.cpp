@@ -41,7 +41,28 @@ namespace Stellar {
     }
 
     void Application::run() {
-        m_VertexBuffer = new VertexBuffer(&vertices);
+        // staging buffer
+        auto stagingBuffer = new Buffer(sizeof(vertices[0]) * vertices.size(),
+                                        VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+                                        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
+                                        VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+                                        vertices.data());
+        m_VertexBuffer = new Buffer(sizeof(vertices[0]) * vertices.size(),
+                                    VK_BUFFER_USAGE_TRANSFER_DST_BIT |
+                                    VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+                                    VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
+                                    VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+
+        VkCommandBuffer cb = VulkanDevice::GetInstance()->beginSingleTimeCommands();
+
+        VkBufferCopy copyRegion{};
+        copyRegion.srcOffset = 0;  // Optional
+        copyRegion.dstOffset = 0;  // Optional
+        copyRegion.size = sizeof(vertices[0]) * vertices.size();
+        vkCmdCopyBuffer(cb, stagingBuffer->getBuffer(),
+                        m_VertexBuffer->getBuffer(), 1, &copyRegion);
+
+        VulkanDevice::GetInstance()->endSingleTimeCommands(cb);
 
         while (m_Running) {
             for (Layer* layer : m_LayerStack)
@@ -51,11 +72,11 @@ namespace Stellar {
             if (VkCommandBuffer commandBuffer = m_RenderContext->beginFrame()) {
                 m_RenderContext->beginRenderPass(commandBuffer);
 
-                VkBuffer vertexBuffers[] = {m_VertexBuffer->getVertexBuffer()};
+                VkBuffer vertexBuffers[] = {m_VertexBuffer->getBuffer()};
                 VkDeviceSize offsets[] = {0};
                 vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
 
-                vkCmdDraw(commandBuffer, static_cast<uint32_t>(m_VertexBuffer->getVertices()->size()), 1, 0, 0);
+                vkCmdDraw(commandBuffer, static_cast<uint32_t>(vertices.size()), 1, 0, 0);
 
                 m_ImGuiLayer->begin();
                 for (Layer* layer : m_LayerStack)

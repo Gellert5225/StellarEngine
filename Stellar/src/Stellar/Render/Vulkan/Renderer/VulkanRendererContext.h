@@ -18,9 +18,6 @@ namespace Stellar {
         explicit VulkanRendererContext(Window &window);
         ~VulkanRendererContext();
 
-        static VkCommandBuffer beginSingleTimeCommands();
-        static void endSingleTimeCommands(VkCommandBuffer);
-
         [[nodiscard]] VkRenderPass getSwapChainRenderPass() const;
         [[nodiscard]] uint32_t getSwapChainImageCount() const;
         [[nodiscard]] int getCurrentFrameIndex() const;

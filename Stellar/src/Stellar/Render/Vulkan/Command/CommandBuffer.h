@@ -4,7 +4,7 @@
 #include "CommandPool.h"
 #include "Stellar/Render/Vulkan/RenderPass/StandardRenderPass.h"
 #include "Stellar/Render/Vulkan/Pipeline/GraphicsPipeline.h"
-#include "Stellar/Render/Vulkan/Buffer/VertexBuffer.h"
+#include "Stellar/Render/Vulkan/Buffer/Buffer.h"
 #include "Stellar/Render/Vulkan/Buffer/FrameBuffer.h"
 #include <vulkan/vulkan.h>
 
@@ -17,6 +17,9 @@ namespace Stellar {
 
         void endRenderPass() const;
         void endCommandBuffer() const;
+
+        static VkCommandBuffer BeginSingleTimeCommands();
+        static void EndSingleTimeCommands();
 
         [[nodiscard]] VkCommandBuffer getCurrentCommandBuffer(int) const;
 

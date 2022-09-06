@@ -1,55 +1,59 @@
 #include "stlrpch.h"
 
-#include "VertexBuffer.h"
+#include "Buffer.h"
 #include "Stellar/Render/Vulkan/Device/VulkanDevice.h"
 
 namespace Stellar {
 
-    VertexBuffer::VertexBuffer(const std::vector<Vertex>* vertices)
-    : vertices(vertices) {
+    Buffer::Buffer(VkDeviceSize size,
+                               VkCommandBufferUsageFlags usage,
+                               VkMemoryPropertyFlags property,
+                               const void* data)
+    : size(size) {
         VkBufferCreateInfo bufferInfo{};
         bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-        bufferInfo.size = sizeof(vertices[0]) * vertices->size();
-        bufferInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+        bufferInfo.size = size;
+        bufferInfo.usage = usage;
         bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
         if (vkCreateBuffer(VulkanDevice::GetInstance()->logicalDevice(),
-                           &bufferInfo, nullptr, &vertexBuffer) != VK_SUCCESS) {
+                           &bufferInfo, nullptr, &buffer) != VK_SUCCESS) {
             throw std::runtime_error("failed to create vertex buffer!");
         }
 
         VkMemoryRequirements memRequirements;
         vkGetBufferMemoryRequirements(VulkanDevice::GetInstance()->logicalDevice(),
-                                      vertexBuffer, &memRequirements);
+                                      buffer, &memRequirements);
         VkMemoryAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
         allocInfo.allocationSize = memRequirements.size;
         allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits,
-                                                   VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT|
-                                                   VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+                                                   property);
         if (vkAllocateMemory(VulkanDevice::GetInstance()->logicalDevice(),
-                             &allocInfo, nullptr, &vertexBufferMemory) != VK_SUCCESS) {
+                             &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS) {
             throw std::runtime_error("failed to allocate vertex buffer memory!");
         }
         vkBindBufferMemory(VulkanDevice::GetInstance()->logicalDevice(),
-                           vertexBuffer, vertexBufferMemory, 0);
+                           buffer, bufferMemory, 0);
 
-        void* data;
-        vkMapMemory(VulkanDevice::GetInstance()->logicalDevice(), vertexBufferMemory, 0, bufferInfo.size, 0, &data);
-        memcpy(data, vertices->data(), (size_t) bufferInfo.size);
-        vkUnmapMemory(VulkanDevice::GetInstance()->logicalDevice(), vertexBufferMemory);
+        if (data) {
+            void* mapped;
+            vkMapMemory(VulkanDevice::GetInstance()->logicalDevice(), bufferMemory, 0, bufferInfo.size, 0, &mapped);
+            memcpy(mapped, data, (size_t) bufferInfo.size);
+            vkUnmapMemory(VulkanDevice::GetInstance()->logicalDevice(), bufferMemory);
+        }
     }
 
-    VertexBuffer::~VertexBuffer() {
-        vkDestroyBuffer(VulkanDevice::GetInstance()->logicalDevice(), vertexBuffer, nullptr);
-        vkFreeMemory(VulkanDevice::GetInstance()->logicalDevice(), vertexBufferMemory, nullptr);
+    Buffer::~Buffer() {
+        vkDestroyBuffer(VulkanDevice::GetInstance()->logicalDevice(), buffer, nullptr);
+        vkFreeMemory(VulkanDevice::GetInstance()->logicalDevice(), bufferMemory, nullptr);
     }
 
-    VkBuffer VertexBuffer::getVertexBuffer() const {
-        return vertexBuffer;
+    VkBuffer Buffer::getBuffer() const {
+        return buffer;
     }
 
-    uint32_t VertexBuffer::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
+    uint32_t Buffer::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
         VkPhysicalDeviceMemoryProperties memProperties;
         vkGetPhysicalDeviceMemoryProperties(VulkanDevice::GetInstance()->physicalDevice(),
                                             &memProperties);
@@ -62,9 +66,5 @@ namespace Stellar {
         }
 
         throw std::runtime_error("failed to find suitable memory type!");
-    }
-
-    const std::vector<Vertex>* VertexBuffer::getVertices() {
-        return vertices;
     }
 }
