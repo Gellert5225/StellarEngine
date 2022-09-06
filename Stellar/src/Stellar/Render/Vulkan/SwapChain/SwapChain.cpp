@@ -260,7 +260,7 @@ namespace Stellar {
         return result;
     }
 
-    VkResult SwapChain::submitCommandBuffers(const VkCommandBuffer* buffer, uint32_t* imageIndex) {
+    VkResult SwapChain::submitCommandBuffers(const VkCommandBuffer* buffer, const uint32_t* imageIndex) {
         if (m_ImagesInFlight[*imageIndex] != VK_NULL_HANDLE) {
             vkWaitForFences(VulkanDevice::GetInstance()->logicalDevice(),
                             1, &m_ImagesInFlight[*imageIndex], VK_TRUE, UINT64_MAX);

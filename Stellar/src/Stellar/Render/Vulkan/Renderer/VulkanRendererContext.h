@@ -31,8 +31,8 @@ namespace Stellar {
         void beginImGUIFrame();
         void endImGUIFrame();
 
-        void beginRenderPass(VkCommandBuffer);
-        void endRenderPass(VkCommandBuffer);
+        void beginRenderPass(VkCommandBuffer commandBuffer);
+        void endRenderPass(VkCommandBuffer commandBuffer);
     private:
         uint32_t m_CurrentImageIndex = 0;
         int m_CurrentFrameIndex = 0;

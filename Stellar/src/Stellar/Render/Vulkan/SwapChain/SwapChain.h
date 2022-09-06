@@ -20,7 +20,7 @@ namespace Stellar {
 
     public:
         SwapChain();
-        explicit SwapChain(std::shared_ptr<SwapChain>);
+        explicit SwapChain(std::shared_ptr<SwapChain> oldSwapChain);
         ~SwapChain();
 
         [[nodiscard]] const std::vector<VkImage>* getSwapChainImages() const;
@@ -29,11 +29,11 @@ namespace Stellar {
         [[nodiscard]] VkSwapchainKHR& getSwapChain();
         [[nodiscard]] VkRenderPass getRenderPass() const;
         [[nodiscard]] uint32_t getImageCount() const;
-        [[nodiscard]] VkFramebuffer getFrameBuffer(uint32_t) const;
+        [[nodiscard]] VkFramebuffer getFrameBuffer(uint32_t index) const;
         [[nodiscard]] bool compareSwapFormats(const SwapChain &swapChain) const;
 
-        VkResult acquireNextImage(uint32_t*);
-        VkResult submitCommandBuffers(const VkCommandBuffer*, uint32_t*);
+        VkResult acquireNextImage(uint32_t* imageIndex);
+        VkResult submitCommandBuffers(const VkCommandBuffer* buffer, const uint32_t* imageIndex);
 
         static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 

@@ -12,7 +12,7 @@ namespace Stellar {
         ~VulkanSurface();
 
         void init(GLFWwindow*);
-        void createSurface(GLFWwindow*);
+        void createSurface(GLFWwindow* window);
 
         [[nodiscard]] VkSurfaceKHR getSurface() const;
     private:

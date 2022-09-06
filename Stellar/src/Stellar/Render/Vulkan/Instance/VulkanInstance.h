@@ -10,10 +10,10 @@ namespace Stellar {
 
     class STLR_API VulkanInstance {
     public:
-        void init(const std::string&,
-                  int,
-                  const std::string&,
-                  int);
+        void init(const std::string& appName,
+                  int appVersion,
+                  const std::string& engineName,
+                  int engineVersion);
 
         ~VulkanInstance();
         static VulkanInstance * GetInstance();
@@ -31,12 +31,13 @@ namespace Stellar {
         VkInstance m_VulkanInstance = VK_NULL_HANDLE;
         VulkanValidationLayer* validationLayerManager = nullptr;
 
-        void createVkInstance(const std::string&,
-                              int,
-                              const std::string&,
-                              int);
+        void createVkInstance(const std::string& appName,
+                              int appVersion,
+                              const std::string& engineName,
+                              int engineVersion);
 
-        static void CheckIfExtensionExists(const char**, uint32_t);
+        static void CheckIfExtensionExists(const char** glfwExtensions,
+                                           uint32_t glfwExtensionCount);
         static std::vector<const char*> GetRequiredExtensions();
 
         VulkanInstance() = default;

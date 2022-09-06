@@ -11,17 +11,14 @@
 namespace Stellar {
     class STLR_API CommandBuffer {
     public:
-        CommandBuffer(VkCommandPool, uint32_t);
-        CommandBuffer(VkCommandPool, uint32_t, VkCommandBufferLevel);
+        CommandBuffer(VkCommandPool commandPool, uint32_t size);
+        CommandBuffer(VkCommandPool commandPool, uint32_t size, VkCommandBufferLevel level);
         ~CommandBuffer() = default;
 
         void endRenderPass() const;
         void endCommandBuffer() const;
 
-        static VkCommandBuffer BeginSingleTimeCommands();
-        static void EndSingleTimeCommands();
-
-        [[nodiscard]] VkCommandBuffer getCurrentCommandBuffer(int) const;
+        [[nodiscard]] VkCommandBuffer getCurrentCommandBuffer(int currentFrameIndex) const;
 
         [[nodiscard]] const std::vector<VkCommandBuffer>* getCommandBuffers() const;
     private:

@@ -15,9 +15,9 @@ namespace Stellar {
         unsigned int width;
         unsigned int height;
 
-        explicit WindowProperty(std::string  title = "Stellar Engine",
-                       unsigned int width = 1280,
-                       unsigned int height = 720)
+        explicit WindowProperty(std::string title = "Stellar Engine",
+                                unsigned int width = 1280,
+                                unsigned int height = 720)
             : title(std::move(title)), width(width), height(height) {}
     };
 
@@ -25,7 +25,7 @@ namespace Stellar {
     public:
         using EventCallbackFn = std::function<void(Event&)>;
 
-        explicit Window(const WindowProperty&);
+        explicit Window(const WindowProperty& property);
         ~Window();
 
         virtual void onUpdate();

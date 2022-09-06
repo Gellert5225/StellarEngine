@@ -11,7 +11,7 @@ namespace Stellar {
 
         ~CommandPool();
 
-        void init(Queue::QueueFamilyIndices);
+        void init(Queue::QueueFamilyIndices indices);
         void reset();
         VkCommandPool* getVkCommandPool();
     private:

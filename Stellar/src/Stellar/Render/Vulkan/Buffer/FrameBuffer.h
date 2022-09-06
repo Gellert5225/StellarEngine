@@ -6,7 +6,9 @@
 namespace Stellar {
     class STLR_API FrameBuffer {
     public:
-        FrameBuffer(const std::vector<VkImageView>&, VkExtent2D&, VkRenderPass);
+        FrameBuffer(const std::vector<VkImageView>& swapChainImageViews,
+                    VkExtent2D& swapChainExtent,
+                    VkRenderPass renderpass);
         ~FrameBuffer();
 
         [[nodiscard]] const std::vector<VkFramebuffer>* getFramebuffers() const;

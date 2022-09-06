@@ -13,7 +13,7 @@ namespace Stellar {
         static VulkanDevice* GetInstance();
         ~VulkanDevice();
 
-        void init(VkSurfaceKHR);
+        void init(VkSurfaceKHR surfaceRef);
 
         [[nodiscard]] VkQueue& getGraphicsQueue() { return m_GraphicsQueue; }
         [[nodiscard]] VkQueue& getPresentQueue() { return m_PresentQueue; }
