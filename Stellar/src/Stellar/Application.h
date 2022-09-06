@@ -52,14 +52,20 @@ namespace Stellar {
 
         LayerStack m_LayerStack;
         Buffer* m_VertexBuffer{};
+        Buffer* m_IndexBuffer{};
         VulkanRendererContext* m_RenderContext;
 
         bool onWindowClose(WindowCloseEvent&);
 
         const std::vector<Vertex> vertices = {
-                {{ 0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-                {{ 0.5f,  0.5f}, {0.0f, 1.0f, 0.0f}},
-                {{-0.5f,  0.5f}, {0.0f, 0.0f, 1.0f}}
+                {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+                {{ 0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
+                {{ 0.5f,  0.5f}, {0.0f, 0.0f, 1.0f}},
+                {{-0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}}
+        };
+
+        const std::vector<uint16_t> indices = {
+                0, 1, 2, 2, 3, 0
         };
     };
 

@@ -41,6 +41,7 @@ namespace Stellar {
     }
 
     void Application::run() {
+        // vertex buffer
         // staging buffer
         auto stagingBuffer = new Buffer(sizeof(vertices[0]) * vertices.size(),
                                         VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
@@ -50,8 +51,7 @@ namespace Stellar {
         m_VertexBuffer = new Buffer(sizeof(vertices[0]) * vertices.size(),
                                     VK_BUFFER_USAGE_TRANSFER_DST_BIT |
                                     VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
-                                    VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
-                                    VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+                                    VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
         VkCommandBuffer cb = VulkanDevice::GetInstance()->beginSingleTimeCommands();
 
@@ -64,6 +64,28 @@ namespace Stellar {
 
         VulkanDevice::GetInstance()->endSingleTimeCommands(cb);
 
+        // index buffer
+        auto indexStagingBuffer =new Buffer(sizeof(indices[0]) * indices.size(),
+                                            VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+                                            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
+                                            VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+                                            indices.data());
+        m_IndexBuffer = new Buffer(sizeof(indices[0]) * indices.size(),
+                                   VK_BUFFER_USAGE_TRANSFER_DST_BIT |
+                                   VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
+                                   VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+
+        VkCommandBuffer cb2 = VulkanDevice::GetInstance()->beginSingleTimeCommands();
+
+        VkBufferCopy copyRegion2{};
+        copyRegion2.srcOffset = 0;  // Optional
+        copyRegion2.dstOffset = 0;  // Optional
+        copyRegion2.size = sizeof(indices[0]) * indices.size();
+        vkCmdCopyBuffer(cb2, indexStagingBuffer->getBuffer(),
+                        m_IndexBuffer->getBuffer(), 1, &copyRegion2);
+
+        VulkanDevice::GetInstance()->endSingleTimeCommands(cb2);
+
         while (m_Running) {
             for (Layer* layer : m_LayerStack)
                 layer->onUpdate();
@@ -75,8 +97,9 @@ namespace Stellar {
                 VkBuffer vertexBuffers[] = {m_VertexBuffer->getBuffer()};
                 VkDeviceSize offsets[] = {0};
                 vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
+                vkCmdBindIndexBuffer(commandBuffer, m_IndexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT16);
 
-                vkCmdDraw(commandBuffer, static_cast<uint32_t>(vertices.size()), 1, 0, 0);
+                vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
 
                 m_ImGuiLayer->begin();
                 for (Layer* layer : m_LayerStack)
