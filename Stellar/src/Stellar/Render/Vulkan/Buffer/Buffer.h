@@ -39,10 +39,14 @@ namespace Stellar {
     class STLR_API Buffer {
     public:
         explicit Buffer(VkDeviceSize size,
-                              VkCommandBufferUsageFlags usage,
-                              VkMemoryPropertyFlags property,
-                              const void* data = nullptr);
+                        VkCommandBufferUsageFlags usage,
+                        VkMemoryPropertyFlags property,
+                        const void* data = nullptr);
         ~Buffer();
+
+        static void CopyBuffer(const Buffer& src,
+                               const Buffer& dst,
+                               uint64_t size);
 
         [[nodiscard]] VkBuffer getBuffer() const;
     private:
