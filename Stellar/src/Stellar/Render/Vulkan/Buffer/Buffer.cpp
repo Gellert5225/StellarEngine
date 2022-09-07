@@ -6,9 +6,9 @@
 namespace Stellar {
 
     Buffer::Buffer(VkDeviceSize size,
-                               VkCommandBufferUsageFlags usage,
-                               VkMemoryPropertyFlags property,
-                               const void* data)
+                   VkCommandBufferUsageFlags usage,
+                   VkMemoryPropertyFlags property,
+                   const void* data)
     : size(size) {
         VkBufferCreateInfo bufferInfo{};
         bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
