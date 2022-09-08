@@ -1,11 +1,13 @@
 #include "stlrpch.h"
 #include "Window.h"
+
+#include <utility>
 #include "Log.h"
 
 #include "Stellar/Events/ApplicationEvent.h"
 #include "Stellar/Events/MouseEvent.h"
 #include "Stellar/Events/KeyEvent.h"
-#include "Stellar/Render/Vulkan/Device/VulkanDevice.h"
+#include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 
 namespace Stellar {
     static void GLFWErrorCallback(int error, const char* description) {
@@ -16,14 +18,14 @@ namespace Stellar {
         return new Window(property);
     }
 
-    Window::Window(const WindowProperty& property) {
-        init(property);
+    Window::Window(WindowProperty property) : m_Property(std::move(property)) {
+
     }
 
-    void Window::init(const WindowProperty& property) {
-        m_Data.Title = property.title;
-        m_Data.Width = property.width;
-        m_Data.Height = property.height;
+    void Window::init() {
+        m_Data.Title = m_Property.title;
+        m_Data.Width = m_Property.width;
+        m_Data.Height = m_Property.height;
 
         [[maybe_unused]] int success = glfwInit();
         STLR_CORE_ASSERT(success, "Could not init GLFW")
@@ -31,16 +33,19 @@ namespace Stellar {
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-        STLR_CORE_INFO("Creating window {0} ({1}, {2})", 
-            property.title, property.width, property.height);
+        STLR_CORE_INFO("Creating window {0} ({1}, {2})",
+                       m_Property.title, m_Property.width, m_Property.height);
 
-        m_Window = glfwCreateWindow((int)property.width,
-                                    (int)property.height,
+        m_Window = glfwCreateWindow((int)m_Property.width,
+                                    (int)m_Property.height,
                                     m_Data.Title.c_str(),
                                     nullptr,
                                     nullptr);
         glfwSetWindowUserPointer(m_Window, &m_Data);
         setVsync(true);
+
+        m_Context = new VulkanRendererContext();
+        m_SwapChain = new SwapChain();
 
         // GLFW callbacks
 //        glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
@@ -56,7 +61,6 @@ namespace Stellar {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
             data.Width = width;
             data.Height = height;
-            data.frameBufferResized = true;
 
             WindowResizeEvent event(width, height);
             data.EventCallback(event);
@@ -155,7 +159,6 @@ namespace Stellar {
     }
 
     void Window::setVsync(bool enabled) {
-
         m_Data.VSync = enabled;
     }
 
@@ -169,6 +172,16 @@ namespace Stellar {
     }
 
     Window::~Window() {
+        delete m_SwapChain;
+        delete m_Context;
         shutDown();
+    }
+
+    SwapChain *Window::getSwapChain() const {
+        return m_SwapChain;
+    }
+
+    void Window::swapBuffers() {
+        m_SwapChain->present();
     }
 }

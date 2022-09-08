@@ -11,13 +11,28 @@ namespace Stellar {
         STLR_CORE_ASSERT(!s_Instance, "Application already exists")
         s_Instance = this;
         m_Window = std::unique_ptr<Window>(Window::Create());
+        m_Window->init();
         m_Window->setEventCallback(BIND_EVENT_FN(Application::onEvent));
-        m_RenderContext = new VulkanRendererContext(*m_Window);
 
-        m_ImGuiLayer = std::make_unique<ImGuiLayer>();
+        m_ImGuiLayer = new ImGuiLayer();
+
+        Renderer::Init();
     }
 
-    Application::~Application() = default;
+    Application::~Application() {
+        STLR_CORE_INFO("Shutting down");
+
+        for (Layer* layer : m_LayerStack) {
+            layer->onDetach();
+            delete layer;
+        }
+
+        delete m_VertexBuffer;
+        delete m_IndexBuffer;
+        Renderer::Shutdown();
+
+        m_Window = nullptr;
+    };
 
     void Application::onEvent(Event& e) {
         EventDispatcher dispatcher(e);
@@ -78,38 +93,55 @@ namespace Stellar {
                 layer->onUpdate();
             m_Window->onUpdate();
 
-            if (VkCommandBuffer commandBuffer = m_RenderContext->beginFrame()) {
-                m_RenderContext->beginRenderPass(commandBuffer);
+            // begin frame
+            // begin command buffer
+            // begin render pass
+            // draw call
+            // end render pass
+            // end command buffer
+            // end frame
 
-                VkBuffer vertexBuffers[] = {m_VertexBuffer->getBuffer()};
-                VkDeviceSize offsets[] = {0};
-                vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
-                vkCmdBindIndexBuffer(commandBuffer, m_IndexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT16);
-
-                vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
-
-                m_ImGuiLayer->begin();
-                for (Layer* layer : m_LayerStack)
-                    layer->onImGuiRender();
-                m_ImGuiLayer->end(commandBuffer);
-
-                m_RenderContext->endRenderPass(commandBuffer);
-                m_RenderContext->endFrame();
+            auto swapChain = m_Window->getSwapChain();
+            swapChain->beginFrame();
+            auto commandBuffer = swapChain->getCurrentCommandBuffer();
+            // begin commandbuffer
+            VkCommandBufferBeginInfo beginInfo{};
+            beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+            if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
+                throw std::runtime_error("failed to begin recording command buffer!");
             }
+
+            Renderer::BeginRenderPass(commandBuffer);
+
+            Renderer::RenderGeometry();
+
+            VkBuffer vertexBuffers[] = {m_VertexBuffer->getBuffer()};
+            VkDeviceSize offsets[] = {0};
+            vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
+            vkCmdBindIndexBuffer(commandBuffer, m_IndexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT16);
+
+            vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
+
+            m_ImGuiLayer->begin();
+            for (Layer* layer : m_LayerStack)
+                layer->onImGuiRender();
+            m_ImGuiLayer->end(commandBuffer);
+
+            Renderer::EndRenderPass(commandBuffer);
+            // end command buffer
+            if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
+                throw std::runtime_error("failed to record command buffer!");
+
+            m_Window->swapBuffers();
+
         }
 
         vkDeviceWaitIdle(VulkanDevice::GetInstance()->logicalDevice());
-
-        m_Window = nullptr;
     }
 
     bool Application::onWindowClose(WindowCloseEvent& e) {
         m_Running = false;
         return true;
-    }
-
-    VulkanRendererContext* Application::getRendererContext() const {
-        return m_RenderContext;
     }
 
     Application::AppInfo Application::getAppInfo() {

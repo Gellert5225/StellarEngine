@@ -4,6 +4,9 @@
 
 #include "Core.h"
 #include "Events/Event.h"
+#include "Platform/Vulkan/Renderer/VulkanRendererContext.h"
+
+#include "Platform/Vulkan/SwapChain/SwapChain.h"
 
 #include <GLFW/glfw3.h>
 
@@ -25,12 +28,14 @@ namespace Stellar {
     public:
         using EventCallbackFn = std::function<void(Event&)>;
 
-        explicit Window(const WindowProperty& property);
+        explicit Window(WindowProperty  property);
         ~Window();
 
+        virtual void init();
         virtual void onUpdate();
         virtual void setEventCallback(const EventCallbackFn& callback);
         virtual void setVsync(bool enabled);
+        virtual void swapBuffers();
 
         [[nodiscard]] virtual unsigned int getWidth() const;
         [[nodiscard]] virtual unsigned int getHeight() const;
@@ -39,25 +44,27 @@ namespace Stellar {
 
         [[nodiscard]] virtual GLFWwindow* getGLFWWindow() const;
 
-        [[nodiscard]] bool wasWindowResized() const { return m_Data.frameBufferResized; }
-        void resetWindowResizedFlag() { m_Data.frameBufferResized = false; }
+        [[nodiscard]] SwapChain* getSwapChain() const;
 
         static Window* Create(const WindowProperty& property = WindowProperty());
     private:
         GLFWwindow* m_Window{};
 
+        RendererContext* m_Context = nullptr;
+        // TODO: Abstract this into different platforms
+        SwapChain* m_SwapChain = nullptr;
+
         struct WindowData {
 			std::string Title;
 			unsigned int Width, Height;
 			bool VSync;
-            bool frameBufferResized = false;
 
 			EventCallbackFn EventCallback;
 		};
         WindowData m_Data;
+        WindowProperty m_Property;
 
     private:
-        virtual void init(const WindowProperty& property);
         virtual void shutDown();
     };
 }

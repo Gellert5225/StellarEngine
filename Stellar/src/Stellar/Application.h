@@ -6,17 +6,18 @@
 
 #include "Stellar/ImGUI/ImGuiLayer.h"
 
-#include "Render/Vulkan/Instance/VulkanInstance.h"
-#include "Render/Vulkan/Device/VulkanDevice.h"
-#include "Render/Vulkan/SwapChain/SwapChain.h"
-#include "Render/Vulkan/Pipeline/GraphicsPipeline.h"
-#include "Render/Vulkan/RenderPass/StandardRenderPass.h"
-#include "Render/Vulkan/Buffer/FrameBuffer.h"
-#include "Render/Vulkan/Command/CommandBuffer.h"
-#include "Render/Vulkan/Buffer/Buffer.h"
-#include "Render/Vulkan/Renderer/VulkanRendererContext.h"
+#include "Platform/Vulkan/Instance/VulkanInstance.h"
+#include "Platform/Vulkan/Device/VulkanDevice.h"
+#include "Platform/Vulkan/SwapChain/SwapChain.h"
+#include "Platform/Vulkan/Pipeline/GraphicsPipeline.h"
+#include "Platform/Vulkan/RenderPass/StandardRenderPass.h"
+#include "Platform/Vulkan/Buffer/FrameBuffer.h"
+#include "Platform/Vulkan/Command/CommandBuffer.h"
+#include "Platform/Vulkan/Buffer/Buffer.h"
+#include "Platform/Vulkan/Renderer/VulkanRendererContext.h"
 #include "Events/Event.h"
 #include "Events/ApplicationEvent.h"
+#include "Renderer/Renderer.h"
 
 namespace Stellar {
     class STLR_API Application {
@@ -38,7 +39,7 @@ namespace Stellar {
 
         static AppInfo getAppInfo();
 
-        [[nodiscard]] VulkanRendererContext* getRendererContext() const;
+        //[[nodiscard]] VulkanRendererContext* getRendererContext() const;
 
         inline static Application& Get() { return *s_Instance; }
         inline Window& getWindow() { return *m_Window; }
@@ -48,12 +49,11 @@ namespace Stellar {
         bool m_Running = true;
 
         std::unique_ptr<Window> m_Window;
-        std::unique_ptr<ImGuiLayer> m_ImGuiLayer;
+        ImGuiLayer *m_ImGuiLayer;
 
         LayerStack m_LayerStack;
         Buffer* m_VertexBuffer{};
         Buffer* m_IndexBuffer{};
-        VulkanRendererContext* m_RenderContext;
 
         bool onWindowClose(WindowCloseEvent&);
 
