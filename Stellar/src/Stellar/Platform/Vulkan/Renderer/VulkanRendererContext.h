@@ -23,7 +23,7 @@ namespace Stellar {
         [[nodiscard]] int getCurrentFrameIndex() const;
         [[nodiscard]] VkExtent2D getSwapChainExtent() const;
         //[[nodiscard]] VkCommandBuffer getCurrentCommandBuffer() const;
-        [[nodiscard]] VkFramebuffer getCurrentFrameBuffer() const;
+        //[[nodiscard]] VkFramebuffer getCurrentFrameBuffer() const;
 
         VkCommandBuffer beginFrame();
         void endFrame();

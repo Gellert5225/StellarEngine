@@ -30,11 +30,11 @@ namespace Stellar {
 
     }
 
-    void Renderer::BeginRenderPass() {
-        s_RendererAPI->beginRenderPass();
+    void Renderer::BeginRenderPass(VkCommandBuffer commandBuffer) {
+        s_RendererAPI->beginRenderPass(commandBuffer);
     }
 
-    void Renderer::EndRenderPass() {
-        s_RendererAPI->endRenderPass();
+    void Renderer::EndRenderPass(VkCommandBuffer commandBuffer) {
+        s_RendererAPI->endRenderPass(commandBuffer);
     }
 }

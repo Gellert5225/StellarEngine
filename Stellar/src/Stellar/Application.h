@@ -17,6 +17,7 @@
 #include "Platform/Vulkan/Renderer/VulkanRendererContext.h"
 #include "Events/Event.h"
 #include "Events/ApplicationEvent.h"
+#include "Renderer/Renderer.h"
 
 namespace Stellar {
     class STLR_API Application {
@@ -38,7 +39,7 @@ namespace Stellar {
 
         static AppInfo getAppInfo();
 
-        [[nodiscard]] VulkanRendererContext* getRendererContext() const;
+        //[[nodiscard]] VulkanRendererContext* getRendererContext() const;
 
         inline static Application& Get() { return *s_Instance; }
         inline Window& getWindow() { return *m_Window; }

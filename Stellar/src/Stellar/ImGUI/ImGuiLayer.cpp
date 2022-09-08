@@ -75,10 +75,10 @@ namespace Stellar {
         init_info.DescriptorPool = descriptorPool;
         init_info.Allocator = VK_NULL_HANDLE;
         init_info.MinImageCount = 2;
-        init_info.ImageCount = Application::Get().getRendererContext()->getSwapChainImageCount();
+        init_info.ImageCount = Application::Get().getWindow().getSwapChain()->getImageCount();
         init_info.CheckVkResultFn = vulkanCheckResult;
         ImGui_ImplVulkan_Init(&init_info,
-                              Application::Get().getRendererContext()->getSwapChainRenderPass());
+                              Application::Get().getWindow().getSwapChain()->getRenderPass());
 
         auto device = VulkanDevice::GetInstance();
         VkCommandBuffer commandBuffer = device->beginSingleTimeCommands();

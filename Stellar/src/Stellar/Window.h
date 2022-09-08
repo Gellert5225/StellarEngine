@@ -28,12 +28,14 @@ namespace Stellar {
     public:
         using EventCallbackFn = std::function<void(Event&)>;
 
-        explicit Window(const WindowProperty& property);
+        explicit Window(WindowProperty  property);
         ~Window();
 
+        virtual void init();
         virtual void onUpdate();
         virtual void setEventCallback(const EventCallbackFn& callback);
         virtual void setVsync(bool enabled);
+        virtual void swapBuffers();
 
         [[nodiscard]] virtual unsigned int getWidth() const;
         [[nodiscard]] virtual unsigned int getHeight() const;
@@ -42,15 +44,15 @@ namespace Stellar {
 
         [[nodiscard]] virtual GLFWwindow* getGLFWWindow() const;
 
-        SwapChain* getSwapChain() const;
+        [[nodiscard]] SwapChain* getSwapChain() const;
 
         static Window* Create(const WindowProperty& property = WindowProperty());
     private:
         GLFWwindow* m_Window{};
 
-        RendererContext* m_Context;
+        RendererContext* m_Context = nullptr;
         // TODO: Abstract this into different platforms
-        SwapChain* m_SwapChain;
+        SwapChain* m_SwapChain = nullptr;
 
         struct WindowData {
 			std::string Title;
@@ -60,9 +62,9 @@ namespace Stellar {
 			EventCallbackFn EventCallback;
 		};
         WindowData m_Data;
+        WindowProperty m_Property;
 
     private:
-        virtual void init(const WindowProperty& property);
         virtual void shutDown();
     };
 }

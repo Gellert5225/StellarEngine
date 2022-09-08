@@ -2,6 +2,7 @@
 #include "SwapChain.h"
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 #include "VulkanSurface.h"
+#include "Stellar/Platform/Vulkan/VulkanCommon.h"
 #include "Stellar/Application.h"
 
 #include "Stellar/Log.h"
@@ -11,9 +12,8 @@ namespace Stellar {
         init();
     }
 
-    SwapChain::SwapChain(std::shared_ptr<SwapChain> oldSwapChain) : m_OldSwapChain(oldSwapChain) {
+    SwapChain::SwapChain(std::shared_ptr<SwapChain> oldSwapChain) {
         init();
-        oldSwapChain = nullptr;
     }
 
     void SwapChain::init() {
@@ -139,6 +139,8 @@ namespace Stellar {
         VkPresentModeKHR presentMode = chooseSwapPresentMode(support.presentModes);
         VkExtent2D extent = chooseSwapExtent(support.capabilities);
 
+        VkSwapchainKHR oldSwapchain = m_VulkanSwapChain;
+
         uint32_t imageCount = support.capabilities.minImageCount + 1;
 
         if (support.capabilities.maxImageCount > 0
@@ -176,12 +178,16 @@ namespace Stellar {
         createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
         createInfo.presentMode = presentMode;
         createInfo.clipped = VK_TRUE;
-        createInfo.oldSwapchain = m_OldSwapChain == nullptr ? VK_NULL_HANDLE : m_OldSwapChain->getSwapChain();
+        createInfo.oldSwapchain = oldSwapchain;
 
         if (vkCreateSwapchainKHR(VulkanDevice::GetInstance()->logicalDevice(),
                                  &createInfo, nullptr, &m_VulkanSwapChain) != VK_SUCCESS) {
             throw std::runtime_error("failed to create swap chain!");
         }
+
+        if (oldSwapchain)
+            vkDestroySwapchainKHR(VulkanDevice::GetInstance()->logicalDevice(),
+                                  oldSwapchain, nullptr);
 
         vkGetSwapchainImagesKHR(VulkanDevice::GetInstance()->logicalDevice(),
                                 m_VulkanSwapChain, &imageCount, nullptr);
@@ -235,10 +241,6 @@ namespace Stellar {
 
     VkRenderPass SwapChain::getRenderPass() const {
         return m_RenderPass->getVkRenderPass();
-    }
-
-    VkFramebuffer SwapChain::getFrameBuffer(uint32_t index) const {
-        return (*m_FrameBuffer->getFramebuffers())[index];
     }
 
     uint32_t SwapChain::getImageCount() const {
@@ -335,7 +337,17 @@ namespace Stellar {
     }
 
     void SwapChain::present() {
+        auto cb = getCurrentCommandBuffer();
+        VkResult result = submitCommandBuffers(&cb,
+                                               &m_CurrentImageIndex);
+        if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
+            onResize();
+        } else if (result != VK_SUCCESS) {
+            throw std::runtime_error("failed to present swap chain image!");
+        }
 
+        m_IsFrameStarted = false;
+        m_CurrentFrameIndex = (m_CurrentFrameIndex + 1) % SwapChain::MAX_FRAMES_IN_FLIGHT;
     }
 
     void SwapChain::createCommandBuffers() {
@@ -350,5 +362,9 @@ namespace Stellar {
 
     VkCommandBuffer SwapChain::getCurrentCommandBuffer() const {
         return m_CommandBuffer->getCurrentCommandBuffer(m_CurrentFrameIndex);
+    }
+
+    VkFramebuffer SwapChain::getCurrentFrameBuffer() const {
+        return (*m_FrameBuffer->getFramebuffers())[m_CurrentImageIndex];
     }
 }

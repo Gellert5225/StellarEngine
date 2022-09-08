@@ -34,7 +34,7 @@ namespace Stellar {
         [[nodiscard]] VkSwapchainKHR& getSwapChain();
         [[nodiscard]] VkRenderPass getRenderPass() const;
         [[nodiscard]] uint32_t getImageCount() const;
-        [[nodiscard]] VkFramebuffer getFrameBuffer(uint32_t index) const;
+        [[nodiscard]] VkFramebuffer getCurrentFrameBuffer() const;
         [[nodiscard]] VkCommandBuffer getCurrentCommandBuffer() const;
         [[nodiscard]] bool compareSwapFormats(const SwapChain &swapChain) const;
 
@@ -61,7 +61,6 @@ namespace Stellar {
         std::vector<VkFence> m_InFlightFences;
         std::vector<VkFence> m_ImagesInFlight;
 
-        std::shared_ptr<SwapChain> m_OldSwapChain;
 
         uint32_t m_CurrentFrameIndex = 0;
         uint32_t m_CurrentImageIndex = 0;

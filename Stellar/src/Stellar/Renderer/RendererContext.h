@@ -5,6 +5,6 @@
 namespace Stellar {
     class STLR_API RendererContext {
     public:
-        virtual void swapBuffers() = 0;
+        //virtual void swapBuffers() = 0;
     };
 }
