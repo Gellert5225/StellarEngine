@@ -27,7 +27,7 @@ namespace Stellar {
     }
 
     void Renderer::Shutdown() {
-
+        s_RendererAPI->shutDown();
     }
 
     void Renderer::BeginRenderPass(VkCommandBuffer commandBuffer) {

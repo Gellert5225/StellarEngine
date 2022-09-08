@@ -7,5 +7,8 @@ int main(int argc, char** argv) {
 
     auto app = Stellar::CreateApplication();
     app->run();
+
+    delete app;
+
     return 0;
 }

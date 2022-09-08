@@ -13,7 +13,7 @@ namespace Stellar {
     public:
         CommandBuffer(VkCommandPool commandPool, uint32_t size);
         CommandBuffer(VkCommandPool commandPool, uint32_t size, VkCommandBufferLevel level);
-        ~CommandBuffer() = default;
+        ~CommandBuffer();
 
         void endRenderPass() const;
         void endCommandBuffer() const;

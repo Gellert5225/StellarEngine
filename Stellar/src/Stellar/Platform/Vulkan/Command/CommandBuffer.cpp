@@ -50,4 +50,12 @@ namespace Stellar {
     VkCommandBuffer CommandBuffer::getCurrentCommandBuffer(uint32_t currentFrameIndex) const {
         return commandBuffers[currentFrameIndex];
     }
+
+    CommandBuffer::~CommandBuffer() {
+        vkFreeCommandBuffers(VulkanDevice::GetInstance()->logicalDevice(),
+                             VulkanDevice::GetInstance()->getCommandPool(),
+                             commandBuffers.size(),
+                             commandBuffers.data());
+        commandBuffers.clear();
+    }
 }

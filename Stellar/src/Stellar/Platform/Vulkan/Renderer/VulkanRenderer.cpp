@@ -1,5 +1,7 @@
 #include "VulkanRenderer.h"
 
+#include "Stellar/Log.h"
+
 namespace Stellar {
 
     void VulkanRenderer::init() {
@@ -11,7 +13,7 @@ namespace Stellar {
     }
 
     void VulkanRenderer::shutDown() {
-
+        delete m_GraphicsPipeline;
     }
 
     void VulkanRenderer::beginRenderPass(VkCommandBuffer commandBuffer) {

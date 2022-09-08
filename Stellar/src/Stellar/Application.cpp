@@ -14,11 +14,25 @@ namespace Stellar {
         m_Window->init();
         m_Window->setEventCallback(BIND_EVENT_FN(Application::onEvent));
 
-        m_ImGuiLayer = std::make_unique<ImGuiLayer>();
+        m_ImGuiLayer = new ImGuiLayer();
+
         Renderer::Init();
     }
 
-    Application::~Application() = default;
+    Application::~Application() {
+        STLR_CORE_INFO("Shutting down");
+
+        for (Layer* layer : m_LayerStack) {
+            layer->onDetach();
+            delete layer;
+        }
+
+        delete m_VertexBuffer;
+        delete m_IndexBuffer;
+        Renderer::Shutdown();
+
+        m_Window = nullptr;
+    };
 
     void Application::onEvent(Event& e) {
         EventDispatcher dispatcher(e);
@@ -118,39 +132,15 @@ namespace Stellar {
 
             m_Window->swapBuffers();
 
-//            if (VkCommandBuffer commandBuffer = m_RenderContext->beginFrame()) {
-//                m_RenderContext->beginRenderPass(commandBuffer);
-//
-//                VkBuffer vertexBuffers[] = {m_VertexBuffer->getBuffer()};
-//                VkDeviceSize offsets[] = {0};
-//                vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
-//                vkCmdBindIndexBuffer(commandBuffer, m_IndexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT16);
-//
-//                vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
-//
-//                m_ImGuiLayer->begin();
-//                for (Layer* layer : m_LayerStack)
-//                    layer->onImGuiRender();
-//                m_ImGuiLayer->end(commandBuffer);
-//
-//                m_RenderContext->endRenderPass(commandBuffer);
-//                m_RenderContext->endFrame();
-//            }
         }
 
         vkDeviceWaitIdle(VulkanDevice::GetInstance()->logicalDevice());
-
-        m_Window = nullptr;
     }
 
     bool Application::onWindowClose(WindowCloseEvent& e) {
         m_Running = false;
         return true;
     }
-
-//    VulkanRendererContext* Application::getRendererContext() const {
-//        return m_RenderContext;
-//    }
 
     Application::AppInfo Application::getAppInfo() {
         return {

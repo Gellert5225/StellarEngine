@@ -2,6 +2,8 @@
 #include "Pipeline.h"
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 
+#include "Stellar/Log.h"
+
 namespace Stellar {
     Pipeline::~Pipeline() {
         vkDestroyPipeline(VulkanDevice::GetInstance()->logicalDevice(), pipeline, nullptr);

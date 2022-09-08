@@ -34,7 +34,6 @@ namespace Stellar {
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-        VkDescriptorPool descriptorPool;
         VkDescriptorPoolSize pool_sizes[] = {
             {VK_DESCRIPTOR_TYPE_SAMPLER, 1000},
             {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000},
@@ -57,7 +56,7 @@ namespace Stellar {
         pool_info.pPoolSizes = pool_sizes;
 
         if (vkCreateDescriptorPool(VulkanDevice::GetInstance()->logicalDevice(),
-            &pool_info, nullptr, &descriptorPool) != VK_SUCCESS) {
+            &pool_info, nullptr, &m_DescriptorPool) != VK_SUCCESS) {
             throw std::runtime_error("failed to set up descriptor pool for imgui");
         }
 
@@ -72,7 +71,7 @@ namespace Stellar {
 
         // pipeline cache is a potential future optimization, ignoring for now
         init_info.PipelineCache = VK_NULL_HANDLE;
-        init_info.DescriptorPool = descriptorPool;
+        init_info.DescriptorPool = m_DescriptorPool;
         init_info.Allocator = VK_NULL_HANDLE;
         init_info.MinImageCount = 2;
         init_info.ImageCount = Application::Get().getWindow().getSwapChain()->getImageCount();
@@ -95,6 +94,7 @@ namespace Stellar {
     }
 
     void ImGuiLayer::onDetach() {
+        vkDestroyDescriptorPool(VulkanDevice::GetInstance()->logicalDevice(), m_DescriptorPool, nullptr);
         ImGui_ImplVulkan_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();

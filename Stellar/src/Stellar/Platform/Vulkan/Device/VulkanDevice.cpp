@@ -14,6 +14,7 @@ namespace Stellar {
     }
 
     VulkanDevice::~VulkanDevice() {
+        vkDestroyCommandPool(m_LogicalDevice, m_CommandPool, nullptr);
         vkDestroyDevice(m_LogicalDevice, nullptr);
     }
 
@@ -47,7 +48,6 @@ namespace Stellar {
     }
 
     void VulkanDevice::createLogicalDevice() {
-        STLR_CORE_INFO("Create Logical Device");
         m_Indices = findQueueFamilies(m_PhysicalDevice);
 
         std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;

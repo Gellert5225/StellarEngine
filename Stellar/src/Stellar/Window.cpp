@@ -172,6 +172,8 @@ namespace Stellar {
     }
 
     Window::~Window() {
+        delete m_SwapChain;
+        delete m_Context;
         shutDown();
     }
 

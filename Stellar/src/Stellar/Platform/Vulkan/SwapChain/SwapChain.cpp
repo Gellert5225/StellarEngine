@@ -68,6 +68,8 @@ namespace Stellar {
     }
 
     SwapChain::~SwapChain() {
+        delete m_CommandBuffer;
+
         for (auto imageView : m_SwapChainImageViews) {
             vkDestroyImageView(VulkanDevice::GetInstance()->logicalDevice(),
                                imageView, nullptr);
@@ -78,7 +80,6 @@ namespace Stellar {
                               m_VulkanSwapChain, nullptr);
 
         delete m_FrameBuffer;
-        delete m_CommandBuffer;
         delete m_RenderPass;
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {

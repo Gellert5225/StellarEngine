@@ -21,6 +21,7 @@ namespace Stellar {
         void onImGuiRender() override;
 
     private:
+        VkDescriptorPool m_DescriptorPool;
         float m_Time = 0.0f;
     };
 }

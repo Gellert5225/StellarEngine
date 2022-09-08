@@ -12,28 +12,12 @@ namespace Stellar {
         VulkanInstance::GetInstance()->init("Stellar Engine Sandbox", 1, "Stellar", 1);
         VulkanSurface::GetInstance()->init(Application::Get().getWindow().getGLFWWindow());
         VulkanDevice::GetInstance()->init(VulkanSurface::GetInstance()->getSurface());
-        //recreateSwapChain();
-        //createCommandBuffer();
-        //createPipeLine();
     }
 
     VulkanRendererContext::~VulkanRendererContext() {
-        delete m_GraphicsPipeLine;
-    }
-
-    void VulkanRendererContext::recreateSwapChain() {
-        vkDeviceWaitIdle(VulkanDevice::GetInstance()->logicalDevice());
-
-        if (m_SwapChain == nullptr) {
-            m_SwapChain = std::make_unique<SwapChain>();
-        } else {
-            std::shared_ptr<SwapChain> oldSwapChain = std::move(m_SwapChain);
-            m_SwapChain = std::make_unique<SwapChain>(oldSwapChain);
-
-            if (!oldSwapChain->compareSwapFormats(*m_SwapChain)) {
-                throw std::runtime_error("Swap chain image(or depth) format has changed!");
-            }
-        }
+        delete VulkanDevice::GetInstance();
+        delete VulkanSurface::GetInstance();
+        delete VulkanInstance::GetInstance();
     }
 
 //    VkCommandBuffer VulkanRendererContext::beginFrame() {
@@ -135,34 +119,7 @@ namespace Stellar {
 //        vkCmdEndRenderPass(commandBuffer);
 //    }
 
-    void VulkanRendererContext::createPipeLine() {
-        m_GraphicsPipeLine = new GraphicsPipeline("resource/Shader/shaderVert.spv",
-                                                  "resource/Shader/shaderFrag.spv",
-                                                  m_SwapChain->getSwapChainExtent(),
-                                                  m_SwapChain->getRenderPass());
-    }
-
-    VkRenderPass VulkanRendererContext::getSwapChainRenderPass() const {
-        return m_SwapChain->getRenderPass();
-    }
-
-    uint32_t VulkanRendererContext::getSwapChainImageCount() const {
-        return m_SwapChain->getImageCount();
-    }
-
-//    VkFramebuffer VulkanRendererContext::getCurrentFrameBuffer() const {
-//        return  m_SwapChain->getFrameBuffer(m_CurrentImageIndex);
-//    }
-
-    VkExtent2D VulkanRendererContext::getSwapChainExtent() const {
-        return m_SwapChain->getSwapChainExtent();
-    }
-
-    int VulkanRendererContext::getCurrentFrameIndex() const {
-        return m_CurrentFrameIndex;
-    }
-
-    void VulkanRendererContext::beginImGUIFrame() {
+//    void VulkanRendererContext::beginImGUIFrame() {
 //        VkCommandBufferBeginInfo cmdBufInfo = {};
 //        cmdBufInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 //        cmdBufInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
@@ -172,14 +129,6 @@ namespace Stellar {
 //        commandBuffer = drawCommandBuffer;
 //        STLR_CORE_ASSERT(commandBuffer, "Command buffer is NULL!");
 //        VK_CHECK_RESULT(vkBeginCommandBuffer(drawCommandBuffer, &cmdBufInfo));
-
-    }
-
-    void VulkanRendererContext::endImGUIFrame() {
-
-    }
 //
-//    std::unique_ptr<SwapChain> VulkanRendererContext::getSwapChain() {
-//        return m_SwapChain;
 //    }
 }
