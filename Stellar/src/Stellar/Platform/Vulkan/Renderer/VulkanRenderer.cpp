@@ -57,4 +57,8 @@ namespace Stellar {
     void VulkanRenderer::endRenderPass(VkCommandBuffer commandBuffer) {
         vkCmdEndRenderPass(commandBuffer);
     }
+
+    void VulkanRenderer::renderGeometry() {
+
+    }
 }

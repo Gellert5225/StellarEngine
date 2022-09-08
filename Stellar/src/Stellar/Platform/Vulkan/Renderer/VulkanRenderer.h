@@ -15,6 +15,7 @@ namespace Stellar {
         void shutDown() override;
         void beginRenderPass(VkCommandBuffer commandBuffer) override;
         void endRenderPass(VkCommandBuffer commandBuffer) override;
+        void renderGeometry() override;
 
     private:
         GraphicsPipeline* m_GraphicsPipeline = nullptr;

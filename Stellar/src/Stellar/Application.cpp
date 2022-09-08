@@ -113,6 +113,8 @@ namespace Stellar {
 
             Renderer::BeginRenderPass(commandBuffer);
 
+            Renderer::RenderGeometry();
+
             VkBuffer vertexBuffers[] = {m_VertexBuffer->getBuffer()};
             VkDeviceSize offsets[] = {0};
             vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);

@@ -37,4 +37,8 @@ namespace Stellar {
     void Renderer::EndRenderPass(VkCommandBuffer commandBuffer) {
         s_RendererAPI->endRenderPass(commandBuffer);
     }
+
+    void Renderer::RenderGeometry() {
+        s_RendererAPI->renderGeometry();
+    }
 }
