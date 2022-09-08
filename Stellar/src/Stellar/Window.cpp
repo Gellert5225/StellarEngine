@@ -5,7 +5,7 @@
 #include "Stellar/Events/ApplicationEvent.h"
 #include "Stellar/Events/MouseEvent.h"
 #include "Stellar/Events/KeyEvent.h"
-#include "Stellar/Render/Vulkan/Device/VulkanDevice.h"
+#include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 
 namespace Stellar {
     static void GLFWErrorCallback(int error, const char* description) {

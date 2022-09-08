@@ -6,8 +6,8 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_vulkan.h>
 
-#include "Stellar/Render/Vulkan/Device/VulkanDevice.h"
-#include "Stellar/Render/Vulkan/VulkanCommon.h"
+#include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
+#include "Stellar/Platform/Vulkan/VulkanCommon.h"
 
 #include "Stellar/Application.h"
 
