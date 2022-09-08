@@ -2,6 +2,7 @@
 
 #include "Stellar/Core.h"
 #include "Stellar/Platform/Vulkan/Buffer/FrameBuffer.h"
+#include "Stellar/Platform/Vulkan/Command/CommandBuffer.h"
 #include "Stellar/Platform/Vulkan/RenderPass/StandardRenderPass.h"
 
 #include <vulkan/vulkan.h>
@@ -22,6 +23,9 @@ namespace Stellar {
         SwapChain();
         explicit SwapChain(std::shared_ptr<SwapChain> oldSwapChain);
         ~SwapChain();
+
+        void beginFrame();
+        void present();
 
         [[nodiscard]] const std::vector<VkImage>* getSwapChainImages() const;
         [[nodiscard]] VkFormat getSwapChainImageFormat() const;
@@ -44,6 +48,7 @@ namespace Stellar {
         VkExtent2D m_SwapChainExtent{};
 
         FrameBuffer* m_FrameBuffer = nullptr;
+        CommandBuffer* m_CommandBuffer = nullptr;
         StandardRenderPass* m_RenderPass = nullptr;
 
         std::vector<VkImage> m_SwapChainImages;
@@ -56,12 +61,14 @@ namespace Stellar {
 
         std::shared_ptr<SwapChain> m_OldSwapChain;
 
-        uint32_t m_CurrentFrame = 0;
+        uint32_t m_CurrentFrameIndex = 0;
+        uint32_t m_CurrentImageIndex = 0;
 
         void createSwapChain();
         void createImageViews();
         void createRenderPass();
         void createFrameBuffers();
+        void createCommandBuffers();
         void createSemaphores();
 
         [[nodiscard]] static VkSurfaceFormatKHR chooseSwapSurfaceFormat(

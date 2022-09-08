@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Stellar/Core.h"
-
+#include "Stellar/Renderer/RendererContext.h"
 #include "Stellar/Platform/Vulkan/SwapChain/SwapChain.h"
 #include "Stellar/Platform/Vulkan/Command/CommandBuffer.h"
 #include "Stellar/Platform/Vulkan/Pipeline/GraphicsPipeline.h"
@@ -13,16 +13,16 @@
 #include <memory>
 
 namespace Stellar {
-    class STLR_API VulkanRendererContext {
+    class STLR_API VulkanRendererContext : public RendererContext {
     public:
-        explicit VulkanRendererContext(Window &window);
+        explicit VulkanRendererContext();
         ~VulkanRendererContext();
 
         [[nodiscard]] VkRenderPass getSwapChainRenderPass() const;
         [[nodiscard]] uint32_t getSwapChainImageCount() const;
         [[nodiscard]] int getCurrentFrameIndex() const;
         [[nodiscard]] VkExtent2D getSwapChainExtent() const;
-        [[nodiscard]] VkCommandBuffer getCurrentCommandBuffer() const;
+        //[[nodiscard]] VkCommandBuffer getCurrentCommandBuffer() const;
         [[nodiscard]] VkFramebuffer getCurrentFrameBuffer() const;
 
         VkCommandBuffer beginFrame();
@@ -38,17 +38,13 @@ namespace Stellar {
         int m_CurrentFrameIndex = 0;
         bool m_IsFrameStarted = false;
 
-        Window& m_Window;
-
         std::unique_ptr<SwapChain> m_SwapChain;
 
-        CommandBuffer* m_CommandBuffer = nullptr;
         GraphicsPipeline* m_GraphicsPipeLine = nullptr;
         VulkanInstance* m_Instance = nullptr;
         VulkanDevice* m_Device = nullptr;
 
         void recreateSwapChain();
-        void createCommandBuffer();
         void createPipeLine();
 
     };

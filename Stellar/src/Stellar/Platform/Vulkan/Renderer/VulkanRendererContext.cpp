@@ -4,20 +4,20 @@
 #include "VulkanRendererContext.h"
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 #include "Stellar/Platform/Vulkan/SwapChain/VulkanSurface.h"
+#include "Stellar/Application.h"
 
 namespace Stellar {
 
-    VulkanRendererContext::VulkanRendererContext(Window &window) : m_Window(window) {
+    VulkanRendererContext::VulkanRendererContext() {
         VulkanInstance::GetInstance()->init("Stellar Engine Sandbox", 1, "Stellar", 1);
-        VulkanSurface::GetInstance()->init(window.getGLFWWindow());
+        VulkanSurface::GetInstance()->init(Application::Get().getWindow().getGLFWWindow());
         VulkanDevice::GetInstance()->init(VulkanSurface::GetInstance()->getSurface());
         recreateSwapChain();
-        createCommandBuffer();
+        //createCommandBuffer();
         createPipeLine();
     }
 
     VulkanRendererContext::~VulkanRendererContext() {
-        delete m_CommandBuffer;
         delete m_GraphicsPipeLine;
     }
 
@@ -71,8 +71,7 @@ namespace Stellar {
 
         VkResult result = m_SwapChain->submitCommandBuffers(&currentCommandBuffer,
                                                             &m_CurrentImageIndex);
-        if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || m_Window.wasWindowResized()) {
-            m_Window.resetWindowResizedFlag();
+        if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
             recreateSwapChain();
         } else if (result != VK_SUCCESS) {
             throw std::runtime_error("failed to present swap chain image!");
@@ -82,10 +81,9 @@ namespace Stellar {
         m_CurrentFrameIndex = (m_CurrentFrameIndex + 1) % SwapChain::MAX_FRAMES_IN_FLIGHT;
     }
 
-    VkCommandBuffer VulkanRendererContext::getCurrentCommandBuffer() const {
-
-        return m_CommandBuffer->getCurrentCommandBuffer(m_CurrentFrameIndex);
-    }
+//    VkCommandBuffer VulkanRendererContext::getCurrentCommandBuffer() const {
+//        return m_CommandBuffer->getCurrentCommandBuffer(m_CurrentFrameIndex);
+//    }
 
     void VulkanRendererContext::beginRenderPass(VkCommandBuffer commandBuffer) {
         STLR_CORE_ASSERT(m_IsFrameStarted,
@@ -142,11 +140,6 @@ namespace Stellar {
                                                   "resource/Shader/shaderFrag.spv",
                                                   m_SwapChain->getSwapChainExtent(),
                                                   m_SwapChain->getRenderPass());
-    }
-
-    void VulkanRendererContext::createCommandBuffer() {
-        m_CommandBuffer = new CommandBuffer(VulkanDevice::GetInstance()->getCommandPool(),
-                                            SwapChain::MAX_FRAMES_IN_FLIGHT);
     }
 
     VkRenderPass VulkanRendererContext::getSwapChainRenderPass() const {

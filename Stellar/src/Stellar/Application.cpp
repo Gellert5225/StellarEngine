@@ -12,7 +12,6 @@ namespace Stellar {
         s_Instance = this;
         m_Window = std::unique_ptr<Window>(Window::Create());
         m_Window->setEventCallback(BIND_EVENT_FN(Application::onEvent));
-        m_RenderContext = new VulkanRendererContext(*m_Window);
 
         m_ImGuiLayer = std::make_unique<ImGuiLayer>();
     }

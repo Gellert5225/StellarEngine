@@ -53,7 +53,6 @@ namespace Stellar {
         LayerStack m_LayerStack;
         Buffer* m_VertexBuffer{};
         Buffer* m_IndexBuffer{};
-        VulkanRendererContext* m_RenderContext;
 
         bool onWindowClose(WindowCloseEvent&);
 

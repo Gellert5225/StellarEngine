@@ -4,6 +4,9 @@
 
 #include "Core.h"
 #include "Events/Event.h"
+#include "Platform/Vulkan/Renderer/VulkanRendererContext.h"
+
+#include "Platform/Vulkan/SwapChain/SwapChain.h"
 
 #include <GLFW/glfw3.h>
 
@@ -39,18 +42,18 @@ namespace Stellar {
 
         [[nodiscard]] virtual GLFWwindow* getGLFWWindow() const;
 
-        [[nodiscard]] bool wasWindowResized() const { return m_Data.frameBufferResized; }
-        void resetWindowResizedFlag() { m_Data.frameBufferResized = false; }
-
         static Window* Create(const WindowProperty& property = WindowProperty());
     private:
         GLFWwindow* m_Window{};
+
+        RendererContext* m_Context;
+        // TODO: Abstract this into different platforms
+        SwapChain* m_SwapChain;
 
         struct WindowData {
 			std::string Title;
 			unsigned int Width, Height;
 			bool VSync;
-            bool frameBufferResized = false;
 
 			EventCallbackFn EventCallback;
 		};

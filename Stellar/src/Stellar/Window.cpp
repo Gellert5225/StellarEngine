@@ -18,6 +18,8 @@ namespace Stellar {
 
     Window::Window(const WindowProperty& property) {
         init(property);
+        m_Context = new VulkanRendererContext();
+        m_SwapChain = new SwapChain();
     }
 
     void Window::init(const WindowProperty& property) {
@@ -56,7 +58,6 @@ namespace Stellar {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
             data.Width = width;
             data.Height = height;
-            data.frameBufferResized = true;
 
             WindowResizeEvent event(width, height);
             data.EventCallback(event);
@@ -155,7 +156,6 @@ namespace Stellar {
     }
 
     void Window::setVsync(bool enabled) {
-
         m_Data.VSync = enabled;
     }
 

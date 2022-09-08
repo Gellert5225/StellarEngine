@@ -11,6 +11,7 @@ namespace Stellar {
         createSwapChain();
         createImageViews();
         createRenderPass();
+        createCommandBuffers();
         createFrameBuffers();
         createSemaphores();
     }
@@ -77,6 +78,7 @@ namespace Stellar {
                               m_VulkanSwapChain, nullptr);
 
         delete m_FrameBuffer;
+        delete m_CommandBuffer;
         delete m_RenderPass;
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
@@ -247,14 +249,14 @@ namespace Stellar {
         // wait for previous frame
         vkWaitForFences(VulkanDevice::GetInstance()->logicalDevice(),
                         1,
-                        &m_InFlightFences[m_CurrentFrame],
+                        &m_InFlightFences[m_CurrentFrameIndex],
                         VK_TRUE,
                         UINT64_MAX);
 
         VkResult result = vkAcquireNextImageKHR(VulkanDevice::GetInstance()->logicalDevice(),
                               m_VulkanSwapChain,
                               UINT64_MAX,
-                              m_ImageAvailableSemaphores[m_CurrentFrame],
+                              m_ImageAvailableSemaphores[m_CurrentFrameIndex],
                               VK_NULL_HANDLE, imageIndex);
 
         return result;
@@ -265,13 +267,13 @@ namespace Stellar {
             vkWaitForFences(VulkanDevice::GetInstance()->logicalDevice(),
                             1, &m_ImagesInFlight[*imageIndex], VK_TRUE, UINT64_MAX);
         }
-        m_ImagesInFlight[*imageIndex] = m_ImagesInFlight[m_CurrentFrame];
+        m_ImagesInFlight[*imageIndex] = m_ImagesInFlight[m_CurrentFrameIndex];
 
         //submit command buffer
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
-        VkSemaphore waitSemaphores[] = {m_ImageAvailableSemaphores[m_CurrentFrame]};
+        VkSemaphore waitSemaphores[] = {m_ImageAvailableSemaphores[m_CurrentFrameIndex]};
         VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
         submitInfo.waitSemaphoreCount = 1;
         submitInfo.pWaitSemaphores = waitSemaphores;
@@ -279,16 +281,16 @@ namespace Stellar {
         submitInfo.commandBufferCount = 1;
         submitInfo.pCommandBuffers = buffer;
 
-        VkSemaphore signalSemaphores[] = {m_RenderFinishedSemaphores[m_CurrentFrame]};
+        VkSemaphore signalSemaphores[] = {m_RenderFinishedSemaphores[m_CurrentFrameIndex]};
         submitInfo.signalSemaphoreCount = 1;
         submitInfo.pSignalSemaphores = signalSemaphores;
 
         vkResetFences(VulkanDevice::GetInstance()->logicalDevice(),
-                      1,  &m_InFlightFences[m_CurrentFrame]);
+                      1,  &m_InFlightFences[m_CurrentFrameIndex]);
         if (vkQueueSubmit(VulkanDevice::GetInstance()->getGraphicsQueue(),
                           1,
                           &submitInfo,
-                          m_InFlightFences[m_CurrentFrame]) != VK_SUCCESS) {
+                          m_InFlightFences[m_CurrentFrameIndex]) != VK_SUCCESS) {
             throw std::runtime_error("failed to submit draw command buffer!");
         }
 
@@ -307,12 +309,25 @@ namespace Stellar {
         VkResult result = vkQueuePresentKHR(VulkanDevice::GetInstance()->getPresentQueue(),
                                             &presentInfo);
 
-        m_CurrentFrame = (m_CurrentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+        m_CurrentFrameIndex = (m_CurrentFrameIndex + 1) % MAX_FRAMES_IN_FLIGHT;
 
         return result;
     }
 
     bool SwapChain::compareSwapFormats(const SwapChain &swapChain) const {
         return swapChain.m_SwapChainImageFormat == m_SwapChainImageFormat;
+    }
+
+    void SwapChain::beginFrame() {
+
+    }
+
+    void SwapChain::present() {
+
+    }
+
+    void SwapChain::createCommandBuffers() {
+        m_CommandBuffer = new CommandBuffer(VulkanDevice::GetInstance()->getCommandPool(),
+                                            SwapChain::MAX_FRAMES_IN_FLIGHT);
     }
 }
