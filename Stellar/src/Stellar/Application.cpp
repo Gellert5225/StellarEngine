@@ -77,6 +77,18 @@ namespace Stellar {
                 layer->onUpdate();
             m_Window->onUpdate();
 
+            // begin frame
+            // begin command buffer
+            // begin render pass
+            // end render pass
+            // end command buffer
+            // end frame
+
+            auto swapChain = m_Window->getSwapChain();
+            swapChain->beginFrame();
+            auto commandBuffer = swapChain->getCurrentCommandBuffer();
+
+
             if (VkCommandBuffer commandBuffer = m_RenderContext->beginFrame()) {
                 m_RenderContext->beginRenderPass(commandBuffer);
 

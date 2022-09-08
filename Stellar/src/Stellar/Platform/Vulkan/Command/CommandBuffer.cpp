@@ -47,7 +47,7 @@ namespace Stellar {
         return &commandBuffers;
     }
 
-    VkCommandBuffer CommandBuffer::getCurrentCommandBuffer(int currentFrameIndex) const {
+    VkCommandBuffer CommandBuffer::getCurrentCommandBuffer(uint32_t currentFrameIndex) const {
         return commandBuffers[currentFrameIndex];
     }
 }

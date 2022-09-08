@@ -42,6 +42,8 @@ namespace Stellar {
 
         [[nodiscard]] virtual GLFWwindow* getGLFWWindow() const;
 
+        SwapChain* getSwapChain() const;
+
         static Window* Create(const WindowProperty& property = WindowProperty());
     private:
         GLFWwindow* m_Window{};

@@ -18,7 +18,7 @@ namespace Stellar {
         void endRenderPass() const;
         void endCommandBuffer() const;
 
-        [[nodiscard]] VkCommandBuffer getCurrentCommandBuffer(int currentFrameIndex) const;
+        [[nodiscard]] VkCommandBuffer getCurrentCommandBuffer(uint32_t currentFrameIndex) const;
 
         [[nodiscard]] const std::vector<VkCommandBuffer>* getCommandBuffers() const;
     private:

@@ -8,21 +8,21 @@
 
 namespace Stellar {
     SwapChain::SwapChain() {
+        init();
+    }
+
+    SwapChain::SwapChain(std::shared_ptr<SwapChain> oldSwapChain) : m_OldSwapChain(oldSwapChain) {
+        init();
+        oldSwapChain = nullptr;
+    }
+
+    void SwapChain::init() {
         createSwapChain();
         createImageViews();
         createRenderPass();
         createCommandBuffers();
         createFrameBuffers();
         createSemaphores();
-    }
-
-    SwapChain::SwapChain(std::shared_ptr<SwapChain> oldSwapChain) : m_OldSwapChain(oldSwapChain) {
-        createSwapChain();
-        createImageViews();
-        createRenderPass();
-        createFrameBuffers();
-        createSemaphores();
-        oldSwapChain = nullptr;
     }
 
     VkSurfaceFormatKHR SwapChain::chooseSwapSurfaceFormat(
@@ -319,7 +319,19 @@ namespace Stellar {
     }
 
     void SwapChain::beginFrame() {
+        STLR_CORE_ASSERT(!m_IsFrameStarted,
+                         "VulkanRendererContext::beginFrame(): Frame already in progress")
 
+        VkResult result = acquireNextImage(&m_CurrentImageIndex);
+        if (result == VK_ERROR_OUT_OF_DATE_KHR) {
+            onResize();
+            //return nullptr;
+        }
+
+        if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
+            throw std::runtime_error("Failed to acquire swap chain image");
+
+        m_IsFrameStarted = true;
     }
 
     void SwapChain::present() {
@@ -329,5 +341,14 @@ namespace Stellar {
     void SwapChain::createCommandBuffers() {
         m_CommandBuffer = new CommandBuffer(VulkanDevice::GetInstance()->getCommandPool(),
                                             SwapChain::MAX_FRAMES_IN_FLIGHT);
+    }
+
+    void SwapChain::onResize() {
+        vkDeviceWaitIdle(VulkanDevice::GetInstance()->logicalDevice());
+        init();
+    }
+
+    VkCommandBuffer SwapChain::getCurrentCommandBuffer() const {
+        return m_CommandBuffer->getCurrentCommandBuffer(m_CurrentFrameIndex);
     }
 }

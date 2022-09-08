@@ -26,6 +26,7 @@ namespace Stellar {
 
         void beginFrame();
         void present();
+        void onResize();
 
         [[nodiscard]] const std::vector<VkImage>* getSwapChainImages() const;
         [[nodiscard]] VkFormat getSwapChainImageFormat() const;
@@ -34,6 +35,7 @@ namespace Stellar {
         [[nodiscard]] VkRenderPass getRenderPass() const;
         [[nodiscard]] uint32_t getImageCount() const;
         [[nodiscard]] VkFramebuffer getFrameBuffer(uint32_t index) const;
+        [[nodiscard]] VkCommandBuffer getCurrentCommandBuffer() const;
         [[nodiscard]] bool compareSwapFormats(const SwapChain &swapChain) const;
 
         VkResult acquireNextImage(uint32_t* imageIndex);
@@ -64,6 +66,9 @@ namespace Stellar {
         uint32_t m_CurrentFrameIndex = 0;
         uint32_t m_CurrentImageIndex = 0;
 
+        bool m_IsFrameStarted = false;
+
+        void init();
         void createSwapChain();
         void createImageViews();
         void createRenderPass();

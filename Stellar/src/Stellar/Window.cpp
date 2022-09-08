@@ -171,4 +171,8 @@ namespace Stellar {
     Window::~Window() {
         shutDown();
     }
+
+    SwapChain *Window::getSwapChain() const {
+        return m_SwapChain;
+    }
 }
