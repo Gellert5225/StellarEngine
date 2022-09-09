@@ -14,6 +14,7 @@ namespace Stellar {
         m_Window->init();
         m_Window->setEventCallback(BIND_EVENT_FN(Application::onEvent));
 
+        m_CommandBuffer = CommandBuffer::Create(2);
         m_ImGuiLayer = new ImGuiLayer();
 
         Renderer::Init();
@@ -78,33 +79,25 @@ namespace Stellar {
                 layer->onUpdate();
             m_Window->onUpdate();
 
-            auto swapChain = m_Window->getSwapChain();
-            swapChain->beginFrame();
-            auto commandBuffer = swapChain->getCurrentCommandBuffer();
-            // begin commandbuffer
-            VkCommandBufferBeginInfo beginInfo{};
-            beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-            if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
-                throw std::runtime_error("failed to begin recording command buffer!");
-            }
+            m_CommandBuffer->begin();
 
             Renderer::SetClearColor({ 0.1f, 0.1f, 0.1f, 0.1f });
-            Renderer::BeginRenderPass(commandBuffer);
+            Renderer::BeginRenderPass(m_CommandBuffer);
 
-            Renderer::RenderGeometry(commandBuffer, m_VertexBuffer, m_IndexBuffer, indices.size());
+            Renderer::RenderGeometry(m_CommandBuffer, m_VertexBuffer, m_IndexBuffer, indices.size());
 
             m_ImGuiLayer->begin();
             for (Layer* layer : m_LayerStack)
                 layer->onImGuiRender();
-            m_ImGuiLayer->end(commandBuffer);
+            m_ImGuiLayer->end(m_CommandBuffer);
 
-            Renderer::EndRenderPass(commandBuffer);
-            // end command buffer
-            if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
-                throw std::runtime_error("failed to record command buffer!");
+            Renderer::EndRenderPass(m_CommandBuffer);
+            m_CommandBuffer->end();
+            m_CommandBuffer->submit();
 
+            auto swapChain = m_Window->getSwapChain();
+            swapChain->beginFrame();
             m_Window->swapBuffers();
-
         }
 
         vkDeviceWaitIdle(VulkanDevice::GetInstance()->logicalDevice());

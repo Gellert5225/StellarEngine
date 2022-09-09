@@ -1,27 +1,34 @@
 #pragma once
 
-#include "Stellar/Core.h"
 #include "CommandPool.h"
+
+#include "Stellar/Core.h"
+#include "Stellar/Renderer/CommandBuffer.h"
 #include "Stellar/Platform/Vulkan/RenderPass/StandardRenderPass.h"
 #include "Stellar/Platform/Vulkan/Pipeline/GraphicsPipeline.h"
 #include "Stellar/Platform/Vulkan/Buffer/VulkanBuffer.h"
 #include "Stellar/Platform/Vulkan/Buffer/FrameBuffer.h"
+
 #include <vulkan/vulkan.h>
 
 namespace Stellar {
-    class STLR_API CommandBuffer {
+    class STLR_API VulkanCommandBuffer : public CommandBuffer {
     public:
-        CommandBuffer(VkCommandPool commandPool, uint32_t size);
-        CommandBuffer(VkCommandPool commandPool, uint32_t size, VkCommandBufferLevel level);
-        ~CommandBuffer();
+        explicit VulkanCommandBuffer(uint32_t size);
+        VulkanCommandBuffer(uint32_t size, VkCommandBufferLevel level);
+        ~VulkanCommandBuffer() override;
 
-        void endRenderPass() const;
-        void endCommandBuffer() const;
+        void begin() override;
+        void end() override;
+        void submit() override;
+
+        void* getActiveCommandBuffer() override;
 
         [[nodiscard]] VkCommandBuffer getCurrentCommandBuffer(uint32_t currentFrameIndex) const;
 
         [[nodiscard]] const std::vector<VkCommandBuffer>* getCommandBuffers() const;
     private:
-        std::vector<VkCommandBuffer> commandBuffers;
+        std::vector<VkCommandBuffer> m_CommandBuffers;
+        std::vector<VkFence> m_WaitFences;
     };
 }

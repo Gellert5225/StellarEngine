@@ -7,8 +7,7 @@ namespace Stellar {
     }
 
     LayerStack::~LayerStack() {
-        for (Layer* layer: m_Layers)
-            delete layer;
+
     }
 
     void LayerStack::pushLayer(Layer* layer) {

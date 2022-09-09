@@ -2,7 +2,7 @@
 
 #include "Stellar/Core.h"
 #include "Stellar/Platform/Vulkan/Buffer/FrameBuffer.h"
-#include "Stellar/Platform/Vulkan/Command/CommandBuffer.h"
+#include "Stellar/Platform/Vulkan/Command/VulkanCommandBuffer.h"
 #include "Stellar/Platform/Vulkan/RenderPass/StandardRenderPass.h"
 
 #include <vulkan/vulkan.h>
@@ -36,9 +36,7 @@ namespace Stellar {
         [[nodiscard]] uint32_t getCurrentFrameIndex() const;
         [[nodiscard]] VkFramebuffer getCurrentFrameBuffer() const;
         [[nodiscard]] VkCommandBuffer getCurrentCommandBuffer() const;
-
-        //VkResult acquireNextImage(uint32_t* imageIndex);
-        VkResult submitCommandBuffers(const VkCommandBuffer* buffer, const uint32_t* imageIndex);
+        [[nodiscard]] VkCommandBuffer getCommandBuffer(uint32_t index) const;
 
         static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 
@@ -48,9 +46,14 @@ namespace Stellar {
         VkFormat m_SwapChainImageFormat{};
         VkExtent2D m_SwapChainExtent{};
 
-        FrameBuffer* m_FrameBuffer = nullptr;
-        CommandBuffer* m_CommandBuffer = nullptr;
         StandardRenderPass* m_RenderPass = nullptr;
+        std::vector<VkFramebuffer> m_Framebuffers;
+
+        struct SwapchainCommandBuffer {
+            VkCommandPool CommandPool = nullptr;
+            VkCommandBuffer CommandBuffer = nullptr;
+        };
+        std::vector<SwapchainCommandBuffer> m_CommandBuffers;
 
         std::vector<VkImage> m_SwapChainImages;
         std::vector<VkImageView> m_SwapChainImageViews;
@@ -59,7 +62,6 @@ namespace Stellar {
         VkSemaphore m_RenderFinishedSemaphores = VK_NULL_HANDLE;
         std::vector<VkFence> m_InFlightFences;
         //std::vector<VkFence> m_ImagesInFlight;
-
 
         uint32_t m_CurrentFrameIndex = 0;
         uint32_t m_CurrentImageIndex = 0;

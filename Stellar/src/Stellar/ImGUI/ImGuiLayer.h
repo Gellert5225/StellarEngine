@@ -5,6 +5,8 @@
 #include "Stellar/Events/MouseEvent.h"
 #include "Stellar/Events/ApplicationEvent.h"
 
+#include "Stellar/Renderer/CommandBuffer.h"
+
 #include <vulkan/vulkan.h>
 
 namespace Stellar {
@@ -14,7 +16,7 @@ namespace Stellar {
         ~ImGuiLayer() override;
 
         void begin() const;
-        void end(VkCommandBuffer) const;
+        void end(CommandBuffer* commandBuffer) const;
 
         void onAttach() override;
         void onDetach() override;

@@ -30,15 +30,15 @@ namespace Stellar {
         s_RendererAPI->shutDown();
     }
 
-    void Renderer::BeginRenderPass(VkCommandBuffer commandBuffer) {
+    void Renderer::BeginRenderPass(CommandBuffer* commandBuffer) {
         s_RendererAPI->beginRenderPass(commandBuffer);
     }
 
-    void Renderer::EndRenderPass(VkCommandBuffer commandBuffer) {
+    void Renderer::EndRenderPass(CommandBuffer* commandBuffer) {
         s_RendererAPI->endRenderPass(commandBuffer);
     }
 
-    void Renderer::RenderGeometry(VkCommandBuffer commandBuffer,
+    void Renderer::RenderGeometry(CommandBuffer* commandBuffer,
                                   VertexBuffer* vertexBuffer,
                                   IndexBuffer* indexBuffer,
                                   uint32_t indexCount) {
@@ -47,5 +47,9 @@ namespace Stellar {
 
     void Renderer::SetClearColor(const glm::vec4 &color) {
         s_RendererAPI->setClearColor(color);
+    }
+
+    uint32_t Renderer::GetCurrentFrameIndex() {
+        return Application::Get().getWindow().getSwapChain()->getCurrentFrameIndex();
     }
 }

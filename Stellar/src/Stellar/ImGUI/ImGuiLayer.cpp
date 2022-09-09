@@ -87,10 +87,22 @@ namespace Stellar {
         VK_CHECK_RESULT(vkDeviceWaitIdle(VulkanDevice::GetInstance()->logicalDevice()));
         ImGui_ImplVulkan_DestroyFontUploadObjects();
 
-//        uint32_t framesInFlight = SwapChain::MAX_FRAMES_IN_FLIGHT;
-//        auto* second = new CommandBuffer(VulkanDevice::GetInstance()->getCommandPool(),
-//                                                  framesInFlight, VK_COMMAND_BUFFER_LEVEL_SECONDARY);
-//        s_ImGuiCommandBuffers = *second->getCommandBuffers();
+        uint32_t framesInFlight = SwapChain::MAX_FRAMES_IN_FLIGHT;
+        s_ImGuiCommandBuffers.resize(framesInFlight);
+        for (uint32_t i = 0; i < framesInFlight; i++) {
+            VkCommandBuffer cmdBuffer;
+
+            VkCommandBufferAllocateInfo cmdBufAllocateInfo = {};
+            cmdBufAllocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+            cmdBufAllocateInfo.commandPool = VulkanDevice::GetInstance()->getCommandPool();
+            cmdBufAllocateInfo.level = VK_COMMAND_BUFFER_LEVEL_SECONDARY;
+            cmdBufAllocateInfo.commandBufferCount = 1;
+
+            VK_CHECK_RESULT(vkAllocateCommandBuffers(VulkanDevice::GetInstance()->logicalDevice(),
+                                                     &cmdBufAllocateInfo, &cmdBuffer));
+            s_ImGuiCommandBuffers[i] = cmdBuffer;
+        }
+
     }
 
     void ImGuiLayer::onDetach() {
@@ -112,7 +124,7 @@ namespace Stellar {
         ImGui::NewFrame();
     }
 
-    void ImGuiLayer::end(VkCommandBuffer commandBuffer) const {
+    void ImGuiLayer::end(CommandBuffer* commandBuffer) const {
         ImGuiIO& io = ImGui::GetIO();
         Application& app = Application::Get();
         io.DisplaySize = ImVec2(app.getWindow().getWidth(), app.getWindow().getHeight());
@@ -126,7 +138,7 @@ namespace Stellar {
             ImGui::RenderPlatformWindowsDefault();
         }
 
-
+//
 //        auto swapChain = Application::Get().getWindow().getSwapChain();
 //
 //        VkClearValue clearValues[2];
@@ -198,7 +210,7 @@ namespace Stellar {
 //
 //        VK_CHECK_RESULT(vkEndCommandBuffer(drawCommandBuffer));
         ImDrawData *drawdata = ImGui::GetDrawData();
-        ImGui_ImplVulkan_RenderDrawData(drawdata, commandBuffer);
+        ImGui_ImplVulkan_RenderDrawData(drawdata, (VkCommandBuffer)commandBuffer->getActiveCommandBuffer());
     }
 
     void ImGuiLayer::onImGuiRender() {

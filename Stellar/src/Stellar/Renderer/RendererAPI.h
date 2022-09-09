@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Stellar/Renderer/Buffer.h"
+#include "Buffer.h"
+#include "CommandBuffer.h"
 
-#include <vulkan/vulkan.h>
 #include <glm/glm.hpp>
 
 namespace Stellar {
@@ -15,11 +15,11 @@ namespace Stellar {
         virtual void init() = 0;
         virtual void shutDown() = 0;
 
-        virtual void beginRenderPass(VkCommandBuffer commandBuffer) = 0;
-        virtual void endRenderPass(VkCommandBuffer commandBuffer) = 0;
+        virtual void beginRenderPass(CommandBuffer* commandBuffer) = 0;
+        virtual void endRenderPass(CommandBuffer* commandBuffer) = 0;
 
         virtual void setClearColor(const glm::vec4& color) = 0;
-        virtual void renderGeometry(VkCommandBuffer commandBuffer,
+        virtual void renderGeometry(CommandBuffer* commandBuffer,
                                     VertexBuffer* vertexBuffers,
                                     IndexBuffer* indexBuffer,
                                     uint32_t indexCount) = 0;
