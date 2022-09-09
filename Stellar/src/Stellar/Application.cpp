@@ -103,7 +103,6 @@ namespace Stellar {
             // end frame
 
             auto swapChain = m_Window->getSwapChain();
-            swapChain->beginFrame();
             auto commandBuffer = swapChain->getCurrentCommandBuffer();
             // begin commandbuffer
             VkCommandBufferBeginInfo beginInfo{};
@@ -134,6 +133,7 @@ namespace Stellar {
             if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
                 throw std::runtime_error("failed to record command buffer!");
 
+            swapChain->beginFrame();
             m_Window->swapBuffers();
 
         }
