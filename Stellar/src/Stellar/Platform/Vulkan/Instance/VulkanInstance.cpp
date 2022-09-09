@@ -42,7 +42,7 @@ namespace Stellar {
         appInfo.applicationVersion = appVersion;
         appInfo.pEngineName = engineName.c_str();
         appInfo.engineVersion = engineVersion;
-        appInfo.apiVersion = VK_API_VERSION_1_0;
+        appInfo.apiVersion = VK_API_VERSION_1_3;
 
         VkInstanceCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -71,8 +71,8 @@ namespace Stellar {
             throw std::runtime_error("failed to create instance!");
         }
 
-        uint32_t instanceVersion = VK_API_VERSION_1_0;
-        vkEnumerateInstanceVersion(&instanceVersion );
+        uint32_t instanceVersion = VK_API_VERSION_1_3;
+        vkEnumerateInstanceVersion(&instanceVersion);
         // 3 macros to extract version info
         uint32_t major = VK_VERSION_MAJOR(instanceVersion);
         uint32_t minor = VK_VERSION_MINOR(instanceVersion);

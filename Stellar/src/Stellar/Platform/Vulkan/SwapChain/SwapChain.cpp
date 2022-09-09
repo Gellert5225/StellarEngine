@@ -24,7 +24,7 @@ namespace Stellar {
     VkSurfaceFormatKHR SwapChain::chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) {
         for (const auto& availableFormat : availableFormats) {
             if (availableFormat.format == VK_FORMAT_B8G8R8A8_UNORM &&
-                availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
+                availableFormat.colorSpace == VK_COLORSPACE_SRGB_NONLINEAR_KHR)
                 return availableFormat;
         }
         return availableFormats[0];
@@ -82,14 +82,14 @@ namespace Stellar {
 
         delete m_RenderPass;
 
-        for (size_t i = 0; i < getImageCount(); i++) {
+        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
             vkDestroyFence(VulkanDevice::GetInstance()->logicalDevice(),
                            m_InFlightFences[i], nullptr);
+            vkDestroySemaphore(VulkanDevice::GetInstance()->logicalDevice(),
+                               m_ImageAvailableSemaphores[i], nullptr);
+            vkDestroySemaphore(VulkanDevice::GetInstance()->logicalDevice(),
+                               m_RenderFinishedSemaphores[i], nullptr);
         }
-        vkDestroySemaphore(VulkanDevice::GetInstance()->logicalDevice(),
-                           m_ImageAvailableSemaphores, nullptr);
-        vkDestroySemaphore(VulkanDevice::GetInstance()->logicalDevice(),
-                           m_RenderFinishedSemaphores, nullptr);
     }
 
     const std::vector<VkImage>* SwapChain::getSwapChainImages() const {
@@ -132,6 +132,14 @@ namespace Stellar {
         return m_SwapChainImages.size();
     }
 
+    VkRenderPass SwapChain::getImGuiRenderPass() const {
+        return m_ImGuiRenderPass->getVkRenderPass();
+    }
+
+    VkFramebuffer SwapChain::getCurrentImGuiFrameBuffer() const {
+        return m_ImGuiFramebuffers[m_CurrentImageIndex];
+    }
+
     void SwapChain::createCommandBuffers() {
         for (auto& commandBuffer : m_CommandBuffers)
             vkDestroyCommandPool(VulkanDevice::GetInstance()->logicalDevice(),
@@ -147,7 +155,7 @@ namespace Stellar {
         commandBufferAllocateInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
         commandBufferAllocateInfo.commandBufferCount = 1;
 
-        m_CommandBuffers.resize(getImageCount());
+        m_CommandBuffers.resize(MAX_FRAMES_IN_FLIGHT);
         for (auto& commandBuffer : m_CommandBuffers) {
             VK_CHECK_RESULT(vkCreateCommandPool(VulkanDevice::GetInstance()->logicalDevice(), &cmdPoolInfo, nullptr, &commandBuffer.CommandPool));
 
@@ -255,28 +263,35 @@ namespace Stellar {
     }
 
     void SwapChain::createSemaphores() {
-        if (!m_ImageAvailableSemaphores || !m_RenderFinishedSemaphores) {
+        m_ImagesInFlight.resize(getImageCount(), VK_NULL_HANDLE);
+        if (m_ImageAvailableSemaphores.size() != MAX_FRAMES_IN_FLIGHT ||
+            m_RenderFinishedSemaphores.size() != MAX_FRAMES_IN_FLIGHT) {
+            m_ImageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
+            m_RenderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
+
             VkSemaphoreCreateInfo semaphoreInfo{};
             semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
-            vkCreateSemaphore(VulkanDevice::GetInstance()->logicalDevice(),
-                              &semaphoreInfo,
-                              nullptr,
-                              &m_ImageAvailableSemaphores);
-            vkCreateSemaphore(VulkanDevice::GetInstance()->logicalDevice(),
-                              &semaphoreInfo,
-                              nullptr,
-                              &m_RenderFinishedSemaphores);
+            for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+                vkCreateSemaphore(VulkanDevice::GetInstance()->logicalDevice(),
+                                  &semaphoreInfo,
+                                  nullptr,
+                                  &m_ImageAvailableSemaphores[i]);
+                vkCreateSemaphore(VulkanDevice::GetInstance()->logicalDevice(),
+                                  &semaphoreInfo,
+                                  nullptr,
+                                  &m_RenderFinishedSemaphores[i]);
+            }
         }
 
-        if (m_InFlightFences.size() != getImageCount()) {
-            m_InFlightFences.resize(getImageCount());
+        if (m_InFlightFences.size() != MAX_FRAMES_IN_FLIGHT) {
+            m_InFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
 
             VkFenceCreateInfo fenceInfo{};
             fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
             fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
-            for (size_t i = 0; i < getImageCount(); i++) {
+            for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
                 if (vkCreateFence(VulkanDevice::GetInstance()->logicalDevice(),
                                   &fenceInfo,
                                   nullptr,
@@ -290,6 +305,8 @@ namespace Stellar {
     void SwapChain::createFrameBuffers() {
         for (auto& framebuffer : m_Framebuffers)
             vkDestroyFramebuffer(VulkanDevice::GetInstance()->logicalDevice(), framebuffer, nullptr);
+        for (auto& framebuffer : m_ImGuiFramebuffers)
+            vkDestroyFramebuffer(VulkanDevice::GetInstance()->logicalDevice(), framebuffer, nullptr);
 
         VkFramebufferCreateInfo frameBufferCreateInfo = {};
         frameBufferCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -299,17 +316,30 @@ namespace Stellar {
         frameBufferCreateInfo.height = m_SwapChainExtent.height;
         frameBufferCreateInfo.layers = 1;
 
+        VkFramebufferCreateInfo frameBufferCreateInfo2 = {};
+        frameBufferCreateInfo2.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+        frameBufferCreateInfo2.renderPass = m_ImGuiRenderPass->getVkRenderPass();
+        frameBufferCreateInfo2.attachmentCount = 1;
+        frameBufferCreateInfo2.width = m_SwapChainExtent.width;
+        frameBufferCreateInfo2.height = m_SwapChainExtent.height;
+        frameBufferCreateInfo2.layers = 1;
+
         m_Framebuffers.resize(getImageCount());
+        m_ImGuiFramebuffers.resize(getImageCount());
         for (uint32_t i = 0; i < m_Framebuffers.size(); i++) {
             frameBufferCreateInfo.pAttachments = &m_SwapChainImageViews[i];
+            frameBufferCreateInfo2.pAttachments = &m_SwapChainImageViews[i];
             VK_CHECK_RESULT(vkCreateFramebuffer(VulkanDevice::GetInstance()->logicalDevice(), &frameBufferCreateInfo, nullptr, &m_Framebuffers[i]));
+            VK_CHECK_RESULT(vkCreateFramebuffer(VulkanDevice::GetInstance()->logicalDevice(), &frameBufferCreateInfo2, nullptr, &m_ImGuiFramebuffers[i]));
         }
 
     }
 
     void SwapChain::createRenderPass() {
         delete m_RenderPass;
+        delete m_ImGuiRenderPass;
         m_RenderPass = new StandardRenderPass(m_SwapChainImageFormat);
+        m_ImGuiRenderPass = new ImGuiRenderPass(m_SwapChainImageFormat);
     }
 
     void SwapChain::beginFrame() {
@@ -319,7 +349,7 @@ namespace Stellar {
         VkResult result = vkAcquireNextImageKHR(VulkanDevice::GetInstance()->logicalDevice(),
                                                 m_VulkanSwapChain,
                                                 UINT64_MAX,
-                                                m_ImageAvailableSemaphores,
+                                                m_ImageAvailableSemaphores[m_CurrentFrameIndex],
                                                 VK_NULL_HANDLE,
                                                 &m_CurrentImageIndex);
 
@@ -337,17 +367,22 @@ namespace Stellar {
     }
 
     void SwapChain::present() {
+        if (m_ImagesInFlight[m_CurrentImageIndex] != VK_NULL_HANDLE) {
+            vkWaitForFences(VulkanDevice::GetInstance()->logicalDevice(), 1, &m_ImagesInFlight[m_CurrentImageIndex], VK_TRUE, UINT64_MAX);
+        }
+        m_ImagesInFlight[m_CurrentImageIndex] = m_InFlightFences[m_CurrentFrameIndex];
+
         VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
 
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
         submitInfo.waitSemaphoreCount = 1;
-        submitInfo.pWaitSemaphores = &m_ImageAvailableSemaphores;
+        submitInfo.pWaitSemaphores = &m_ImageAvailableSemaphores[m_CurrentFrameIndex];
         submitInfo.pWaitDstStageMask = waitStages;
         submitInfo.commandBufferCount = 1;
         submitInfo.pCommandBuffers = &m_CommandBuffers[m_CurrentFrameIndex].CommandBuffer;
         submitInfo.signalSemaphoreCount = 1;
-        submitInfo.pSignalSemaphores = &m_RenderFinishedSemaphores;
+        submitInfo.pSignalSemaphores = &m_RenderFinishedSemaphores[m_CurrentFrameIndex];
 
         vkResetFences(VulkanDevice::GetInstance()->logicalDevice(),
                       1,  &m_InFlightFences[m_CurrentFrameIndex]);
@@ -361,7 +396,7 @@ namespace Stellar {
         VkPresentInfoKHR presentInfo{};
         presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
         presentInfo.waitSemaphoreCount = 1;
-        presentInfo.pWaitSemaphores = &m_RenderFinishedSemaphores;
+        presentInfo.pWaitSemaphores = &m_RenderFinishedSemaphores[m_CurrentFrameIndex];
         presentInfo.swapchainCount = 1;
         presentInfo.pSwapchains = &m_VulkanSwapChain;
         presentInfo.pImageIndices = &m_CurrentImageIndex;

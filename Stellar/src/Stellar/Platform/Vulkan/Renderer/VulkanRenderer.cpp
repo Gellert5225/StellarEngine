@@ -21,7 +21,7 @@ namespace Stellar {
 
         std::array<VkClearValue, 2> clearValues{};
         clearValues[0].color = m_ClearColor;
-        clearValues[1].depthStencil = {0.0f, 0};
+        clearValues[1].depthStencil = {1.0f, 0};
 
         VkRenderPassBeginInfo renderPassInfo{};
         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;

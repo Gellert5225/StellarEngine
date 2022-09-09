@@ -8,6 +8,7 @@
 
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 #include "Stellar/Platform/Vulkan/VulkanCommon.h"
+#include "Stellar/Platform/Vulkan/RenderPass/ImGuiRenderPass.h"
 
 #include "Stellar/Application.h"
 
@@ -16,7 +17,6 @@ namespace Stellar {
 
     ImGuiLayer::ImGuiLayer() 
         : Layer("ImGuiLayer") {
-        
     }
 
     ImGuiLayer::~ImGuiLayer() {
@@ -138,40 +138,37 @@ namespace Stellar {
             ImGui::RenderPlatformWindowsDefault();
         }
 
-//
-//        auto swapChain = Application::Get().getWindow().getSwapChain();
-//
-//        VkClearValue clearValues[2];
-//        clearValues[0].color = { {0.1f, 0.1f,0.1f, 1.0f} };
-//        clearValues[1].depthStencil = { 1.0f, 0 };
-//
-//        auto commandBufferIndex = swapChain->getCurrentFrameIndex();
-//
-//        VkCommandBufferBeginInfo drawCmdBufInfo = {};
-//        drawCmdBufInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-//        drawCmdBufInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-//        drawCmdBufInfo.pNext = nullptr;
-//
-//        VkCommandBuffer drawCommandBuffer = swapChain->getCurrentCommandBuffer();
-//        VK_CHECK_RESULT(vkBeginCommandBuffer(drawCommandBuffer, &drawCmdBufInfo));
-//
-//        VkRenderPassBeginInfo renderPassBeginInfo = {};
-//        renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-//        renderPassBeginInfo.pNext = nullptr;
-//        renderPassBeginInfo.renderPass = swapChain->getRenderPass();
-//        renderPassBeginInfo.renderArea.offset.x = 0;
-//        renderPassBeginInfo.renderArea.offset.y = 0;
-//        renderPassBeginInfo.renderArea.extent = swapChain->getSwapChainExtent();
-//        renderPassBeginInfo.clearValueCount = 2; // Color + depth
-//        renderPassBeginInfo.pClearValues = clearValues;
-//        renderPassBeginInfo.framebuffer = swapChain->getCurrentFrameBuffer();
-//
-//        vkCmdBeginRenderPass(drawCommandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
-//
+        auto swapChain = Application::Get().getWindow().getSwapChain();
+
+#if 1
+        VkClearValue clearValues[1];
+        clearValues[0].color = { {0.1f, 0.1f,0.1f, 1.0f} };
+
+        auto commandBufferIndex = swapChain->getCurrentFrameIndex();
+
+        VkCommandBufferBeginInfo drawCmdBufInfo = {};
+        drawCmdBufInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+        drawCmdBufInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+
+        VK_CHECK_RESULT(vkBeginCommandBuffer(swapChain->getCurrentCommandBuffer(), &drawCmdBufInfo));
+
+        VkRenderPassBeginInfo renderPassBeginInfo = {};
+        renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+        renderPassBeginInfo.pNext = nullptr;
+        renderPassBeginInfo.renderPass = swapChain->getImGuiRenderPass();
+        renderPassBeginInfo.renderArea.offset.x = 0;
+        renderPassBeginInfo.renderArea.offset.y = 0;
+        renderPassBeginInfo.renderArea.extent = swapChain->getSwapChainExtent();
+        renderPassBeginInfo.clearValueCount = 1;
+        renderPassBeginInfo.pClearValues = clearValues;
+        renderPassBeginInfo.framebuffer = swapChain->getCurrentImGuiFrameBuffer();
+
+        vkCmdBeginRenderPass(swapChain->getCurrentCommandBuffer(), &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+
 //        VkCommandBufferInheritanceInfo inheritanceInfo = {};
 //        inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
-//        inheritanceInfo.renderPass = swapChain->getRenderPass();
-//        inheritanceInfo.framebuffer = swapChain->getCurrentFrameBuffer();
+//        inheritanceInfo.renderPass = swapChain->getImGuiRenderPass();
+//        inheritanceInfo.framebuffer = swapChain->getCurrentImGuiFrameBuffer();
 //
 //        VkCommandBufferBeginInfo cmdBufInfo = {};
 //        cmdBufInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -195,22 +192,24 @@ namespace Stellar {
 //        scissor.offset.x = 0;
 //        scissor.offset.y = 0;
 //        vkCmdSetScissor(s_ImGuiCommandBuffers[commandBufferIndex], 0, 1, &scissor);
-//
-//        ImDrawData* main_draw_data = ImGui::GetDrawData();
-//        ImGui_ImplVulkan_RenderDrawData(main_draw_data, s_ImGuiCommandBuffers[commandBufferIndex]);
-//
+
+        ImDrawData* main_draw_data = ImGui::GetDrawData();
+        ImGui_ImplVulkan_RenderDrawData(main_draw_data, swapChain->getCurrentCommandBuffer());
+
 //        VK_CHECK_RESULT(vkEndCommandBuffer(s_ImGuiCommandBuffers[commandBufferIndex]));
 //
 //        std::vector<VkCommandBuffer> commandBuffers;
 //        commandBuffers.push_back(s_ImGuiCommandBuffers[commandBufferIndex]);
 //
-//        vkCmdExecuteCommands(drawCommandBuffer, uint32_t(commandBuffers.size()), commandBuffers.data());
-//
-//        vkCmdEndRenderPass(drawCommandBuffer);
-//
-//        VK_CHECK_RESULT(vkEndCommandBuffer(drawCommandBuffer));
+//        vkCmdExecuteCommands(swapChain->getCurrentCommandBuffer(), uint32_t(commandBuffers.size()), commandBuffers.data());
+
+        vkCmdEndRenderPass(swapChain->getCurrentCommandBuffer());
+
+        VK_CHECK_RESULT(vkEndCommandBuffer(swapChain->getCurrentCommandBuffer()));
+#else
         ImDrawData *drawdata = ImGui::GetDrawData();
         ImGui_ImplVulkan_RenderDrawData(drawdata, (VkCommandBuffer)commandBuffer->getActiveCommandBuffer());
+#endif
     }
 
     void ImGuiLayer::onImGuiRender() {

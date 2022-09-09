@@ -14,7 +14,7 @@ namespace Stellar {
         m_Window->init();
         m_Window->setEventCallback(BIND_EVENT_FN(Application::onEvent));
 
-        m_CommandBuffer = CommandBuffer::Create(2);
+        m_CommandBuffer = CommandBuffer::Create(3);
         m_ImGuiLayer = new ImGuiLayer();
 
         Renderer::Init();
@@ -79,24 +79,25 @@ namespace Stellar {
                 layer->onUpdate();
             m_Window->onUpdate();
 
+            auto swapChain = m_Window->getSwapChain();
+            swapChain->beginFrame();
+
+            // geomoetry
             m_CommandBuffer->begin();
-
-            Renderer::SetClearColor({ 0.1f, 0.1f, 0.1f, 0.1f });
+            Renderer::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
             Renderer::BeginRenderPass(m_CommandBuffer);
-
             Renderer::RenderGeometry(m_CommandBuffer, m_VertexBuffer, m_IndexBuffer, indices.size());
+            Renderer::EndRenderPass(m_CommandBuffer);
+            m_CommandBuffer->end();
+            m_CommandBuffer->submit();
 
+            // imGui
             m_ImGuiLayer->begin();
             for (Layer* layer : m_LayerStack)
                 layer->onImGuiRender();
             m_ImGuiLayer->end(m_CommandBuffer);
 
-            Renderer::EndRenderPass(m_CommandBuffer);
-            m_CommandBuffer->end();
-            m_CommandBuffer->submit();
-
-            auto swapChain = m_Window->getSwapChain();
-            swapChain->beginFrame();
+            // present
             m_Window->swapBuffers();
         }
 

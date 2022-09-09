@@ -74,7 +74,6 @@ namespace Stellar {
         beginInfo.pNext = nullptr;
 
         VkCommandBuffer commandBuffer = nullptr;
-        auto swapChain = Application::Get().getWindow().getSwapChain();
         commandBuffer = m_CommandBuffers[frameIndex];//swapChain->getCommandBuffer(frameIndex);
         m_ActiveCommandBuffer = commandBuffer;
 
@@ -88,6 +87,7 @@ namespace Stellar {
 
         if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
             throw std::runtime_error("failed to record command buffer!");
+        m_ActiveCommandBuffer = nullptr;
     }
 
     void VulkanCommandBuffer::submit() {
