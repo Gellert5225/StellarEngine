@@ -56,6 +56,7 @@ namespace Stellar {
         Buffer* m_IndexBuffer{};
 
         bool onWindowClose(WindowCloseEvent&);
+        bool onWindowResize(WindowResizeEvent&);
 
         const std::vector<Vertex> vertices = {
                 {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},

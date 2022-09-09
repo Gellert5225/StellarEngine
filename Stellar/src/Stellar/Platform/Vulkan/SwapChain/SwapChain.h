@@ -34,11 +34,12 @@ namespace Stellar {
         [[nodiscard]] VkSwapchainKHR& getSwapChain();
         [[nodiscard]] VkRenderPass getRenderPass() const;
         [[nodiscard]] uint32_t getImageCount() const;
+        [[nodiscard]] uint32_t getCurrentFrameIndex() const;
         [[nodiscard]] VkFramebuffer getCurrentFrameBuffer() const;
         [[nodiscard]] VkCommandBuffer getCurrentCommandBuffer() const;
         [[nodiscard]] bool compareSwapFormats(const SwapChain &swapChain) const;
 
-        VkResult acquireNextImage(uint32_t* imageIndex);
+        //VkResult acquireNextImage(uint32_t* imageIndex);
         VkResult submitCommandBuffers(const VkCommandBuffer* buffer, const uint32_t* imageIndex);
 
         static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
@@ -56,8 +57,8 @@ namespace Stellar {
         std::vector<VkImage> m_SwapChainImages;
         std::vector<VkImageView> m_SwapChainImageViews;
 
-        std::vector<VkSemaphore> m_ImageAvailableSemaphores;
-        std::vector<VkSemaphore> m_RenderFinishedSemaphores;
+        VkSemaphore m_ImageAvailableSemaphores;
+        VkSemaphore m_RenderFinishedSemaphores;
         std::vector<VkFence> m_InFlightFences;
         std::vector<VkFence> m_ImagesInFlight;
 

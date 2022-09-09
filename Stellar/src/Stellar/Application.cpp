@@ -37,6 +37,7 @@ namespace Stellar {
     void Application::onEvent(Event& e) {
         EventDispatcher dispatcher(e);
         dispatcher.dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::onWindowClose));
+        dispatcher.dispatch<WindowResizeEvent>(BIND_EVENT_FN(Application::onWindowResize));
 
         for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();) {
             (*--it)->onEvent(e);
@@ -111,6 +112,7 @@ namespace Stellar {
                 throw std::runtime_error("failed to begin recording command buffer!");
             }
 
+            Renderer::SetClearColor({ 0.1f, 0.1f, 0.1f, 0.1f });
             Renderer::BeginRenderPass(commandBuffer);
 
             Renderer::RenderGeometry();
@@ -150,5 +152,18 @@ namespace Stellar {
             VulkanDevice::GetInstance()->getDeviceProperties().deviceName,
             VulkanInstance::GetInstance()->getInstanceVersion()
         };
+    }
+
+    bool Application::onWindowResize(WindowResizeEvent& e) {
+        const uint32_t width = e.getWidth(), height = e.getHeight();
+        if (width == 0 || height == 0) {
+            //m_Minimized = true;
+            return false;
+        }
+        //m_Minimized = false;
+
+        m_Window->getSwapChain()->onResize();
+
+        return false;
     }
 }

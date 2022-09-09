@@ -86,7 +86,7 @@ namespace Stellar {
 
         VK_CHECK_RESULT(vkDeviceWaitIdle(VulkanDevice::GetInstance()->logicalDevice()));
         ImGui_ImplVulkan_DestroyFontUploadObjects();
-//
+
 //        uint32_t framesInFlight = SwapChain::MAX_FRAMES_IN_FLIGHT;
 //        auto* second = new CommandBuffer(VulkanDevice::GetInstance()->getCommandPool(),
 //                                                  framesInFlight, VK_COMMAND_BUFFER_LEVEL_SECONDARY);
@@ -126,40 +126,40 @@ namespace Stellar {
             ImGui::RenderPlatformWindowsDefault();
         }
 
-//
-//        auto context = Application::Get().getRendererContext();
+
+//        auto swapChain = Application::Get().getWindow().getSwapChain();
 //
 //        VkClearValue clearValues[2];
 //        clearValues[0].color = { {0.1f, 0.1f,0.1f, 1.0f} };
 //        clearValues[1].depthStencil = { 1.0f, 0 };
 //
-//        int commandBufferIndex = context->getCurrentFrameIndex();
+//        auto commandBufferIndex = swapChain->getCurrentFrameIndex();
 //
 //        VkCommandBufferBeginInfo drawCmdBufInfo = {};
 //        drawCmdBufInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 //        drawCmdBufInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 //        drawCmdBufInfo.pNext = nullptr;
 //
-//        VkCommandBuffer drawCommandBuffer = context->getCurrentCommandBuffer();
+//        VkCommandBuffer drawCommandBuffer = swapChain->getCurrentCommandBuffer();
 //        VK_CHECK_RESULT(vkBeginCommandBuffer(drawCommandBuffer, &drawCmdBufInfo));
 //
 //        VkRenderPassBeginInfo renderPassBeginInfo = {};
 //        renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 //        renderPassBeginInfo.pNext = nullptr;
-//        renderPassBeginInfo.renderPass = context->getSwapChainRenderPass();
+//        renderPassBeginInfo.renderPass = swapChain->getRenderPass();
 //        renderPassBeginInfo.renderArea.offset.x = 0;
 //        renderPassBeginInfo.renderArea.offset.y = 0;
-//        renderPassBeginInfo.renderArea.extent = context->getSwapChainExtent();
+//        renderPassBeginInfo.renderArea.extent = swapChain->getSwapChainExtent();
 //        renderPassBeginInfo.clearValueCount = 2; // Color + depth
 //        renderPassBeginInfo.pClearValues = clearValues;
-//        renderPassBeginInfo.framebuffer = context->getCurrentFrameBuffer();
+//        renderPassBeginInfo.framebuffer = swapChain->getCurrentFrameBuffer();
 //
 //        vkCmdBeginRenderPass(drawCommandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
 //
 //        VkCommandBufferInheritanceInfo inheritanceInfo = {};
 //        inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
-//        inheritanceInfo.renderPass = context->getSwapChainRenderPass();
-//        inheritanceInfo.framebuffer = context->getCurrentFrameBuffer();
+//        inheritanceInfo.renderPass = swapChain->getRenderPass();
+//        inheritanceInfo.framebuffer = swapChain->getCurrentFrameBuffer();
 //
 //        VkCommandBufferBeginInfo cmdBufInfo = {};
 //        cmdBufInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -170,16 +170,16 @@ namespace Stellar {
 //
 //        VkViewport viewport = {};
 //        viewport.x = 0.0f;
-//        viewport.y = (float)context->getSwapChainExtent().height;
-//        viewport.height = (float)context->getSwapChainExtent().height;
-//        viewport.width = (float)context->getSwapChainExtent().width;
+//        viewport.y = (float)swapChain->getSwapChainExtent().height;
+//        viewport.height = (float)swapChain->getSwapChainExtent().height;
+//        viewport.width = (float)swapChain->getSwapChainExtent().width;
 //        viewport.minDepth = 0.0f;
 //        viewport.maxDepth = 1.0f;
 //        vkCmdSetViewport(s_ImGuiCommandBuffers[commandBufferIndex], 0, 1, &viewport);
 //
 //        VkRect2D scissor = {};
-//        scissor.extent.width = context->getSwapChainExtent().width;
-//        scissor.extent.height = context->getSwapChainExtent().height;
+//        scissor.extent.width = swapChain->getSwapChainExtent().width;
+//        scissor.extent.height = swapChain->getSwapChainExtent().height;
 //        scissor.offset.x = 0;
 //        scissor.offset.y = 0;
 //        vkCmdSetScissor(s_ImGuiCommandBuffers[commandBufferIndex], 0, 1, &scissor);

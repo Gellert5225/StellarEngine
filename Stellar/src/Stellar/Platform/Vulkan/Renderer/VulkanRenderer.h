@@ -13,11 +13,15 @@ namespace Stellar {
     public:
         void init() override;
         void shutDown() override;
+
         void beginRenderPass(VkCommandBuffer commandBuffer) override;
         void endRenderPass(VkCommandBuffer commandBuffer) override;
+
+        void setClearColor(const glm::vec4& color) override;
         void renderGeometry() override;
 
     private:
         GraphicsPipeline* m_GraphicsPipeline = nullptr;
+        VkClearColorValue m_ClearColor = {{0.66f, 0.9f, 0.96f, 1.0f}};
     };
 }

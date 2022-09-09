@@ -20,7 +20,7 @@ namespace Stellar {
         SwapChain* swapChain = Application::Get().getWindow().getSwapChain();
 
         std::array<VkClearValue, 2> clearValues{};
-        clearValues[0].color = {{0.66f, 0.9f, 0.96f, 1.0f}};
+        clearValues[0].color = m_ClearColor;
         clearValues[1].depthStencil = {1.0f, 0};
 
         VkRenderPassBeginInfo renderPassInfo{};
@@ -60,5 +60,9 @@ namespace Stellar {
 
     void VulkanRenderer::renderGeometry() {
 
+    }
+
+    void VulkanRenderer::setClearColor(const glm::vec4 &color) {
+        m_ClearColor = {{ color.r, color.g, color.b, color.a }};
     }
 }

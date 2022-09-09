@@ -41,4 +41,8 @@ namespace Stellar {
     void Renderer::RenderGeometry() {
         s_RendererAPI->renderGeometry();
     }
+
+    void Renderer::SetClearColor(const glm::vec4 &color) {
+        s_RendererAPI->setClearColor(color);
+    }
 }

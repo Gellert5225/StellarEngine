@@ -4,6 +4,7 @@
 #include "RendererAPI.h"
 
 #include <vulkan/vulkan.h>
+#include <glm/glm.hpp>
 
 namespace Stellar {
 
@@ -15,6 +16,7 @@ namespace Stellar {
         static void BeginRenderPass(VkCommandBuffer commandBuffer);
         static void EndRenderPass(VkCommandBuffer commandBuffer);
 
+        static void SetClearColor(const glm::vec4& color);
         static void RenderGeometry();
 
     };

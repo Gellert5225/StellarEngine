@@ -25,8 +25,7 @@ namespace Stellar {
         createSemaphores();
     }
 
-    VkSurfaceFormatKHR SwapChain::chooseSwapSurfaceFormat(
-            const std::vector<VkSurfaceFormatKHR>& availableFormats) {
+    VkSurfaceFormatKHR SwapChain::chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) {
         for (const auto& availableFormat : availableFormats) {
             if (availableFormat.format == VK_FORMAT_B8G8R8A8_UNORM &&
                 availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
@@ -82,14 +81,14 @@ namespace Stellar {
         delete m_FrameBuffer;
         delete m_RenderPass;
 
-        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-            vkDestroySemaphore(VulkanDevice::GetInstance()->logicalDevice(),
-                               m_ImageAvailableSemaphores[i], nullptr);
-            vkDestroySemaphore(VulkanDevice::GetInstance()->logicalDevice(),
-                               m_RenderFinishedSemaphores[i], nullptr);
+        for (size_t i = 0; i < getImageCount(); i++) {
             vkDestroyFence(VulkanDevice::GetInstance()->logicalDevice(),
                            m_InFlightFences[i], nullptr);
         }
+        vkDestroySemaphore(VulkanDevice::GetInstance()->logicalDevice(),
+                           m_ImageAvailableSemaphores, nullptr);
+        vkDestroySemaphore(VulkanDevice::GetInstance()->logicalDevice(),
+                           m_RenderFinishedSemaphores, nullptr);
     }
 
     const std::vector<VkImage>* SwapChain::getSwapChainImages() const {
@@ -201,8 +200,8 @@ namespace Stellar {
     }
 
     void SwapChain::createSemaphores() {
-        m_ImageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
-        m_RenderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
+        m_ImageAvailableSemaphores;
+        m_RenderFinishedSemaphores;
         m_InFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
         m_ImagesInFlight.resize(m_SwapChainImages.size(), VK_NULL_HANDLE);
 
@@ -214,21 +213,21 @@ namespace Stellar {
         fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-            if (vkCreateSemaphore(VulkanDevice::GetInstance()->logicalDevice(),
-                                  &semaphoreInfo,
-                                  nullptr,
-                                  &m_ImageAvailableSemaphores[i]) != VK_SUCCESS ||
-                vkCreateSemaphore(VulkanDevice::GetInstance()->logicalDevice(),
-                                  &semaphoreInfo,
-                                  nullptr,
-                                  &m_RenderFinishedSemaphores[i]) != VK_SUCCESS ||
-                vkCreateFence(VulkanDevice::GetInstance()->logicalDevice(),
+            if (vkCreateFence(VulkanDevice::GetInstance()->logicalDevice(),
                               &fenceInfo,
                               nullptr,
                               &m_InFlightFences[i]) != VK_SUCCESS) {
                 throw std::runtime_error("failed to create semaphores!");
             }
         }
+        vkCreateSemaphore(VulkanDevice::GetInstance()->logicalDevice(),
+                          &semaphoreInfo,
+                          nullptr,
+                          &m_ImageAvailableSemaphores);
+        vkCreateSemaphore(VulkanDevice::GetInstance()->logicalDevice(),
+                          &semaphoreInfo,
+                          nullptr,
+                          &m_RenderFinishedSemaphores);
     }
 
     void SwapChain::createFrameBuffers() {
@@ -248,45 +247,117 @@ namespace Stellar {
         return m_SwapChainImages.size();
     }
 
-    VkResult SwapChain::acquireNextImage(uint32_t* imageIndex) {
-        // wait for previous frame
-        vkWaitForFences(VulkanDevice::GetInstance()->logicalDevice(),
-                        1,
-                        &m_InFlightFences[m_CurrentFrameIndex],
-                        VK_TRUE,
-                        UINT64_MAX);
+//    VkResult SwapChain::acquireNextImage(uint32_t* imageIndex) {
+//        // wait for previous frame
+////        vkWaitForFences(VulkanDevice::GetInstance()->logicalDevice(),
+////                        1,
+////                        &m_InFlightFences[m_CurrentFrameIndex],
+////                        VK_TRUE,
+////                        UINT64_MAX);
+//
+//        VkResult result = vkAcquireNextImageKHR(VulkanDevice::GetInstance()->logicalDevice(),
+//                              m_VulkanSwapChain,
+//                              UINT64_MAX,
+//                              m_ImageAvailableSemaphores[m_CurrentFrameIndex],
+//                              VK_NULL_HANDLE, imageIndex);
+//
+//        return result;
+//    }
 
-        VkResult result = vkAcquireNextImageKHR(VulkanDevice::GetInstance()->logicalDevice(),
-                              m_VulkanSwapChain,
-                              UINT64_MAX,
-                              m_ImageAvailableSemaphores[m_CurrentFrameIndex],
-                              VK_NULL_HANDLE, imageIndex);
+//    VkResult SwapChain::submitCommandBuffers(const VkCommandBuffer* buffer, const uint32_t* imageIndex) {
+////        if (m_ImagesInFlight[*imageIndex] != VK_NULL_HANDLE) {
+////            vkWaitForFences(VulkanDevice::GetInstance()->logicalDevice(),
+////                            1, &m_ImagesInFlight[*imageIndex], VK_TRUE, UINT64_MAX);
+////        }
+////        m_ImagesInFlight[*imageIndex] = m_ImagesInFlight[m_CurrentFrameIndex];
+//
+//        //submit command buffer
+//        VkSubmitInfo submitInfo{};
+//        submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+//
+//        VkSemaphore waitSemaphores[] = {m_ImageAvailableSemaphores[m_CurrentFrameIndex]};
+//        VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+//        submitInfo.waitSemaphoreCount = 1;
+//        submitInfo.pWaitSemaphores = waitSemaphores;
+//        submitInfo.pWaitDstStageMask = waitStages;
+//        submitInfo.commandBufferCount = 1;
+//        submitInfo.pCommandBuffers = buffer;
+//
+//        VkSemaphore signalSemaphores[] = {m_RenderFinishedSemaphores[m_CurrentFrameIndex]};
+//        submitInfo.signalSemaphoreCount = 1;
+//        submitInfo.pSignalSemaphores = signalSemaphores;
+//
+//        vkResetFences(VulkanDevice::GetInstance()->logicalDevice(),
+//                      1,  &m_InFlightFences[m_CurrentFrameIndex]);
+//        if (vkQueueSubmit(VulkanDevice::GetInstance()->getGraphicsQueue(),
+//                          1,
+//                          &submitInfo,
+//                          m_InFlightFences[m_CurrentFrameIndex]) != VK_SUCCESS) {
+//            throw std::runtime_error("failed to submit draw command buffer!");
+//        }
+//
+//        VkPresentInfoKHR presentInfo{};
+//        presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+//
+//        presentInfo.waitSemaphoreCount = 1;
+//        presentInfo.pWaitSemaphores = signalSemaphores;
+//
+//        VkSwapchainKHR swapChains[] = {m_VulkanSwapChain};
+//        presentInfo.swapchainCount = 1;
+//        presentInfo.pSwapchains = swapChains;
+//        presentInfo.pImageIndices = imageIndex;
+//        presentInfo.pResults = nullptr;
+//
+//        VkResult result = vkQueuePresentKHR(VulkanDevice::GetInstance()->getPresentQueue(),
+//                                            &presentInfo);
+//
+//       // m_CurrentFrameIndex = (m_CurrentFrameIndex + 1) % MAX_FRAMES_IN_FLIGHT;
+//
+//        return result;
+//    }
 
-        return result;
+    bool SwapChain::compareSwapFormats(const SwapChain &swapChain) const {
+        return swapChain.m_SwapChainImageFormat == m_SwapChainImageFormat;
     }
 
-    VkResult SwapChain::submitCommandBuffers(const VkCommandBuffer* buffer, const uint32_t* imageIndex) {
-        if (m_ImagesInFlight[*imageIndex] != VK_NULL_HANDLE) {
-            vkWaitForFences(VulkanDevice::GetInstance()->logicalDevice(),
-                            1, &m_ImagesInFlight[*imageIndex], VK_TRUE, UINT64_MAX);
-        }
-        m_ImagesInFlight[*imageIndex] = m_ImagesInFlight[m_CurrentFrameIndex];
+    void SwapChain::beginFrame() {
+        STLR_CORE_ASSERT(!m_IsFrameStarted,
+                         "VulkanRendererContext::beginFrame(): Frame already in progress")
 
-        //submit command buffer
+        VkResult result = vkAcquireNextImageKHR(VulkanDevice::GetInstance()->logicalDevice(),
+                                                m_VulkanSwapChain,
+                                                UINT64_MAX,
+                                                m_ImageAvailableSemaphores,
+                                                VK_NULL_HANDLE,
+                                                &m_CurrentImageIndex);
+
+//        vkResetCommandPool(VulkanDevice::GetInstance()->logicalDevice(),
+//                           VulkanDevice::GetInstance()->getCommandPool(),
+//                           0);
+
+        if (result == VK_ERROR_OUT_OF_DATE_KHR)
+            onResize();
+
+        if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
+            throw std::runtime_error("Failed to acquire swap chain image");
+
+        m_IsFrameStarted = true;
+    }
+
+    void SwapChain::present() {
+        auto cb = getCurrentCommandBuffer();
+
+        VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-
-        VkSemaphore waitSemaphores[] = {m_ImageAvailableSemaphores[m_CurrentFrameIndex]};
-        VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
         submitInfo.waitSemaphoreCount = 1;
-        submitInfo.pWaitSemaphores = waitSemaphores;
+        submitInfo.pWaitSemaphores = &m_ImageAvailableSemaphores;
         submitInfo.pWaitDstStageMask = waitStages;
         submitInfo.commandBufferCount = 1;
-        submitInfo.pCommandBuffers = buffer;
-
-        VkSemaphore signalSemaphores[] = {m_RenderFinishedSemaphores[m_CurrentFrameIndex]};
+        submitInfo.pCommandBuffers = &cb;
         submitInfo.signalSemaphoreCount = 1;
-        submitInfo.pSignalSemaphores = signalSemaphores;
+        submitInfo.pSignalSemaphores = &m_RenderFinishedSemaphores;
 
         vkResetFences(VulkanDevice::GetInstance()->logicalDevice(),
                       1,  &m_InFlightFences[m_CurrentFrameIndex]);
@@ -299,48 +370,16 @@ namespace Stellar {
 
         VkPresentInfoKHR presentInfo{};
         presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-
         presentInfo.waitSemaphoreCount = 1;
-        presentInfo.pWaitSemaphores = signalSemaphores;
-
-        VkSwapchainKHR swapChains[] = {m_VulkanSwapChain};
+        presentInfo.pWaitSemaphores = &m_RenderFinishedSemaphores;
         presentInfo.swapchainCount = 1;
-        presentInfo.pSwapchains = swapChains;
-        presentInfo.pImageIndices = imageIndex;
+        presentInfo.pSwapchains = &m_VulkanSwapChain;
+        presentInfo.pImageIndices = &m_CurrentImageIndex;
         presentInfo.pResults = nullptr;
 
         VkResult result = vkQueuePresentKHR(VulkanDevice::GetInstance()->getPresentQueue(),
                                             &presentInfo);
 
-        m_CurrentFrameIndex = (m_CurrentFrameIndex + 1) % MAX_FRAMES_IN_FLIGHT;
-
-        return result;
-    }
-
-    bool SwapChain::compareSwapFormats(const SwapChain &swapChain) const {
-        return swapChain.m_SwapChainImageFormat == m_SwapChainImageFormat;
-    }
-
-    void SwapChain::beginFrame() {
-        STLR_CORE_ASSERT(!m_IsFrameStarted,
-                         "VulkanRendererContext::beginFrame(): Frame already in progress")
-
-        VkResult result = acquireNextImage(&m_CurrentImageIndex);
-        if (result == VK_ERROR_OUT_OF_DATE_KHR) {
-            onResize();
-            //return nullptr;
-        }
-
-        if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
-            throw std::runtime_error("Failed to acquire swap chain image");
-
-        m_IsFrameStarted = true;
-    }
-
-    void SwapChain::present() {
-        auto cb = getCurrentCommandBuffer();
-        VkResult result = submitCommandBuffers(&cb,
-                                               &m_CurrentImageIndex);
         if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
             onResize();
         } else if (result != VK_SUCCESS) {
@@ -349,6 +388,12 @@ namespace Stellar {
 
         m_IsFrameStarted = false;
         m_CurrentFrameIndex = (m_CurrentFrameIndex + 1) % SwapChain::MAX_FRAMES_IN_FLIGHT;
+
+        vkWaitForFences(VulkanDevice::GetInstance()->logicalDevice(),
+                        1,
+                        &m_InFlightFences[m_CurrentFrameIndex],
+                        VK_TRUE,
+                        UINT64_MAX);
     }
 
     void SwapChain::createCommandBuffers() {
@@ -359,6 +404,7 @@ namespace Stellar {
     void SwapChain::onResize() {
         vkDeviceWaitIdle(VulkanDevice::GetInstance()->logicalDevice());
         init();
+        vkDeviceWaitIdle(VulkanDevice::GetInstance()->logicalDevice());
     }
 
     VkCommandBuffer SwapChain::getCurrentCommandBuffer() const {
@@ -367,5 +413,9 @@ namespace Stellar {
 
     VkFramebuffer SwapChain::getCurrentFrameBuffer() const {
         return (*m_FrameBuffer->getFramebuffers())[m_CurrentImageIndex];
+    }
+
+    uint32_t SwapChain::getCurrentFrameIndex() const {
+        return m_CurrentFrameIndex;
     }
 }
