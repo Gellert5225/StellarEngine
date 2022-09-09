@@ -12,10 +12,6 @@ namespace Stellar {
         init();
     }
 
-    SwapChain::SwapChain(std::shared_ptr<SwapChain> oldSwapChain) {
-        init();
-    }
-
     void SwapChain::init() {
         createSwapChain();
         createImageViews();
@@ -105,6 +101,24 @@ namespace Stellar {
 
     VkSwapchainKHR& SwapChain::getSwapChain() {
         return m_VulkanSwapChain;
+    }
+
+    VkCommandBuffer SwapChain::getCurrentCommandBuffer() const {
+        return m_CommandBuffer->getCurrentCommandBuffer(m_CurrentFrameIndex);
+    }
+
+    VkFramebuffer SwapChain::getCurrentFrameBuffer() const {
+        return (*m_FrameBuffer->getFramebuffers())[m_CurrentImageIndex];
+    }
+
+    uint32_t SwapChain::getCurrentFrameIndex() const {
+        return m_CurrentFrameIndex;
+    }
+
+    void SwapChain::createCommandBuffers() {
+        delete m_CommandBuffer;
+        m_CommandBuffer = new CommandBuffer(VulkanDevice::GetInstance()->getCommandPool(),
+                                            SwapChain::MAX_FRAMES_IN_FLIGHT);
     }
 
     void SwapChain::createImageViews() {
@@ -257,79 +271,6 @@ namespace Stellar {
         return m_SwapChainImages.size();
     }
 
-//    VkResult SwapChain::acquireNextImage(uint32_t* imageIndex) {
-//        // wait for previous frame
-////        vkWaitForFences(VulkanDevice::GetInstance()->logicalDevice(),
-////                        1,
-////                        &m_InFlightFences[m_CurrentFrameIndex],
-////                        VK_TRUE,
-////                        UINT64_MAX);
-//
-//        VkResult result = vkAcquireNextImageKHR(VulkanDevice::GetInstance()->logicalDevice(),
-//                              m_VulkanSwapChain,
-//                              UINT64_MAX,
-//                              m_ImageAvailableSemaphores[m_CurrentFrameIndex],
-//                              VK_NULL_HANDLE, imageIndex);
-//
-//        return result;
-//    }
-
-//    VkResult SwapChain::submitCommandBuffers(const VkCommandBuffer* buffer, const uint32_t* imageIndex) {
-////        if (m_ImagesInFlight[*imageIndex] != VK_NULL_HANDLE) {
-////            vkWaitForFences(VulkanDevice::GetInstance()->logicalDevice(),
-////                            1, &m_ImagesInFlight[*imageIndex], VK_TRUE, UINT64_MAX);
-////        }
-////        m_ImagesInFlight[*imageIndex] = m_ImagesInFlight[m_CurrentFrameIndex];
-//
-//        //submit command buffer
-//        VkSubmitInfo submitInfo{};
-//        submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-//
-//        VkSemaphore waitSemaphores[] = {m_ImageAvailableSemaphores[m_CurrentFrameIndex]};
-//        VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
-//        submitInfo.waitSemaphoreCount = 1;
-//        submitInfo.pWaitSemaphores = waitSemaphores;
-//        submitInfo.pWaitDstStageMask = waitStages;
-//        submitInfo.commandBufferCount = 1;
-//        submitInfo.pCommandBuffers = buffer;
-//
-//        VkSemaphore signalSemaphores[] = {m_RenderFinishedSemaphores[m_CurrentFrameIndex]};
-//        submitInfo.signalSemaphoreCount = 1;
-//        submitInfo.pSignalSemaphores = signalSemaphores;
-//
-//        vkResetFences(VulkanDevice::GetInstance()->logicalDevice(),
-//                      1,  &m_InFlightFences[m_CurrentFrameIndex]);
-//        if (vkQueueSubmit(VulkanDevice::GetInstance()->getGraphicsQueue(),
-//                          1,
-//                          &submitInfo,
-//                          m_InFlightFences[m_CurrentFrameIndex]) != VK_SUCCESS) {
-//            throw std::runtime_error("failed to submit draw command buffer!");
-//        }
-//
-//        VkPresentInfoKHR presentInfo{};
-//        presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-//
-//        presentInfo.waitSemaphoreCount = 1;
-//        presentInfo.pWaitSemaphores = signalSemaphores;
-//
-//        VkSwapchainKHR swapChains[] = {m_VulkanSwapChain};
-//        presentInfo.swapchainCount = 1;
-//        presentInfo.pSwapchains = swapChains;
-//        presentInfo.pImageIndices = imageIndex;
-//        presentInfo.pResults = nullptr;
-//
-//        VkResult result = vkQueuePresentKHR(VulkanDevice::GetInstance()->getPresentQueue(),
-//                                            &presentInfo);
-//
-//       // m_CurrentFrameIndex = (m_CurrentFrameIndex + 1) % MAX_FRAMES_IN_FLIGHT;
-//
-//        return result;
-//    }
-
-    bool SwapChain::compareSwapFormats(const SwapChain &swapChain) const {
-        return swapChain.m_SwapChainImageFormat == m_SwapChainImageFormat;
-    }
-
     void SwapChain::beginFrame() {
         STLR_CORE_ASSERT(!m_IsFrameStarted,
                          "VulkanRendererContext::beginFrame(): Frame already in progress")
@@ -406,27 +347,79 @@ namespace Stellar {
                         UINT64_MAX);
     }
 
-    void SwapChain::createCommandBuffers() {
-        delete m_CommandBuffer;
-        m_CommandBuffer = new CommandBuffer(VulkanDevice::GetInstance()->getCommandPool(),
-                                            SwapChain::MAX_FRAMES_IN_FLIGHT);
-    }
-
     void SwapChain::onResize() {
         vkDeviceWaitIdle(VulkanDevice::GetInstance()->logicalDevice());
         init();
         vkDeviceWaitIdle(VulkanDevice::GetInstance()->logicalDevice());
     }
 
-    VkCommandBuffer SwapChain::getCurrentCommandBuffer() const {
-        return m_CommandBuffer->getCurrentCommandBuffer(m_CurrentFrameIndex);
-    }
+    //    VkResult SwapChain::acquireNextImage(uint32_t* imageIndex) {
+//        // wait for previous frame
+////        vkWaitForFences(VulkanDevice::GetInstance()->logicalDevice(),
+////                        1,
+////                        &m_InFlightFences[m_CurrentFrameIndex],
+////                        VK_TRUE,
+////                        UINT64_MAX);
+//
+//        VkResult result = vkAcquireNextImageKHR(VulkanDevice::GetInstance()->logicalDevice(),
+//                              m_VulkanSwapChain,
+//                              UINT64_MAX,
+//                              m_ImageAvailableSemaphores[m_CurrentFrameIndex],
+//                              VK_NULL_HANDLE, imageIndex);
+//
+//        return result;
+//    }
 
-    VkFramebuffer SwapChain::getCurrentFrameBuffer() const {
-        return (*m_FrameBuffer->getFramebuffers())[m_CurrentImageIndex];
-    }
+//    VkResult SwapChain::submitCommandBuffers(const VkCommandBuffer* buffer, const uint32_t* imageIndex) {
+////        if (m_ImagesInFlight[*imageIndex] != VK_NULL_HANDLE) {
+////            vkWaitForFences(VulkanDevice::GetInstance()->logicalDevice(),
+////                            1, &m_ImagesInFlight[*imageIndex], VK_TRUE, UINT64_MAX);
+////        }
+////        m_ImagesInFlight[*imageIndex] = m_ImagesInFlight[m_CurrentFrameIndex];
+//
+//        //submit command buffer
+//        VkSubmitInfo submitInfo{};
+//        submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+//
+//        VkSemaphore waitSemaphores[] = {m_ImageAvailableSemaphores[m_CurrentFrameIndex]};
+//        VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+//        submitInfo.waitSemaphoreCount = 1;
+//        submitInfo.pWaitSemaphores = waitSemaphores;
+//        submitInfo.pWaitDstStageMask = waitStages;
+//        submitInfo.commandBufferCount = 1;
+//        submitInfo.pCommandBuffers = buffer;
+//
+//        VkSemaphore signalSemaphores[] = {m_RenderFinishedSemaphores[m_CurrentFrameIndex]};
+//        submitInfo.signalSemaphoreCount = 1;
+//        submitInfo.pSignalSemaphores = signalSemaphores;
+//
+//        vkResetFences(VulkanDevice::GetInstance()->logicalDevice(),
+//                      1,  &m_InFlightFences[m_CurrentFrameIndex]);
+//        if (vkQueueSubmit(VulkanDevice::GetInstance()->getGraphicsQueue(),
+//                          1,
+//                          &submitInfo,
+//                          m_InFlightFences[m_CurrentFrameIndex]) != VK_SUCCESS) {
+//            throw std::runtime_error("failed to submit draw command buffer!");
+//        }
+//
+//        VkPresentInfoKHR presentInfo{};
+//        presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+//
+//        presentInfo.waitSemaphoreCount = 1;
+//        presentInfo.pWaitSemaphores = signalSemaphores;
+//
+//        VkSwapchainKHR swapChains[] = {m_VulkanSwapChain};
+//        presentInfo.swapchainCount = 1;
+//        presentInfo.pSwapchains = swapChains;
+//        presentInfo.pImageIndices = imageIndex;
+//        presentInfo.pResults = nullptr;
+//
+//        VkResult result = vkQueuePresentKHR(VulkanDevice::GetInstance()->getPresentQueue(),
+//                                            &presentInfo);
+//
+//       // m_CurrentFrameIndex = (m_CurrentFrameIndex + 1) % MAX_FRAMES_IN_FLIGHT;
+//
+//        return result;
+//    }
 
-    uint32_t SwapChain::getCurrentFrameIndex() const {
-        return m_CurrentFrameIndex;
-    }
 }

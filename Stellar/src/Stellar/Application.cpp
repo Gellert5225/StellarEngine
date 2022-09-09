@@ -59,33 +59,17 @@ namespace Stellar {
     void Application::run() {
         // vertex buffer
         auto vertexBufferSize = sizeof(vertices[0]) * vertices.size();
-        auto* stagingBuffer = new Buffer(vertexBufferSize,
-                                        VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-                                        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
-                                        VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-                                        vertices.data());
-        m_VertexBuffer = new Buffer(vertexBufferSize,
-                                    VK_BUFFER_USAGE_TRANSFER_DST_BIT |
-                                    VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
-                                    VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-
-        Buffer::CopyBuffer(*stagingBuffer, *m_VertexBuffer, vertexBufferSize);
+        auto* stagingBuffer = VertexBuffer::Create(vertexBufferSize, vertices.data());
+        m_VertexBuffer = VertexBuffer::Create(vertexBufferSize);
+        stagingBuffer->copy(*m_VertexBuffer);
 
         delete stagingBuffer;
 
         // index buffer
         auto indexBufferSize = sizeof(indices[0]) * indices.size();
-        auto indexStagingBuffer =new Buffer(indexBufferSize,
-                                            VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-                                            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
-                                            VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-                                            indices.data());
-        m_IndexBuffer = new Buffer(indexBufferSize,
-                                   VK_BUFFER_USAGE_TRANSFER_DST_BIT |
-                                   VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
-                                   VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-
-        Buffer::CopyBuffer(*indexStagingBuffer, *m_IndexBuffer, indexBufferSize);
+        auto indexStagingBuffer = IndexBuffer::Create(indexBufferSize, indices.data());
+        m_IndexBuffer = IndexBuffer::Create(indexBufferSize);
+        indexStagingBuffer->copy(*m_IndexBuffer);
 
         delete indexStagingBuffer;
 
@@ -94,15 +78,8 @@ namespace Stellar {
                 layer->onUpdate();
             m_Window->onUpdate();
 
-            // begin frame
-            // begin command buffer
-            // begin render pass
-            // draw call
-            // end render pass
-            // end command buffer
-            // end frame
-
             auto swapChain = m_Window->getSwapChain();
+            swapChain->beginFrame();
             auto commandBuffer = swapChain->getCurrentCommandBuffer();
             // begin commandbuffer
             VkCommandBufferBeginInfo beginInfo{};
@@ -114,14 +91,7 @@ namespace Stellar {
             Renderer::SetClearColor({ 0.1f, 0.1f, 0.1f, 0.1f });
             Renderer::BeginRenderPass(commandBuffer);
 
-            Renderer::RenderGeometry();
-
-            VkBuffer vertexBuffers[] = {m_VertexBuffer->getBuffer()};
-            VkDeviceSize offsets[] = {0};
-            vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
-            vkCmdBindIndexBuffer(commandBuffer, m_IndexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT16);
-
-            vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
+            Renderer::RenderGeometry(commandBuffer, m_VertexBuffer, m_IndexBuffer, indices.size());
 
             m_ImGuiLayer->begin();
             for (Layer* layer : m_LayerStack)
@@ -133,7 +103,6 @@ namespace Stellar {
             if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
                 throw std::runtime_error("failed to record command buffer!");
 
-            swapChain->beginFrame();
             m_Window->swapBuffers();
 
         }

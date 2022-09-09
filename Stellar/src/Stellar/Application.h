@@ -13,7 +13,7 @@
 #include "Platform/Vulkan/RenderPass/StandardRenderPass.h"
 #include "Platform/Vulkan/Buffer/FrameBuffer.h"
 #include "Platform/Vulkan/Command/CommandBuffer.h"
-#include "Platform/Vulkan/Buffer/Buffer.h"
+#include "Stellar/Platform/Vulkan/Buffer/VulkanBuffer.h"
 #include "Platform/Vulkan/Renderer/VulkanRendererContext.h"
 #include "Events/Event.h"
 #include "Events/ApplicationEvent.h"
@@ -52,8 +52,8 @@ namespace Stellar {
         ImGuiLayer *m_ImGuiLayer;
 
         LayerStack m_LayerStack;
-        Buffer* m_VertexBuffer{};
-        Buffer* m_IndexBuffer{};
+        VertexBuffer* m_VertexBuffer{};
+        IndexBuffer* m_IndexBuffer{};
 
         bool onWindowClose(WindowCloseEvent&);
         bool onWindowResize(WindowResizeEvent&);

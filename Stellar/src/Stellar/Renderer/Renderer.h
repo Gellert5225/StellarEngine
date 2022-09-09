@@ -2,6 +2,7 @@
 
 #include "Stellar/Core.h"
 #include "RendererAPI.h"
+#include "Stellar/Renderer/Buffer.h"
 
 #include <vulkan/vulkan.h>
 #include <glm/glm.hpp>
@@ -17,7 +18,10 @@ namespace Stellar {
         static void EndRenderPass(VkCommandBuffer commandBuffer);
 
         static void SetClearColor(const glm::vec4& color);
-        static void RenderGeometry();
+        static void RenderGeometry(VkCommandBuffer commandBuffer,
+                                   VertexBuffer* vertexBuffer,
+                                   IndexBuffer* indexBuffer,
+                                   uint32_t indexCount);
 
     };
 }

@@ -2,6 +2,8 @@
 
 #include "Stellar/Core.h"
 
+#include "Stellar/Renderer/Buffer.h"
+
 #include <glm/glm.hpp>
 #include <vulkan/vulkan.h>
 #include <array>
@@ -36,23 +38,37 @@ namespace Stellar {
         }
     };
 
-    class STLR_API Buffer {
+    class STLR_API VulkanVertexBuffer : public VertexBuffer {
     public:
-        explicit Buffer(VkDeviceSize size,
-                        VkCommandBufferUsageFlags usage,
-                        VkMemoryPropertyFlags property,
-                        const void* data = nullptr);
-        ~Buffer();
+        explicit VulkanVertexBuffer(VkDeviceSize size,
+                                    VkCommandBufferUsageFlags usage,
+                                    VkMemoryPropertyFlags property,
+                                    const void* data = nullptr);
+        ~VulkanVertexBuffer() override;
 
-        static void CopyBuffer(const Buffer& src,
-                               const Buffer& dst,
-                               uint64_t size);
+        void copy(const VertexBuffer& dst) override;
 
-        [[nodiscard]] VkBuffer getBuffer() const;
+        [[nodiscard]] void* getBuffer() const override;
     private:
-        VkBuffer buffer = VK_NULL_HANDLE;
-        VkDeviceSize size;
-        VkDeviceMemory bufferMemory = VK_NULL_HANDLE;
+        VkBuffer m_Buffer = VK_NULL_HANDLE;
+        VkDeviceMemory m_BufferMemory = VK_NULL_HANDLE;
         uint32_t findMemoryType(uint32_t, VkMemoryPropertyFlags);
+    };
+
+    class STLR_API VulkanIndexBuffer : public IndexBuffer {
+    public:
+        explicit VulkanIndexBuffer(VkDeviceSize size,
+                                   VkCommandBufferUsageFlags usage,
+                                   VkMemoryPropertyFlags property,
+                                   const void *data = nullptr);
+        ~VulkanIndexBuffer() override;
+
+        void copy(const IndexBuffer& dst) override;
+
+        [[nodiscard]] void* getBuffer() const override;
+    private:
+        VkBuffer m_Buffer = VK_NULL_HANDLE;
+        VkDeviceMemory m_BufferMemory = VK_NULL_HANDLE;
+        uint32_t findMemoryType(uint32_t , VkMemoryPropertyFlags);
     };
 }

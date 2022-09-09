@@ -21,7 +21,6 @@ namespace Stellar {
 
     public:
         SwapChain();
-        explicit SwapChain(std::shared_ptr<SwapChain> oldSwapChain);
         ~SwapChain();
 
         void beginFrame();
@@ -37,7 +36,6 @@ namespace Stellar {
         [[nodiscard]] uint32_t getCurrentFrameIndex() const;
         [[nodiscard]] VkFramebuffer getCurrentFrameBuffer() const;
         [[nodiscard]] VkCommandBuffer getCurrentCommandBuffer() const;
-        [[nodiscard]] bool compareSwapFormats(const SwapChain &swapChain) const;
 
         //VkResult acquireNextImage(uint32_t* imageIndex);
         VkResult submitCommandBuffers(const VkCommandBuffer* buffer, const uint32_t* imageIndex);
@@ -57,8 +55,8 @@ namespace Stellar {
         std::vector<VkImage> m_SwapChainImages;
         std::vector<VkImageView> m_SwapChainImageViews;
 
-        VkSemaphore m_ImageAvailableSemaphores;
-        VkSemaphore m_RenderFinishedSemaphores;
+        VkSemaphore m_ImageAvailableSemaphores = VK_NULL_HANDLE;
+        VkSemaphore m_RenderFinishedSemaphores = VK_NULL_HANDLE;
         std::vector<VkFence> m_InFlightFences;
         //std::vector<VkFence> m_ImagesInFlight;
 

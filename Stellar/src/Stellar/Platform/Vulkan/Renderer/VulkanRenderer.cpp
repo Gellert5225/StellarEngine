@@ -58,8 +58,16 @@ namespace Stellar {
         vkCmdEndRenderPass(commandBuffer);
     }
 
-    void VulkanRenderer::renderGeometry() {
+    void VulkanRenderer::renderGeometry(VkCommandBuffer commandBuffer,
+                                        VertexBuffer* vertexBuffer,
+                                        IndexBuffer* indexBuffer,
+                                        uint32_t indexCount) {
+        VkDeviceSize offsets[] = {0};
+        auto buffers = (VkBuffer)vertexBuffer->getBuffer();
+        vkCmdBindVertexBuffers(commandBuffer, 0, 1, &buffers, offsets);
+        vkCmdBindIndexBuffer(commandBuffer, (VkBuffer)indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT16);
 
+        vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
     }
 
     void VulkanRenderer::setClearColor(const glm::vec4 &color) {

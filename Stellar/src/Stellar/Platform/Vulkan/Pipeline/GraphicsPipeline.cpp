@@ -3,7 +3,7 @@
 
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 #include "../RenderPass/StandardRenderPass.h"
-#include "../Buffer/Buffer.h"
+#include "Stellar/Platform/Vulkan/Buffer/VulkanBuffer.h"
 
 namespace Stellar {
 

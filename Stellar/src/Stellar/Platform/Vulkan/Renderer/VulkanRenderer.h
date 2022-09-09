@@ -3,6 +3,7 @@
 #include "Stellar/Core.h"
 
 #include "Stellar/Renderer/RendererAPI.h"
+#include "Stellar/Renderer/Buffer.h"
 #include "Stellar/Platform/Vulkan/SwapChain/SwapChain.h"
 #include "Stellar/Application.h"
 
@@ -18,7 +19,10 @@ namespace Stellar {
         void endRenderPass(VkCommandBuffer commandBuffer) override;
 
         void setClearColor(const glm::vec4& color) override;
-        void renderGeometry() override;
+        void renderGeometry(VkCommandBuffer commandBuffer,
+                            VertexBuffer* vertexBuffer,
+                            IndexBuffer* indexBuffer,
+                            uint32_t indexCount) override;
 
     private:
         GraphicsPipeline* m_GraphicsPipeline = nullptr;

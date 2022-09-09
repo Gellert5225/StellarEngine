@@ -38,8 +38,11 @@ namespace Stellar {
         s_RendererAPI->endRenderPass(commandBuffer);
     }
 
-    void Renderer::RenderGeometry() {
-        s_RendererAPI->renderGeometry();
+    void Renderer::RenderGeometry(VkCommandBuffer commandBuffer,
+                                  VertexBuffer* vertexBuffer,
+                                  IndexBuffer* indexBuffer,
+                                  uint32_t indexCount) {
+        s_RendererAPI->renderGeometry(commandBuffer, vertexBuffer, indexBuffer, indexCount);
     }
 
     void Renderer::SetClearColor(const glm::vec4 &color) {
