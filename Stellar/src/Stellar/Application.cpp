@@ -7,7 +7,7 @@
 namespace Stellar {
     Application* Application::s_Instance = nullptr;
 
-    Application::Application() {
+    Application::Application() : m_Camera(-1.0f, -1.0f, -1.0f, -1.0f) {
         STLR_CORE_ASSERT(!s_Instance, "Application already exists")
         s_Instance = this;
         m_Window = std::unique_ptr<Window>(Window::Create());
@@ -27,6 +27,8 @@ namespace Stellar {
             layer->onDetach();
             delete layer;
         }
+
+        delete m_CommandBuffer;
 
         delete m_VertexBuffer;
         delete m_IndexBuffer;
@@ -60,16 +62,16 @@ namespace Stellar {
     void Application::run() {
         // vertex buffer
         auto vertexBufferSize = sizeof(vertices[0]) * vertices.size();
-        auto* stagingBuffer = VertexBuffer::Create(vertexBufferSize, vertices.data());
-        m_VertexBuffer = VertexBuffer::Create(vertexBufferSize);
+        auto* stagingBuffer = Buffer::Create(BufferType::Vertex, vertexBufferSize, vertices.data());
+        m_VertexBuffer = Buffer::Create(BufferType::Vertex, vertexBufferSize);
         stagingBuffer->copy(*m_VertexBuffer);
 
         delete stagingBuffer;
 
         // index buffer
         auto indexBufferSize = sizeof(indices[0]) * indices.size();
-        auto indexStagingBuffer = IndexBuffer::Create(indexBufferSize, indices.data());
-        m_IndexBuffer = IndexBuffer::Create(indexBufferSize);
+        auto indexStagingBuffer = Buffer::Create(BufferType::Index, indexBufferSize, indices.data());
+        m_IndexBuffer = Buffer::Create(BufferType::Index,  indexBufferSize);
         indexStagingBuffer->copy(*m_IndexBuffer);
 
         delete indexStagingBuffer;

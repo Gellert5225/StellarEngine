@@ -38,37 +38,20 @@ namespace Stellar {
         }
     };
 
-    class STLR_API VulkanVertexBuffer : public VertexBuffer {
+    class STLR_API VulkanBuffer : public Buffer {
     public:
-        explicit VulkanVertexBuffer(VkDeviceSize size,
+        explicit VulkanBuffer(VkDeviceSize size,
                                     VkCommandBufferUsageFlags usage,
                                     VkMemoryPropertyFlags property,
                                     const void* data = nullptr);
-        ~VulkanVertexBuffer() override;
+        ~VulkanBuffer() override;
 
-        void copy(const VertexBuffer& dst) override;
+        void copy(const Buffer& dst) override;
 
         [[nodiscard]] void* getBuffer() const override;
     private:
         VkBuffer m_Buffer = VK_NULL_HANDLE;
         VkDeviceMemory m_BufferMemory = VK_NULL_HANDLE;
         uint32_t findMemoryType(uint32_t, VkMemoryPropertyFlags);
-    };
-
-    class STLR_API VulkanIndexBuffer : public IndexBuffer {
-    public:
-        explicit VulkanIndexBuffer(VkDeviceSize size,
-                                   VkCommandBufferUsageFlags usage,
-                                   VkMemoryPropertyFlags property,
-                                   const void *data = nullptr);
-        ~VulkanIndexBuffer() override;
-
-        void copy(const IndexBuffer& dst) override;
-
-        [[nodiscard]] void* getBuffer() const override;
-    private:
-        VkBuffer m_Buffer = VK_NULL_HANDLE;
-        VkDeviceMemory m_BufferMemory = VK_NULL_HANDLE;
-        uint32_t findMemoryType(uint32_t , VkMemoryPropertyFlags);
     };
 }

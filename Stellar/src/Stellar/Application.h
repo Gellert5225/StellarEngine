@@ -4,20 +4,15 @@
 #include "Window.h"
 #include "LayerStack.h"
 
-#include "Stellar/ImGUI/ImGuiLayer.h"
+#include "ImGUI/ImGuiLayer.h"
 
 #include "Platform/Vulkan/Instance/VulkanInstance.h"
 #include "Platform/Vulkan/Device/VulkanDevice.h"
-#include "Platform/Vulkan/SwapChain/SwapChain.h"
-#include "Platform/Vulkan/Pipeline/GraphicsPipeline.h"
-#include "Platform/Vulkan/RenderPass/StandardRenderPass.h"
-#include "Platform/Vulkan/Buffer/FrameBuffer.h"
-#include "Platform/Vulkan/Command/VulkanCommandBuffer.h"
-#include "Stellar/Platform/Vulkan/Buffer/VulkanBuffer.h"
-#include "Platform/Vulkan/Renderer/VulkanRendererContext.h"
+
 #include "Events/Event.h"
 #include "Events/ApplicationEvent.h"
 #include "Renderer/Renderer.h"
+#include "Renderer/OrthographicCamera.h"
 
 namespace Stellar {
     class STLR_API Application {
@@ -52,9 +47,10 @@ namespace Stellar {
         ImGuiLayer *m_ImGuiLayer;
 
         LayerStack m_LayerStack;
-        VertexBuffer* m_VertexBuffer{};
-        IndexBuffer* m_IndexBuffer{};
+        Buffer* m_VertexBuffer{};
+        Buffer* m_IndexBuffer{};
         CommandBuffer* m_CommandBuffer{};
+        OrthographicCamera m_Camera;
 
         bool onWindowClose(WindowCloseEvent&);
         bool onWindowResize(WindowResizeEvent&);

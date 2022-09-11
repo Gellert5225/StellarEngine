@@ -59,8 +59,8 @@ namespace Stellar {
     }
 
     void VulkanRenderer::renderGeometry(CommandBuffer* commandBuffer,
-                                        VertexBuffer* vertexBuffer,
-                                        IndexBuffer* indexBuffer,
+                                        Buffer* vertexBuffer,
+                                        Buffer* indexBuffer,
                                         uint32_t indexCount) {
         VkDeviceSize offsets[] = {0};
         auto buffers = (VkBuffer)vertexBuffer->getBuffer();

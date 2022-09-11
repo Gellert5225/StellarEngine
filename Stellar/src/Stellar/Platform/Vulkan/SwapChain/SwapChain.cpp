@@ -63,8 +63,6 @@ namespace Stellar {
     }
 
     SwapChain::~SwapChain() {
-        //delete m_CommandBuffer;
-
         for (auto& commandBuffer : m_CommandBuffers)
             vkDestroyCommandPool(VulkanDevice::GetInstance()->logicalDevice(), commandBuffer.CommandPool, nullptr);
 
@@ -79,8 +77,11 @@ namespace Stellar {
 
         for (auto& framebuffer : m_Framebuffers)
             vkDestroyFramebuffer(VulkanDevice::GetInstance()->logicalDevice(), framebuffer, nullptr);
+        for (auto& framebuffer : m_ImGuiFramebuffers)
+            vkDestroyFramebuffer(VulkanDevice::GetInstance()->logicalDevice(), framebuffer, nullptr);
 
         delete m_RenderPass;
+        delete m_ImGuiRenderPass;
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
             vkDestroyFence(VulkanDevice::GetInstance()->logicalDevice(),

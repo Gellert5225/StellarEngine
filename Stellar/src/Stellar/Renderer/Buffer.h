@@ -3,30 +3,23 @@
 #include "Stellar/Core.h"
 
 namespace Stellar {
-    class STLR_API VertexBuffer {
-    public:
-        virtual ~VertexBuffer() = default;
-
-        virtual void copy(const VertexBuffer& dst) = 0;
-        [[nodiscard]] virtual void* getBuffer() const = 0;
-
-        static VertexBuffer* Create(uint64_t size, const void* data = nullptr);
-
-    protected:
-        explicit VertexBuffer(uint64_t size) : m_Size(size) {}
-        uint64_t m_Size = 0;
+    enum class BufferType {
+        Vertex,
+        Index,
+        Uniform
     };
 
-    class STLR_API IndexBuffer {
+    class STLR_API Buffer {
     public:
-        virtual ~IndexBuffer() = default;
+        virtual ~Buffer() = default;
 
-        virtual void copy(const IndexBuffer& dst) = 0;
+        virtual void copy(const Buffer& dst) = 0;
         [[nodiscard]] virtual void* getBuffer() const = 0;
 
-        static IndexBuffer* Create(uint64_t size, const void* data = nullptr);
+        static Buffer* Create(BufferType type, uint64_t size, const void* data = nullptr);
+
     protected:
-        explicit IndexBuffer(uint64_t size) : m_Size(size) {}
+        explicit Buffer(uint64_t size) : m_Size(size) {}
         uint64_t m_Size = 0;
     };
 }

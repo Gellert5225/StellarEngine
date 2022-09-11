@@ -39,8 +39,8 @@ namespace Stellar {
     }
 
     void Renderer::RenderGeometry(CommandBuffer* commandBuffer,
-                                  VertexBuffer* vertexBuffer,
-                                  IndexBuffer* indexBuffer,
+                                  Buffer* vertexBuffer,
+                                  Buffer* indexBuffer,
                                   uint32_t indexCount) {
         s_RendererAPI->renderGeometry(commandBuffer, vertexBuffer, indexBuffer, indexCount);
     }

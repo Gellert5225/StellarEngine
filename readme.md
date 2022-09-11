@@ -52,6 +52,7 @@ Now you just need to build the Sandbox project:
 - [x] ImGui
 - [x] Triangle
 - [x] Shader library
+- [ ] Camera
 - [ ] Texture
 - [x] Renderer
 - [ ] Metal-cpp

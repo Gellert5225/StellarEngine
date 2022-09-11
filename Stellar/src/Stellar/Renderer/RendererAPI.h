@@ -20,8 +20,8 @@ namespace Stellar {
 
         virtual void setClearColor(const glm::vec4& color) = 0;
         virtual void renderGeometry(CommandBuffer* commandBuffer,
-                                    VertexBuffer* vertexBuffers,
-                                    IndexBuffer* indexBuffer,
+                                    Buffer* vertexBuffers,
+                                    Buffer* indexBuffer,
                                     uint32_t indexCount) = 0;
 
         static RendererAPIType Current() { return s_CurrentRendererAPI; }
