@@ -8,8 +8,9 @@ namespace Stellar {
 
     GraphicsPipeline::GraphicsPipeline(const std::string& vertShaderPath,
                                        const std::string& fragShaderPath,
-                                       VkRenderPass renderPass,
-                                       VkDescriptorSetLayout layouts) {
+                                       VkRenderPass renderPass) {
+        createDescriptorSetLayout();
+        createDescriptorPool();
         VkShaderModule vertShaderModule = Shader::GetInstance()->getShaderModule(vertShaderPath);
         VkShaderModule fragShaderModule = Shader::GetInstance()->getShaderModule(fragShaderPath);
 
@@ -54,7 +55,7 @@ namespace Stellar {
         rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
         rasterizer.lineWidth = 1.0f;
         rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
-        rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
+        rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
         rasterizer.depthBiasEnable = VK_FALSE;
         rasterizer.depthBiasConstantFactor = 0.0f;
         rasterizer.depthBiasClamp = 0.0f;
@@ -100,7 +101,7 @@ namespace Stellar {
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
         pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
         pipelineLayoutInfo.setLayoutCount = 1;
-        pipelineLayoutInfo.pSetLayouts = &layouts;
+        pipelineLayoutInfo.pSetLayouts = &m_DescriptorSetLayout;
         pipelineLayoutInfo.pushConstantRangeCount = 0; // Optional
         pipelineLayoutInfo.pPushConstantRanges = nullptr; // Optional
 
@@ -136,5 +137,42 @@ namespace Stellar {
                               fragShaderModule, nullptr);
         vkDestroyShaderModule(VulkanDevice::GetInstance()->logicalDevice(),
                               vertShaderModule, nullptr);
+    }
+
+    void GraphicsPipeline::createDescriptorSetLayout() {
+        VkDescriptorSetLayoutBinding uboLayoutBinding{};
+        uboLayoutBinding.binding = 0;
+        uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        uboLayoutBinding.descriptorCount = 1;
+        uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+
+        VkDescriptorSetLayoutCreateInfo layoutInfo{};
+        layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+        layoutInfo.bindingCount = 1;
+        layoutInfo.pBindings = &uboLayoutBinding;
+
+        if (vkCreateDescriptorSetLayout(VulkanDevice::GetInstance()->logicalDevice(),
+                                        &layoutInfo,
+                                        nullptr,
+                                        &m_DescriptorSetLayout) != VK_SUCCESS) {
+            throw std::runtime_error("failed to create descriptor set layout!");
+        }
+    }
+
+    void GraphicsPipeline::createDescriptorPool() {
+        VkDescriptorPoolSize poolSize{};
+        poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        poolSize.descriptorCount = static_cast<uint32_t>(SwapChain::MAX_FRAMES_IN_FLIGHT);
+
+        VkDescriptorPoolCreateInfo poolInfo{};
+        poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+        poolInfo.poolSizeCount = 1;
+        poolInfo.pPoolSizes = &poolSize;
+        poolInfo.maxSets = static_cast<uint32_t>(SwapChain::MAX_FRAMES_IN_FLIGHT);
+
+        if (vkCreateDescriptorPool(VulkanDevice::GetInstance()->logicalDevice(),
+                                   &poolInfo, nullptr, &m_DescriptorPool) != VK_SUCCESS) {
+            throw std::runtime_error("failed to create descriptor pool!");
+        }
     }
 }

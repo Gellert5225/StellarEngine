@@ -41,9 +41,9 @@ namespace Stellar {
     class STLR_API VulkanBuffer : public Buffer {
     public:
         explicit VulkanBuffer(VkDeviceSize size,
-                                    VkCommandBufferUsageFlags usage,
-                                    VkMemoryPropertyFlags property,
-                                    const void* data = nullptr);
+                              VkCommandBufferUsageFlags usage,
+                              VkMemoryPropertyFlags property,
+                              const void* data = nullptr);
         ~VulkanBuffer() override;
 
         void copy(const Buffer& dst) override;
@@ -56,5 +56,9 @@ namespace Stellar {
         VkBuffer m_Buffer = VK_NULL_HANDLE;
         VkDeviceMemory m_BufferMemory = VK_NULL_HANDLE;
         uint32_t findMemoryType(uint32_t, VkMemoryPropertyFlags);
+    };
+
+    class STLR_API VulkanUniformBuffer : public Buffer {
+
     };
 }

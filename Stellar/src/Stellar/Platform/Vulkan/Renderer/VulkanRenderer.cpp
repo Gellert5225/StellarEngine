@@ -1,9 +1,6 @@
 #include "stlrpch.h"
 #include "VulkanRenderer.h"
 
-#include "Stellar/Log.h"
-#include "Stellar/Platform/Vulkan/Descriptor/DescriptorSetLayout.h"
-
 #include <glm/gtc/matrix_transform.hpp>
 #include <chrono>
 
@@ -11,13 +8,12 @@ namespace Stellar {
 
     void VulkanRenderer::init() {
         m_UniformBuffer = Buffer::Create(BufferType::Uniform, sizeof(GlobalUniforms));
-        auto* layout = new DescriptorSetLayout();
 
         SwapChain* swapChain = Application::Get().getWindow().getSwapChain();
         m_GraphicsPipeline = new GraphicsPipeline("resource/Shader/shaderVert.spv",
                                                   "resource/Shader/shaderFrag.spv",
-                                                  swapChain->getRenderPass(),
-                                                  layout->getDescriptorSetLayouts());
+                                                  swapChain->getRenderPass());
+        createDescriptorSets();
     }
 
     void VulkanRenderer::shutDown() {
@@ -77,6 +73,10 @@ namespace Stellar {
                                0, 1, &buffers, offsets);
         vkCmdBindIndexBuffer((VkCommandBuffer)commandBuffer->getActiveCommandBuffer(),
                              (VkBuffer)indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT16);
+        vkCmdBindDescriptorSets((VkCommandBuffer)commandBuffer->getActiveCommandBuffer(),
+                                VK_PIPELINE_BIND_POINT_GRAPHICS,
+                                *m_GraphicsPipeline->getPipelineLayout(),
+                                0, 1, &m_DescriptorSets[Renderer::GetCurrentFrameIndex()], 0, nullptr);
         vkCmdDrawIndexed((VkCommandBuffer)commandBuffer->getActiveCommandBuffer(),
                          indexCount, 1, 0, 0, 0);
     }
@@ -106,5 +106,42 @@ namespace Stellar {
         m_UniformBuffer->map(&data);
         m_UniformBuffer->write(data, &ubo);
         m_UniformBuffer->unMap();
+    }
+
+    void VulkanRenderer::createDescriptorSets() {
+        std::vector<VkDescriptorSetLayout> layouts(SwapChain::MAX_FRAMES_IN_FLIGHT,
+                                                   m_GraphicsPipeline->getDescriptorSetLayout());
+
+        VkDescriptorSetAllocateInfo allocInfo{};
+        allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+        allocInfo.descriptorPool = m_GraphicsPipeline->getDescriptorPool();
+        allocInfo.descriptorSetCount = SwapChain::MAX_FRAMES_IN_FLIGHT;
+        allocInfo.pSetLayouts = layouts.data();
+
+        m_DescriptorSets.resize(SwapChain::MAX_FRAMES_IN_FLIGHT);
+
+        if (vkAllocateDescriptorSets(VulkanDevice::GetInstance()->logicalDevice(),
+                                     &allocInfo, m_DescriptorSets.data()) != VK_SUCCESS) {
+            throw std::runtime_error("failed to allocate descriptor sets!");
+        }
+
+        for (size_t i = 0; i < SwapChain::MAX_FRAMES_IN_FLIGHT; i++) {
+            VkDescriptorBufferInfo bufferInfo{};
+            bufferInfo.buffer = (VkBuffer)m_UniformBuffer->getBuffer();
+            bufferInfo.offset = 0;
+            bufferInfo.range = sizeof(GlobalUniforms);
+
+            VkWriteDescriptorSet descriptorWrite{};
+            descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            descriptorWrite.dstSet = m_DescriptorSets[i];
+            descriptorWrite.dstBinding = 0;
+            descriptorWrite.dstArrayElement = 0;
+            descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+            descriptorWrite.descriptorCount = 1;
+            descriptorWrite.pBufferInfo = &bufferInfo;
+
+            vkUpdateDescriptorSets(VulkanDevice::GetInstance()->logicalDevice(), 1, &descriptorWrite, 0, nullptr);
+        }
+
     }
 }

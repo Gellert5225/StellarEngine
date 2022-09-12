@@ -31,5 +31,9 @@ namespace Stellar {
         VkClearColorValue m_ClearColor = {{0.66f, 0.9f, 0.96f, 1.0f}};
 
         Buffer* m_UniformBuffer{};
+
+        std::vector<VkDescriptorSet> m_DescriptorSets;
+
+        void createDescriptorSets();
     };
 }

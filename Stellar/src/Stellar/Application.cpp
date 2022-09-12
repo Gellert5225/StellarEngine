@@ -16,10 +16,9 @@ namespace Stellar {
         m_Window->init();
         m_Window->setEventCallback(BIND_EVENT_FN(Application::onEvent));
 
+        Renderer::Init();
         m_CommandBuffer = CommandBuffer::Create(3);
         m_ImGuiLayer = new ImGuiLayer();
-
-        Renderer::Init();
     }
 
     Application::~Application() {

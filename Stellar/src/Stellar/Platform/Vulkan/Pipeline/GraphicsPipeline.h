@@ -10,8 +10,9 @@ namespace Stellar {
     public:
         GraphicsPipeline(const std::string& vertShaderPath,
                          const std::string& fragShaderPath,
-                         VkRenderPass renderPass,
-                         VkDescriptorSetLayout layouts
-                         );
+                         VkRenderPass renderPass);
+    protected:
+        void createDescriptorSetLayout() override;
+        void createDescriptorPool() override;
     };
 }
