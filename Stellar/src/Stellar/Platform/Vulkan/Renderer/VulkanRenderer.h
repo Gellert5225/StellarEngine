@@ -15,6 +15,8 @@ namespace Stellar {
         void init() override;
         void shutDown() override;
 
+        void beginScene() override;
+
         void beginRenderPass(CommandBuffer* commandBuffer) override;
         void endRenderPass(CommandBuffer* commandBuffer) override;
 
@@ -27,5 +29,7 @@ namespace Stellar {
     private:
         GraphicsPipeline* m_GraphicsPipeline = nullptr;
         VkClearColorValue m_ClearColor = {{0.66f, 0.9f, 0.96f, 1.0f}};
+
+        Buffer* m_UniformBuffer{};
     };
 }

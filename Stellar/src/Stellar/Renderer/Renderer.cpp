@@ -52,4 +52,8 @@ namespace Stellar {
     uint32_t Renderer::GetCurrentFrameIndex() {
         return Application::Get().getWindow().getSwapChain()->getCurrentFrameIndex();
     }
+
+    void Renderer::BeginScene() {
+        s_RendererAPI->beginScene();
+    }
 }

@@ -4,6 +4,8 @@
 #include "Log.h"
 #include "Input.h"
 
+#include "Renderer/Uniforms.h"
+
 namespace Stellar {
     Application* Application::s_Instance = nullptr;
 
@@ -76,6 +78,8 @@ namespace Stellar {
 
         delete indexStagingBuffer;
 
+        //m_UniformBuffer = Buffer::Create(BufferType::Uniform, sizeof(GlobalUniforms));
+
         while (m_Running) {
             for (Layer* layer : m_LayerStack)
                 layer->onUpdate();
@@ -85,6 +89,7 @@ namespace Stellar {
             swapChain->beginFrame();
 
             // geomoetry
+            Renderer::BeginScene();
             m_CommandBuffer->begin();
             Renderer::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
             Renderer::BeginRenderPass(m_CommandBuffer);

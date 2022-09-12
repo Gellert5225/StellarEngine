@@ -35,12 +35,12 @@ namespace Stellar {
         vkBindBufferMemory(VulkanDevice::GetInstance()->logicalDevice(),
                            m_Buffer, m_BufferMemory, 0);
 
+        // staging
         if (data) {
             void* mapped;
-            vkMapMemory(VulkanDevice::GetInstance()->logicalDevice(),
-                        m_BufferMemory, 0, bufferInfo.size, 0, &mapped);
-            memcpy(mapped, data, (size_t) bufferInfo.size);
-            vkUnmapMemory(VulkanDevice::GetInstance()->logicalDevice(), m_BufferMemory);
+            map(&mapped);
+            write(mapped, data);
+            unMap();
         }
     }
 
@@ -80,5 +80,16 @@ namespace Stellar {
         throw std::runtime_error("failed to find suitable memory type!");
     }
 
+    void VulkanBuffer::map(void** data) {
+        vkMapMemory(VulkanDevice::GetInstance()->logicalDevice(),
+                    m_BufferMemory, 0, m_Size, 0, data);
+    }
 
+    void VulkanBuffer::unMap() {
+        vkUnmapMemory(VulkanDevice::GetInstance()->logicalDevice(), m_BufferMemory);
+    }
+
+    void VulkanBuffer::write(void *dst, const void *src) {
+        memcpy(dst, src, m_Size);
+    }
 }

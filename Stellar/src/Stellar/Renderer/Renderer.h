@@ -7,6 +7,7 @@
 #include "Stellar/Core.h"
 
 #include <glm/glm.hpp>
+#include "Uniforms.h"
 
 namespace Stellar {
 
@@ -14,6 +15,8 @@ namespace Stellar {
     public:
         static void Init();
         static void Shutdown();
+
+        static void BeginScene();
 
         static void BeginRenderPass(CommandBuffer* commandBuffer);
         static void EndRenderPass(CommandBuffer* commandBuffer);

@@ -37,7 +37,10 @@ namespace Stellar {
                                                 VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
                                                 VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
                     case BufferType::Uniform:
-                        break;
+                        return new VulkanBuffer(size,
+                                                VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+                                                VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
+                                                VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
                 }
             case RendererAPIType::Metal:
                 STLR_CORE_ASSERT(false, "Metal is not yet supported");

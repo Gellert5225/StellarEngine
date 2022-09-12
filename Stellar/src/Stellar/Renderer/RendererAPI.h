@@ -15,6 +15,8 @@ namespace Stellar {
         virtual void init() = 0;
         virtual void shutDown() = 0;
 
+        virtual void beginScene() = 0;
+
         virtual void beginRenderPass(CommandBuffer* commandBuffer) = 0;
         virtual void endRenderPass(CommandBuffer* commandBuffer) = 0;
 

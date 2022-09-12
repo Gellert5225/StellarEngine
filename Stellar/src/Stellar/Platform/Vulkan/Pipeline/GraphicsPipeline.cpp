@@ -2,15 +2,14 @@
 #include "GraphicsPipeline.h"
 
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
-#include "../RenderPass/StandardRenderPass.h"
 #include "Stellar/Platform/Vulkan/Buffer/VulkanBuffer.h"
 
 namespace Stellar {
 
     GraphicsPipeline::GraphicsPipeline(const std::string& vertShaderPath,
                                        const std::string& fragShaderPath,
-                                       const VkExtent2D& swapChainExtent,
-                                       VkRenderPass renderPass) {
+                                       VkRenderPass renderPass,
+                                       VkDescriptorSetLayout layouts) {
         VkShaderModule vertShaderModule = Shader::GetInstance()->getShaderModule(vertShaderPath);
         VkShaderModule fragShaderModule = Shader::GetInstance()->getShaderModule(fragShaderPath);
 
@@ -100,8 +99,8 @@ namespace Stellar {
 
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
         pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-        pipelineLayoutInfo.setLayoutCount = 0; // Optional
-        pipelineLayoutInfo.pSetLayouts = nullptr; // Optional
+        pipelineLayoutInfo.setLayoutCount = 1;
+        pipelineLayoutInfo.pSetLayouts = &layouts;
         pipelineLayoutInfo.pushConstantRangeCount = 0; // Optional
         pipelineLayoutInfo.pPushConstantRanges = nullptr; // Optional
 

@@ -18,6 +18,9 @@ namespace Stellar {
 
         static Buffer* Create(BufferType type, uint64_t size, const void* data = nullptr);
 
+        virtual void map(void** data) = 0;
+        virtual void unMap() = 0;
+        virtual void write(void* dst, const void* src) = 0;
     protected:
         explicit Buffer(uint64_t size) : m_Size(size) {}
         uint64_t m_Size = 0;

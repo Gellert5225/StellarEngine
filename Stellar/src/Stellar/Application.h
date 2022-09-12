@@ -45,12 +45,13 @@ namespace Stellar {
 
         std::unique_ptr<Window> m_Window;
         ImGuiLayer *m_ImGuiLayer;
-
         LayerStack m_LayerStack;
+        OrthographicCamera m_Camera;
+
         Buffer* m_VertexBuffer{};
         Buffer* m_IndexBuffer{};
+        Buffer* m_UniformBuffer{};
         CommandBuffer* m_CommandBuffer{};
-        OrthographicCamera m_Camera;
 
         bool onWindowClose(WindowCloseEvent&);
         bool onWindowResize(WindowResizeEvent&);
