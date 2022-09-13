@@ -11,6 +11,7 @@ namespace Stellar {
         Camera();
         void setOrthographicProjection(float width, float height, float nearP, float farP);
         void setPerspectiveProjection(float fovy, float aspect, float near, float far);
+        void setOrtho(float left, float right, float top, float bottom, float near, float far);
 
         void setPosition(const glm::vec3 position) { m_Position = position; recalculateViewMatrix(); }
         void setRotation(float rotation) { m_Rotation = rotation; recalculateViewMatrix(); }

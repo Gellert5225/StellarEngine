@@ -20,15 +20,25 @@ ExampleLayer::ExampleLayer() : Layer("Example") {
     indexStagingBuffer->copy(*m_IndexBuffer);
 
     delete indexStagingBuffer;
+
+    auto extent = Stellar::Application::Get().getWindow().getSwapChain()->getSwapChainExtent();
+    auto perspective = (float)extent.width / (float) extent.height;
+    //m_Camera.setOrtho(-perspective, perspective, -1, 1, -10, 10);
+    m_Camera.setPerspectiveProjection(glm::radians(45.0f), perspective, 0.1f, 10.0f);
 }
 
 void ExampleLayer::onUpdate() {
-    auto extent = Stellar::Application::Get().getWindow().getSwapChain()->getSwapChainExtent();
-    m_Camera.setPerspectiveProjection(glm::radians(45.0f),
-                                      (float)extent.width / (float) extent.height,
-                                      0.1f, 10.0f);
+    // camera movement
+    if (Stellar::Input::IsKeyPressed(STLR_KEY_LEFT))
+        m_CameraPosition.x += m_CameraSpeed;
+    else if (Stellar::Input::IsKeyPressed(STLR_KEY_RIGHT))
+        m_CameraPosition.x -= m_CameraSpeed;
+    if (Stellar::Input::IsKeyPressed(STLR_KEY_UP))
+        m_CameraPosition.z += m_CameraSpeed;
+    else if (Stellar::Input::IsKeyPressed(STLR_KEY_DOWN))
+        m_CameraPosition.z -= m_CameraSpeed;
+
     m_Camera.setPosition(m_CameraPosition);
-    //m_Camera.setOrthographicProjection((float)extent.width, (float)extent.height, 0.1f, 10.0f);
     Stellar::Renderer::BeginScene(m_Camera);
     Stellar::Renderer::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
     Stellar::Renderer::BeginRenderPass();
@@ -43,20 +53,7 @@ void ExampleLayer::onDetach() {
 }
 
 void ExampleLayer::onEvent(Stellar::Event &event) {
-    Stellar::EventDispatcher dispatcher(event);
-    dispatcher.dispatch<Stellar::KeyPressedEvent>(BIND_EVENT_FN(ExampleLayer::onKeyPressedEvent));
-}
 
-bool ExampleLayer::onKeyPressedEvent(Stellar::KeyPressedEvent &event) {
-    if (event.getKeyCode() == STLR_KEY_LEFT)
-        m_CameraPosition.x -= m_CameraSpeed;
-    if (event.getKeyCode() == STLR_KEY_RIGHT)
-        m_CameraPosition.x += m_CameraSpeed;
-    if (event.getKeyCode() == STLR_KEY_UP)
-        m_CameraPosition.z += m_CameraSpeed;
-    if (event.getKeyCode() == STLR_KEY_DOWN)
-        m_CameraPosition.z -= m_CameraSpeed;
-    return false;
 }
 
 void ExampleLayer::onImGuiRender() {

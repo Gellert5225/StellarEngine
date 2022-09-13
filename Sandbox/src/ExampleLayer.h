@@ -18,7 +18,7 @@ public:
 
 private:
     Stellar::Camera m_Camera{};
-    glm::vec3 m_CameraPosition{0.0f, 1.0f, 0.5f};
+    glm::vec3 m_CameraPosition{0.0f, 2.0f, 0.5f};
     float m_CameraSpeed = 0.1f;
 
     Stellar::Buffer* m_VertexBuffer{};

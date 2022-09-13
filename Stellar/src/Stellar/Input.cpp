@@ -3,6 +3,7 @@
 #include "Input.h"
 
 #include "Application.h"
+#include "Log.h"
 
 namespace Stellar {
     class Input* Input::s_Instance = new Input();
@@ -10,7 +11,7 @@ namespace Stellar {
     bool Input::isKeypressedImpl(int keycode) {
         auto window = Application::Get().getWindow().getGLFWWindow();
         auto state = glfwGetKey(window, keycode);
-        return state == GLFW_PRESS || GLFW_REPEAT;
+        return state == GLFW_PRESS || state == GLFW_REPEAT;
     }
 
     bool Input::isMouseButtonPressedImpl(int button) {
