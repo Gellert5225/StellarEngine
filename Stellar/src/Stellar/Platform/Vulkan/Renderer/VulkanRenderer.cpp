@@ -96,9 +96,7 @@ namespace Stellar {
                                 time * glm::radians(90.0f),
                                 glm::vec3(0.0f, 0.0f, 1.0f));
 
-        ubo.viewProjection = camera.getProjectionMatrix() * glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f),
-                                                                glm::vec3(0.0f, 0.0f, 0.0f),
-                                                                glm::vec3(0.0f, 0.0f, 1.0f));
+        ubo.viewProjection = camera.getViewProjectionMatrix();
 
         void* data;
         m_UniformBuffer->map(&data);

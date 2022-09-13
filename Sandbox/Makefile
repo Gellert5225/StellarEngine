@@ -4,9 +4,9 @@ BIN_DIR = bin
 RM = rm -f
 
 # Compiler and flags
-CC = g++
-CFLAGS = -std=c++17 -Wall -g -O3
-INCLUDES = -I../Stellar/src/ -I../Stellar/vendor/spdlog/include -I../Stellar/vendor/glfw/include -I../Stellar/vendor/glm -I../Stellar/vendor/imgui
+CXX = g++
+CXXFLAGS = -std=c++17 -Wall -g -O3
+CPPFLAGS = -I../Stellar/src/ -I../Stellar/vendor/spdlog/include -I../Stellar/vendor/glfw/include -I../Stellar/vendor/glm -I../Stellar/vendor/imgui
 LFLAGS = -L./bin
 LIBS = -lStellar
 PWD = $(shell pwd)
@@ -50,7 +50,7 @@ endif
 SRC_DIR = src
 SHADER_DIR = resource/Shader
 SRCS := $(sort $(shell find $(SRC_DIR) -name '*.cpp'))
-OBJS = $(SRCS:%.cpp=$(BUILD_DIR)/%.o)
+OBJS = $(patsubst %.cpp,build/%.o,$(SRCS))
 VERT_SRCS := $(sort $(shell find $(SHADER_DIR) -name '*.vert'))
 FRAG_SRCS := $(sort $(shell find $(SHADER_DIR) -name '*.frag'))
 VERT_SPIRV = $(VERT_SRCS:%.vert=$(SHADER_DIR)/%.spv)
@@ -79,13 +79,16 @@ all: $(BIN_DIR)/$(MAIN)
 	$(COMPILE_SHADERS)
 	@echo Sandbox has been built to bin
 
-$(BIN_DIR)/$(MAIN): $(OBJS) 
+override CPPFLAGS += -MMD
+-include $(shell find build -name "*.d" 2> /dev/null)
+
+$(BIN_DIR)/$(MAIN): $(OBJS)
 	@mkdir -p '$(@D)'
-	@$(call run_and_test,$(CC) $(CFLAGS) $(INCLUDES) -o $(BIN_DIR)/$(MAIN) $(OBJS) $(LFLAGS) $(LIBS))
+	@$(call run_and_test,$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $(BIN_DIR)/$(MAIN) $(OBJS) $(LFLAGS) $(LIBS))
 
 $(BUILD_DIR)/%.o: %.cpp
 	@mkdir -p '$(@D)'
-	@$(call run_and_test, ($(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@))
+	@$(call run_and_test, ($(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $<  -o $@))
 
 run:
 	export $(EXPORT_FLAG)="${PWD}/bin"; \

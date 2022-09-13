@@ -2,15 +2,17 @@
 
 #include "Stellar/Core.h"
 
+#include <glm/gtc/matrix_transform.hpp>
 #include <glm/glm.hpp>
 
 namespace Stellar {
     class STLR_API Camera {
     public:
+        Camera();
         void setOrthographicProjection(float width, float height, float nearP, float farP);
         void setPerspectiveProjection(float fovy, float aspect, float near, float far);
 
-        void setPosition(const glm::vec3 position) { m_Position = position; }
+        void setPosition(const glm::vec3 position) { m_Position = position; recalculateViewMatrix(); }
         void setRotation(float rotation) { m_Rotation = rotation; recalculateViewMatrix(); }
 
         [[nodiscard]] const glm::mat4& getViewmatrix() const { return m_ViewMatrix; }
@@ -20,7 +22,7 @@ namespace Stellar {
         [[nodiscard]] const glm::vec3& getPosition() const { return m_Position; }
         [[nodiscard]] float getRotation() const { return m_Rotation; }
     private:
-        glm::mat4 m_ProjectionMatrix;
+        glm::mat4 m_ProjectionMatrix{};
         glm::mat4 m_ViewMatrix{};
         glm::mat4 m_ViewProjectionMatrix{};
 
