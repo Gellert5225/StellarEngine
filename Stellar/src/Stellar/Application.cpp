@@ -77,8 +77,6 @@ namespace Stellar {
 
         delete indexStagingBuffer;
 
-        //m_UniformBuffer = Buffer::Create(BufferType::Uniform, sizeof(GlobalUniforms));
-
         while (m_Running) {
             for (Layer* layer : m_LayerStack)
                 layer->onUpdate();
@@ -91,7 +89,7 @@ namespace Stellar {
             m_Camera.setPerspectiveProjection(glm::radians(45.0f),
                                               (float)extent.width / (float) extent.height,
                                               0.1f, 10.0f);
-            //m_Camera.setOrthographicProjection(-1, 1, 1, -1, -1, 1);
+            //m_Camera.setOrthographicProjection((float)extent.width, (float)extent.height, 0.1f, 10.0f);
             // geomoetry
             Renderer::BeginScene(m_Camera);
             m_CommandBuffer->begin();

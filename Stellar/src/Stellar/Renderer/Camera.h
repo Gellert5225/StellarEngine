@@ -7,10 +7,7 @@
 namespace Stellar {
     class STLR_API Camera {
     public:
-        //Camera(float left, float right, float top, float bottom, float near, float far);
-        void setOrthographicProjection(
-                float left, float right, float top, float bottom, float near, float far);
-
+        void setOrthographicProjection(float width, float height, float nearP, float farP);
         void setPerspectiveProjection(float fovy, float aspect, float near, float far);
 
         void setPosition(const glm::vec3 position) { m_Position = position; }
