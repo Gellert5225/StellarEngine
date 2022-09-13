@@ -124,7 +124,7 @@ namespace Stellar {
         ImGui::NewFrame();
     }
 
-    void ImGuiLayer::end(CommandBuffer* commandBuffer) const {
+    void ImGuiLayer::end() const {
         ImGuiIO& io = ImGui::GetIO();
         Application& app = Application::Get();
         io.DisplaySize = ImVec2(app.getWindow().getWidth(), app.getWindow().getHeight());

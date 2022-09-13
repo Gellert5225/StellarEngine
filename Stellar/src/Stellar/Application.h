@@ -46,26 +46,9 @@ namespace Stellar {
         std::unique_ptr<Window> m_Window;
         ImGuiLayer *m_ImGuiLayer;
         LayerStack m_LayerStack;
-        Camera m_Camera{};
-
-        Buffer* m_VertexBuffer{};
-        Buffer* m_IndexBuffer{};
-        Buffer* m_UniformBuffer{};
-        CommandBuffer* m_CommandBuffer{};
 
         bool onWindowClose(WindowCloseEvent&);
         bool onWindowResize(WindowResizeEvent&);
-
-        const std::vector<Vertex> vertices = {
-                {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-                {{ 0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
-                {{ 0.5f,  0.5f}, {0.0f, 0.0f, 1.0f}},
-                {{-0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}}
-        };
-
-        const std::vector<uint16_t> indices = {
-                0, 1, 2, 2, 3, 0
-        };
     };
 
     Application* CreateApplication();

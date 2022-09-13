@@ -16,13 +16,13 @@ namespace Stellar {
         void shutDown() override;
 
         void beginScene(Camera camera) override;
+        void endScene() override;
 
-        void beginRenderPass(CommandBuffer* commandBuffer) override;
-        void endRenderPass(CommandBuffer* commandBuffer) override;
+        void beginRenderPass() override;
+        void endRenderPass() override;
 
         void setClearColor(const glm::vec4& color) override;
-        void renderGeometry(CommandBuffer* commandBuffer,
-                            Buffer* vertexBuffer,
+        void renderGeometry(Buffer* vertexBuffer,
                             Buffer* indexBuffer,
                             uint32_t indexCount) override;
 

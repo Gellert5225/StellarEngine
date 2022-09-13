@@ -17,17 +17,19 @@ namespace Stellar {
         virtual void shutDown() = 0;
 
         virtual void beginScene(Camera camera) = 0;
+        virtual void endScene() = 0;
 
-        virtual void beginRenderPass(CommandBuffer* commandBuffer) = 0;
-        virtual void endRenderPass(CommandBuffer* commandBuffer) = 0;
+        virtual void beginRenderPass() = 0;
+        virtual void endRenderPass() = 0;
 
         virtual void setClearColor(const glm::vec4& color) = 0;
-        virtual void renderGeometry(CommandBuffer* commandBuffer,
-                                    Buffer* vertexBuffers,
+        virtual void renderGeometry(Buffer* vertexBuffers,
                                     Buffer* indexBuffer,
                                     uint32_t indexCount) = 0;
 
         static RendererAPIType Current() { return s_CurrentRendererAPI; }
+    protected:
+        CommandBuffer* m_CommandBuffer{};
     private:
         inline static RendererAPIType s_CurrentRendererAPI = RendererAPIType::Vulkan;
 

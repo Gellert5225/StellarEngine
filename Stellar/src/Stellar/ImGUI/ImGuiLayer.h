@@ -17,7 +17,7 @@ namespace Stellar {
         ~ImGuiLayer() override;
 
         void begin() const;
-        void end(CommandBuffer* commandBuffer) const;
+        void end() const;
 
         void onAttach() override;
         void onDetach() override;

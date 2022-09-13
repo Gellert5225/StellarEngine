@@ -17,7 +17,6 @@ namespace Stellar {
         m_Window->setEventCallback(BIND_EVENT_FN(Application::onEvent));
 
         Renderer::Init();
-        m_CommandBuffer = CommandBuffer::Create(3);
         m_ImGuiLayer = new ImGuiLayer();
     }
 
@@ -29,10 +28,6 @@ namespace Stellar {
             delete layer;
         }
 
-        delete m_CommandBuffer;
-
-        delete m_VertexBuffer;
-        delete m_IndexBuffer;
         Renderer::Shutdown();
 
         m_Window = nullptr;
@@ -61,50 +56,20 @@ namespace Stellar {
     }
 
     void Application::run() {
-        // vertex buffer
-        auto vertexBufferSize = sizeof(vertices[0]) * vertices.size();
-        auto* stagingBuffer = Buffer::Create(BufferType::Vertex, vertexBufferSize, vertices.data());
-        m_VertexBuffer = Buffer::Create(BufferType::Vertex, vertexBufferSize);
-        stagingBuffer->copy(*m_VertexBuffer);
-
-        delete stagingBuffer;
-
-        // index buffer
-        auto indexBufferSize = sizeof(indices[0]) * indices.size();
-        auto indexStagingBuffer = Buffer::Create(BufferType::Index, indexBufferSize, indices.data());
-        m_IndexBuffer = Buffer::Create(BufferType::Index,  indexBufferSize);
-        indexStagingBuffer->copy(*m_IndexBuffer);
-
-        delete indexStagingBuffer;
-
         while (m_Running) {
-            for (Layer* layer : m_LayerStack)
-                layer->onUpdate();
             m_Window->onUpdate();
 
             auto swapChain = m_Window->getSwapChain();
             swapChain->beginFrame();
 
-            auto extent = swapChain->getSwapChainExtent();
-            m_Camera.setPerspectiveProjection(glm::radians(45.0f),
-                                              (float)extent.width / (float) extent.height,
-                                              0.1f, 10.0f);
-            //m_Camera.setOrthographicProjection((float)extent.width, (float)extent.height, 0.1f, 10.0f);
-            // geomoetry
-            Renderer::BeginScene(m_Camera);
-            m_CommandBuffer->begin();
-            Renderer::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
-            Renderer::BeginRenderPass(m_CommandBuffer);
-            Renderer::RenderGeometry(m_CommandBuffer, m_VertexBuffer, m_IndexBuffer, indices.size());
-            Renderer::EndRenderPass(m_CommandBuffer);
-            m_CommandBuffer->end();
-            m_CommandBuffer->submit();
+            for (Layer* layer : m_LayerStack)
+                layer->onUpdate();
 
             // imGui
             m_ImGuiLayer->begin();
             for (Layer* layer : m_LayerStack)
                 layer->onImGuiRender();
-            m_ImGuiLayer->end(m_CommandBuffer);
+            m_ImGuiLayer->end();
 
             // present
             m_Window->swapBuffers();

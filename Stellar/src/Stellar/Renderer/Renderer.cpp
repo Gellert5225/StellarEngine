@@ -30,19 +30,18 @@ namespace Stellar {
         s_RendererAPI->shutDown();
     }
 
-    void Renderer::BeginRenderPass(CommandBuffer* commandBuffer) {
-        s_RendererAPI->beginRenderPass(commandBuffer);
+    void Renderer::BeginRenderPass() {
+        s_RendererAPI->beginRenderPass();
     }
 
-    void Renderer::EndRenderPass(CommandBuffer* commandBuffer) {
-        s_RendererAPI->endRenderPass(commandBuffer);
+    void Renderer::EndRenderPass() {
+        s_RendererAPI->endRenderPass();
     }
 
-    void Renderer::RenderGeometry(CommandBuffer* commandBuffer,
-                                  Buffer* vertexBuffer,
+    void Renderer::RenderGeometry(Buffer* vertexBuffer,
                                   Buffer* indexBuffer,
                                   uint32_t indexCount) {
-        s_RendererAPI->renderGeometry(commandBuffer, vertexBuffer, indexBuffer, indexCount);
+        s_RendererAPI->renderGeometry(vertexBuffer, indexBuffer, indexCount);
     }
 
     void Renderer::SetClearColor(const glm::vec4 &color) {
@@ -55,5 +54,9 @@ namespace Stellar {
 
     void Renderer::BeginScene(Camera camera) {
         s_RendererAPI->beginScene(camera);
+    }
+
+    void Renderer::EndScene() {
+        s_RendererAPI->endScene();
     }
 }

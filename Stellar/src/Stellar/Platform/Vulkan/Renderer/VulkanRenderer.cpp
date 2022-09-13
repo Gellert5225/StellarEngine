@@ -7,6 +7,7 @@
 namespace Stellar {
 
     void VulkanRenderer::init() {
+        m_CommandBuffer = CommandBuffer::Create(SwapChain::MAX_FRAMES_IN_FLIGHT);
         m_UniformBuffer = Buffer::Create(BufferType::Uniform, sizeof(GlobalUniforms));
 
         SwapChain* swapChain = Application::Get().getWindow().getSwapChain();
@@ -19,9 +20,10 @@ namespace Stellar {
     void VulkanRenderer::shutDown() {
         delete m_GraphicsPipeline;
         delete m_UniformBuffer;
+        delete m_CommandBuffer;
     }
 
-    void VulkanRenderer::beginRenderPass(CommandBuffer* commandBuffer) {
+    void VulkanRenderer::beginRenderPass() {
         SwapChain* swapChain = Application::Get().getWindow().getSwapChain();
 
         std::array<VkClearValue, 2> clearValues{};
@@ -37,7 +39,7 @@ namespace Stellar {
         renderPassInfo.clearValueCount = 2;
         renderPassInfo.pClearValues = clearValues.data();
 
-        vkCmdBeginRenderPass((VkCommandBuffer)commandBuffer->getActiveCommandBuffer(),
+        vkCmdBeginRenderPass((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
                              &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
         VkViewport viewport{};
@@ -47,37 +49,36 @@ namespace Stellar {
         viewport.height = static_cast<float>(swapChain->getSwapChainExtent().height);
         viewport.minDepth = 0.0f;
         viewport.maxDepth = 1.0f;
-        vkCmdSetViewport((VkCommandBuffer)commandBuffer->getActiveCommandBuffer(), 0, 1, &viewport);
+        vkCmdSetViewport((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(), 0, 1, &viewport);
 
         VkRect2D scissor{};
         scissor.offset = {0, 0};
         scissor.extent = swapChain->getSwapChainExtent();
-        vkCmdSetScissor((VkCommandBuffer)commandBuffer->getActiveCommandBuffer(), 0, 1, &scissor);
+        vkCmdSetScissor((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(), 0, 1, &scissor);
 
-        vkCmdBindPipeline((VkCommandBuffer)commandBuffer->getActiveCommandBuffer(),
+        vkCmdBindPipeline((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
                           VK_PIPELINE_BIND_POINT_GRAPHICS,
                           *m_GraphicsPipeline->getPipeline());
     }
 
-    void VulkanRenderer::endRenderPass(CommandBuffer* commandBuffer) {
-        vkCmdEndRenderPass((VkCommandBuffer)commandBuffer->getActiveCommandBuffer());
+    void VulkanRenderer::endRenderPass() {
+        vkCmdEndRenderPass((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer());
     }
 
-    void VulkanRenderer::renderGeometry(CommandBuffer* commandBuffer,
-                                        Buffer* vertexBuffer,
+    void VulkanRenderer::renderGeometry(Buffer* vertexBuffer,
                                         Buffer* indexBuffer,
                                         uint32_t indexCount) {
         VkDeviceSize offsets[] = {0};
         auto buffers = (VkBuffer)vertexBuffer->getBuffer();
-        vkCmdBindVertexBuffers((VkCommandBuffer)commandBuffer->getActiveCommandBuffer(),
+        vkCmdBindVertexBuffers((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
                                0, 1, &buffers, offsets);
-        vkCmdBindIndexBuffer((VkCommandBuffer)commandBuffer->getActiveCommandBuffer(),
+        vkCmdBindIndexBuffer((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
                              (VkBuffer)indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT16);
-        vkCmdBindDescriptorSets((VkCommandBuffer)commandBuffer->getActiveCommandBuffer(),
+        vkCmdBindDescriptorSets((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
                                 VK_PIPELINE_BIND_POINT_GRAPHICS,
                                 *m_GraphicsPipeline->getPipelineLayout(),
                                 0, 1, &m_DescriptorSets[Renderer::GetCurrentFrameIndex()], 0, nullptr);
-        vkCmdDrawIndexed((VkCommandBuffer)commandBuffer->getActiveCommandBuffer(),
+        vkCmdDrawIndexed((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
                          indexCount, 1, 0, 0, 0);
     }
 
@@ -87,11 +88,9 @@ namespace Stellar {
 
     void VulkanRenderer::beginScene(Camera camera) {
         static auto startTime = std::chrono::high_resolution_clock::now();
-
         auto currentTime = std::chrono::high_resolution_clock::now();
         float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
-        auto extent = Application::Get().getWindow().getSwapChain()->getSwapChainExtent();
         GlobalUniforms ubo{};
         ubo.model = glm::rotate(glm::mat4(1.0f),
                                 time * glm::radians(90.0f),
@@ -105,6 +104,8 @@ namespace Stellar {
         m_UniformBuffer->map(&data);
         m_UniformBuffer->write(data, &ubo);
         m_UniformBuffer->unMap();
+
+        m_CommandBuffer->begin();
     }
 
     void VulkanRenderer::createDescriptorSets() {
@@ -142,5 +143,10 @@ namespace Stellar {
             vkUpdateDescriptorSets(VulkanDevice::GetInstance()->logicalDevice(), 1, &descriptorWrite, 0, nullptr);
         }
 
+    }
+
+    void VulkanRenderer::endScene() {
+        m_CommandBuffer->end();
+        m_CommandBuffer->submit();
     }
 }
