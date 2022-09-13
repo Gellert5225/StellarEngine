@@ -3,7 +3,7 @@
 #include "RendererAPI.h"
 #include "Buffer.h"
 #include "CommandBuffer.h"
-
+#include "Camera.h"
 #include "Stellar/Core.h"
 
 #include <glm/glm.hpp>
@@ -16,7 +16,7 @@ namespace Stellar {
         static void Init();
         static void Shutdown();
 
-        static void BeginScene();
+        static void BeginScene(Camera camera);
 
         static void BeginRenderPass(CommandBuffer* commandBuffer);
         static void EndRenderPass(CommandBuffer* commandBuffer);

@@ -9,7 +9,7 @@
 namespace Stellar {
     Application* Application::s_Instance = nullptr;
 
-    Application::Application() : m_Camera(-1.0f, -1.0f, -1.0f, -1.0f) {
+    Application::Application() {
         STLR_CORE_ASSERT(!s_Instance, "Application already exists")
         s_Instance = this;
         m_Window = std::unique_ptr<Window>(Window::Create());
@@ -87,8 +87,13 @@ namespace Stellar {
             auto swapChain = m_Window->getSwapChain();
             swapChain->beginFrame();
 
+            auto extent = swapChain->getSwapChainExtent();
+            m_Camera.setPerspectiveProjection(glm::radians(45.0f),
+                                              (float)extent.width / (float) extent.height,
+                                              0.1f, 10.0f);
+            //m_Camera.setOrthographicProjection(-1, 1, 1, -1, -1, 1);
             // geomoetry
-            Renderer::BeginScene();
+            Renderer::BeginScene(m_Camera);
             m_CommandBuffer->begin();
             Renderer::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
             Renderer::BeginRenderPass(m_CommandBuffer);

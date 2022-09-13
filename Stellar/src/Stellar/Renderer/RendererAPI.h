@@ -2,6 +2,7 @@
 
 #include "Buffer.h"
 #include "CommandBuffer.h"
+#include "Camera.h"
 
 #include <glm/glm.hpp>
 
@@ -15,7 +16,7 @@ namespace Stellar {
         virtual void init() = 0;
         virtual void shutDown() = 0;
 
-        virtual void beginScene() = 0;
+        virtual void beginScene(Camera camera) = 0;
 
         virtual void beginRenderPass(CommandBuffer* commandBuffer) = 0;
         virtual void endRenderPass(CommandBuffer* commandBuffer) = 0;

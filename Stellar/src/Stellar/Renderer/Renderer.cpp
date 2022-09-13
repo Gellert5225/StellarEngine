@@ -53,7 +53,7 @@ namespace Stellar {
         return Application::Get().getWindow().getSwapChain()->getCurrentFrameIndex();
     }
 
-    void Renderer::BeginScene() {
-        s_RendererAPI->beginScene();
+    void Renderer::BeginScene(Camera camera) {
+        s_RendererAPI->beginScene(camera);
     }
 }

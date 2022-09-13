@@ -11,6 +11,9 @@ Stellar Engine is a cross-platform game engine using Vulkan API. Inspired by Che
 Currently it is at the very initial state of development. It supports Windows10(64 bit), Linux(64 bit) and macOS with Intel CPU. 
 > Although theoretically it should support Apple Silicon but I do not have a M1 Mac
 
+### Current Stage
+![](Screenshots/currentStage.png)
+
 ## Installation
 
 ### Prerequisite

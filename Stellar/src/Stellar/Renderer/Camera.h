@@ -5,9 +5,13 @@
 #include <glm/glm.hpp>
 
 namespace Stellar {
-    class STLR_API OrthographicCamera {
+    class STLR_API Camera {
     public:
-        OrthographicCamera(float left, float right, float bottom, float top);
+        //Camera(float left, float right, float top, float bottom, float near, float far);
+        void setOrthographicProjection(
+                float left, float right, float top, float bottom, float near, float far);
+
+        void setPerspectiveProjection(float fovy, float aspect, float near, float far);
 
         void setPosition(const glm::vec3 position) { m_Position = position; }
         void setRotation(float rotation) { m_Rotation = rotation; recalculateViewMatrix(); }

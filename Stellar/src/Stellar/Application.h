@@ -12,7 +12,7 @@
 #include "Events/Event.h"
 #include "Events/ApplicationEvent.h"
 #include "Renderer/Renderer.h"
-#include "Renderer/OrthographicCamera.h"
+#include "Renderer/Camera.h"
 
 namespace Stellar {
     class STLR_API Application {
@@ -46,7 +46,7 @@ namespace Stellar {
         std::unique_ptr<Window> m_Window;
         ImGuiLayer *m_ImGuiLayer;
         LayerStack m_LayerStack;
-        OrthographicCamera m_Camera;
+        Camera m_Camera{};
 
         Buffer* m_VertexBuffer{};
         Buffer* m_IndexBuffer{};

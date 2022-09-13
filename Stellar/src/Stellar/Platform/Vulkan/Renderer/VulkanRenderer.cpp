@@ -85,7 +85,7 @@ namespace Stellar {
         m_ClearColor = {{ color.r, color.g, color.b, color.a }};
     }
 
-    void VulkanRenderer::beginScene() {
+    void VulkanRenderer::beginScene(Camera camera) {
         static auto startTime = std::chrono::high_resolution_clock::now();
 
         auto currentTime = std::chrono::high_resolution_clock::now();
@@ -97,11 +97,10 @@ namespace Stellar {
                                 time * glm::radians(90.0f),
                                 glm::vec3(0.0f, 0.0f, 1.0f));
 
-        auto proj = glm::perspective(glm::radians(45.0f), extent.width / (float) extent.height, 0.1f, 10.0f);
-        proj[1][1] *= -1;
-        ubo.viewProjection = proj * glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f),
-                                                glm::vec3(0.0f, 0.0f, 0.0f),
-                                                glm::vec3(0.0f, 0.0f, 1.0f));
+        ubo.viewProjection = camera.getProjectionMatrix() * glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f),
+                                                                glm::vec3(0.0f, 0.0f, 0.0f),
+                                                                glm::vec3(0.0f, 0.0f, 1.0f));
+
         void* data;
         m_UniformBuffer->map(&data);
         m_UniformBuffer->write(data, &ubo);

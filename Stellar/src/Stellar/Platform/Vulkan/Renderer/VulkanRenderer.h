@@ -15,7 +15,7 @@ namespace Stellar {
         void init() override;
         void shutDown() override;
 
-        void beginScene() override;
+        void beginScene(Camera camera) override;
 
         void beginRenderPass(CommandBuffer* commandBuffer) override;
         void endRenderPass(CommandBuffer* commandBuffer) override;
