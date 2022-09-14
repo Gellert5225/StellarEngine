@@ -56,7 +56,7 @@ namespace Stellar {
         rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
         rasterizer.lineWidth = 1.0f;
         rasterizer.cullMode = VK_CULL_MODE_NONE;
-        rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
+        rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
         rasterizer.depthBiasEnable = VK_FALSE;
         rasterizer.depthBiasConstantFactor = 0.0f;
         rasterizer.depthBiasClamp = 0.0f;
@@ -112,7 +112,7 @@ namespace Stellar {
         pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange; // Optional
 
         if (vkCreatePipelineLayout(VulkanDevice::GetInstance()->logicalDevice(),
-                                   &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
+                                   &pipelineLayoutInfo, nullptr, &m_PipelineLayout) != VK_SUCCESS) {
             throw std::runtime_error("failed to create pipeline layout!");
         }
 
@@ -128,14 +128,14 @@ namespace Stellar {
         pipelineInfo.pDepthStencilState = nullptr; // Optional
         pipelineInfo.pColorBlendState = &colorBlending;
         pipelineInfo.pDynamicState = &dynamicState;
-        pipelineInfo.layout = pipelineLayout;
+        pipelineInfo.layout = m_PipelineLayout;
         pipelineInfo.renderPass = renderPass;
         pipelineInfo.subpass = 0;
         pipelineInfo.basePipelineHandle = VK_NULL_HANDLE; // Optional
 
         if (vkCreateGraphicsPipelines(VulkanDevice::GetInstance()->logicalDevice(),
                                       VK_NULL_HANDLE, 1, &pipelineInfo, nullptr,
-                                      &pipeline) != VK_SUCCESS) {
+                                      &m_Pipeline) != VK_SUCCESS) {
             throw std::runtime_error("failed to create graphics pipeline!");
         }
 

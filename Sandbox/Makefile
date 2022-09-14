@@ -8,7 +8,7 @@ CXX = g++
 CXXFLAGS = -std=c++17 -Wall -g -O3
 CPPFLAGS = -I../Stellar/src/ -I../Stellar/vendor/spdlog/include -I../Stellar/vendor/glfw/include -I../Stellar/vendor/glm -I../Stellar/vendor/imgui
 LFLAGS = -L./bin
-LIBS = -lStellar -lglfw3
+LIBS = -lStellar -lglfw
 PWD = $(shell pwd)
 EXPORT_FLAG =
 SHADER_FLAG = glslc

@@ -16,10 +16,10 @@ namespace Stellar {
     }
 
     VkPipeline* Pipeline::getPipeline() {
-        return &pipeline;
+        return &m_Pipeline;
     }
 
     VkPipelineLayout* Pipeline::getPipelineLayout() {
-        return &pipelineLayout;
+        return &m_PipelineLayout;
     }
 }
