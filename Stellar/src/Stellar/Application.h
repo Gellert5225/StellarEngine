@@ -6,6 +6,8 @@
 
 #include "ImGUI/ImGuiLayer.h"
 
+#include "Core/Timestep.h"
+
 #include "Platform/Vulkan/Instance/VulkanInstance.h"
 #include "Platform/Vulkan/Device/VulkanDevice.h"
 
@@ -46,6 +48,7 @@ namespace Stellar {
         std::unique_ptr<Window> m_Window;
         ImGuiLayer *m_ImGuiLayer;
         LayerStack m_LayerStack;
+        float m_LastFrameTime = 0.0f;
 
         bool onWindowClose(WindowCloseEvent&);
         bool onWindowResize(WindowResizeEvent&);

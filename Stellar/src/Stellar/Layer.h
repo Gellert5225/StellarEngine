@@ -2,6 +2,7 @@
 
 #include "Core.h"
 #include "Events/Event.h"
+#include "Core/Timestep.h"
 
 namespace Stellar {
     class STLR_API Layer {
@@ -11,7 +12,7 @@ namespace Stellar {
 
         virtual void onAttach() {}
         virtual void onDetach() {}
-        virtual void onUpdate() {}
+        virtual void onUpdate(Timestep ts) {}
         virtual void onEvent(Event& e) {}
         virtual void onImGuiRender() {}
 

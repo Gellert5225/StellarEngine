@@ -27,16 +27,16 @@ ExampleLayer::ExampleLayer() : Layer("Example") {
     m_Camera.setPerspectiveProjection(glm::radians(45.0f), perspective, 0.1f, 10.0f);
 }
 
-void ExampleLayer::onUpdate() {
+void ExampleLayer::onUpdate(Stellar::Timestep ts) {
     // camera movement
     if (Stellar::Input::IsKeyPressed(STLR_KEY_LEFT))
-        m_CameraPosition.x += m_CameraSpeed;
+        m_CameraPosition.x += m_CameraSpeed * ts;
     else if (Stellar::Input::IsKeyPressed(STLR_KEY_RIGHT))
-        m_CameraPosition.x -= m_CameraSpeed;
+        m_CameraPosition.x -= m_CameraSpeed * ts;
     if (Stellar::Input::IsKeyPressed(STLR_KEY_UP))
-        m_CameraPosition.z += m_CameraSpeed;
+        m_CameraPosition.z += m_CameraSpeed * ts;
     else if (Stellar::Input::IsKeyPressed(STLR_KEY_DOWN))
-        m_CameraPosition.z -= m_CameraSpeed;
+        m_CameraPosition.z -= m_CameraSpeed * ts;
 
     m_Camera.setPosition(m_CameraPosition);
     Stellar::Renderer::BeginScene(m_Camera);

@@ -4,8 +4,6 @@
 #include "Log.h"
 #include "Input.h"
 
-#include "Renderer/Uniforms.h"
-
 namespace Stellar {
     Application* Application::s_Instance = nullptr;
 
@@ -57,13 +55,15 @@ namespace Stellar {
 
     void Application::run() {
         while (m_Running) {
-            m_Window->onUpdate();
+            auto time = (float)glfwGetTime();
+            Timestep timestep{time - m_LastFrameTime};
+            m_LastFrameTime = time;
 
             auto swapChain = m_Window->getSwapChain();
             swapChain->beginFrame();
 
             for (Layer* layer : m_LayerStack)
-                layer->onUpdate();
+                layer->onUpdate(timestep);
 
             // imGui
             m_ImGuiLayer->begin();
@@ -73,6 +73,8 @@ namespace Stellar {
 
             // present
             m_Window->swapBuffers();
+
+            m_Window->onUpdate();
         }
 
         vkDeviceWaitIdle(VulkanDevice::GetInstance()->logicalDevice());
