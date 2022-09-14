@@ -24,7 +24,7 @@ ExampleLayer::ExampleLayer() : Layer("Example") {
     auto extent = Stellar::Application::Get().getWindow().getSwapChain()->getSwapChainExtent();
     auto perspective = (float)extent.width / (float) extent.height;
     //m_Camera.setOrtho(-perspective, perspective, -1, 1, -10, 10);
-    m_Camera.setPerspectiveProjection(glm::radians(45.0f), perspective, 0.1f, 10.0f);
+    m_Camera.setPerspectiveProjection(glm::radians(60.0f), perspective, 0.1f, 10.0f);
 }
 
 void ExampleLayer::onUpdate(Stellar::Timestep ts) {
@@ -38,11 +38,15 @@ void ExampleLayer::onUpdate(Stellar::Timestep ts) {
     else if (Stellar::Input::IsKeyPressed(STLR_KEY_DOWN))
         m_CameraPosition.z -= m_CameraSpeed * ts;
 
+    glm::mat4 transform = glm::rotate(glm::mat4(1.0f),
+                                      Stellar::Timestep::GetCurrentTime() * glm::radians(90.0f),
+                                      glm::vec3(1.0f, 0.0f, 1.0f));
+
     m_Camera.setPosition(m_CameraPosition);
     Stellar::Renderer::BeginScene(m_Camera);
     Stellar::Renderer::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
     Stellar::Renderer::BeginRenderPass();
-    Stellar::Renderer::RenderGeometry(m_VertexBuffer, m_IndexBuffer, indices.size());
+    Stellar::Renderer::RenderGeometry(m_VertexBuffer, m_IndexBuffer, indices.size(), transform);
     Stellar::Renderer::EndRenderPass();
     Stellar::Renderer::EndScene();
 }

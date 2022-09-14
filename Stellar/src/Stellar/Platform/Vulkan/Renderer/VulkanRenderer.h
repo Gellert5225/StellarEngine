@@ -24,7 +24,8 @@ namespace Stellar {
         void setClearColor(const glm::vec4& color) override;
         void renderGeometry(Buffer* vertexBuffer,
                             Buffer* indexBuffer,
-                            uint32_t indexCount) override;
+                            uint32_t indexCount,
+                            const glm::mat4& transform) override;
 
     private:
         GraphicsPipeline* m_GraphicsPipeline = nullptr;

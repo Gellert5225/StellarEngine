@@ -25,7 +25,8 @@ namespace Stellar {
         static void SetClearColor(const glm::vec4& color);
         static void RenderGeometry(Buffer* vertexBuffer,
                                    Buffer* indexBuffer,
-                                   uint32_t indexCount);
+                                   uint32_t indexCount,
+                                   const glm::mat4& transform);
 
         static uint32_t GetCurrentFrameIndex();
     };

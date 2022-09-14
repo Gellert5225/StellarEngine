@@ -4,6 +4,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <chrono>
 
+#include "Stellar/Log.h"
+
 namespace Stellar {
 
     void VulkanRenderer::init() {
@@ -67,7 +69,18 @@ namespace Stellar {
 
     void VulkanRenderer::renderGeometry(Buffer* vertexBuffer,
                                         Buffer* indexBuffer,
-                                        uint32_t indexCount) {
+                                        uint32_t indexCount,
+                                        const glm::mat4& transform) {
+        Push push{};
+        push.model = transform;
+
+        vkCmdPushConstants((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
+                           *m_GraphicsPipeline->getPipelineLayout(),
+                           VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+                           0,
+                           sizeof(Push),
+                           &push);
+
         VkDeviceSize offsets[] = {0};
         auto buffers = (VkBuffer)vertexBuffer->getBuffer();
         vkCmdBindVertexBuffers((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
@@ -87,14 +100,7 @@ namespace Stellar {
     }
 
     void VulkanRenderer::beginScene(Camera camera) {
-        static auto startTime = std::chrono::high_resolution_clock::now();
-        auto currentTime = std::chrono::high_resolution_clock::now();
-        float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-
         GlobalUniforms ubo{};
-        ubo.model = glm::rotate(glm::mat4(1.0f),
-                                time * glm::radians(90.0f),
-                                glm::vec3(1.0f, 0.0f, 1.0f));
 
         ubo.viewProjection = camera.getViewProjectionMatrix();
 

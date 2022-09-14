@@ -1,12 +1,13 @@
 #pragma once
 
-#include "Stellar/Core.h"
-
 #include <glm/glm.hpp>
 
 namespace Stellar {
-    struct STLR_API GlobalUniforms {
-        glm::mat4 viewProjection{1.f};
-        glm::mat4 model{1.f};
+    struct GlobalUniforms {
+        alignas(16) glm::mat4 viewProjection{1.f};
+    };
+
+    struct Push {
+        alignas(16) glm::mat4 model{1.f};
     };
 }

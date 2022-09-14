@@ -40,8 +40,9 @@ namespace Stellar {
 
     void Renderer::RenderGeometry(Buffer* vertexBuffer,
                                   Buffer* indexBuffer,
-                                  uint32_t indexCount) {
-        s_RendererAPI->renderGeometry(vertexBuffer, indexBuffer, indexCount);
+                                  uint32_t indexCount,
+                                  const glm::mat4& transform) {
+        s_RendererAPI->renderGeometry(vertexBuffer, indexBuffer, indexCount, transform);
     }
 
     void Renderer::SetClearColor(const glm::vec4 &color) {
