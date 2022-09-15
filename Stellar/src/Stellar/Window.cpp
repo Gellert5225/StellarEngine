@@ -44,7 +44,7 @@ namespace Stellar {
         setVsync(true);
 
         m_Context = RendererContext::Create();
-        m_SwapChain = new SwapChain();
+        m_SwapChain = SwapChain::Create();
 
         // GLFW callbacks
 //        glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {

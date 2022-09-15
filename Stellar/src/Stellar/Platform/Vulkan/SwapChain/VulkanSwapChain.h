@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Stellar/Core.h"
+#include "Stellar/Renderer/SwapChain.h"
 #include "Stellar/Platform/Vulkan/Buffer/FrameBuffer.h"
 #include "Stellar/Platform/Vulkan/Command/VulkanCommandBuffer.h"
 #include "Stellar/Platform/Vulkan/RenderPass/StandardRenderPass.h"
@@ -12,7 +13,7 @@
 #include <memory>
 
 namespace Stellar {
-    class STLR_API SwapChain {
+    class STLR_API VulkanSwapChain : public SwapChain {
     public:
         struct SwapChainSupportDetails {
             VkSurfaceCapabilitiesKHR capabilities;
@@ -21,21 +22,21 @@ namespace Stellar {
         };
 
     public:
-        SwapChain();
-        ~SwapChain();
+        VulkanSwapChain();
+        ~VulkanSwapChain() override;
 
-        void beginFrame();
-        void present();
-        void onResize();
+        void beginFrame() override;
+        void present() override;
+        void onResize() override;
 
         [[nodiscard]] const std::vector<VkImage>* getSwapChainImages() const;
         [[nodiscard]] VkFormat getSwapChainImageFormat() const;
-        [[nodiscard]] VkExtent2D getSwapChainExtent() const;
+        [[nodiscard]] SwapChainExtent2D getSwapChainExtent() const override;
         [[nodiscard]] VkSwapchainKHR& getSwapChain();
         [[nodiscard]] VkRenderPass getRenderPass() const;
         [[nodiscard]] VkRenderPass getImGuiRenderPass() const;
         [[nodiscard]] uint32_t getImageCount() const;
-        [[nodiscard]] uint32_t getCurrentFrameIndex() const;
+        [[nodiscard]] uint32_t getCurrentFrameIndex() const override;
         [[nodiscard]] VkFramebuffer getCurrentFrameBuffer() const;
         [[nodiscard]] VkFramebuffer getCurrentImGuiFrameBuffer() const;
         [[nodiscard]] VkCommandBuffer getCurrentCommandBuffer() const;
@@ -47,7 +48,7 @@ namespace Stellar {
         VkSwapchainKHR m_VulkanSwapChain = VK_NULL_HANDLE;
 
         VkFormat m_SwapChainImageFormat{};
-        VkExtent2D m_SwapChainExtent{};
+        SwapChainExtent2D m_SwapChainExtent{};
 
         StandardRenderPass* m_RenderPass = nullptr;
         ImGuiRenderPass* m_ImGuiRenderPass = nullptr;

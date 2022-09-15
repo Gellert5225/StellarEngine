@@ -34,6 +34,7 @@ namespace Stellar {
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
+        auto swapChain = (VulkanSwapChain*)Application::Get().getWindow().getSwapChain();
         VkDescriptorPoolSize pool_sizes[] = {
             {VK_DESCRIPTOR_TYPE_SAMPLER, 1000},
             {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000},
@@ -74,10 +75,9 @@ namespace Stellar {
         init_info.DescriptorPool = m_DescriptorPool;
         init_info.Allocator = VK_NULL_HANDLE;
         init_info.MinImageCount = 2;
-        init_info.ImageCount = Application::Get().getWindow().getSwapChain()->getImageCount();
+        init_info.ImageCount = swapChain->getImageCount();
         init_info.CheckVkResultFn = vulkanCheckResult;
-        ImGui_ImplVulkan_Init(&init_info,
-                              Application::Get().getWindow().getSwapChain()->getRenderPass());
+        ImGui_ImplVulkan_Init(&init_info, swapChain->getRenderPass());
 
         auto device = VulkanDevice::GetInstance();
         VkCommandBuffer commandBuffer = device->beginSingleTimeCommands();
@@ -87,7 +87,7 @@ namespace Stellar {
         VK_CHECK_RESULT(vkDeviceWaitIdle(VulkanDevice::GetInstance()->logicalDevice()));
         ImGui_ImplVulkan_DestroyFontUploadObjects();
 
-        uint32_t framesInFlight = SwapChain::MAX_FRAMES_IN_FLIGHT;
+        uint32_t framesInFlight = VulkanSwapChain::MAX_FRAMES_IN_FLIGHT;
         s_ImGuiCommandBuffers.resize(framesInFlight);
         for (uint32_t i = 0; i < framesInFlight; i++) {
             VkCommandBuffer cmdBuffer;
@@ -137,7 +137,7 @@ namespace Stellar {
             ImGui::RenderPlatformWindowsDefault();
         }
 
-        auto swapChain = Application::Get().getWindow().getSwapChain();
+        auto swapChain = (VulkanSwapChain*)Application::Get().getWindow().getSwapChain();
 
 #if 1
         VkClearValue clearValues[1];
@@ -157,7 +157,8 @@ namespace Stellar {
         renderPassBeginInfo.renderPass = swapChain->getImGuiRenderPass();
         renderPassBeginInfo.renderArea.offset.x = 0;
         renderPassBeginInfo.renderArea.offset.y = 0;
-        renderPassBeginInfo.renderArea.extent = swapChain->getSwapChainExtent();
+        renderPassBeginInfo.renderArea.extent.width = swapChain->getSwapChainExtent().width;
+        renderPassBeginInfo.renderArea.extent.height = swapChain->getSwapChainExtent().height;
         renderPassBeginInfo.clearValueCount = 1;
         renderPassBeginInfo.pClearValues = clearValues;
         renderPassBeginInfo.framebuffer = swapChain->getCurrentImGuiFrameBuffer();

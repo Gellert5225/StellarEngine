@@ -34,6 +34,7 @@ else
 		OS = macos
 		EXPORT_FLAG = DYLD_LIBRARY_PATH
 		LIBS += -lglfw.3
+		CPPFLAGS += -I../Stellar/vendor/metal-cpp
 
 		INSTALL_NAME_TOOL_STELLAR = $(shell install_name_tool -change lib/libStellar.dylib  "@executable_path/../Frameworks/libStellar.dylib" ../macOS/StellarEngine.app/Contents/MacOS/Sandbox)
     	INSTALL_NAME_TOOL_GLFW = $(shell install_name_tool -add_rpath "@executable_path/../Frameworks" ../macOS/StellarEngine.app/Contents/MacOS/Sandbox)

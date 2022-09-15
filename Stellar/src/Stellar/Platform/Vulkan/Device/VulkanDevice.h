@@ -2,7 +2,7 @@
 
 #include "Stellar/Core.h"
 #include "Stellar/Platform/Vulkan/Instance/VulkanInstance.h"
-#include "Stellar/Platform/Vulkan/SwapChain/SwapChain.h"
+#include "Stellar/Platform/Vulkan/SwapChain/VulkanSwapChain.h"
 #include "Stellar/Platform/Vulkan/Queue/Queue.h"
 
 #include <vulkan/vulkan.h>
@@ -23,7 +23,7 @@ namespace Stellar {
         [[nodiscard]] VkPhysicalDevice physicalDevice() const;
         [[nodiscard]] VkDevice logicalDevice() const;
 
-        [[nodiscard]] SwapChain::SwapChainSupportDetails getSwapChainSupport() const;
+        [[nodiscard]] VulkanSwapChain::SwapChainSupportDetails getSwapChainSupport() const;
 
         [[nodiscard]] VkPhysicalDeviceProperties getDeviceProperties() const;
 
@@ -53,7 +53,7 @@ namespace Stellar {
         void createCommandPool();
 
         Queue::QueueFamilyIndices findQueueFamilies(VkPhysicalDevice) const;
-        SwapChain::SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice) const;
+        VulkanSwapChain::SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice) const;
     };
 }
 

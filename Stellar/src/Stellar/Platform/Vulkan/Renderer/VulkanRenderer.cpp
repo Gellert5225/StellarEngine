@@ -10,10 +10,10 @@
 namespace Stellar {
 
     void VulkanRenderer::init() {
-        m_CommandBuffer = CommandBuffer::Create(SwapChain::MAX_FRAMES_IN_FLIGHT);
+        m_CommandBuffer = CommandBuffer::Create(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
         m_UniformBuffer = Buffer::Create(BufferType::Uniform, sizeof(GlobalUniforms));
 
-        SwapChain* swapChain = Application::Get().getWindow().getSwapChain();
+        auto swapChain = (VulkanSwapChain*)Application::Get().getWindow().getSwapChain();
         m_GraphicsPipeline = new GraphicsPipeline("../Resources/Shader/shaderVert.spv",
                                                   "../Resources/Shader/shaderFrag.spv",
                                                   swapChain->getRenderPass());
@@ -27,7 +27,7 @@ namespace Stellar {
     }
 
     void VulkanRenderer::beginRenderPass() {
-        SwapChain* swapChain = Application::Get().getWindow().getSwapChain();
+        auto swapChain = (VulkanSwapChain*)Application::Get().getWindow().getSwapChain();
 
         std::array<VkClearValue, 2> clearValues{};
         clearValues[0].color = m_ClearColor;
@@ -38,7 +38,8 @@ namespace Stellar {
         renderPassInfo.renderPass = swapChain->getRenderPass();
         renderPassInfo.framebuffer = swapChain->getCurrentFrameBuffer();
         renderPassInfo.renderArea.offset = {0, 0};
-        renderPassInfo.renderArea.extent = swapChain->getSwapChainExtent();
+        renderPassInfo.renderArea.extent.width = swapChain->getSwapChainExtent().width;
+        renderPassInfo.renderArea.extent.height = swapChain->getSwapChainExtent().height;
         renderPassInfo.clearValueCount = 2;
         renderPassInfo.pClearValues = clearValues.data();
 
@@ -56,7 +57,8 @@ namespace Stellar {
 
         VkRect2D scissor{};
         scissor.offset = {0, 0};
-        scissor.extent = swapChain->getSwapChainExtent();
+        scissor.extent.width = swapChain->getSwapChainExtent().width;
+        scissor.extent.height = swapChain->getSwapChainExtent().height;
         vkCmdSetScissor((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(), 0, 1, &scissor);
 
         vkCmdBindPipeline((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
@@ -114,23 +116,23 @@ namespace Stellar {
     }
 
     void VulkanRenderer::createDescriptorSets() {
-        std::vector<VkDescriptorSetLayout> layouts(SwapChain::MAX_FRAMES_IN_FLIGHT,
+        std::vector<VkDescriptorSetLayout> layouts(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT,
                                                    m_GraphicsPipeline->getDescriptorSetLayout());
 
         VkDescriptorSetAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
         allocInfo.descriptorPool = m_GraphicsPipeline->getDescriptorPool();
-        allocInfo.descriptorSetCount = SwapChain::MAX_FRAMES_IN_FLIGHT;
+        allocInfo.descriptorSetCount = VulkanSwapChain::MAX_FRAMES_IN_FLIGHT;
         allocInfo.pSetLayouts = layouts.data();
 
-        m_DescriptorSets.resize(SwapChain::MAX_FRAMES_IN_FLIGHT);
+        m_DescriptorSets.resize(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
 
         if (vkAllocateDescriptorSets(VulkanDevice::GetInstance()->logicalDevice(),
                                      &allocInfo, m_DescriptorSets.data()) != VK_SUCCESS) {
             throw std::runtime_error("failed to allocate descriptor sets!");
         }
 
-        for (size_t i = 0; i < SwapChain::MAX_FRAMES_IN_FLIGHT; i++) {
+        for (size_t i = 0; i < VulkanSwapChain::MAX_FRAMES_IN_FLIGHT; i++) {
             VkDescriptorBufferInfo bufferInfo{};
             bufferInfo.buffer = (VkBuffer)m_UniformBuffer->getBuffer();
             bufferInfo.offset = 0;

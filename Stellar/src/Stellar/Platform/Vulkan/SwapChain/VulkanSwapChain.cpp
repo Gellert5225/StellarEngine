@@ -1,18 +1,20 @@
 #include "stlrpch.h"
-#include "SwapChain.h"
-#include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
+
+#include "VulkanSwapChain.h"
 #include "VulkanSurface.h"
+
+#include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 #include "Stellar/Platform/Vulkan/VulkanCommon.h"
 #include "Stellar/Application.h"
 
 #include "Stellar/Log.h"
 
 namespace Stellar {
-    SwapChain::SwapChain() {
+    VulkanSwapChain::VulkanSwapChain() {
         init();
     }
 
-    void SwapChain::init() {
+    void VulkanSwapChain::init() {
         createSwapChain();
         createImageViews();
         createRenderPass();
@@ -21,7 +23,7 @@ namespace Stellar {
         createSemaphores();
     }
 
-    VkSurfaceFormatKHR SwapChain::chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) {
+    VkSurfaceFormatKHR VulkanSwapChain::chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) {
         for (const auto& availableFormat : availableFormats) {
             if (availableFormat.format == VK_FORMAT_B8G8R8A8_UNORM &&
                 availableFormat.colorSpace == VK_COLORSPACE_SRGB_NONLINEAR_KHR)
@@ -30,7 +32,7 @@ namespace Stellar {
         return availableFormats[0];
     }
 
-    VkPresentModeKHR SwapChain::chooseSwapPresentMode(
+    VkPresentModeKHR VulkanSwapChain::chooseSwapPresentMode(
             const std::vector<VkPresentModeKHR>& availblePresentModes) {
         for (const auto& availablePresentMode : availblePresentModes) {
             if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR)
@@ -39,7 +41,7 @@ namespace Stellar {
         return VK_PRESENT_MODE_FIFO_KHR;
     }
 
-    VkExtent2D SwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) {
+    VkExtent2D VulkanSwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) {
         if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
             return capabilities.currentExtent;
         } else {
@@ -62,7 +64,7 @@ namespace Stellar {
         }
     }
 
-    SwapChain::~SwapChain() {
+    VulkanSwapChain::~VulkanSwapChain() {
         for (auto& commandBuffer : m_CommandBuffers)
             vkDestroyCommandPool(VulkanDevice::GetInstance()->logicalDevice(), commandBuffer.CommandPool, nullptr);
 
@@ -93,55 +95,55 @@ namespace Stellar {
         }
     }
 
-    const std::vector<VkImage>* SwapChain::getSwapChainImages() const {
+    const std::vector<VkImage>* VulkanSwapChain::getSwapChainImages() const {
         return &m_SwapChainImages;
     }
 
-    VkFormat SwapChain::getSwapChainImageFormat() const {
+    VkFormat VulkanSwapChain::getSwapChainImageFormat() const {
         return m_SwapChainImageFormat;
     }
 
-    VkExtent2D SwapChain::getSwapChainExtent() const {
+    SwapChain::SwapChainExtent2D VulkanSwapChain::getSwapChainExtent() const {
         return m_SwapChainExtent;
     }
 
-    VkSwapchainKHR& SwapChain::getSwapChain() {
+    VkSwapchainKHR& VulkanSwapChain::getSwapChain() {
         return m_VulkanSwapChain;
     }
 
-    VkCommandBuffer SwapChain::getCurrentCommandBuffer() const {
+    VkCommandBuffer VulkanSwapChain::getCurrentCommandBuffer() const {
         return m_CommandBuffers[m_CurrentFrameIndex].CommandBuffer;
     }
 
-    VkCommandBuffer SwapChain::getCommandBuffer(uint32_t index) const {
+    VkCommandBuffer VulkanSwapChain::getCommandBuffer(uint32_t index) const {
         return m_CommandBuffers[index].CommandBuffer;
     }
 
-    VkFramebuffer SwapChain::getCurrentFrameBuffer() const {
+    VkFramebuffer VulkanSwapChain::getCurrentFrameBuffer() const {
         return m_Framebuffers[m_CurrentImageIndex];
     }
 
-    uint32_t SwapChain::getCurrentFrameIndex() const {
+    uint32_t VulkanSwapChain::getCurrentFrameIndex() const {
         return m_CurrentFrameIndex;
     }
 
-    VkRenderPass SwapChain::getRenderPass() const {
+    VkRenderPass VulkanSwapChain::getRenderPass() const {
         return m_RenderPass->getVkRenderPass();
     }
 
-    uint32_t SwapChain::getImageCount() const {
+    uint32_t VulkanSwapChain::getImageCount() const {
         return m_SwapChainImages.size();
     }
 
-    VkRenderPass SwapChain::getImGuiRenderPass() const {
+    VkRenderPass VulkanSwapChain::getImGuiRenderPass() const {
         return m_ImGuiRenderPass->getVkRenderPass();
     }
 
-    VkFramebuffer SwapChain::getCurrentImGuiFrameBuffer() const {
+    VkFramebuffer VulkanSwapChain::getCurrentImGuiFrameBuffer() const {
         return m_ImGuiFramebuffers[m_CurrentImageIndex];
     }
 
-    void SwapChain::createCommandBuffers() {
+    void VulkanSwapChain::createCommandBuffers() {
         for (auto& commandBuffer : m_CommandBuffers)
             vkDestroyCommandPool(VulkanDevice::GetInstance()->logicalDevice(),
                                  commandBuffer.CommandPool, nullptr);
@@ -165,7 +167,7 @@ namespace Stellar {
         }
     }
 
-    void SwapChain::createImageViews() {
+    void VulkanSwapChain::createImageViews() {
         for (auto imageView : m_SwapChainImageViews) {
             vkDestroyImageView(VulkanDevice::GetInstance()->logicalDevice(),
                                imageView, nullptr);
@@ -197,7 +199,7 @@ namespace Stellar {
         }
     }
 
-    void SwapChain::createSwapChain() {
+    void VulkanSwapChain::createSwapChain() {
         SwapChainSupportDetails support = VulkanDevice::GetInstance()->getSwapChainSupport();
         VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(support.formats);
         VkPresentModeKHR presentMode = chooseSwapPresentMode(support.presentModes);
@@ -261,10 +263,10 @@ namespace Stellar {
                                 m_VulkanSwapChain, &imageCount, m_SwapChainImages.data());
 
         m_SwapChainImageFormat = surfaceFormat.format;
-        m_SwapChainExtent = extent;
+        m_SwapChainExtent = { extent.width, extent.height };
     }
 
-    void SwapChain::createSemaphores() {
+    void VulkanSwapChain::createSemaphores() {
         m_ImagesInFlight.resize(getImageCount(), VK_NULL_HANDLE);
         if (m_ImageAvailableSemaphores.size() != MAX_FRAMES_IN_FLIGHT ||
             m_RenderFinishedSemaphores.size() != MAX_FRAMES_IN_FLIGHT) {
@@ -304,7 +306,7 @@ namespace Stellar {
         }
     }
 
-    void SwapChain::createFrameBuffers() {
+    void VulkanSwapChain::createFrameBuffers() {
         for (auto& framebuffer : m_Framebuffers)
             vkDestroyFramebuffer(VulkanDevice::GetInstance()->logicalDevice(), framebuffer, nullptr);
         for (auto& framebuffer : m_ImGuiFramebuffers)
@@ -337,14 +339,14 @@ namespace Stellar {
 
     }
 
-    void SwapChain::createRenderPass() {
+    void VulkanSwapChain::createRenderPass() {
         delete m_RenderPass;
         delete m_ImGuiRenderPass;
         m_RenderPass = new StandardRenderPass(m_SwapChainImageFormat);
         m_ImGuiRenderPass = new ImGuiRenderPass(m_SwapChainImageFormat);
     }
 
-    void SwapChain::beginFrame() {
+    void VulkanSwapChain::beginFrame() {
         STLR_CORE_ASSERT(!m_IsFrameStarted,
                          "VulkanRendererContext::beginFrame(): Frame already in progress")
 
@@ -368,7 +370,7 @@ namespace Stellar {
         m_IsFrameStarted = true;
     }
 
-    void SwapChain::present() {
+    void VulkanSwapChain::present() {
         if (m_ImagesInFlight[m_CurrentImageIndex] != VK_NULL_HANDLE) {
             vkWaitForFences(VulkanDevice::GetInstance()->logicalDevice(), 1, &m_ImagesInFlight[m_CurrentImageIndex], VK_TRUE, UINT64_MAX);
         }
@@ -414,7 +416,7 @@ namespace Stellar {
         }
 
         m_IsFrameStarted = false;
-        m_CurrentFrameIndex = (m_CurrentFrameIndex + 1) % SwapChain::MAX_FRAMES_IN_FLIGHT;
+        m_CurrentFrameIndex = (m_CurrentFrameIndex + 1) % VulkanSwapChain::MAX_FRAMES_IN_FLIGHT;
 
         vkWaitForFences(VulkanDevice::GetInstance()->logicalDevice(),
                         1,
@@ -424,7 +426,7 @@ namespace Stellar {
         vkDeviceWaitIdle(VulkanDevice::GetInstance()->logicalDevice());
     }
 
-    void SwapChain::onResize() {
+    void VulkanSwapChain::onResize() {
         vkDeviceWaitIdle(VulkanDevice::GetInstance()->logicalDevice());
         init();
         vkDeviceWaitIdle(VulkanDevice::GetInstance()->logicalDevice());

@@ -2,11 +2,10 @@
 
 #include "stlrpch.h"
 
-#include "Core.h"
-#include "Events/Event.h"
-#include "Renderer/RendererContext.h"
-
-#include "Platform/Vulkan/SwapChain/SwapChain.h"
+#include "Stellar/Core.h"
+#include "Stellar/Events/Event.h"
+#include "Stellar/Renderer/RendererContext.h"
+#include "Stellar/Renderer/SwapChain.h"
 
 #include <GLFW/glfw3.h>
 

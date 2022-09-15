@@ -116,7 +116,7 @@ namespace Stellar {
         bool swapChainAdequate = false;
 
         if (extensionSupported) {
-            SwapChain::SwapChainSupportDetails support = querySwapChainSupport(device);
+            VulkanSwapChain::SwapChainSupportDetails support = querySwapChainSupport(device);
             swapChainAdequate = !support.formats.empty() && !support.presentModes.empty();
         }
 
@@ -168,7 +168,7 @@ namespace Stellar {
         return indices;
     }
 
-    SwapChain::SwapChainSupportDetails VulkanDevice::getSwapChainSupport() const {
+    VulkanSwapChain::SwapChainSupportDetails VulkanDevice::getSwapChainSupport() const {
         return querySwapChainSupport(m_PhysicalDevice);
     }
 
@@ -184,8 +184,8 @@ namespace Stellar {
         return m_LogicalDevice;
     }
 
-    SwapChain::SwapChainSupportDetails VulkanDevice::querySwapChainSupport(VkPhysicalDevice device) const {
-        SwapChain::SwapChainSupportDetails details;
+    VulkanSwapChain::SwapChainSupportDetails VulkanDevice::querySwapChainSupport(VkPhysicalDevice device) const {
+        VulkanSwapChain::SwapChainSupportDetails details;
 
         vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, m_Surface, &details.capabilities);
 

@@ -10,7 +10,17 @@ namespace Stellar {
         return s_Instance;
     }
 
-    void MetalDevice::init() {
+    MetalDevice::~MetalDevice() {
+        m_CommandQueue->release();
+        m_Device->release();
+    }
 
+    void MetalDevice::init() {
+        m_Device = MTL::CreateSystemDefaultDevice();
+        m_CommandQueue = m_Device->newCommandQueue();
+    }
+
+    MTL::Device* MetalDevice::getDevice() {
+        return m_Device;
     }
 }

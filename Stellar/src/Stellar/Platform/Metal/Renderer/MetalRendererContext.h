@@ -5,6 +5,7 @@
 
 namespace Stellar {
     class STLR_API MetalRendererContext : public RendererContext {
+    public:
         MetalRendererContext();
         ~MetalRendererContext() override;
 

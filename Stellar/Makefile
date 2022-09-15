@@ -45,7 +45,7 @@ ifeq ($(OS),windows)
 	else ifeq ($(OS),macos)
 		CPPFLAGS += -I./vendor/metal-cpp
 		LDFLAGS += -L./vendor/glfw/libs
-		LDLIBS += -lglfw.3 -lvulkan
+		LDLIBS += -lglfw.3 -lvulkan -framework QuartzCore -framework Metal -framework Foundation -framework Cocoa -framework CoreGraphics -framework MetalKit
 	else ifeq ($(OS),linux)
 		CPPFLAGS += -I ./vendor/vulkan/linux/include
 		LDFLAGS += -L./vendor/glfw/libs -L./vendor/vulkan/linux/lib
@@ -66,7 +66,7 @@ rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 ALL_INDEX_HTMLS := $(call rwildcard,foo/,index.html)
 
 # How to recursively find all files that match a pattern
-SRC_FILES := $(call rwildcard,src/,*.cpp)
+SRC_FILES := $(call rwildcard,src/,*.cpp) $(wildcard src/Stellar/Platform/Metal/*.mm )
 SRC_DIR = ./src
 IMGUI_DIR = vendor/imgui
 #SRC_FILES := $(sort $(shell find $(SRC_DIR) -name '*.cpp'))
