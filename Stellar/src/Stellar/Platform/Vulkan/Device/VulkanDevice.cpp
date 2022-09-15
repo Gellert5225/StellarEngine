@@ -120,7 +120,11 @@ namespace Stellar {
             swapChainAdequate = !support.formats.empty() && !support.presentModes.empty();
         }
 
-        return true;
+        return deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU
+                && deviceFeatures.geometryShader
+                && indices.isComplete()
+                && extensionSupported
+                && swapChainAdequate;;
     }
 
     bool VulkanDevice::checkDeviceExtensionSupport(VkPhysicalDevice device) const {
