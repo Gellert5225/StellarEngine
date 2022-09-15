@@ -1,6 +1,20 @@
 {
     "configurations": [
         {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "STLR_BUILD_DLL"
+            ],
+            "compilerPath": "C:\\msys64\\mingw64\\bin\\g++.exe",
+            "cStandard": "gnu17",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "linux-gcc-x64",
+            "configurationProvider": "ms-vscode.makefile-tools"
+        },
+        {
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**"

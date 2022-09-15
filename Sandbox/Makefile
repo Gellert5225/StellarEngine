@@ -8,7 +8,7 @@ CXX = g++
 CXXFLAGS = -std=c++17 -Wall -g -O3
 CPPFLAGS = -I../Stellar/src/ -I../Stellar/vendor/spdlog/include -I../Stellar/vendor/glfw/include -I../Stellar/vendor/glm -I../Stellar/vendor/imgui
 LFLAGS = -L./bin
-LIBS = -lStellar -lglfw
+LIBS = -lStellar
 PWD = $(shell pwd)
 EXPORT_FLAG =
 SHADER_FLAG = glslc
@@ -24,6 +24,7 @@ ifeq ($(OS),Windows_NT) # OS is a preexisting environment variable on Windows
 	OS = windows
 	EXE_EXT = .exe
 	CPPFLAGS += -I../Stellar/vendor/vulkan/win/Include
+	LIBS += -lglfw3
 else
 	UNAME := $(shell uname -s)
 	EXPORT = export
@@ -46,13 +47,15 @@ else
 	endif
 endif
 
+rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
+SRC_FILES := $(call rwildcard,src/,*.cpp)
 # Source files
 SRC_DIR = src
 SHADER_DIR = resource/Shader
-SRCS := $(sort $(shell find $(SRC_DIR) -name '*.cpp'))
+SRCS := $(call rwildcard,src/,*.cpp)
 OBJS = $(patsubst %.cpp,build/%.o,$(SRCS))
-VERT_SRCS := $(sort $(shell find $(SHADER_DIR) -name '*.vert'))
-FRAG_SRCS := $(sort $(shell find $(SHADER_DIR) -name '*.frag'))
+VERT_SRCS := $(call rwildcard,$(SHADER_DIR)/,*.vert)
+FRAG_SRCS := $(call rwildcard,$(SHADER_DIR)/,*.frag)
 VERT_SPIRV = $(VERT_SRCS:%.vert=$(SHADER_DIR)/%.spv)
 FRAG_SPIRV = $(FRAG_SRCS:%.frag=$(SHADER_DIR)/%.spv)
 

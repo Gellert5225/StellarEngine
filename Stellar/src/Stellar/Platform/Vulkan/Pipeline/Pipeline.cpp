@@ -6,9 +6,9 @@
 
 namespace Stellar {
     Pipeline::~Pipeline() {
-        vkDestroyPipeline(VulkanDevice::GetInstance()->logicalDevice(), pipeline, nullptr);
+        vkDestroyPipeline(VulkanDevice::GetInstance()->logicalDevice(), m_Pipeline, nullptr);
         vkDestroyPipelineLayout(VulkanDevice::GetInstance()->logicalDevice(),
-                                pipelineLayout, nullptr);
+                                m_PipelineLayout, nullptr);
 
         vkDestroyDescriptorPool(VulkanDevice::GetInstance()->logicalDevice(), m_DescriptorPool, nullptr);
         vkDestroyDescriptorSetLayout(VulkanDevice::GetInstance()->logicalDevice(),
