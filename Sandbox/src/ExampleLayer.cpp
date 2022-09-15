@@ -20,14 +20,14 @@ ExampleLayer::ExampleLayer() : Layer("Example") {
     indexStagingBuffer->copy(*m_IndexBuffer);
 
     delete indexStagingBuffer;
+}
 
+void ExampleLayer::onUpdate(Stellar::Timestep ts) {
     auto extent = Stellar::Application::Get().getWindow().getSwapChain()->getSwapChainExtent();
     auto perspective = (float)extent.width / (float) extent.height;
     //m_Camera.setOrtho(-perspective, perspective, -1, 1, -10, 10);
     m_Camera.setPerspectiveProjection(glm::radians(60.0f), perspective, 0.1f, 10.0f);
-}
 
-void ExampleLayer::onUpdate(Stellar::Timestep ts) {
     // camera movement
     if (Stellar::Input::IsKeyPressed(STLR_KEY_LEFT))
         m_CameraPosition.x += m_CameraSpeed * ts;
