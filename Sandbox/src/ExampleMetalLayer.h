@@ -15,5 +15,6 @@ public:
     void onImGuiRender() override;
 
 private:
+    Stellar::Camera m_Camera{};
 
 };

@@ -14,10 +14,13 @@ namespace Stellar {
 
     MetalSwapChain::~MetalSwapChain() {
         m_MetalSwapChain = nullptr;
+        //m_CommandBuffer->release();
     }
 
     void MetalSwapChain::init() {
         createSwapChain();
+        createRenderPass();
+        createCommandBuffer();
     }
 
     void MetalSwapChain::createSwapChain() {
@@ -33,12 +36,27 @@ namespace Stellar {
 
     }
 
-    void MetalSwapChain::beginFrame() {
-        auto* drawable = reinterpret_cast<CA::MetalDrawable*>(nextDrawable(m_MetalSwapChain));
+    void MetalSwapChain::createRenderPass() {
+        m_Drawable = reinterpret_cast<CA::MetalDrawable*>(nextDrawable(m_MetalSwapChain));
 
-        if (drawable == nullptr) {
+        if (m_Drawable == nullptr) {
             STLR_CORE_ASSERT(false, "Failed to acquire Metal Drawable");
         }
+
+//        m_RenderPass = MTL::RenderPassDescriptor::alloc()->init();
+//        auto colorAttachment = m_RenderPass->colorAttachments()->object(0);
+//
+//        colorAttachment->setClearColor(MTL::ClearColor::Make(0, 0, 0, 0.25));
+//        colorAttachment->setLoadAction(MTL::LoadActionClear);
+//        colorAttachment->setStoreAction(MTL::StoreActionStore);
+//        colorAttachment->setTexture(m_Drawable->texture());
+    }
+
+    void MetalSwapChain::createCommandBuffer() {
+        //m_CommandBuffer = MetalDevice::GetInstance()->getCommandQueue()->commandBuffer();
+    }
+
+    void MetalSwapChain::beginFrame() {
     }
 
     void MetalSwapChain::present() {
@@ -59,5 +77,17 @@ namespace Stellar {
 
     void* MetalSwapChain::getSwapChain() {
         return m_MetalSwapChain;
+    }
+
+    CA::MetalDrawable *MetalSwapChain::getCurrentFrameBuffer() {
+        return m_Drawable;
+    }
+
+    MTL::RenderPassDescriptor *MetalSwapChain::getRenderPass() {
+        return m_RenderPass;
+    }
+
+    MTL::CommandBuffer *MetalSwapChain::getCommandBuffer() {
+        return m_CommandBuffer;
     }
 }

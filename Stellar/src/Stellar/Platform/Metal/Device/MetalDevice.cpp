@@ -23,4 +23,8 @@ namespace Stellar {
     MTL::Device* MetalDevice::getDevice() {
         return m_Device;
     }
+
+    MTL::CommandQueue *MetalDevice::getCommandQueue() {
+        return m_CommandQueue;
+    }
 }

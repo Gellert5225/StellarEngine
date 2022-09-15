@@ -3,6 +3,8 @@
 #include "Renderer.h"
 
 #include "Stellar/Platform/Vulkan/Renderer/VulkanRenderer.h"
+#include "Stellar/Platform/Metal/Renderer/MetalRenderer.h"
+
 #include "Stellar/Log.h"
 
 namespace Stellar {
@@ -11,11 +13,8 @@ namespace Stellar {
     static RendererAPI* InitRendererAPI() {
         switch (RendererAPI::Current()) {
             case RendererAPIType::Vulkan: return new VulkanRenderer();
-            case RendererAPIType::Metal:
-                STLR_CORE_ASSERT(false, "Metal is not yet supported");
-                break;
-            case RendererAPIType::None:
-                break;
+            case RendererAPIType::Metal: return new MetalRenderer();
+            case RendererAPIType::None: break;
         }
         STLR_CORE_ASSERT(false, "Unknown RendererAPI");
         return nullptr;

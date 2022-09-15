@@ -12,6 +12,7 @@ namespace Stellar {
         void init();
 
         MTL::Device* getDevice();
+        MTL::CommandQueue* getCommandQueue();
     private:
         static MetalDevice* s_Instance;
 
