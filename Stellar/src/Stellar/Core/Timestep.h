@@ -1,13 +1,14 @@
 #pragma once
 
 #include <GLFW/glfw3.h>
+#include "Stellar/Core.h"
 
 namespace Stellar {
-    class Timestep {
+    class STLR_API Timestep {
     public:
         explicit Timestep(float time = 0.0f) : m_Time(time) {}
 
-        static float GetCurrentTime() { return (float)glfwGetTime(); }
+        static float GetTime() { return (float)glfwGetTime(); }
 
         [[nodiscard]] float getSeconds() const { return m_Time; }
         [[nodiscard]] float getMilliseconds() const { return m_Time * 1000.f; }

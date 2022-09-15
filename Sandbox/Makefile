@@ -8,7 +8,7 @@ CXX = g++
 CXXFLAGS = -std=c++17 -Wall -g -O3
 CPPFLAGS = -I../Stellar/src/ -I../Stellar/vendor/spdlog/include -I../Stellar/vendor/glfw/include -I../Stellar/vendor/glm -I../Stellar/vendor/imgui
 LFLAGS = -L./bin
-LIBS = -lStellar
+LIBS = -lStellar -lglfw3
 PWD = $(shell pwd)
 EXPORT_FLAG =
 SHADER_FLAG = glslc
@@ -23,7 +23,7 @@ CP_LIBS =
 ifeq ($(OS),Windows_NT) # OS is a preexisting environment variable on Windows
 	OS = windows
 	EXE_EXT = .exe
-	INCLUDES += -I../Stellar/vendor/vulkan/win/Include
+	CPPFLAGS += -I../Stellar/vendor/vulkan/win/Include
 else
 	UNAME := $(shell uname -s)
 	EXPORT = export
@@ -39,7 +39,7 @@ else
 		ifeq ($(UNAME),Linux)
 			OS = linux
 			EXPORT_FLAG = LD_LIBRARY_PATH
-			INCLUDES += -I../Stellar/vendor/vulkan/linux/include
+			CPPFLAGS += -I../Stellar/vendor/vulkan/linux/include
 		else
 			$(error OS not supported by this Makefile)
 		endif

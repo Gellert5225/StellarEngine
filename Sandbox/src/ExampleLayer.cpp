@@ -39,7 +39,7 @@ void ExampleLayer::onUpdate(Stellar::Timestep ts) {
         m_CameraPosition.z -= m_CameraSpeed * ts;
 
     glm::mat4 transform = glm::rotate(glm::mat4(1.0f),
-                                      Stellar::Timestep::GetCurrentTime() * glm::radians(90.0f),
+                                      Stellar::Timestep::GetTime() * glm::radians(90.0f),
                                       glm::vec3(1.0f, 0.0f, 1.0f));
 
     m_Camera.setPosition(m_CameraPosition);
