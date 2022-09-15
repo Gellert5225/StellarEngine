@@ -80,7 +80,7 @@ namespace Stellar {
         uint32_t minor = VK_VERSION_MINOR(instanceVersion);
         uint32_t patch = VK_VERSION_PATCH(instanceVersion);
 
-        m_InstanceVersion = std::to_string(major) +
+        m_InstanceVersion = "Vulkan: v" + std::to_string(major) +
                 "." + std::to_string(minor) + "." + std::to_string(patch);
 
         STLR_CORE_INFO("Vulkan Version: {0}", m_InstanceVersion);

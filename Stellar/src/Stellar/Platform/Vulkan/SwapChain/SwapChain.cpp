@@ -421,6 +421,7 @@ namespace Stellar {
                         &m_InFlightFences[m_CurrentFrameIndex],
                         VK_TRUE,
                         UINT64_MAX);
+        vkDeviceWaitIdle(VulkanDevice::GetInstance()->logicalDevice());
     }
 
     void SwapChain::onResize() {

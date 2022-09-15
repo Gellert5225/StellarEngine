@@ -1,11 +1,16 @@
 #pragma once
 
 #include "Stellar/Core.h"
+#include "RendererAPI.h"
 
 namespace Stellar {
     class STLR_API RendererContext {
     public:
-        RendererContext() = default;
         virtual ~RendererContext() = default;
+
+        static RendererContext* Create();
+
+        [[nodiscard]] virtual std::string getGPUInfo() const = 0;
+        [[nodiscard]] virtual std::string getGraphicsAPI() const = 0;
     };
 }

@@ -7,7 +7,6 @@
 #include "Stellar/Events/ApplicationEvent.h"
 #include "Stellar/Events/MouseEvent.h"
 #include "Stellar/Events/KeyEvent.h"
-#include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 
 namespace Stellar {
     static void GLFWErrorCallback(int error, const char* description) {
@@ -44,7 +43,7 @@ namespace Stellar {
         glfwSetWindowUserPointer(m_Window, &m_Data);
         setVsync(true);
 
-        m_Context = new VulkanRendererContext();
+        m_Context = RendererContext::Create();
         m_SwapChain = new SwapChain();
 
         // GLFW callbacks
@@ -179,6 +178,10 @@ namespace Stellar {
 
     SwapChain *Window::getSwapChain() const {
         return m_SwapChain;
+    }
+
+    RendererContext* Window::getRendererContext() const {
+        return m_Context;
     }
 
     void Window::swapBuffers() {

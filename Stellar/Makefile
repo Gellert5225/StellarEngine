@@ -43,7 +43,7 @@ ifeq ($(OS),windows)
 	endif
 
 	else ifeq ($(OS),macos)
-		CPPFLAGS +=
+		CPPFLAGS += -I./vendor/metal-cpp
 		LDFLAGS += -L./vendor/glfw/libs
 		LDLIBS += -lglfw.3 -lvulkan
 	else ifeq ($(OS),linux)

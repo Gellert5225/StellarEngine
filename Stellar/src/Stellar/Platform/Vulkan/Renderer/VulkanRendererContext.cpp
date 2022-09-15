@@ -20,6 +20,14 @@ namespace Stellar {
         delete VulkanInstance::GetInstance();
     }
 
+    std::string VulkanRendererContext::getGPUInfo() const {
+        return VulkanDevice::GetInstance()->getDeviceProperties().deviceName;
+    };
+
+    std::string VulkanRendererContext::getGraphicsAPI() const {
+        return VulkanInstance::GetInstance()->getInstanceVersion();
+    };
+
 //    VkCommandBuffer VulkanRendererContext::beginFrame() {
 //        STLR_CORE_ASSERT(!m_IsFrameStarted,
 //                         "VulkanRendererContext::beginFrame(): Frame already in progress")

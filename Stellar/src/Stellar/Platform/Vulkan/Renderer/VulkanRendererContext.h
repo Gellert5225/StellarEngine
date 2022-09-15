@@ -18,6 +18,9 @@ namespace Stellar {
         VulkanRendererContext();
         ~VulkanRendererContext() override;
 
+        [[nodiscard]] std::string getGPUInfo() const override;
+        [[nodiscard]] std::string getGraphicsAPI() const override;
+
     private:
 
     };

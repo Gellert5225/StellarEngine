@@ -77,7 +77,7 @@ namespace Stellar {
             m_Window->onUpdate();
         }
 
-        vkDeviceWaitIdle(VulkanDevice::GetInstance()->logicalDevice());
+        // vkDeviceWaitIdle(VulkanDevice::GetInstance()->logicalDevice());
     }
 
     bool Application::onWindowClose(WindowCloseEvent& e) {
@@ -85,11 +85,11 @@ namespace Stellar {
         return true;
     }
 
-    Application::AppInfo Application::getAppInfo() {
+    Application::AppInfo Application::getAppInfo() const {
         return {
             "Stellar Engine",
-            VulkanDevice::GetInstance()->getDeviceProperties().deviceName,
-            VulkanInstance::GetInstance()->getInstanceVersion()
+            m_Window->getRendererContext()->getGPUInfo(),
+            m_Window->getRendererContext()->getGraphicsAPI()
         };
     }
 

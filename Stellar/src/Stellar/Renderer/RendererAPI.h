@@ -33,7 +33,12 @@ namespace Stellar {
         CommandBuffer* m_CommandBuffer{};
         Camera m_Camera;
     private:
-        inline static RendererAPIType s_CurrentRendererAPI = RendererAPIType::Vulkan;
+#ifdef __APPLE__
+#define STLR_RENDERER_API RendererAPIType::Metal
+#else
+#define STLR_RENDERER_API RendererAPIType::Vulkan
+#endif
+        inline static RendererAPIType s_CurrentRendererAPI = STLR_RENDERER_API;
 
     };
 }

@@ -4,7 +4,7 @@
 
 #include "Core.h"
 #include "Events/Event.h"
-#include "Platform/Vulkan/Renderer/VulkanRendererContext.h"
+#include "Renderer/RendererContext.h"
 
 #include "Platform/Vulkan/SwapChain/SwapChain.h"
 
@@ -29,7 +29,7 @@ namespace Stellar {
         using EventCallbackFn = std::function<void(Event&)>;
 
         explicit Window(WindowProperty  property);
-        ~Window();
+        virtual ~Window();
 
         virtual void init();
         virtual void onUpdate();
@@ -45,6 +45,7 @@ namespace Stellar {
         [[nodiscard]] virtual GLFWwindow* getGLFWWindow() const;
 
         [[nodiscard]] SwapChain* getSwapChain() const;
+        [[nodiscard]] RendererContext* getRendererContext() const;
 
         static Window* Create(const WindowProperty& property = WindowProperty());
     private:
