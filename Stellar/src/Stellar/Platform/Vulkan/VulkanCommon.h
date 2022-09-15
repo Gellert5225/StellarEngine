@@ -2,6 +2,7 @@
 #include "stlrpch.h"
 
 #include <vulkan/vulkan.h>
+#include <vulkan/vulkan_beta.h>
 
 #include "Stellar/Log.h"
 
@@ -11,7 +12,8 @@ namespace Stellar {
     };
 
     const std::vector<const char*> deviceExtensions = {
-            VK_KHR_SWAPCHAIN_EXTENSION_NAME
+            VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+            VK_KHR_PORTABILITY_SUBSET_EXTENSION_NAME
     };
 
     inline const char* VKResultToString(VkResult result) {

@@ -74,7 +74,7 @@ namespace Stellar {
         createInfo.pEnabledFeatures = &deviceFeatures;
         createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
         createInfo.ppEnabledExtensionNames = deviceExtensions.data();
-
+        
         VulkanValidationLayer* validationLayer = VulkanInstance::GetInstance()->getValidationLayerManager();
         if (validationLayer && VulkanValidationLayer::ValidationLayerEnabled()) {
             createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
@@ -120,11 +120,7 @@ namespace Stellar {
             swapChainAdequate = !support.formats.empty() && !support.presentModes.empty();
         }
 
-        return deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU
-                && deviceFeatures.geometryShader
-                && indices.isComplete()
-                && extensionSupported
-                && swapChainAdequate;
+        return true;
     }
 
     bool VulkanDevice::checkDeviceExtensionSupport(VkPhysicalDevice device) const {

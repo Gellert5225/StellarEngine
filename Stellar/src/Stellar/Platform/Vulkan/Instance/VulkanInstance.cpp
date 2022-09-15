@@ -50,11 +50,13 @@ namespace Stellar {
 
         auto extensions = GetRequiredExtensions();
         CheckIfExtensionExists(extensions.data(), extensions.size());
-
+        
         createInfo.enabledLayerCount = 0;
         createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
         createInfo.ppEnabledExtensionNames = extensions.data();
-
+#ifdef __APPLE__
+        createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+#endif
         VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
 #ifndef NDEBUG
         createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
@@ -113,6 +115,9 @@ namespace Stellar {
         std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
 
 #ifndef NDEBUG
+#ifdef __APPLE__
+        extensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+#endif
         extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
         for (const auto& extension : extensions) {
             STLR_CORE_INFO("Extension Required: {0}", extension);
