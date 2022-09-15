@@ -1,6 +1,3 @@
-[submodule "Stellar/vendor/imgui"]
-	path = Stellar/vendor/imgui
-	url = https://github.com/ocornut/imgui.git
 [submodule "Stellar/vendor/spdlog"]
 	path = Stellar/vendor/spdlog
 	url = https://github.com/Gellert5225/spdlog.git
