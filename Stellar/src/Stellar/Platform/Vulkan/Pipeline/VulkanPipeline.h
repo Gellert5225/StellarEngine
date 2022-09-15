@@ -5,10 +5,10 @@
 #include <vulkan/vulkan.h>
 
 namespace Stellar {
-    class STLR_API Pipeline {
+    class STLR_API VulkanPipeline {
     public:
-        Pipeline() = default;
-        virtual ~Pipeline() = 0;
+        VulkanPipeline() = default;
+        virtual ~VulkanPipeline() = 0;
 
         VkPipeline* getPipeline();
         VkPipelineLayout* getPipelineLayout();

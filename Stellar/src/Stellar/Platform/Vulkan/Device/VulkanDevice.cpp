@@ -124,7 +124,7 @@ namespace Stellar {
                 && deviceFeatures.geometryShader
                 && indices.isComplete()
                 && extensionSupported
-                && swapChainAdequate;;
+                && swapChainAdequate;
     }
 
     bool VulkanDevice::checkDeviceExtensionSupport(VkPhysicalDevice device) const {

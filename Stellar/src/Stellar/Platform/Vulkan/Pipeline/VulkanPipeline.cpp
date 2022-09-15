@@ -1,11 +1,11 @@
 #include "stlrpch.h"
-#include "Pipeline.h"
+#include "VulkanPipeline.h"
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 
 #include "Stellar/Log.h"
 
 namespace Stellar {
-    Pipeline::~Pipeline() {
+    VulkanPipeline::~VulkanPipeline() {
         vkDestroyPipeline(VulkanDevice::GetInstance()->logicalDevice(), m_Pipeline, nullptr);
         vkDestroyPipelineLayout(VulkanDevice::GetInstance()->logicalDevice(),
                                 m_PipelineLayout, nullptr);
@@ -15,11 +15,11 @@ namespace Stellar {
                                      m_DescriptorSetLayout, nullptr);
     }
 
-    VkPipeline* Pipeline::getPipeline() {
+    VkPipeline* VulkanPipeline::getPipeline() {
         return &m_Pipeline;
     }
 
-    VkPipelineLayout* Pipeline::getPipelineLayout() {
+    VkPipelineLayout* VulkanPipeline::getPipelineLayout() {
         return &m_PipelineLayout;
     }
 }

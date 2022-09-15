@@ -102,7 +102,6 @@ namespace Stellar {
                                                      &cmdBufAllocateInfo, &cmdBuffer));
             s_ImGuiCommandBuffers[i] = cmdBuffer;
         }
-
     }
 
     void ImGuiLayer::onDetach() {
@@ -144,7 +143,7 @@ namespace Stellar {
         VkClearValue clearValues[1];
         clearValues[0].color = { {0.1f, 0.1f,0.1f, 1.0f} };
 
-        auto commandBufferIndex = swapChain->getCurrentFrameIndex();
+//        auto commandBufferIndex = swapChain->getCurrentFrameIndex();
 
         VkCommandBufferBeginInfo drawCmdBufInfo = {};
         drawCmdBufInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;

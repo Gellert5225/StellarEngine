@@ -2,11 +2,11 @@
 
 #include "Stellar/Core.h"
 
-#include "Pipeline.h"
+#include "VulkanPipeline.h"
 #include "../Shader/Shader.h"
 
 namespace Stellar {
-    class STLR_API GraphicsPipeline : public Pipeline {
+    class STLR_API GraphicsPipeline : public VulkanPipeline {
     public:
         GraphicsPipeline(const std::string& vertShaderPath,
                          const std::string& fragShaderPath,

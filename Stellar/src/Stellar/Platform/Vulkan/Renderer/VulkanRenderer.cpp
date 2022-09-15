@@ -13,8 +13,8 @@ namespace Stellar {
         m_UniformBuffer = Buffer::Create(BufferType::Uniform, sizeof(GlobalUniforms));
 
         SwapChain* swapChain = Application::Get().getWindow().getSwapChain();
-        m_GraphicsPipeline = new GraphicsPipeline("../Resources/Shader/shaderVert.spv",
-                                                  "../Resources/Shader/shaderFrag.spv",
+        m_GraphicsPipeline = new GraphicsPipeline("Resources/Shader/shaderVert.spv",
+                                                  "Resources/Shader/shaderFrag.spv",
                                                   swapChain->getRenderPass());
         createDescriptorSets();
     }

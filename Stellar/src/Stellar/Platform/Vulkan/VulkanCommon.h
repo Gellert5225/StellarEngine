@@ -12,8 +12,11 @@ namespace Stellar {
     };
 
     const std::vector<const char*> deviceExtensions = {
-            VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+            VK_KHR_SWAPCHAIN_EXTENSION_NAME
+#ifdef __APPLE__
+            ,
             VK_KHR_PORTABILITY_SUBSET_EXTENSION_NAME
+#endif
     };
 
     inline const char* VKResultToString(VkResult result) {
