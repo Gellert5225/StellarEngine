@@ -37,26 +37,19 @@ namespace Stellar {
     }
 
     void MetalSwapChain::createRenderPass() {
+
+    }
+
+    void MetalSwapChain::createCommandBuffer() {
+        m_CommandBuffer = MetalDevice::GetInstance()->getCommandQueue()->commandBuffer();
+    }
+
+    void MetalSwapChain::beginFrame() {
         m_Drawable = reinterpret_cast<CA::MetalDrawable*>(nextDrawable(m_MetalSwapChain));
 
         if (m_Drawable == nullptr) {
             STLR_CORE_ASSERT(false, "Failed to acquire Metal Drawable");
         }
-
-//        m_RenderPass = MTL::RenderPassDescriptor::alloc()->init();
-//        auto colorAttachment = m_RenderPass->colorAttachments()->object(0);
-//
-//        colorAttachment->setClearColor(MTL::ClearColor::Make(0, 0, 0, 0.25));
-//        colorAttachment->setLoadAction(MTL::LoadActionClear);
-//        colorAttachment->setStoreAction(MTL::StoreActionStore);
-//        colorAttachment->setTexture(m_Drawable->texture());
-    }
-
-    void MetalSwapChain::createCommandBuffer() {
-        //m_CommandBuffer = MetalDevice::GetInstance()->getCommandQueue()->commandBuffer();
-    }
-
-    void MetalSwapChain::beginFrame() {
     }
 
     void MetalSwapChain::present() {

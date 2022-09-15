@@ -19,40 +19,31 @@ namespace Stellar {
     }
 
     void MetalRenderer::endScene() {
-//        auto swapChain = (MetalSwapChain*)Application::Get().getWindow().getSwapChain();
-//        swapChain->getCommandBuffer()->presentDrawable(swapChain->getCurrentFrameBuffer());
-//        swapChain->getCommandBuffer()->commit();
+        auto swapChain = (MetalSwapChain*)Application::Get().getWindow().getSwapChain();
+        m_CommandBuffer->presentDrawable(swapChain->getCurrentFrameBuffer());
+        m_CommandBuffer->commit();
+        m_CommandBuffer->release();
     }
 
     void MetalRenderer::beginRenderPass() {
         auto swapChain = (MetalSwapChain*)Application::Get().getWindow().getSwapChain();
-//        m_Encoder = swapChain->getCommandBuffer()->renderCommandEncoder(swapChain->getRenderPass());
-        auto drawable = swapChain->getCurrentFrameBuffer();
 
-        NS::AutoreleasePool* pPool = NS::AutoreleasePool::alloc()->init();
         MTL::RenderPassDescriptor* mainPass = MTL::RenderPassDescriptor::alloc()->init();
         auto colorAttachment = mainPass->colorAttachments()->object(0);
 
-        colorAttachment->setClearColor(MTL::ClearColor::Make(1, 0, 0, 1));
+        colorAttachment->setClearColor(m_ClearColor);
         colorAttachment->setLoadAction(MTL::LoadActionClear);
         colorAttachment->setStoreAction(MTL::StoreActionStore);
-        colorAttachment->setTexture(drawable->texture());
+        colorAttachment->setTexture(swapChain->getCurrentFrameBuffer()->texture());
 
-        MTL::CommandBuffer* buffer = MetalDevice::GetInstance()->getCommandQueue()->commandBuffer();
+        m_CommandBuffer = MetalDevice::GetInstance()->getCommandQueue()->commandBuffer();
 
-        // This will segfault, as the renderCommandEncoderWithDescriptor: selector is 0x0
-        // in the MTL::Private::Selector namespace. The selector was not loaded through
-        // sel_registerName from objc/runtime.h.
-        MTL::RenderCommandEncoder* encoder = buffer->renderCommandEncoder(mainPass);
-
-        encoder->endEncoding();
-        buffer->presentDrawable(drawable);
-        buffer->commit();
-        pPool->release();
+        m_Encoder = m_CommandBuffer->renderCommandEncoder(mainPass);
     }
 
     void MetalRenderer::endRenderPass() {
-        //m_Encoder->endEncoding();
+        m_Encoder->endEncoding();
+        m_Encoder->release();
     }
 
     void MetalRenderer::setClearColor(const glm::vec4 &color) {
