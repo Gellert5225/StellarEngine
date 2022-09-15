@@ -23,7 +23,7 @@ namespace Stellar {
         VkFenceCreateInfo fenceCreateInfo{};
         fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
         fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-        m_WaitFences.resize(SwapChain::MAX_FRAMES_IN_FLIGHT);
+        m_WaitFences.resize(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
         for (auto & m_WaitFence : m_WaitFences) {
             VK_CHECK_RESULT(vkCreateFence(VulkanDevice::GetInstance()->logicalDevice(),
                                           &fenceCreateInfo, nullptr, &m_WaitFence));

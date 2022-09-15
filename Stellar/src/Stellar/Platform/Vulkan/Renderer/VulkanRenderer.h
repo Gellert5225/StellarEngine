@@ -4,7 +4,7 @@
 
 #include "Stellar/Renderer/RendererAPI.h"
 #include "Stellar/Renderer/Buffer.h"
-#include "Stellar/Platform/Vulkan/SwapChain/SwapChain.h"
+#include "Stellar/Platform/Vulkan/SwapChain/VulkanSwapChain.h"
 #include "Stellar/Application.h"
 
 #include <vulkan/vulkan.h>

@@ -8,9 +8,6 @@
 
 #include "Core/Timestep.h"
 
-#include "Platform/Vulkan/Instance/VulkanInstance.h"
-#include "Platform/Vulkan/Device/VulkanDevice.h"
-
 #include "Events/Event.h"
 #include "Events/ApplicationEvent.h"
 #include "Renderer/Renderer.h"
@@ -34,9 +31,7 @@ namespace Stellar {
         void pushLayer(Layer*);
         void pushOverlay(Layer*);
 
-        static AppInfo getAppInfo();
-
-        //[[nodiscard]] VulkanRendererContext* getRendererContext() const;
+        [[nodiscard]] AppInfo getAppInfo() const;
 
         inline static Application& Get() { return *s_Instance; }
         inline Window& getWindow() { return *m_Window; }

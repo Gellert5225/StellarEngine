@@ -24,7 +24,7 @@ ExampleLayer::ExampleLayer() : Layer("Example") {
 
 void ExampleLayer::onUpdate(Stellar::Timestep ts) {
     auto extent = Stellar::Application::Get().getWindow().getSwapChain()->getSwapChainExtent();
-    auto perspective = (float)extent.width / (float) extent.height;
+    auto perspective = (float)extent.width / (float)extent.height;
     //m_Camera.setOrtho(-perspective, perspective, -1, 1, -10, 10);
     m_Camera.setPerspectiveProjection(glm::radians(60.0f), perspective, 0.1f, 10.0f);
 
@@ -62,12 +62,12 @@ void ExampleLayer::onEvent(Stellar::Event &event) {
 }
 
 void ExampleLayer::onImGuiRender() {
-    auto appInfo = Stellar::Application::getAppInfo();
+    auto appInfo = Stellar::Application::Get().getAppInfo();
 
     ImGui::Begin("Info");
 
     ImGui::Text("GPU: %s", appInfo.graphicsInfo.c_str());
-    ImGui::Text("Vulkan version: %s", appInfo.vulkanVersion.c_str());
+    ImGui::Text("%s", appInfo.vulkanVersion.c_str());
 
     ImGui::Text(
             "Frame time: %.3f ms, FPS: %.1f FPS",

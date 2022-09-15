@@ -1,12 +1,18 @@
 #pragma once
 
 #include "Stellar/Core.h"
+#include <glm/glm.hpp>
 
 namespace Stellar {
     enum class BufferType {
         Vertex,
         Index,
         Uniform
+    };
+
+    struct STLR_API Vertex {
+        glm::vec2 position;
+        glm::vec3 color;
     };
 
     class STLR_API Buffer {
