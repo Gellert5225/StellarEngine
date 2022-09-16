@@ -6,9 +6,15 @@
 class Sandbox: public Stellar::Application {
     public:
         Sandbox() {
-            //pushLayer(new ExampleLayer());
-            pushLayer(Stellar::ImGuiLayer::Create());
+            #if defined __GNUC__ || defined _WIN64_ 
+            pushLayer(new ExampleLayer());
+            #endif
+
+            #if defined __APPLE__
             pushLayer(new ExampleMetalLayer());
+            #endif
+
+            pushLayer(Stellar::ImGuiLayer::Create());
         }
         ~Sandbox() override = default;
 };

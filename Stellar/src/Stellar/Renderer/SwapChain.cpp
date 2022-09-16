@@ -3,8 +3,13 @@
 #include "SwapChain.h"
 #include "RendererAPI.h"
 
+#if defined __GNUC__ || defined _WIN64_
 #include "Stellar/Platform/Vulkan/SwapChain/VulkanSwapChain.h"
+#endif
+
+#if defined(__APPLE__)
 #include "Stellar/Platform/Metal/SwapChain/MetalSwapChain.h"
+#endif
 
 #include "Stellar/Log.h"
 

@@ -2,8 +2,13 @@
 
 #include "Renderer.h"
 
+#if defined(__APPLE__)
 #include "Stellar/Platform/Metal/Renderer/MetalRenderer.h"
+#endif
+
+#if defined __GNUC__ || defined _WIN64_
 #include "Stellar/Platform/Vulkan/Renderer/VulkanRenderer.h"
+#endif
 
 #include "Stellar/Log.h"
 

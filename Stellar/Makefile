@@ -69,8 +69,16 @@ IMGUI_SRC_FILES := $(wildcard $(IMGUI_DIR)/*.cpp)
 SRC_FILES := $(call rwildcard,src/,*.cpp) \
 	$(IMGUI_SRC_FILES)
 
-OBJS = $(filter %.o,$(patsubst %.cpp,build/%.o,$(SRC_FILES)) \
+OBJS = 
+
+ifeq ($(OS),macos)
+	OBJS = $(filter %.o,$(patsubst %.cpp,build/%.o,$(SRC_FILES)) \
     $(patsubst %.mm,build/%.o,$(OBJC_FILES)))
+else
+	SRC_FILES := $(filter-out $(call rwildcard,src/Stellar/Platform/Metal/,*.cpp), $(SRC_FILES))
+	SRC_FILES := $(filter-out $(call rwildcard,src/Stellar/Platform/Metal/,*.mm), $(SRC_FILES))
+	OBJS = $(filter %.o,$(patsubst %.cpp,build/%.o,$(SRC_FILES)))
+endif
 
 all: lib/lib$(LIB_NAME)$(LIB_EXT)
 	@mkdir -p ../Sandbox/bin

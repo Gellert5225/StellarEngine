@@ -5,14 +5,25 @@
 
 #include "Stellar/Log.h"
 
+#if defined __GNUC__ || defined _WIN64_
 #include "Stellar/Platform/Vulkan/ImGUI/VulkanImGuiLayer.h"
+#endif
+
+#if defined __APPLE__
 #include "Stellar/Platform/Metal/ImGui/MetalImGuiLayer.h"
+#endif
 
 namespace Stellar {
     ImGuiLayer *ImGuiLayer::Create() {
         switch (RendererAPI::Current()) {
-            case RendererAPIType::Vulkan: return new VulkanImGuiLayer();
-            case RendererAPIType::Metal:  return new MetalImGuiLayer();
+            case RendererAPIType::Vulkan: 
+                #if defined __GNUC__ || defined _WIN64_
+                    return new VulkanImGuiLayer();
+                #endif
+            case RendererAPIType::Metal:  
+                #if defined __APPLE__
+                    return new MetalImGuiLayer();
+                #endif
             case RendererAPIType::None:   return nullptr;
         }
         STLR_CORE_ASSERT(false, "Unknown RendererAPI");
