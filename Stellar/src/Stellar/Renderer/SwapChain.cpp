@@ -13,9 +13,13 @@ namespace Stellar {
     SwapChain *SwapChain::Create() {
         switch (RendererAPI::Current()) {
             case RendererAPIType::Vulkan:
-                return new VulkanSwapChain();
+                #if defined __GNUC__ || defined _WIN64_
+                    return new VulkanSwapChain();
+                #endif
             case RendererAPIType::Metal:
-                return new MetalSwapChain();
+                #if defined __APPLE__
+                    return new MetalSwapChain();
+                #endif
             case RendererAPIType::None:
                 break;
         }

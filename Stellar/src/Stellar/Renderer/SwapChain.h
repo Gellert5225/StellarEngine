@@ -2,8 +2,6 @@
 
 #include "Stellar/Core.h"
 
-#include "Stellar/Platform/Metal/MetalAPI.h"
-
 namespace Stellar {
     class STLR_API SwapChain {
     public:

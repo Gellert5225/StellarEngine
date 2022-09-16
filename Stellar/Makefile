@@ -62,14 +62,14 @@ include $(wildcard ../PrettyPrint.inc)
 # Make does not offer a recursive wildcard function, so here's one:
 rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 
-# How to recursively find all files with the same name in a given folder
-ALL_INDEX_HTMLS := $(call rwildcard,foo/,index.html)
-
 # How to recursively find all files that match a pattern
 SRC_FILES := $(call rwildcard,src/,*.cpp) $(wildcard src/Stellar/Platform/Metal/*.mm )
+ifneq ($(OS),macos)
+	SRC_FILES := $(filter-out $(call rwildcard,src/Stellar/Platform/Metal/,*.cpp), $(SRC_FILES))
+	SRC_FILES := $(filter-out $(call rwildcard,src/Stellar/Platform/Metal/,*.mm), $(SRC_FILES))
+endif
 SRC_DIR = ./src
 IMGUI_DIR = vendor/imgui
-#SRC_FILES := $(sort $(shell find $(SRC_DIR) -name '*.cpp'))
 IMGUI_SRC_FILES := $(wildcard $(IMGUI_DIR)/*.cpp)
 O_FILES = $(patsubst %.cpp,build/%.o,$(SRC_FILES) $(IMGUI_SRC_FILES))
 

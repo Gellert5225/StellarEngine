@@ -2,8 +2,8 @@
 
 #include "Renderer.h"
 
-#include "Stellar/Platform/Vulkan/Renderer/VulkanRenderer.h"
 #include "Stellar/Platform/Metal/Renderer/MetalRenderer.h"
+#include "Stellar/Platform/Vulkan/Renderer/VulkanRenderer.h"
 
 #include "Stellar/Log.h"
 
@@ -12,8 +12,14 @@ namespace Stellar {
 
     static RendererAPI* InitRendererAPI() {
         switch (RendererAPI::Current()) {
-            case RendererAPIType::Vulkan: return new VulkanRenderer();
-            case RendererAPIType::Metal: return new MetalRenderer();
+            case RendererAPIType::Vulkan: 
+                #if defined __GNUC__ || defined _WIN64_
+                    return new VulkanRenderer();
+                #endif
+            case RendererAPIType::Metal: 
+                #if defined __APPLE__
+                    return new MetalRenderer();
+                #endif
             case RendererAPIType::None: break;
         }
         STLR_CORE_ASSERT(false, "Unknown RendererAPI");

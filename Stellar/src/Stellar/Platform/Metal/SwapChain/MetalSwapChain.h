@@ -21,16 +21,19 @@ namespace Stellar {
 
         [[nodiscard]] SwapChainExtent2D getSwapChainExtent() const override;
         [[nodiscard]] uint32_t getCurrentFrameIndex() const override;
+#if defined(__APPLE__)
         CA::MetalDrawable* getCurrentFrameBuffer();
         MTL::RenderPassDescriptor* getRenderPass();
         MTL::CommandBuffer* getCommandBuffer();
+#endif
         void* getSwapChain();
     private:
         void* m_MetalSwapChain;
+#if defined(__APPLE__)
         CA::MetalDrawable* m_Drawable;
         MTL::RenderPassDescriptor* m_RenderPass;
         MTL::CommandBuffer* m_CommandBuffer;
-
+#endif
         void init();
         void createSwapChain();
         void createRenderPass();

@@ -9,9 +9,13 @@ namespace Stellar {
     RendererContext* RendererContext::Create() {
         switch (RendererAPI::Current()) {
             case RendererAPIType::Vulkan:
-                return new VulkanRendererContext();
+                #if defined __GNUC__ || defined _WIN64_
+                    return new VulkanRendererContext();
+                #endif
             case RendererAPIType::Metal:
-                return new MetalRendererContext();
+                #if defined __APPLE__
+                    return new MetalRendererContext();
+                #endif
             case RendererAPIType::None:
                 break;
         }

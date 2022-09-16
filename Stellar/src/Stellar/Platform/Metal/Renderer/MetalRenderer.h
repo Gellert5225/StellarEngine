@@ -25,9 +25,10 @@ namespace Stellar {
                             const glm::mat4& transform) override;
 
     private:
-        //GraphicsPipeline* m_GraphicsPipeline = nullptr;
+#if defined(__APPLE__)
         MTL::ClearColor m_ClearColor = {0.66f, 0.9f, 0.96f, 1.0f};
         MTL::RenderCommandEncoder* m_Encoder;
         MTL::CommandBuffer* m_CommandBuffer;
+#endif
     };
 }
