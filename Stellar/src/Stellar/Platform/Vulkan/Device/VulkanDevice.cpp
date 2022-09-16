@@ -120,7 +120,9 @@ namespace Stellar {
             swapChainAdequate = !support.formats.empty() && !support.presentModes.empty();
         }
 
-        return deviceProperties.deviceType == indices.isComplete()
+        return deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU
+                && deviceFeatures.geometryShader
+                && indices.isComplete()
                 && extensionSupported
                 && swapChainAdequate;
     }

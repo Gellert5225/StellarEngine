@@ -1,2 +1,2 @@
-glslc resource/Shader/ShaderFrag.frag -o resource/Shader/shaderFrag.spv
-glslc resource/Shader/ShaderVert.vert -o resource/Shader/shaderVert.spv
+glslc Resources/Shader/ShaderFrag.frag -o Resources/Shader/shaderFrag.spv
+glslc Resources/Shader/ShaderVert.vert -o Resources/Shader/shaderVert.spv

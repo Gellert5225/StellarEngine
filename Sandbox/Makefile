@@ -63,7 +63,7 @@ FRAG_SRCS := $(call rwildcard,$(SHADER_DIR)/,*.frag)
 VERT_SPIRV = $(VERT_SRCS:%.vert=$(SHADER_DIR)/%.spv)
 FRAG_SPIRV = $(FRAG_SRCS:%.frag=$(SHADER_DIR)/%.spv)
 
-COMPILE_SHADERS = $(shell chmod +x resource/Shader/compile.sh && ./resource/Shader/compile.sh)
+COMPILE_SHADERS = $(shell chmod +x Resources/Shader/compile.sh && ./Resources/Shader/compile.sh)
 
 ifeq ($(OS),linux)
 	LIBS += -lglfw -lvulkan
