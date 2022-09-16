@@ -5,7 +5,7 @@
 #include "Stellar/Platform/Metal/Renderer/MetalRenderer.h"
 #endif
 
-#if defined __linux__ || defined _WIN64_
+#if defined __linux__ || defined _WIN64
 #include "Stellar/Platform/Vulkan/Renderer/VulkanRenderer.h"
 #endif
 
@@ -18,7 +18,7 @@ namespace Stellar {
     static RendererAPI* InitRendererAPI() {
         switch (RendererAPI::Current()) {
             case RendererAPIType::Vulkan: 
-                #if defined __linux__ || defined _WIN64_
+                #if defined __linux__ || defined _WIN64
                     return new VulkanRenderer();
                 #endif
             case RendererAPIType::Metal: 

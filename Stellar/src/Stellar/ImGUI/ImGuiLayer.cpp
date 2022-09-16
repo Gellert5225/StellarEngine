@@ -5,7 +5,7 @@
 
 #include "Stellar/Log.h"
 
-#if defined __linux__ || defined _WIN64_
+#if defined __linux__ || defined _WIN64
 #include "Stellar/Platform/Vulkan/ImGUI/VulkanImGuiLayer.h"
 #endif
 
@@ -17,7 +17,7 @@ namespace Stellar {
     ImGuiLayer *ImGuiLayer::Create() {
         switch (RendererAPI::Current()) {
             case RendererAPIType::Vulkan: 
-                #if defined __linux__ || defined _WIN64_
+                #if defined __linux__ || defined _WIN64
                     return new VulkanImGuiLayer();
                 #endif
             case RendererAPIType::Metal:  

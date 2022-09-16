@@ -3,7 +3,7 @@
 #include "SwapChain.h"
 #include "RendererAPI.h"
 
-#if defined __linux__ || defined _WIN64_
+#if defined __linux__ || defined _WIN64
 #include "Stellar/Platform/Vulkan/SwapChain/VulkanSwapChain.h"
 #endif
 
@@ -18,7 +18,7 @@ namespace Stellar {
     SwapChain *SwapChain::Create() {
         switch (RendererAPI::Current()) {
             case RendererAPIType::Vulkan:
-                #if defined __linux__ || defined _WIN64_
+                #if defined __linux__ || defined _WIN64
                     return new VulkanSwapChain();
                 #endif
             case RendererAPIType::Metal:
