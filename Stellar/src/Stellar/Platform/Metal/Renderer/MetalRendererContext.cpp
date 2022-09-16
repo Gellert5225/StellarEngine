@@ -17,10 +17,10 @@ namespace Stellar {
     }
 
     std::string MetalRendererContext::getGPUInfo() const {
-        return std::string();
+        return MetalDevice::GetInstance()->getDevice()->name()->utf8String();
     }
 
     std::string MetalRendererContext::getGraphicsAPI() const {
-        return std::string();
+        return "Metal";
     }
 }

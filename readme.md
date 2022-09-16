@@ -1,15 +1,27 @@
-# Stellar Engine - Vulkan
-A custom game engine using C++ and Vulkan API
+# Stellar Engine
+A custom game engine using C++ and Vulkan/Metal API.
 ## Table of Contents
 * [Introduction](#introduction)
 * [Installation](#installation)
 * [ToDo](#todo)
 
 ## Introduction
-Stellar Engine is a cross-platform game engine using Vulkan API. Inspired by Cherno's [Hazel Engine](https://github.com/TheCherno/Hazel)
+Stellar Engine is a cross-platform game engine using Vulkan/Metal API. Inspired by Cherno's [Hazel Engine](https://github.com/TheCherno/Hazel)
 
-Currently it is at the very initial state of development. It supports Windows10(64 bit), Linux(64 bit) and macOS with Intel CPU. 
-> Although theoretically it should support Apple Silicon but I do not have a M1 Mac
+Currently it is at the very initial state of development. It supports Windows10(64 bit), Linux(64 bit) and macOS. 
+> On Windows and Linux platforms, StellarEngine will use Vulkan API.
+> And on macOS, it will use Metal API instead.
+
+### How it works
+
+This project has 2 sub projects, the `core engine` and a `sandbox`. The `core engine` contains all the rendering code, and the `sandbox` can be viewed as a client(a game or a 3D application).
+
+- On Windows and Linux platform, code is written purely in C++, and is compiled using `g++`. 
+> Note: On Windows you will need to install `MinGW` first, see [here](#installation) for detail.
+
+- On macOS, code is written in C++ and Objective-C++, with the latter primarily being a bridging file between the main C++ code and [metal-cpp](https://developer.apple.com/metal/cpp/) code.
+
+- All three platforms use `GLFW` as window creation and `ImGui` for UI components.
 
 ### Current Stage
 ![](Screenshots/currentStage.png)
@@ -37,15 +49,14 @@ I will try to list as detailed as possible. However I have not tested the build 
 
 ### Running
 
-To run, you need to compile the core engine first:
+To run, you just need to build the project first:
 
-`cd Stellar && make`
+`make -j`
 
-Then, depending on your platform, a shared library will be generated and copied to `Sandbox/bin`. (`.dll` for Win64 and `.so` for Linux) 
+Then, run the executable:
 
-Now you just need to build the Sandbox project:
+`make run`
 
-`cd .. && cd Sandbox && make && make run`
 
 ## ToDo
 
@@ -58,8 +69,8 @@ Now you just need to build the Sandbox project:
 - [x] Camera
 - [ ] Texture
 - [x] Renderer
-- [ ] Metal-cpp
-- [ ] macOS support
+- [x] Metal-cpp
+- [x] macOS support
 - [ ] Load model
 - [ ] PBR
 - [ ] IBL
