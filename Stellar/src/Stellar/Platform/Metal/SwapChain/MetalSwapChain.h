@@ -24,6 +24,7 @@ namespace Stellar {
 #if defined(__APPLE__)
         CA::MetalDrawable* getCurrentFrameBuffer();
         MTL::RenderPassDescriptor* getRenderPass();
+        MTL::RenderPassDescriptor* getImGuiRenderPass();
         MTL::CommandBuffer* getCommandBuffer();
 #endif
         void* getSwapChain();
@@ -32,7 +33,8 @@ namespace Stellar {
 #if defined(__APPLE__)
         CA::MetalDrawable* m_Drawable;
         MTL::RenderPassDescriptor* m_RenderPass;
-        MTL::CommandBuffer* m_CommandBuffer;
+        MTL::RenderPassDescriptor* m_ImGuiRenderPass;
+        MTL::CommandBuffer* m_CommandBuffer = nullptr;
 #endif
         void init();
         void createSwapChain();

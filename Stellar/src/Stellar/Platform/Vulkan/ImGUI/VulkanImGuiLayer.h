@@ -17,7 +17,7 @@ namespace Stellar {
         VulkanImGuiLayer();
         ~VulkanImGuiLayer() override;
 
-        void begin() const override;
+        void begin() override;
         void end() const override;
 
         void onAttach() override;
@@ -26,7 +26,5 @@ namespace Stellar {
     //static std::vector<VkCommandBuffer> s_ImGuiCommandBuffers;
     private:
         VkDescriptorPool m_DescriptorPool;
-        float m_Time = 0.0f;
-
     };
 }

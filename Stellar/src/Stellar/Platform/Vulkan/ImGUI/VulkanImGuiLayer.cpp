@@ -116,7 +116,7 @@ namespace Stellar {
 //        e.handled |= e.isInCategory(EventCategory::Keyboard) & io.WantCaptureKeyboard;
 //    }
 
-    void VulkanImGuiLayer::begin() const {
+    void VulkanImGuiLayer::begin() {
         ImGui_ImplVulkan_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();

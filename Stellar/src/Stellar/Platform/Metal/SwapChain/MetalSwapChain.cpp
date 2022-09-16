@@ -24,6 +24,7 @@ namespace Stellar {
     }
 
     void MetalSwapChain::createSwapChain() {
+        NS::AutoreleasePool* pPool = NS::AutoreleasePool::alloc()->init();
         float xscale, yscale;
         glfwGetWindowContentScale(Application::Get().getWindow().getGLFWWindow(), &xscale, &yscale);
 
@@ -34,10 +35,13 @@ namespace Stellar {
                                        height * yscale,
                                        MetalDevice::GetInstance()->getDevice());
 
+        pPool->release();
+
     }
 
     void MetalSwapChain::createRenderPass() {
         m_RenderPass = MTL::RenderPassDescriptor::alloc()->init();
+        //m_ImGuiRenderPass = MTL::RenderPassDescriptor::alloc()->init();
     }
 
     void MetalSwapChain::createCommandBuffer() {
@@ -53,11 +57,13 @@ namespace Stellar {
     }
 
     void MetalSwapChain::present() {
+        m_Drawable->present();
         m_Drawable->release();
     }
 
     void MetalSwapChain::onResize() {
-
+        m_MetalSwapChain = nullptr;
+        createSwapChain();
     }
 
     SwapChain::SwapChainExtent2D MetalSwapChain::getSwapChainExtent() const {
@@ -82,5 +88,9 @@ namespace Stellar {
 
     MTL::CommandBuffer *MetalSwapChain::getCommandBuffer() {
         return m_CommandBuffer;
+    }
+
+    MTL::RenderPassDescriptor *MetalSwapChain::getImGuiRenderPass() {
+        return m_ImGuiRenderPass;
     }
 }

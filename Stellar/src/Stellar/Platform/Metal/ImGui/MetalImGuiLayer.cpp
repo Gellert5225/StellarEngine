@@ -9,9 +9,6 @@
 
 #include "Stellar/Application.h"
 
-void* createLayer(GLFWwindow* window, double width, double height, void* device);
-void* nextDrawable(void* layer);
-
 namespace Stellar {
 
     MetalImGuiLayer::MetalImGuiLayer() {
@@ -34,26 +31,62 @@ namespace Stellar {
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
         auto window = Application::Get().getWindow().getGLFWWindow();
-        ImGui_ImplGlfw_InitForOpenGL(window, true);
+        ImGui_ImplGlfw_InitForOther(window, true);
         ImGui_ImplMetal_Init(MetalDevice::GetInstance()->getDevice());
 
         int width, height;
         glfwGetFramebufferSize(window, &width, &height);
     }
 
-    void MetalImGuiLayer::begin() const {
+    void MetalImGuiLayer::begin() {
         auto swapChain = (MetalSwapChain*)Application::Get().getWindow().getSwapChain();
+        auto colorAttachment = swapChain->getRenderPass()->colorAttachments()->object(0);
+        colorAttachment->setClearColor({1, 0, 0, 1});
+        colorAttachment->setLoadAction(MTL::LoadActionLoad);
+        colorAttachment->setStoreAction(MTL::StoreActionStore);
+        m_CommandBuffer = MetalDevice::GetInstance()->getCommandQueue()->commandBuffer();
+        m_Encoder = m_CommandBuffer->renderCommandEncoder(swapChain->getRenderPass());
+
+        ImGui_ImplMetal_NewFrame(swapChain->getRenderPass());
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
     }
 
     void MetalImGuiLayer::end() const {
+        ImGuiIO& io = ImGui::GetIO();
+        Application& app = Application::Get();
+        io.DisplaySize = ImVec2(app.getWindow().getWidth(), app.getWindow().getHeight());
 
+        auto time = (float)glfwGetTime();
+        io.DeltaTime = m_Time > 0.0 ? (time - m_Time) : (1.0f / 60.0f);
+
+        ImGui::Render();
+        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+            auto window = Application::Get().getWindow().getGLFWWindow();
+            int width, height;
+            glfwGetFramebufferSize(window, &width, &height);
+            ImGui::UpdatePlatformWindows();
+            ImGui::RenderPlatformWindowsDefault();
+        }
+
+        ImGui_ImplMetal_RenderDrawData(ImGui::GetDrawData(), m_CommandBuffer, m_Encoder);
+
+        auto swapChain = (MetalSwapChain*)Application::Get().getWindow().getSwapChain();
+        m_Encoder->endEncoding();
+        m_Encoder->release();
+        //swapChain->getCurrentFrameBuffer()->present();
+        m_CommandBuffer->commit();
+        m_CommandBuffer->release();
     }
 
     void MetalImGuiLayer::onDetach() {
-        Layer::onDetach();
+        ImGui_ImplMetal_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext();
     }
 
     void MetalImGuiLayer::onImGuiRender() {
-        Layer::onImGuiRender();
+        static bool show = true;
+        ImGui::ShowDemoWindow(&show);
     }
 }

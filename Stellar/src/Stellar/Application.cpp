@@ -15,7 +15,7 @@ namespace Stellar {
         m_Window->setEventCallback(BIND_EVENT_FN(Application::onEvent));
 
         Renderer::Init();
-        //m_ImGuiLayer = ImGuiLayer::Create();
+        m_ImGuiLayer = ImGuiLayer::Create();
     }
 
     Application::~Application() {
@@ -65,11 +65,11 @@ namespace Stellar {
             for (Layer* layer : m_LayerStack)
                 layer->onUpdate(timestep);
 
-           // imGui
-//           m_ImGuiLayer->begin();
-//           for (Layer* layer : m_LayerStack)
-//               layer->onImGuiRender();
-//           m_ImGuiLayer->end();
+            // imGui
+            m_ImGuiLayer->begin();
+            for (Layer* layer : m_LayerStack)
+                layer->onImGuiRender();
+            m_ImGuiLayer->end();
 
             // present
             m_Window->swapBuffers();

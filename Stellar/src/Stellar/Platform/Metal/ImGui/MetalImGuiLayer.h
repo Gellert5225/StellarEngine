@@ -2,6 +2,7 @@
 
 #include "Stellar/Core.h"
 #include "Stellar/ImGUI/ImGuiLayer.h"
+#include "Stellar/Platform/Metal/MetalAPI.h"
 
 namespace Stellar {
 
@@ -10,7 +11,7 @@ namespace Stellar {
         MetalImGuiLayer();
         ~MetalImGuiLayer() override;
 
-        void begin() const override;
+        void begin() override;
         void end() const override;
 
         void onAttach() override;
@@ -18,6 +19,8 @@ namespace Stellar {
         void onImGuiRender() override;
 
     private:
+        MTL::CommandBuffer* m_CommandBuffer = nullptr;
+        MTL::RenderCommandEncoder* m_Encoder;
     };
 
 }
