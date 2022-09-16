@@ -37,7 +37,7 @@ namespace Stellar {
     }
 
     void MetalSwapChain::createRenderPass() {
-
+        m_RenderPass = MTL::RenderPassDescriptor::alloc()->init();
     }
 
     void MetalSwapChain::createCommandBuffer() {
@@ -53,7 +53,7 @@ namespace Stellar {
     }
 
     void MetalSwapChain::present() {
-
+        m_Drawable->release();
     }
 
     void MetalSwapChain::onResize() {

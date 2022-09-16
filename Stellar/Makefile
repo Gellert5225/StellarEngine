@@ -2,7 +2,7 @@ LIB_NAME = Stellar
 
 # Commen flags for all platforms
 CXX      = g++
-CPPFLAGS = -I ./vendor/glfw/include -I ./vendor/spdlog/include -I./vendor/imgui -I./vendor/imgui/backends -I ./src -I./vendor/glm
+CPPFLAGS = -I./vendor/glfw/include -I./vendor/spdlog/include -I./vendor/imgui -I./src -I./vendor/glm
 CXXFLAGS = -std=c++17 -g -O2 -DSTLR_BUILD_DLL -fPIC -Wall
 LDFLAGS  = 
 LDLIBS   =
@@ -63,15 +63,14 @@ include $(wildcard ../PrettyPrint.inc)
 rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 
 # How to recursively find all files that match a pattern
-SRC_FILES := $(call rwildcard,src/,*.cpp) $(wildcard src/Stellar/Platform/Metal/*.mm )
-ifneq ($(OS),macos)
-	SRC_FILES := $(filter-out $(call rwildcard,src/Stellar/Platform/Metal/,*.cpp), $(SRC_FILES))
-	SRC_FILES := $(filter-out $(call rwildcard,src/Stellar/Platform/Metal/,*.mm), $(SRC_FILES))
-endif
-SRC_DIR = ./src
+OBJC_FILES := $(call rwildcard,src/Stellar/Platform/Metal/,*.mm)
 IMGUI_DIR = vendor/imgui
 IMGUI_SRC_FILES := $(wildcard $(IMGUI_DIR)/*.cpp)
-O_FILES = $(patsubst %.cpp,build/%.o,$(SRC_FILES) $(IMGUI_SRC_FILES))
+SRC_FILES := $(call rwildcard,src/,*.cpp) \
+	$(IMGUI_SRC_FILES)
+
+OBJS = $(filter %.o,$(patsubst %.cpp,build/%.o,$(SRC_FILES)) \
+    $(patsubst %.mm,build/%.o,$(OBJC_FILES)))
 
 all: lib/lib$(LIB_NAME)$(LIB_EXT)
 	@mkdir -p ../Sandbox/bin
@@ -86,18 +85,18 @@ override CPPFLAGS += -MMD
 $(PCH_OUT): $(PCH_SRC) 
 	@$(call run_and_test,$(CXX) $(CPPFLAGS) $(PCH_FLAGS) -o $@ -c $<)
 
-bin/%: build/%.o | lib/lib$(LIB_NAME)$(LIB_EXT)
+lib/lib$(LIB_NAME)$(LIB_EXT): $(OBJS)
 	@mkdir -p $(@D)
-	@$(call run_and_test,$(CXX) $(LDFLAGS) $< $(LDLIBS) -o $@)
-
-lib/lib$(LIB_NAME)$(LIB_EXT): $(O_FILES)
-	@mkdir -p $(@D)
-	@$(call run_and_test, ($(CXX) -shared -o $@ $^ $(LDFLAGS) $(LDLIBS)))
+	@$(call run_and_test, ($(CXX) -std=c++17 -shared -o $@ $^ $(LDFLAGS) $(LDLIBS)))
 
 build/%.o: %.cpp $(PCH_OUT)
 	@mkdir -p $(@D)
-	@$(call run_and_test, ($(CXX) -c $(CPPFLAGS) $(CXXFLAGS) -include $(PCH_SRC) $< -o $@))
+	@$(call run_and_test, ($(CXX) -c $(CPPFLAGS)  $(CXXFLAGS) -include $(PCH_SRC) $< -o $@))
+
+build/%.o: %.mm
+	@mkdir -p $(@D)
+	@$(call run_and_test, ($(CXX) -c $(CPPFLAGS) $(CXXFLAGS) -ObjC++  $< -o $@))
 
 clean:
 	@echo "Cleaning"
-	@$(RM) -r bin build lib **/*.gch **/*.d *.o *.a *.def *.s
+	@$(RM) -r bin build lib **/*.gch **/*.d *.o *.a *.def *.s **/.o

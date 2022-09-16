@@ -6,9 +6,9 @@
 class Sandbox: public Stellar::Application {
     public:
         Sandbox() {
-            pushLayer(new ExampleLayer());
-            pushLayer(new Stellar::ImGuiLayer());
-            //pushLayer(new ExampleMetalLayer());
+            //pushLayer(new ExampleLayer());
+            //pushLayer(Stellar::ImGuiLayer::Create());
+            pushLayer(new ExampleMetalLayer());
         }
         ~Sandbox() override = default;
 };

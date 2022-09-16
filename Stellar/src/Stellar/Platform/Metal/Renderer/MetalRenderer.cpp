@@ -11,7 +11,7 @@ namespace Stellar {
     }
 
     void MetalRenderer::shutDown() {
-        //m_Encoder->release();
+
     }
 
     void MetalRenderer::beginScene(Stellar::Camera camera) {
@@ -28,9 +28,7 @@ namespace Stellar {
     void MetalRenderer::beginRenderPass() {
         auto swapChain = (MetalSwapChain*)Application::Get().getWindow().getSwapChain();
 
-        MTL::RenderPassDescriptor* mainPass = MTL::RenderPassDescriptor::alloc()->init();
-        auto colorAttachment = mainPass->colorAttachments()->object(0);
-
+        auto colorAttachment = swapChain->getRenderPass()->colorAttachments()->object(0);
         colorAttachment->setClearColor(m_ClearColor);
         colorAttachment->setLoadAction(MTL::LoadActionClear);
         colorAttachment->setStoreAction(MTL::StoreActionStore);
@@ -38,7 +36,7 @@ namespace Stellar {
 
         m_CommandBuffer = MetalDevice::GetInstance()->getCommandQueue()->commandBuffer();
 
-        m_Encoder = m_CommandBuffer->renderCommandEncoder(mainPass);
+        m_Encoder = m_CommandBuffer->renderCommandEncoder(swapChain->getRenderPass());
     }
 
     void MetalRenderer::endRenderPass() {
