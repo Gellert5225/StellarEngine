@@ -26,14 +26,13 @@
 #if defined(_WIN64)
     #define IMGUI_API __declspec(dllexport)
     #define DEBUG_BREAK __debugbreak()
-#elif defined(__GNUC__)
+#elif defined(__linux__)
     #define IMGUI_API __attribute__((visibility("default")))
     #define DEBUG_BREAK raise(SIGTRAP)
-#elif defiend(__APPLE__)
+#elif defined(__APPLE__)
     #define IMGUI_API
     #include <signal.h>
-    #define DEBUG_BREAK rais(SIGTRAP)
-    #pragma warning Unknown dynamic link import/export semantics.
+    #define DEBUG_BREAK raise(SIGTRAP)
 #endif
 //#define IMGUI_API __declspec( dllimport )
 

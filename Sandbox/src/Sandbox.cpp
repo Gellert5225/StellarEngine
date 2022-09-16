@@ -6,7 +6,7 @@
 class Sandbox: public Stellar::Application {
     public:
         Sandbox() {
-            #if defined __GNUC__ || defined _WIN64_ 
+            #if defined __linux__ || defined _WIN64_ 
             pushLayer(new ExampleLayer());
             #endif
 

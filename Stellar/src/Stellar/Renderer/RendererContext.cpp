@@ -9,7 +9,7 @@ namespace Stellar {
     RendererContext* RendererContext::Create() {
         switch (RendererAPI::Current()) {
             case RendererAPIType::Vulkan:
-                #if defined __GNUC__ || defined _WIN64_
+                #if defined __linux__ || defined _WIN64_
                     return new VulkanRendererContext();
                 #endif
             case RendererAPIType::Metal:

@@ -1,15 +1,15 @@
 #include "stlrpch.h"
-
 #include "Renderer.h"
 
 #if defined(__APPLE__)
 #include "Stellar/Platform/Metal/Renderer/MetalRenderer.h"
 #endif
 
-#if defined __GNUC__ || defined _WIN64_
+#if defined __linux__ || defined _WIN64_
 #include "Stellar/Platform/Vulkan/Renderer/VulkanRenderer.h"
 #endif
 
+#include "Stellar/Application.h"
 #include "Stellar/Log.h"
 
 namespace Stellar {
@@ -18,7 +18,7 @@ namespace Stellar {
     static RendererAPI* InitRendererAPI() {
         switch (RendererAPI::Current()) {
             case RendererAPIType::Vulkan: 
-                #if defined __GNUC__ || defined _WIN64_
+                #if defined __linux__ || defined _WIN64_
                     return new VulkanRenderer();
                 #endif
             case RendererAPIType::Metal: 
