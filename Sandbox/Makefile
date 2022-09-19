@@ -1,14 +1,11 @@
-# Directory setup
-BUILD_DIR = build
-BIN_DIR = bin
-RM = rm -f
+DBG_OPT_FLAGS=-g
+ASAN_FLAGS=-fsanitize=address
 
-# Compiler and flags
 CXX = 
-CXXFLAGS = -std=c++17 -Wall -g -O3
+CXXFLAGS = -std=c++17 -Wall $(DBG_OPT_FLAGS) $(ASAN_FLAGS)
 CPPFLAGS = -I../Stellar/src/ -I../Stellar/vendor/spdlog/include -I../Stellar/vendor/glfw/include -I../Stellar/vendor/glm -I../Stellar/vendor/imgui
 LFLAGS = -L./bin
-LIBS = -lStellar
+LIBS = 
 PWD = $(shell pwd)
 EXPORT_FLAG =
 SHADER_FLAG = glslc
@@ -19,29 +16,50 @@ INSTALL_NAME_TOOL_STELLAR =
 INSTALL_NAME_TOOL_GLFW =
 CP_LIBS =
 CP_SHADERS = 
+RM       	= rm -f
+OUT_DIR   = 
+BUILD_MODE = 
+BIN_DIR = bin
+
+ifeq "$(findstring debug, $(MAKECMDGOALS))" ""
+	BUILD_MODE = release
+	LIB_NAME = Stellar
+	OUT_DIR = release
+	BIN_DIR = $(OUT_DIR)/bin
+ 	CXXFLAGS += -O3 -DNDEBUG
+	LIBS = -lStellar
+else
+	BUILD_MODE = debug
+	LIB_NAME = Stellar_debug
+ 	OUT_DIR = debug
+	BIN_DIR = $(OUT_DIR)/bin
+ 	CXXFLAGS += -g -fsanitize=address
+	LIBS = -lStellar_debug
+endif
 
 # OS check
-ifeq ($(OS),Windows_NT) # OS is a preexisting environment variable on Windows
+ifeq ($(OS),Windows_NT)
 	OS = windows
 	EXE_EXT = .exe
 	CPPFLAGS += -I../Stellar/vendor/vulkan/win/Include
-	CXX = g+=
+	CXX = g++
 	LIBS += -lglfw3
 else
 	UNAME := $(shell uname -s)
 	EXPORT = export
 	ifeq ($(UNAME),Darwin)
-		BIN_DIR = ../macOS/StellarEngine.app/Contents/MacOS
+		ifeq ($(BUILD_MODE),release)
+			BIN_DIR = ../macOS/StellarEngine.app/Contents/MacOS
+			INSTALL_NAME_TOOL_STELLAR = $(shell install_name_tool -change lib/libStellar.dylib  "@executable_path/../Frameworks/libStellar.dylib" ../macOS/StellarEngine.app/Contents/MacOS/Sandbox)
+			INSTALL_NAME_TOOL_GLFW = $(shell install_name_tool -add_rpath "@executable_path/../Frameworks" ../macOS/StellarEngine.app/Contents/MacOS/Sandbox)
+			CP_LIBS = $(shell mkdir -p ../macOS/StellarEngine.app/Contents/Frameworks &&  cp ./bin/libStellar.dylib ../macOS/StellarEngine.app/Contents/Frameworks && cp ./bin/libglfw.3.dylib ../macOS/StellarEngine.app/Contents/Frameworks)
+			CP_SHADERS = $(shell cp -r ./Resources/Shader ../macOS/StellarEngine.app/Contents/Resources/Shader)
+		endif
 		OS = macos
 		EXPORT_FLAG = DYLD_LIBRARY_PATH
 		LIBS += -lglfw.3
 		CPPFLAGS += -I../Stellar/vendor/metal-cpp
 		CXX = clang++
-
-		INSTALL_NAME_TOOL_STELLAR = $(shell install_name_tool -change lib/libStellar.dylib  "@executable_path/../Frameworks/libStellar.dylib" ../macOS/StellarEngine.app/Contents/MacOS/Sandbox)
-    	INSTALL_NAME_TOOL_GLFW = $(shell install_name_tool -add_rpath "@executable_path/../Frameworks" ../macOS/StellarEngine.app/Contents/MacOS/Sandbox)
-    	CP_LIBS = $(shell mkdir -p ../macOS/StellarEngine.app/Contents/Frameworks &&  cp ./bin/libStellar.dylib ../macOS/StellarEngine.app/Contents/Frameworks && cp ./bin/libglfw.3.dylib ../macOS/StellarEngine.app/Contents/Frameworks)
-		CP_SHADERS = $(shell cp -r ./Resources/Shader ../macOS/StellarEngine.app/Contents/Resources/Shader)
 	else 
 		ifeq ($(UNAME),Linux)
 			OS = linux
@@ -60,7 +78,7 @@ SRC_FILES := $(call rwildcard,src/,*.cpp)
 SRC_DIR = src
 SHADER_DIR = resource/Shader
 SRCS := $(call rwildcard,src/,*.cpp)
-OBJS = $(patsubst %.cpp,build/%.o,$(SRCS))
+OBJS = $(patsubst %.cpp,$(OUT_DIR)/build/%.o,$(SRCS))
 VERT_SRCS := $(call rwildcard,$(SHADER_DIR)/,*.vert)
 FRAG_SRCS := $(call rwildcard,$(SHADER_DIR)/,*.frag)
 VERT_SPIRV = $(VERT_SRCS:%.vert=$(SHADER_DIR)/%.spv)
@@ -81,6 +99,9 @@ include $(wildcard ../PrettyPrint.inc)
 
 .PHONY: depend clean
 
+debug: all
+release: all
+
 all: $(BIN_DIR)/$(MAIN)
 	$(CP_LIBS)
 	$(INSTALL_NAME_TOOL_STELLAR)
@@ -97,20 +118,20 @@ $(BIN_DIR)/$(MAIN): $(OBJS)
 	@mkdir -p '$(@D)'
 	@$(call run_and_test,$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $(BIN_DIR)/$(MAIN) $(OBJS) $(LFLAGS) $(LIBS))
 
-$(BUILD_DIR)/%.o: %.cpp
+$(OUT_DIR)/build/%.o: %.cpp
 	@mkdir -p '$(@D)'
 	@$(call run_and_test, ($(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $<  -o $@))
 
 run:
 	export $(EXPORT_FLAG)="${PWD}/bin"; \
-	$(BIN_DIR)/Sandbox$(EXE_EXT)
+		$(BIN_DIR)/Sandbox$(EXE_EXT)
 
 run_mac:
 	$(shell open ../macOS/StellarEngine.app)
 
 clean:
 	@echo "Cleaning"
-	@$(RM) -r bin build lib
+	@$(RM) -r release debug bin
 	@$(RM) ../macOS/StellarEngine.app/Contents/Frameworks/* ../macOS/StellarEngine.app/Contents/MacOS/*
 
 depend: $(SRCS)
