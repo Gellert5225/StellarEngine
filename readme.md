@@ -46,6 +46,7 @@ I will try to list as detailed as possible. However I have not tested the build 
     - X11
 - macOS:
     - Clang++
+> Note: On maoOS, if you want to enable `Address Sanitation(Valgrind)` you need to manually install clang from llvm as the default clang in `/usr/bin` shipped by Apple does not support it.
 
 ### Running
 
@@ -75,4 +76,5 @@ Then, run the executable:
 - [ ] PBR
 - [ ] IBL
 - [ ] Deferred rendering
-- [ ] Networking
+- [ ] Memory allocator
+- [ ] Multi-threading
