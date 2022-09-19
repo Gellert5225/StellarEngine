@@ -1,7 +1,9 @@
 #include "Buffer.h"
 
 #include "Stellar/Renderer/RendererAPI.h"
+#if defined __linux__ || defined _WIN64
 #include "Stellar/Platform/Vulkan/Buffer/VulkanBuffer.h"
+#endif
 #include "Stellar/Log.h"
 
 namespace Stellar {
@@ -9,6 +11,7 @@ namespace Stellar {
     Buffer* Buffer::Create(BufferType type, uint64_t size, const void *data) {
         switch (RendererAPI::Current()) {
             case RendererAPIType::Vulkan:
+            #if defined __linux__ || defined _WIN64
                 switch (type) {
                     case BufferType::Vertex:
                         if (data) { // staging
@@ -42,6 +45,7 @@ namespace Stellar {
                                                 VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
                                                 VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
                 }
+            #endif
             case RendererAPIType::Metal:
                 STLR_CORE_ASSERT(false, "Metal is not yet supported");
                 break;

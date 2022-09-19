@@ -4,7 +4,7 @@ BIN_DIR = bin
 RM = rm -f
 
 # Compiler and flags
-CXX = g++
+CXX = 
 CXXFLAGS = -std=c++17 -Wall -g -O3
 CPPFLAGS = -I../Stellar/src/ -I../Stellar/vendor/spdlog/include -I../Stellar/vendor/glfw/include -I../Stellar/vendor/glm -I../Stellar/vendor/imgui
 LFLAGS = -L./bin
@@ -25,6 +25,7 @@ ifeq ($(OS),Windows_NT) # OS is a preexisting environment variable on Windows
 	OS = windows
 	EXE_EXT = .exe
 	CPPFLAGS += -I../Stellar/vendor/vulkan/win/Include
+	CXX = g+=
 	LIBS += -lglfw3
 else
 	UNAME := $(shell uname -s)
@@ -35,6 +36,7 @@ else
 		EXPORT_FLAG = DYLD_LIBRARY_PATH
 		LIBS += -lglfw.3
 		CPPFLAGS += -I../Stellar/vendor/metal-cpp
+		CXX = clang++
 
 		INSTALL_NAME_TOOL_STELLAR = $(shell install_name_tool -change lib/libStellar.dylib  "@executable_path/../Frameworks/libStellar.dylib" ../macOS/StellarEngine.app/Contents/MacOS/Sandbox)
     	INSTALL_NAME_TOOL_GLFW = $(shell install_name_tool -add_rpath "@executable_path/../Frameworks" ../macOS/StellarEngine.app/Contents/MacOS/Sandbox)
@@ -45,6 +47,7 @@ else
 			OS = linux
 			EXPORT_FLAG = LD_LIBRARY_PATH
 			CPPFLAGS += -I../Stellar/vendor/vulkan/linux/include
+			CXX = g++
 		else
 			$(error OS not supported by this Makefile)
 		endif

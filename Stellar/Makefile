@@ -1,7 +1,7 @@
 LIB_NAME = Stellar
 
 # Commen flags for all platforms
-CXX      = g++
+CXX      = 
 CPPFLAGS = -I./vendor/glfw/include -I./vendor/spdlog/include -I./vendor/imgui -I./src -I./vendor/glm
 CXXFLAGS = -std=c++17 -g -O2 -DSTLR_BUILD_DLL -fPIC -Wall
 LDFLAGS  = 
@@ -43,8 +43,8 @@ ifeq ($(OS),windows)
 	endif
 
 	else ifeq ($(OS),macos)
-		CPPFLAGS += -I./vendor/metal-cpp
-		LDFLAGS += -L./vendor/glfw/libs
+		CPPFLAGS += -I./vendor/metal-cpp -I/usr/local/include
+		LDFLAGS += -L./vendor/glfw/libs -L./vendor/vulkan
 		LDLIBS += -lglfw.3 -lvulkan -framework QuartzCore -framework Metal -framework Foundation -framework Cocoa -framework CoreGraphics -framework MetalKit
 	else ifeq ($(OS),linux)
 		CPPFLAGS += -I ./vendor/vulkan/linux/include
@@ -72,9 +72,12 @@ SRC_FILES := $(call rwildcard,src/,*.cpp) \
 OBJS = 
 
 ifeq ($(OS),macos)
+	CXX = clang++
+	SRC_FILES := $(filter-out $(call rwildcard,src/Stellar/Platform/Vulkan/,*.cpp), $(SRC_FILES))
 	OBJS = $(filter %.o,$(patsubst %.cpp,build/%.o,$(SRC_FILES)) \
     $(patsubst %.mm,build/%.o,$(OBJC_FILES)))
 else
+	CXX = g++
 	SRC_FILES := $(filter-out $(call rwildcard,src/Stellar/Platform/Metal/,*.cpp), $(SRC_FILES))
 	SRC_FILES := $(filter-out $(call rwildcard,src/Stellar/Platform/Metal/,*.mm), $(SRC_FILES))
 	OBJS = $(filter %.o,$(patsubst %.cpp,build/%.o,$(SRC_FILES)))
@@ -91,11 +94,11 @@ override CPPFLAGS += -MMD
 
 # Compiles PCH
 $(PCH_OUT): $(PCH_SRC) 
-	@$(call run_and_test,$(CXX) $(CPPFLAGS) $(PCH_FLAGS) -o $@ -c $<)
+	@$(call run_and_test,$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(PCH_FLAGS) -o $@ -c $<)
 
 lib/lib$(LIB_NAME)$(LIB_EXT): $(OBJS)
 	@mkdir -p $(@D)
-	@$(call run_and_test, ($(CXX) -std=c++17 -shared -o $@ $^ $(LDFLAGS) $(LDLIBS)))
+	@$(call run_and_test, ($(CXX) $(CXXFLAGS) -std=c++17 -shared -o $@ $^ $(LDFLAGS) $(LDLIBS)))
 
 build/%.o: %.cpp $(PCH_OUT)
 	@mkdir -p $(@D)
@@ -103,7 +106,7 @@ build/%.o: %.cpp $(PCH_OUT)
 
 build/%.o: %.mm
 	@mkdir -p $(@D)
-	@$(call run_and_test, ($(CXX) -c $(CPPFLAGS) $(CXXFLAGS) -ObjC++  $< -o $@))
+	@$(call run_and_test, ($(CXX) -c $(CPPFLAGS) $(CXXFLAGS) -ObjC++ $< -o $@))
 
 clean:
 	@echo "Cleaning"

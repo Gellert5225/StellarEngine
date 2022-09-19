@@ -5,17 +5,18 @@
   "version": "0.2.0",
   "configurations": [  
     {
-      "name": "(Windows) Launch",
-      "type": "cppvsdbg",
+      "name": "(lldb) Launch",
+      "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceRoot}/Sandbox/bin/Sandbox",
+      "program": "${workspaceRoot}/macOS/StellarEngine.app/Contents/MacOS/Sandbox",
       "args": [],
       "stopAtEntry": false,
-      "cwd": "${workspaceFolder}/Sandbox",
+      "cwd": "${fileDirname}",
       "environment": [],
       "externalConsole": false,
-      "preLaunchTask": "Build Engine"
+      "MIMode": "lldb"
     },
+    
     {
       "name": "(gdb) Launch",
       "type": "cppdbg",
