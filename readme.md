@@ -50,13 +50,15 @@ I will try to list as detailed as possible. However I have not tested the build 
 
 ### Running
 
-To run, you just need to build the project first:
+To run in debug mode, use: 
 
-`make -j`
+`make -j BUILD=debug`
 
 Then, run the executable:
 
-`make run`
+`make run BUILD=debug`
+
+To run in release, simply `make -j; make run`
 
 
 ## ToDo

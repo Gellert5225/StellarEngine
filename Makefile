@@ -1,36 +1,34 @@
+BUILD = release
+export
+
+include $(wildcard ./PrettyPrint.inc)
+
 all:
-	$(MAKE) -C Stellar
-	$(MAKE) -C Sandbox
-
-debug: 
-	$(MAKE) debug -C Stellar
-	$(MAKE) debug -C Sandbox
-
-release: 
-	$(MAKE) release -C Stellar
-	$(MAKE) release -C Sandbox
+	@echo Building Stellar...
+	@MAKE BUILD=$(BUILD) -C Stellar
+	@echo Building Sandbox...
+	@MAKE BUILD=$(BUILD) -C Sandbox
 
 stellar:
-	$(MAKE) -C Stellar
+	@MAKE -C Stellar
 
 sandbox:
-	$(MAKE) -C Sandbox
+	@MAKE -C Sandbox
 
-run-debug:
-	$(MAKE) debug -C Sandbox run
-
-run-release:
-	$(MAKE) release -C Sandbox run
+run:
+	@MAKE -C Sandbox run BUILD=$(BUILD)
 
 UNAME := $(shell uname -s)
 
 ifeq ($(UNAME), Darwin)
 run_mac:
-	$(MAKE) -C Sandbox run_mac
+	@MAKE -C Sandbox run_mac
 else
 
 endif
 
 clean:
-	$(MAKE) -C Stellar clean
-	$(MAKE) -C Sandbox clean
+	@echo Cleaning Stellar...
+	@MAKE -C Stellar clean
+	@echo Cleaning Sandbox...
+	@MAKE -C Sandbox clean

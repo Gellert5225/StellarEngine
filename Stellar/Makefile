@@ -18,7 +18,7 @@ PCH_FLAGS = -x c++-header -std=c++17 -DSTLR_BUILD_DLL -fPIC
 RM       	= rm -f
 OUT_DIR   = release
 
-ifeq "$(findstring debug, $(MAKECMDGOALS))" ""
+ifeq ($(BUILD),release)
 	LIB_NAME = Stellar
 	OUT_DIR = release
  	CXXFLAGS += -O3 -DNDEBUG
@@ -91,9 +91,6 @@ else
 	OBJS = $(filter %.o,$(patsubst %.cpp,$(OUT_DIR)/build/%.o,$(SRC_FILES)))
 endif
 
-debug: all
-release: all
-
 all: $(OUT_DIR)/lib/lib$(LIB_NAME)$(LIB_EXT)
 	@mkdir -p ../Sandbox/bin
 	@cp $(OUT_DIR)/lib/lib$(LIB_NAME)$(LIB_EXT) ../Sandbox/bin/
@@ -112,7 +109,7 @@ $(OUT_DIR)/lib/lib$(LIB_NAME)$(LIB_EXT): $(OBJS)
 
 $(OUT_DIR)/build/%.o: %.cpp $(PCH_OUT)
 	@mkdir -p $(@D)
-	@$(call run_and_test, ($(CXX) -c $(INCLUDES)  $(CXXFLAGS) -include $(PCH_SRC) $< -o $@))
+	($(CXX) -c $(INCLUDES)  $(CXXFLAGS) -include $(PCH_SRC) $< -o $@)
 
 $(OUT_DIR)/build/%.o: %.mm
 	@mkdir -p $(@D)

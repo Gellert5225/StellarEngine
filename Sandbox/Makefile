@@ -2,7 +2,7 @@ DBG_OPT_FLAGS=-g
 ASAN_FLAGS=-fsanitize=address
 
 CXX = 
-CXXFLAGS = -std=c++17 -Wall $(DBG_OPT_FLAGS) $(ASAN_FLAGS)
+CXXFLAGS = -std=c++17 -Wall
 CPPFLAGS = -I../Stellar/src/ -I../Stellar/vendor/spdlog/include -I../Stellar/vendor/glfw/include -I../Stellar/vendor/glm -I../Stellar/vendor/imgui
 LFLAGS = -L./bin
 LIBS = 
@@ -21,7 +21,7 @@ OUT_DIR   =
 BUILD_MODE = 
 BIN_DIR = bin
 
-ifeq "$(findstring debug, $(MAKECMDGOALS))" ""
+ifeq ($(BUILD),release)
 	BUILD_MODE = release
 	LIB_NAME = Stellar
 	OUT_DIR = release
@@ -99,9 +99,6 @@ include $(wildcard ../PrettyPrint.inc)
 
 .PHONY: depend clean
 
-debug: all
-release: all
-
 all: $(BIN_DIR)/$(MAIN)
 	$(CP_LIBS)
 	$(INSTALL_NAME_TOOL_STELLAR)
@@ -120,10 +117,10 @@ $(BIN_DIR)/$(MAIN): $(OBJS)
 
 $(OUT_DIR)/build/%.o: %.cpp
 	@mkdir -p '$(@D)'
-	@$(call run_and_test, ($(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $<  -o $@))
+	($(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $<  -o $@)
 
 run:
-	export $(EXPORT_FLAG)="${PWD}/bin"; \
+	@export $(EXPORT_FLAG)="${PWD}/bin"; \
 		$(BIN_DIR)/Sandbox$(EXE_EXT)
 
 run_mac:
