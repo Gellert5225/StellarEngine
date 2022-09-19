@@ -19,8 +19,6 @@ namespace Stellar {
     }
 
     void MetalRenderer::endScene() {
-        auto swapChain = (MetalSwapChain*)Application::Get().getWindow().getSwapChain();
-        //m_CommandBuffer->presentDrawable(swapChain->getCurrentFrameBuffer());
         m_CommandBuffer->commit();
         m_CommandBuffer->release();
     }

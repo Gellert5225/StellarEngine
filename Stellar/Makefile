@@ -106,7 +106,7 @@ build/%.o: %.cpp $(PCH_OUT)
 
 build/%.o: %.mm
 	@mkdir -p $(@D)
-	@$(call run_and_test, ($(CXX) -c $(CPPFLAGS) $(CXXFLAGS) -ObjC++ $< -o $@))
+	@$(call run_and_test, ($(CXX) -c $(CPPFLAGS) $(CXXFLAGS) -ObjC++ -fobjc-arc $< -o $@))
 
 clean:
 	@echo "Cleaning"

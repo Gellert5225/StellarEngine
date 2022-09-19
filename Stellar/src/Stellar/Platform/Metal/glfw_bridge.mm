@@ -6,25 +6,23 @@
 #import <QuartzCore/QuartzCore.h>
 
 void* createLayer(GLFWwindow* window, double width, double height, void* device) {
-    @autoreleasepool {
-        CGSize size = {};
-        size.height = height;
-        size.width = width;
+    CGSize size = {};
+    size.height = height;
+    size.width = width;
 
-        CAMetalLayer* layer = [CAMetalLayer layer];
-        layer.device = (__bridge id<MTLDevice>) device;
-        layer.pixelFormat = MTLPixelFormatBGRA8Unorm;
-        layer.drawableSize = size;
+    CAMetalLayer* layer = [CAMetalLayer layer];
+    layer.device = (__bridge id<MTLDevice>) device;
+    layer.pixelFormat = MTLPixelFormatBGRA8Unorm;
+    layer.drawableSize = size;
 
-        NSWindow* nswindow = glfwGetCocoaWindow(window);
-        nswindow.contentView.layer = layer;
-        nswindow.contentView.wantsLayer = YES;
+    NSWindow* nswindow = glfwGetCocoaWindow(window);
+    nswindow.contentView.layer = layer;
+    nswindow.contentView.wantsLayer = YES;
 
-        return layer;
-    }
+    return (__bridge void *)layer;
 }
 
 void* nextDrawable(void* layer) {
     CAMetalLayer* metalLayer = (__bridge CAMetalLayer*) layer;
-    return [metalLayer nextDrawable];
+    return (__bridge void *)[metalLayer nextDrawable];
 }

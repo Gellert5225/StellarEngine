@@ -71,10 +71,8 @@ namespace Stellar {
 
         ImGui_ImplMetal_RenderDrawData(ImGui::GetDrawData(), m_CommandBuffer, m_Encoder);
 
-        auto swapChain = (MetalSwapChain*)Application::Get().getWindow().getSwapChain();
         m_Encoder->endEncoding();
         m_Encoder->release();
-        //swapChain->getCurrentFrameBuffer()->present();
         m_CommandBuffer->commit();
         m_CommandBuffer->release();
     }
