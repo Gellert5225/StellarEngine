@@ -55,7 +55,7 @@ else
 			INSTALL_NAME_TOOL_STELLAR = $(shell install_name_tool -change $(OUT_DIR)/bin/libStellar.dylib  "@executable_path/../Frameworks/libStellar.dylib" ../macOS/StellarEngine.app/Contents/MacOS/Sandbox)
 			INSTALL_NAME_TOOL_GLFW = $(shell install_name_tool -add_rpath "@executable_path/../Frameworks" ../macOS/StellarEngine.app/Contents/MacOS/Sandbox)
 			CP_LIBS = $(shell mkdir -p ../macOS/StellarEngine.app/Contents/Frameworks &&  cp $(OUT_DIR)/bin/libStellar.dylib ../macOS/StellarEngine.app/Contents/Frameworks && cp $(OUT_DIR)/bin/libglfw.3.dylib ../macOS/StellarEngine.app/Contents/Frameworks)
-			CP_SHADERS = $(shell cp -r ./Resources/Shader ../macOS/StellarEngine.app/Contents/Resources/Shader)
+			CP_SHADERS = $(shell cp -r ./Resources/Shader ../macOS/StellarEngine.app/Contents/Resources)
 		endif
 		OS = macos
 		EXPORT_FLAG = DYLD_LIBRARY_PATH
