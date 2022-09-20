@@ -5,6 +5,8 @@
 bin/
 build/
 lib/
+release/
+debug/
 
 macOS/StellarEngine.app/Contents/Frameworks/*
 macOS/StellarEngine.app/Contents/MacOS/*
@@ -16,3 +18,7 @@ macOS/StellarEngine.app/Contents/MacOS/*
 # imgui
 imgui_log.txt
 imgui.ini
+
+#xcode
+project.xcworkspace/
+xcuserdata/
