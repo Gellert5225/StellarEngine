@@ -63,7 +63,7 @@
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}/Sandbox",
-      "environment": [ { "name": "LD_LIBRARY_PATH", "value": "${workspaceFolder}/debug/Sandbox/bin" }],
+      "environment": [ { "name": "LD_LIBRARY_PATH", "value": "${workspaceFolder}/Sandbox/debug/bin" }],
       "externalConsole": false,
       "MIMode": "gdb",
       "setupCommands": [

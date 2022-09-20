@@ -58,7 +58,7 @@ else
 			CXX = g++
 			INCLUDES += -I ./vendor/vulkan/linux/include
 			LDFLAGS += -L./vendor/glfw/libs -L./vendor/vulkan/linux/lib
-			LDLIBS += -lglfw -lvulkan -Wl,--out-implib,lib/libStellar.a
+			LDLIBS += -lglfw -lvulkan
 		else
 			$(error OS not supported by this Makefile)
 		endif
