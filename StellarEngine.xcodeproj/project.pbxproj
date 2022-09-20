@@ -1425,6 +1425,7 @@
 		89A08B2E28D964C600E1A87E /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		89A08B4C28D9652E00E1A87E /* Sandbox */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Sandbox; sourceTree = BUILT_PRODUCTS_DIR; };
 		89A08B5B28D966A100E1A87E /* libStellar.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libStellar.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		89A08B8228D971F400E1A87E /* readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = readme.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1454,6 +1455,7 @@
 		8904BD2828D95CD600256602 = {
 			isa = PBXGroup;
 			children = (
+				89A08B8228D971F400E1A87E /* readme.md */,
 				89A08B0128D964C600E1A87E /* Sandbox */,
 				8904BD3B28D95D3900256602 /* Stellar */,
 				8904BD3228D95CD600256602 /* Products */,

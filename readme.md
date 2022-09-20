@@ -40,6 +40,7 @@ I will try to list as detailed as possible. However I have not tested the build 
     - [Linux](https://vulkan.lunarg.com/doc/view/latest/linux/getting_started_ubuntu.html)
 - Follow the Development Environment Tutorial (https://vulkan-tutorial.com/Development_environment)
 - C++17
+- Visual Studio Code (optional)
 - Windows:
     - MinGW with GCC installed
     - Follow tutorial here: https://www.msys2.org/
@@ -47,21 +48,24 @@ I will try to list as detailed as possible. However I have not tested the build 
     - GNU GCC
     - X11
 - macOS:
+    - Xcode (optional)
     - Clang++
 > Note: On maoOS, if you want to enable `Address Sanitation(Valgrind)` you need to manually install clang from llvm as the default clang in `/usr/bin` shipped by Apple does not support it.
 
 ### Running
 
-To run, you need to build the engine first: 
+#### From Command Line
 
-`make -j`
+- Debug: `make -j BUILD=debug` and `make run BUILD=debug`
+- Release: `make -j` and `make run`
 
-Then, run the executable:
+#### From VS-Code
 
-`make run`
+- Go to `Run and Debug`, select a configuration according to your platform, then hit F5.
 
-The default build mode is `release`, to run in `debug` mode, simply pass an argument: `make -j BUILD=debug`, then `make run BUILD=debug`
+#### From Xcode
 
+Select `Sandbox` from Scheme, then `CMD + R`
 
 ## ToDo
 
