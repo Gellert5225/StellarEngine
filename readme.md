@@ -21,7 +21,7 @@ This project has 2 sub projects, the `core engine` and a `sandbox`. The `core en
 
 - On macOS, code is written in C++ and Objective-C++, with the latter primarily being a bridging file between the main C++ code and [metal-cpp](https://developer.apple.com/metal/cpp/) code.
 
-- All three platforms use `GLFW` as window creation and `ImGui` for UI components.
+- All three platforms use [`GLFW`](https://www.glfw.org/) as window creation and [`ImGui`](https://github.com/ocornut/imgui) for UI components.
 
 ### Current Stage
 ![](Screenshots/currentStage.png)
