@@ -50,15 +50,15 @@ I will try to list as detailed as possible. However I have not tested the build 
 
 ### Running
 
-To run in debug mode, use: 
+To run, you need to build the engine first: 
 
-`make -j BUILD=debug`
+`make -j`
 
 Then, run the executable:
 
-`make run BUILD=debug`
+`make run`
 
-To run in release, simply `make -j; make run`
+The default build mode is `release`, to run in `debug` mode, simply pass an argument: `make -j BUILD=debug`, then `make run BUILD=debug`
 
 
 ## ToDo
