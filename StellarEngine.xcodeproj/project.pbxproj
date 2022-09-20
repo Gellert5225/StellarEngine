@@ -3264,8 +3264,8 @@
 			children = (
 				8904C76128D95D4200256602 /* MetalRenderer.h */,
 				8904C76228D95D4200256602 /* MetalRenderer.cpp */,
-				8904C76328D95D4200256602 /* MetalRendererContext.cpp */,
 				8904C76428D95D4200256602 /* MetalRendererContext.h */,
+				8904C76328D95D4200256602 /* MetalRendererContext.cpp */,
 			);
 			path = Renderer;
 			sourceTree = "<group>";
@@ -3273,8 +3273,8 @@
 		8904C76528D95D4200256602 /* SwapChain */ = {
 			isa = PBXGroup;
 			children = (
-				8904C76628D95D4200256602 /* MetalSwapChain.cpp */,
 				8904C76728D95D4200256602 /* MetalSwapChain.h */,
+				8904C76628D95D4200256602 /* MetalSwapChain.cpp */,
 			);
 			path = SwapChain;
 			sourceTree = "<group>";
@@ -3282,10 +3282,10 @@
 		8904C76828D95D4200256602 /* ImGui */ = {
 			isa = PBXGroup;
 			children = (
-				8904C76928D95D4200256602 /* imgui_impl_metal.mm */,
-				8904C76A28D95D4200256602 /* MetalImGuiLayer.cpp */,
 				8904C76B28D95D4200256602 /* imgui_impl_metal.h */,
+				8904C76928D95D4200256602 /* imgui_impl_metal.mm */,
 				8904C76C28D95D4200256602 /* MetalImGuiLayer.h */,
+				8904C76A28D95D4200256602 /* MetalImGuiLayer.cpp */,
 			);
 			path = ImGui;
 			sourceTree = "<group>";
@@ -3293,8 +3293,8 @@
 		8904C76E28D95D4200256602 /* Device */ = {
 			isa = PBXGroup;
 			children = (
-				8904C76F28D95D4200256602 /* MetalDevice.cpp */,
 				8904C77028D95D4200256602 /* MetalDevice.h */,
+				8904C76F28D95D4200256602 /* MetalDevice.cpp */,
 			);
 			path = Device;
 			sourceTree = "<group>";

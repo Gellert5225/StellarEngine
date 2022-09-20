@@ -116,5 +116,4 @@ $(OUT_DIR)/build/%.o: %.mm
 	@$(call run_and_test, ($(CXX) -c $(INCLUDES) $(CXXFLAGS) -ObjC++ -fobjc-arc $< -o $@))
 
 clean:
-	@echo "Cleaning"
 	@$(RM) -r debug/ release/ **/*.gch **/*.d *.o *.a *.def *.s **/.o

@@ -129,7 +129,6 @@ run_mac:
 	$(shell open ../macOS/StellarEngine.app)
 
 clean:
-	@echo "Cleaning"
 	@$(RM) -r release debug bin
 	@$(RM) ../macOS/StellarEngine.app/Contents/Frameworks/* ../macOS/StellarEngine.app/Contents/MacOS/*
 
