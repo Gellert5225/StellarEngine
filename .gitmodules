@@ -1,3 +1,0 @@
-[submodule "Stellar/vendor/spdlog"]
-	path = Stellar/vendor/spdlog
-	url = https://github.com/Gellert5225/spdlog.git

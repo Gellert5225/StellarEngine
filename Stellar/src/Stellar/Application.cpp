@@ -55,8 +55,6 @@ namespace Stellar {
 
     void Application::run() {
         while (m_Running) {
-            int* ptr = new int(5);
-
             auto time = (float)glfwGetTime();
             Timestep timestep{time - m_LastFrameTime};
             m_LastFrameTime = time;
