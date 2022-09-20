@@ -16,12 +16,14 @@ Currently it is at the very initial state of development. It supports Windows10(
 
 This project has 2 sub projects, the `core engine` and a `sandbox`. The `core engine` contains all the rendering code, and the `sandbox` can be viewed as a client(a game or a 3D application).
 
-- On Windows and Linux platform, code is written purely in C++, and is compiled using `g++`. 
-> Note: On Windows you will need to install `MinGW` first, see [here](#installation) for detail.
+| Platform      | Graphics API | Language          | Compiler  |
+| ------------- | ------------ | ----------------- | --------- |
+| Windows       | Vulkan       | C++               | g++       |
+| Linux         | Vulkan       | C++               | g++       |
+| Mac           | Metal        | C++/Objective-C++ | clang++   |
 
-- On macOS, code is written in C++ and Objective-C++, with the latter primarily being a bridging file between the main C++ code and [metal-cpp](https://developer.apple.com/metal/cpp/) code.
 
-- All three platforms use [`GLFW`](https://www.glfw.org/) as window creation and [`ImGui`](https://github.com/ocornut/imgui) for UI components.
+All three platforms use [`GLFW`](https://www.glfw.org/) as window creation and [`ImGui`](https://github.com/ocornut/imgui) for UI components.
 
 ### Current Stage
 ![](Screenshots/currentStage.png)
