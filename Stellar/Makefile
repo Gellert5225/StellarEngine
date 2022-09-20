@@ -25,7 +25,7 @@ ifeq ($(BUILD),release)
 else
 	LIB_NAME = Stellar_debug
  	OUT_DIR = debug
- 	CXXFLAGS += -g -fsanitize=address
+ 	CXXFLAGS += -g -O1
 endif
 
 # Target OS detection
@@ -37,7 +37,7 @@ ifeq ($(OS),Windows_NT) # OS is a preexisting environment variable on Windows
 	CXX = g++
 	LDFLAGS += -L./vendor/glfw/libs -L./vendor/vulkan/win
 	INCLUDES += -I ./vendor/vulkan/win/Include
-	LDLIBS += -lglfw3 -lopengl32 -lgdi32 -lvulkan-1 -Wl,--out-implib,lib/libStellar.a
+	LDLIBS += -lglfw3 -lopengl32 -lgdi32 -lvulkan-1
 else
 	UNAME := $(shell uname -s)
 	ifeq ($(UNAME),Darwin)
@@ -92,9 +92,9 @@ else
 endif
 
 all: $(OUT_DIR)/lib/lib$(LIB_NAME)$(LIB_EXT)
-	@mkdir -p ../Sandbox/bin
-	@cp $(OUT_DIR)/lib/lib$(LIB_NAME)$(LIB_EXT) ../Sandbox/bin/
-	@cp ./vendor/glfw/libs/$(GLFW_LIB) ../Sandbox/bin/
+	@mkdir -p ../Sandbox/$(OUT_DIR)/bin
+	@cp $(OUT_DIR)/lib/lib$(LIB_NAME)$(LIB_EXT) ../Sandbox/$(OUT_DIR)/bin
+	@cp ./vendor/glfw/libs/$(GLFW_LIB) ../Sandbox/$(OUT_DIR)/bin
 
 # Update dependencies with each compilation
 -include $(shell find build -name "*.d" 2> /dev/null)
@@ -105,11 +105,11 @@ $(PCH_OUT): $(PCH_SRC)
 
 $(OUT_DIR)/lib/lib$(LIB_NAME)$(LIB_EXT): $(OBJS)
 	@mkdir -p $(@D)
-	@$(call run_and_test, ($(CXX) $(CXXFLAGS) -std=c++17 -shared -o $@ $^ $(LDFLAGS) $(LDLIBS)))
+	@$(call run_and_test, ($(CXX) $(CXXFLAGS) -shared -o $@ $^ $(LDFLAGS) $(LDLIBS)))
 
 $(OUT_DIR)/build/%.o: %.cpp $(PCH_OUT)
 	@mkdir -p $(@D)
-	($(CXX) -c $(INCLUDES)  $(CXXFLAGS) -include $(PCH_SRC) $< -o $@)
+	@$(call run_and_test,($(CXX) -c $(INCLUDES)  $(CXXFLAGS) -include $(PCH_SRC) $< -o $@))
 
 $(OUT_DIR)/build/%.o: %.mm
 	@mkdir -p $(@D)

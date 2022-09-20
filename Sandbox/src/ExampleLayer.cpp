@@ -45,7 +45,7 @@ void ExampleLayer::onUpdate(Stellar::Timestep ts) {
 
     m_Camera.setPosition(m_CameraPosition);
     Stellar::Renderer::BeginScene(m_Camera);
-    Stellar::Renderer::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+    Stellar::Renderer::SetClearColor({ 0.66f, 0.9f, 0.96f, 1.0f });
     Stellar::Renderer::BeginRenderPass();
     Stellar::Renderer::RenderGeometry(m_VertexBuffer, m_IndexBuffer, indices.size(), transform);
     Stellar::Renderer::EndRenderPass();

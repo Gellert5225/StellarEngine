@@ -57,8 +57,8 @@ namespace Stellar {
 #ifdef __APPLE__
         createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
 #endif
-        VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
 #ifndef NDEBUG
+        VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
         createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
         createInfo.ppEnabledLayerNames = validationLayers.data();
         VulkanValidationLayer::PopulateDebugMessengerCreateInfo(debugCreateInfo);

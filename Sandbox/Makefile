@@ -4,7 +4,7 @@ ASAN_FLAGS=-fsanitize=address
 CXX = 
 CXXFLAGS = -std=c++17 -Wall
 CPPFLAGS = -I../Stellar/src/ -I../Stellar/vendor/spdlog/include -I../Stellar/vendor/glfw/include -I../Stellar/vendor/glm -I../Stellar/vendor/imgui
-LFLAGS = -L./bin
+LFLAGS = 
 LIBS = 
 PWD = $(shell pwd)
 EXPORT_FLAG =
@@ -27,13 +27,15 @@ ifeq ($(BUILD),release)
 	OUT_DIR = release
 	BIN_DIR = $(OUT_DIR)/bin
  	CXXFLAGS += -O3 -DNDEBUG
+	LFLAGS = -L$(OUT_DIR)/bin
 	LIBS = -lStellar
 else
 	BUILD_MODE = debug
 	LIB_NAME = Stellar_debug
  	OUT_DIR = debug
 	BIN_DIR = $(OUT_DIR)/bin
- 	CXXFLAGS += -g -fsanitize=address
+ 	CXXFLAGS += -g -O1
+	LFLAGS = -L$(OUT_DIR)/bin
 	LIBS = -lStellar_debug
 endif
 
@@ -117,7 +119,7 @@ $(BIN_DIR)/$(MAIN): $(OBJS)
 
 $(OUT_DIR)/build/%.o: %.cpp
 	@mkdir -p '$(@D)'
-	($(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $<  -o $@)
+	@$(call run_and_test, ($(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $<  -o $@))
 
 run:
 	@export $(EXPORT_FLAG)="${PWD}/bin"; \
