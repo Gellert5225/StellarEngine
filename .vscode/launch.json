@@ -5,27 +5,40 @@
   "version": "0.2.0",
   "configurations": [  
     {
-      "name": "(lldb) Launch",
+      "name": "Mac Launch(Release)",
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceRoot}/macOS/StellarEngine.app/Contents/MacOS/Sandbox",
       "args": [],
       "stopAtEntry": false,
-      "cwd": "${fileDirname}",
-      "environment": [],
+      "cwd": "${workspaceFolder}/Sandbox",
+      "environment": [{ "name": "DYLD_LIBRARY_PATH", "value": "${workspaceFolder}/Sandbox/release/bin" }],
       "externalConsole": false,
-      "MIMode": "lldb"
+      "MIMode": "lldb",
+      "preLaunchTask": "Build Engine(Release)"
     },
-    
     {
-      "name": "(gdb) Launch",
+      "name": "Mac Launch(Debug)",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceRoot}/Sandbox/bin/Sandbox",
+      "program": "${workspaceRoot}/Sandbox/debug/bin/Sandbox",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}/Sandbox",
-      "environment": [ { "name": "LD_LIBRARY_PATH", "value": "${workspaceFolder}/Sandbox/bin" }],
+      "environment": [{ "name": "DYLD_LIBRARY_PATH", "value": "${workspaceFolder}/Sandbox/debug/bin" }],
+      "externalConsole": false,
+      "MIMode": "lldb",
+      "preLaunchTask": "Build Engine(Debug)"
+    },
+    {
+      "name": "Linux Launch(Release)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceRoot}/Sandbox/release/bin/Sandbox",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/Sandbox",
+      "environment": [ { "name": "LD_LIBRARY_PATH", "value": "${workspaceFolder}/Sandbox/release/bin" }],
       "externalConsole": false,
       "MIMode": "gdb",
       "setupCommands": [
@@ -40,7 +53,32 @@
               "ignoreFailures": true
           }
       ],
-      "preLaunchTask": "Build Engine"
+      "preLaunchTask": "Build Engine(Release)"
+    },
+    {
+      "name": "Linux Launch(Debug)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceRoot}/Sandbox/debug/bin/Sandbox",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/Sandbox",
+      "environment": [ { "name": "LD_LIBRARY_PATH", "value": "${workspaceFolder}/debug/Sandbox/bin" }],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
+          {
+              "description": "Enable pretty-printing for gdb",
+              "text": "-enable-pretty-printing",
+              "ignoreFailures": true
+          },
+          {
+              "description":  "Set Disassembly Flavor to Intel",
+              "text": "-gdb-set disassembly-flavor intel",
+              "ignoreFailures": true
+          }
+      ],
+      "preLaunchTask": "Build Engine(Debug)"
     }
   ]
 }

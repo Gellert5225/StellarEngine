@@ -52,9 +52,9 @@ else
 	ifeq ($(UNAME),Darwin)
 		ifeq ($(BUILD_MODE),release)
 			BIN_DIR = ../macOS/StellarEngine.app/Contents/MacOS
-			INSTALL_NAME_TOOL_STELLAR = $(shell install_name_tool -change lib/libStellar.dylib  "@executable_path/../Frameworks/libStellar.dylib" ../macOS/StellarEngine.app/Contents/MacOS/Sandbox)
+			INSTALL_NAME_TOOL_STELLAR = $(shell install_name_tool -change $(OUT_DIR)/bin/libStellar.dylib  "@executable_path/../Frameworks/libStellar.dylib" ../macOS/StellarEngine.app/Contents/MacOS/Sandbox)
 			INSTALL_NAME_TOOL_GLFW = $(shell install_name_tool -add_rpath "@executable_path/../Frameworks" ../macOS/StellarEngine.app/Contents/MacOS/Sandbox)
-			CP_LIBS = $(shell mkdir -p ../macOS/StellarEngine.app/Contents/Frameworks &&  cp ./bin/libStellar.dylib ../macOS/StellarEngine.app/Contents/Frameworks && cp ./bin/libglfw.3.dylib ../macOS/StellarEngine.app/Contents/Frameworks)
+			CP_LIBS = $(shell mkdir -p ../macOS/StellarEngine.app/Contents/Frameworks &&  cp $(OUT_DIR)/bin/libStellar.dylib ../macOS/StellarEngine.app/Contents/Frameworks && cp $(OUT_DIR)/bin/libglfw.3.dylib ../macOS/StellarEngine.app/Contents/Frameworks)
 			CP_SHADERS = $(shell cp -r ./Resources/Shader ../macOS/StellarEngine.app/Contents/Resources/Shader)
 		endif
 		OS = macos
@@ -122,7 +122,7 @@ $(OUT_DIR)/build/%.o: %.cpp
 	@$(call run_and_test, ($(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $<  -o $@))
 
 run:
-	@export $(EXPORT_FLAG)="${PWD}/bin"; \
+	@export $(EXPORT_FLAG)="${PWD}/$(OUT_DIR)/bin"; \
 		$(BIN_DIR)/Sandbox$(EXE_EXT)
 
 run_mac:
