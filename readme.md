@@ -5,7 +5,17 @@ A custom game engine using C++ and Vulkan/Metal API.
 ## Table of Contents
 
 * [Introduction](#introduction)
+  * [How it works](#how-it-works)
+  * [Current stage](#current-stage)
+* [Dependencies](#dependencies)
+  * [GLFW](#glfw)
+  * [glm](#glm)
+  * [ImGui](#imgui)
+  * [Metal-cpp](#metal-cpp)
+  * [spdlog](#spdlog)
 * [Installation](#installation)
+  * [Prerequisite](#prerequisite)
+  * [Running](#running)
 * [ToDo](#todo)
 
 ## Introduction
@@ -26,11 +36,69 @@ This project has 2 sub projects, the `core engine` and a `sandbox`. The `core en
 | Linux         | Vulkan       | C++               | g++       |
 | Mac           | Metal        | C++/Objective-C++ | clang++   |
 
-All three platforms use [`GLFW`](https://www.glfw.org/) as window creation and [`ImGui`](https://github.com/ocornut/imgui) for UI components.
-
 ### Current Stage
 
 ![Current Stage](Screenshots/currentStage.png)
+
+## Dependencies
+
+### GLFW
+
+StellarEngine uses `GLFW` to create window on Windows, Linux and macOS.
+
+### GLM
+
+StellarEngine uses `glm` as main mathematics libray, including position vectors and camera transforms.
+> Note: On macOS, Apple's `simd` has different memory alignment than standard `glm` alignments.
+
+#### glm
+
+| Data type   | Size | Alignment |
+| ----------- | ---- | --------- |
+| `glm::vec2` | 8    | 4         |
+| `glm::vec3` | 12   | 4         |
+| `glm::vec4` | 16   | 4         |
+| `glm::mat4` | 64   | 4         |
+
+#### simd
+
+| Data type       | Size | Alignment |
+| --------------- | ---- | --------- |
+| `float2`        | 8    | 8         |
+| `float3`        | 16   | 16        |
+| `float4`        | 16   | 16        |
+| `float4x4`      | 64   | 16        |
+| `packed_float2` | 8    | 4         |
+| `packed_float3` | 12   | 4         |
+| `packed_float4` | 16   | 4         |
+
+### ImGui
+
+On windows and Linux, ImGui context will be Vulkan, and Metal on macOS.
+
+### Metal-cpp
+
+StellarEngine does not use MoltenVK, instead, it uses Metal directly. Metal-cpp is a C++ interface for Metal API.
+
+### spdlog
+
+StellarEngine uses `spdlog` for its core logging features. A wrapper is written to better organize its functions.
+
+```c++
+// core
+STLR_CORE_TRACE("This is white text, {0}", example_arg)
+STLR_CORE_INFO("This is green text, {0}", example_arg)
+STLR_CORE_WARN("This is yellow text, {0}", example_arg)
+STLR_CORE_ERROR("This is red text, {0}", example_arg)
+STLR_CORE_FATAL("This is white text with red background, {0}", example_arg)
+
+// client
+STLR_TRACE("This is white text, {0}", example_arg)
+STLR_INFO("This is green text, {0}", example_arg)
+STLR_WARN("This is yellow text, {0}", example_arg)
+STLR_ERROR("This is red text, {0}", example_arg)
+STLR_FATAL("This is white text with red background, {0}", example_arg)
+```
 
 ## Installation
 
