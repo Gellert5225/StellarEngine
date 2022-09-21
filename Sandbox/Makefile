@@ -2,7 +2,7 @@ DBG_OPT_FLAGS=-g
 ASAN_FLAGS=-fsanitize=address
 
 CXX = 
-CXXFLAGS = -std=c++17 -Wall
+CXXFLAGS = -std=c++17 -Wall -MD
 CPPFLAGS = -I../Stellar/src/ -I../Stellar/vendor/spdlog/include -I../Stellar/vendor/glfw/include -I../Stellar/vendor/glm -I../Stellar/vendor/imgui
 LFLAGS = 
 LIBS = 
@@ -110,8 +110,6 @@ all: $(BIN_DIR)/$(MAIN)
 	$(COMPILE_SHADERS)
 	@echo Sandbox has been built to bin
 
--include $(shell find build -name "*.d" 2> /dev/null)
-
 $(BIN_DIR)/$(MAIN): $(OBJS)
 	@mkdir -p '$(@D)'
 	@$(call run_and_test,$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $(BIN_DIR)/$(MAIN) $(OBJS) $(LFLAGS) $(LIBS))
@@ -133,3 +131,5 @@ clean:
 
 depend: $(SRCS)
 	makedepend $(INCLUDES) $^
+
+-include $(OBJS:.o=.d)
