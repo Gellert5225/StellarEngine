@@ -5,7 +5,7 @@ ASAN_FLAGS=-fsanitize=address
 # Compiler and linker
 CXX      = 
 INCLUDES = -I./vendor/glfw/include -I./vendor/spdlog/include -I./vendor/imgui -I./src -I./vendor/glm
-CXXFLAGS = -std=c++17 -DSTLR_BUILD_DLL -fPIC -Wall
+CXXFLAGS = -std=c++17 -DSTLR_BUILD_DLL -fPIC -Wall -MD
 LDFLAGS  = 
 LDLIBS   =
 
@@ -96,8 +96,6 @@ all: $(OUT_DIR)/lib/lib$(LIB_NAME)$(LIB_EXT)
 	@cp $(OUT_DIR)/lib/lib$(LIB_NAME)$(LIB_EXT) ../Sandbox/$(OUT_DIR)/bin
 	@cp ./vendor/glfw/libs/$(GLFW_LIB) ../Sandbox/$(OUT_DIR)/bin
 
-# Update dependencies with each compilation
--include $(shell find build -name "*.d" 2> /dev/null)
 
 # Compiles PCH
 $(PCH_OUT): $(PCH_SRC) 
@@ -117,3 +115,5 @@ $(OUT_DIR)/build/%.o: %.mm
 
 clean:
 	@$(RM) -r debug/ release/ **/*.gch **/*.d *.o *.a *.def *.s **/.o
+
+-include $(OBJS:.o=.d)
