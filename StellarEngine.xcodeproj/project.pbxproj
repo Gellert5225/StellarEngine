@@ -51,15 +51,22 @@
 		89D1E02A28DABB16007C723E /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89D1E02628DABB16007C723E /* Shader.cpp */; };
 		89D1E03128DAD747007C723E /* MetalShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89D1E02F28DAD747007C723E /* MetalShader.cpp */; };
 		89D1E03228DAD747007C723E /* MetalShader.h in Headers */ = {isa = PBXBuildFile; fileRef = 89D1E03028DAD747007C723E /* MetalShader.h */; };
+		89D1E03628DB0A15007C723E /* MetalPipeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 89D1E03428DB0A15007C723E /* MetalPipeline.h */; };
+		89D1E03728DB0A15007C723E /* MetalPipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89D1E03528DB0A15007C723E /* MetalPipeline.cpp */; };
+		89D1E03B28DB0A2E007C723E /* MetalBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89D1E03928DB0A2E007C723E /* MetalBuffer.cpp */; };
+		89D1E03C28DB0A2E007C723E /* MetalBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 89D1E03A28DB0A2E007C723E /* MetalBuffer.h */; };
+		89D1E03F28DB0AB0007C723E /* shader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 89D1E03E28DB0AAF007C723E /* shader.metal */; };
+		89D1E04028DB0B16007C723E /* shader.metal in CopyFiles */ = {isa = PBXBuildFile; fileRef = 89D1E03E28DB0AAF007C723E /* shader.metal */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		89A08B4A28D9652E00E1A87E /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
+			dstPath = usr/share/man/man1;
+			dstSubfolderSpec = 16;
 			files = (
+				89D1E04028DB0B16007C723E /* shader.metal in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
@@ -1419,9 +1426,7 @@
 		89A08B0228D964C600E1A87E /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		89A08B0528D964C600E1A87E /* ShaderFrag.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ShaderFrag.frag; sourceTree = "<group>"; };
 		89A08B0628D964C600E1A87E /* compile.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = compile.sh; sourceTree = "<group>"; };
-		89A08B0728D964C600E1A87E /* shaderVert.spv */ = {isa = PBXFileReference; lastKnownFileType = file; path = shaderVert.spv; sourceTree = "<group>"; };
 		89A08B0828D964C600E1A87E /* ShaderVert.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ShaderVert.vert; sourceTree = "<group>"; };
-		89A08B0928D964C600E1A87E /* shaderFrag.spv */ = {isa = PBXFileReference; lastKnownFileType = file; path = shaderFrag.spv; sourceTree = "<group>"; };
 		89A08B1828D964C600E1A87E /* imgui.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = imgui.ini; sourceTree = "<group>"; };
 		89A08B2928D964C600E1A87E /* ExampleMetalLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleMetalLayer.h; sourceTree = "<group>"; };
 		89A08B2A28D964C600E1A87E /* Sandbox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Sandbox.cpp; sourceTree = "<group>"; };
@@ -1438,6 +1443,11 @@
 		89D1E02628DABB16007C723E /* Shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shader.cpp; sourceTree = "<group>"; };
 		89D1E02F28DAD747007C723E /* MetalShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MetalShader.cpp; sourceTree = "<group>"; };
 		89D1E03028DAD747007C723E /* MetalShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetalShader.h; sourceTree = "<group>"; };
+		89D1E03428DB0A15007C723E /* MetalPipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetalPipeline.h; sourceTree = "<group>"; };
+		89D1E03528DB0A15007C723E /* MetalPipeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MetalPipeline.cpp; sourceTree = "<group>"; };
+		89D1E03928DB0A2E007C723E /* MetalBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MetalBuffer.cpp; sourceTree = "<group>"; };
+		89D1E03A28DB0A2E007C723E /* MetalBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetalBuffer.h; sourceTree = "<group>"; };
+		89D1E03E28DB0AAF007C723E /* shader.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = shader.metal; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -3265,12 +3275,14 @@
 		8904C75E28D95D4200256602 /* Metal */ = {
 			isa = PBXGroup;
 			children = (
-				89D1E02E28DAD747007C723E /* Shader */,
+				8904C76D28D95D4200256602 /* MetalAPI.h */,
 				8904C75F28D95D4200256602 /* glfw_bridge.mm */,
+				89D1E03828DB0A2E007C723E /* Buffer */,
+				89D1E03328DB0A15007C723E /* Pipeline */,
+				89D1E02E28DAD747007C723E /* Shader */,
 				8904C76028D95D4200256602 /* Renderer */,
 				8904C76528D95D4200256602 /* SwapChain */,
 				8904C76828D95D4200256602 /* ImGui */,
-				8904C76D28D95D4200256602 /* MetalAPI.h */,
 				8904C76E28D95D4200256602 /* Device */,
 			);
 			path = Metal;
@@ -3495,11 +3507,10 @@
 		89A08B0428D964C600E1A87E /* Shader */ = {
 			isa = PBXGroup;
 			children = (
+				89D1E03D28DB0AAF007C723E /* Metal */,
 				89A08B0528D964C600E1A87E /* ShaderFrag.frag */,
 				89A08B0628D964C600E1A87E /* compile.sh */,
-				89A08B0728D964C600E1A87E /* shaderVert.spv */,
 				89A08B0828D964C600E1A87E /* ShaderVert.vert */,
-				89A08B0928D964C600E1A87E /* shaderFrag.spv */,
 			);
 			path = Shader;
 			sourceTree = "<group>";
@@ -3526,6 +3537,32 @@
 			path = Shader;
 			sourceTree = "<group>";
 		};
+		89D1E03328DB0A15007C723E /* Pipeline */ = {
+			isa = PBXGroup;
+			children = (
+				89D1E03428DB0A15007C723E /* MetalPipeline.h */,
+				89D1E03528DB0A15007C723E /* MetalPipeline.cpp */,
+			);
+			path = Pipeline;
+			sourceTree = "<group>";
+		};
+		89D1E03828DB0A2E007C723E /* Buffer */ = {
+			isa = PBXGroup;
+			children = (
+				89D1E03928DB0A2E007C723E /* MetalBuffer.cpp */,
+				89D1E03A28DB0A2E007C723E /* MetalBuffer.h */,
+			);
+			path = Buffer;
+			sourceTree = "<group>";
+		};
+		89D1E03D28DB0AAF007C723E /* Metal */ = {
+			isa = PBXGroup;
+			children = (
+				89D1E03E28DB0AAF007C723E /* shader.metal */,
+			);
+			path = Metal;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -3535,6 +3572,8 @@
 			files = (
 				89D1E02928DABB16007C723E /* Pipeline.h in Headers */,
 				89D1E02728DABB16007C723E /* Shader.h in Headers */,
+				89D1E03628DB0A15007C723E /* MetalPipeline.h in Headers */,
+				89D1E03C28DB0A2E007C723E /* MetalBuffer.h in Headers */,
 				89D1E03228DAD747007C723E /* MetalShader.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3622,6 +3661,7 @@
 				89A08B5328D965B700E1A87E /* Sandbox.cpp in Sources */,
 				89A08B5428D965B800E1A87E /* ExampleMetalLayer.cpp in Sources */,
 				89A08B5528D965BA00E1A87E /* ExampleLayer.cpp in Sources */,
+				89D1E03F28DB0AB0007C723E /* shader.metal in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3647,6 +3687,7 @@
 				89A08B7A28D967A300E1A87E /* imgui_demo.cpp in Sources */,
 				89A08B7728D967A100E1A87E /* imgui_widgets.cpp in Sources */,
 				89A08B6C28D966EA00E1A87E /* MetalRenderer.cpp in Sources */,
+				89D1E03B28DB0A2E007C723E /* MetalBuffer.cpp in Sources */,
 				89A08B7028D966EF00E1A87E /* MetalImGuiLayer.cpp in Sources */,
 				89D1E02A28DABB16007C723E /* Shader.cpp in Sources */,
 				89A08B6128D966D400E1A87E /* Window.cpp in Sources */,
@@ -3658,6 +3699,7 @@
 				89A08B6728D966E000E1A87E /* SwapChain.cpp in Sources */,
 				89A08B6428D966D900E1A87E /* Log.cpp in Sources */,
 				89A08B6228D966D600E1A87E /* Layer.cpp in Sources */,
+				89D1E03728DB0A15007C723E /* MetalPipeline.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3829,6 +3871,10 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Stellar/vendor/glfw/libs",
 				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-DNDEBUG",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SYSTEM_HEADER_SEARCH_PATHS = /usr/local/include;
 				USER_HEADER_SEARCH_PATHS = (
@@ -3887,6 +3933,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Stellar/vendor/glfw/libs",
 				);
+				OTHER_CPLUSPLUSFLAGS = "-DNDEBUG";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SYSTEM_HEADER_SEARCH_PATHS = /usr/local/include;

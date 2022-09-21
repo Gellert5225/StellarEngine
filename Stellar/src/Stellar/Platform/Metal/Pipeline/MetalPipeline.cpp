@@ -12,7 +12,7 @@ namespace Stellar {
         MTL::RenderPipelineDescriptor* descriptor = MTL::RenderPipelineDescriptor::alloc()->init();
         descriptor->setVertexFunction(vertexFn);
         descriptor->setFragmentFunction(fragFn);
-        descriptor->colorAttachments()->object(0)->setPixelFormat( MTL::PixelFormat::PixelFormatBGRA8Unorm_sRGB );
+        descriptor->colorAttachments()->object(0)->setPixelFormat(MTL::PixelFormat::PixelFormatBGRA8Unorm);
 
         NS::Error* error = nullptr; 
         m_PipelineState =  MetalDevice::GetInstance()->getDevice()->newRenderPipelineState(descriptor, &error);

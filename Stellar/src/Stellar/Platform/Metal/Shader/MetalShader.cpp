@@ -10,7 +10,9 @@ namespace Stellar {
         std::string pathCp = filePath;
         #ifdef NDEBUG
             pathCp.insert(0, "../");
-        #endif      
+        #else
+            pathCp.insert(0, "Sandbox/");
+        #endif
         auto shaderSrc = Shader::ReadFile(pathCp);
 
         NS::Error* error = nullptr;
