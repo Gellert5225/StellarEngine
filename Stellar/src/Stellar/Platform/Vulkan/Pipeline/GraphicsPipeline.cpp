@@ -5,11 +5,12 @@
 #include "Stellar/Platform/Vulkan/Buffer/VulkanBuffer.h"
 #include "Stellar/Renderer/Uniforms.h"
 
+#include "Stellar/Application.h"
+
 namespace Stellar {
 
     GraphicsPipeline::GraphicsPipeline(const std::string& vertShaderPath,
-                                       const std::string& fragShaderPath,
-                                       VkRenderPass renderPass) {
+                                       const std::string& fragShaderPath) {
         createDescriptorSetLayout();
         createDescriptorPool();
 
@@ -108,6 +109,7 @@ namespace Stellar {
             throw std::runtime_error("failed to create pipeline layout!");
         }
 
+        auto swapChain = (VulkanSwapChain*)Application::Get().getWindow().getSwapChain();
         VkGraphicsPipelineCreateInfo pipelineInfo{};
         pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
         pipelineInfo.stageCount = 2;
@@ -121,7 +123,7 @@ namespace Stellar {
         pipelineInfo.pColorBlendState = &colorBlending;
         pipelineInfo.pDynamicState = &dynamicState;
         pipelineInfo.layout = m_PipelineLayout;
-        pipelineInfo.renderPass = renderPass;
+        pipelineInfo.renderPass = swapChain->getRenderPass();
         pipelineInfo.subpass = 0;
         pipelineInfo.basePipelineHandle = VK_NULL_HANDLE; // Optional
 

@@ -9,8 +9,7 @@ namespace Stellar {
     class STLR_API GraphicsPipeline : public VulkanPipeline {
     public:
         GraphicsPipeline(const std::string& vertShaderPath,
-                         const std::string& fragShaderPath,
-                         VkRenderPass renderPass);
+                         const std::string& fragShaderPaths);
     protected:
         void createDescriptorSetLayout() override;
         void createDescriptorPool() override;

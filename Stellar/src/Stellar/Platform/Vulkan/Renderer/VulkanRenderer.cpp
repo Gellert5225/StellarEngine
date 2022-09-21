@@ -13,10 +13,8 @@ namespace Stellar {
         m_CommandBuffer = CommandBuffer::Create(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
         m_UniformBuffer = Buffer::Create(BufferType::Uniform, sizeof(GlobalUniforms));
 
-        auto swapChain = (VulkanSwapChain*)Application::Get().getWindow().getSwapChain();
         m_GraphicsPipeline = new GraphicsPipeline("Resources/Shader/shaderVert.vert.spv",
-                                                  "Resources/Shader/shaderFrag.frag.spv",
-                                                  swapChain->getRenderPass());
+                                                  "Resources/Shader/shaderFrag.frag.spv");
         createDescriptorSets();
     }
 
