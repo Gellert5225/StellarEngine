@@ -3,7 +3,7 @@
 #include "Stellar/Core.h"
 
 #include "VulkanPipeline.h"
-#include "../Shader/Shader.h"
+#include "Stellar/Platform/Vulkan/Shader/VulkanShader.h"
 
 namespace Stellar {
     class STLR_API GraphicsPipeline : public VulkanPipeline {

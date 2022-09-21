@@ -1,7 +1,7 @@
 #include "Buffer.h"
 
 #include "Stellar/Renderer/RendererAPI.h"
-#if defined __linux__ || defined _WIN64
+#if defined(__linux__) || defined(_WIN64)
 #include "Stellar/Platform/Vulkan/Buffer/VulkanBuffer.h"
 #endif
 #include "Stellar/Log.h"

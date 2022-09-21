@@ -5,7 +5,7 @@
 #include "Stellar/Platform/Metal/Renderer/MetalRenderer.h"
 #endif
 
-#if defined __linux__ || defined _WIN64
+#if defined(__linux__) || defined(_WIN64)
 #include "Stellar/Platform/Vulkan/Renderer/VulkanRenderer.h"
 #endif
 

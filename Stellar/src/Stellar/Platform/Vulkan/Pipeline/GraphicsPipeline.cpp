@@ -12,22 +12,14 @@ namespace Stellar {
                                        VkRenderPass renderPass) {
         createDescriptorSetLayout();
         createDescriptorPool();
-        VkShaderModule vertShaderModule = Shader::GetInstance()->getShaderModule(vertShaderPath);
-        VkShaderModule fragShaderModule = Shader::GetInstance()->getShaderModule(fragShaderPath);
 
-        VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
-        vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-        vertShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
-        vertShaderStageInfo.module = vertShaderModule;
-        vertShaderStageInfo.pName = "main";
+        auto vertShader = new VulkanShader(vertShaderPath);
+        auto fragShader = new VulkanShader(fragShaderPath);
 
-        VkPipelineShaderStageCreateInfo fragShaderStageInfo{};
-        fragShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-        fragShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-        fragShaderStageInfo.module = fragShaderModule;
-        fragShaderStageInfo.pName = "main";
-
-        VkPipelineShaderStageCreateInfo shaderStages[] = {vertShaderStageInfo, fragShaderStageInfo};
+        VkPipelineShaderStageCreateInfo shaderStages[] = {
+            vertShader->getStageInfo(), 
+            fragShader->getStageInfo()
+        };
 
         auto bindingDescription = VulkanVertex::getBindingDescription();
         auto attributeDesctiptions = VulkanVertex::getAttributeDescriptions();
@@ -139,10 +131,8 @@ namespace Stellar {
             throw std::runtime_error("failed to create graphics pipeline!");
         }
 
-        vkDestroyShaderModule(VulkanDevice::GetInstance()->logicalDevice(),
-                              fragShaderModule, nullptr);
-        vkDestroyShaderModule(VulkanDevice::GetInstance()->logicalDevice(),
-                              vertShaderModule, nullptr);
+        delete vertShader;
+        delete fragShader;
     }
 
     void GraphicsPipeline::createDescriptorSetLayout() {

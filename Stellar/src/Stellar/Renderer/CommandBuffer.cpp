@@ -3,7 +3,7 @@
 #include "CommandBuffer.h"
 #include "RendererAPI.h"
 
-#if defined __linux__ || defined _WIN64
+#if defined(__linux__) || defined(_WIN64)
 #include "Stellar/Platform/Vulkan/Command/VulkanCommandBuffer.h"
 #endif
 
