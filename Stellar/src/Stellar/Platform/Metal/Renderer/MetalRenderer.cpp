@@ -4,14 +4,18 @@
 #include "Stellar/Application.h"
 #include "Stellar/Platform/Metal/SwapChain/MetalSwapChain.h"
 #include "Stellar/Platform/Metal/Device/MetalDevice.h"
+#include "Stellar/Platform/Metal/Shader/MetalShader.h"
+#include "Stellar/Platform/Metal/Buffer/MetalBuffer.h"
 
 namespace Stellar {
     void MetalRenderer::init() {
-
+        auto shader = new MetalShader("Resources/Shader/Metal/shader.metal");
+        m_Pipeline = new MetalPipeline(shader);
+        delete shader;
     }
 
     void MetalRenderer::shutDown() {
-
+        delete m_Pipeline;
     }
 
     void MetalRenderer::beginScene(Stellar::Camera camera) {
@@ -50,7 +54,12 @@ namespace Stellar {
                                        Stellar::Buffer *indexBuffer,
                                        uint32_t indexCount,
                                        const glm::mat4 &transform) {
-
+        m_Encoder->setRenderPipelineState(m_Pipeline->getPipelineState());
+        m_Encoder->setVertexBuffer((MTL::Buffer*)vertexBuffer->getBuffer(), 0, 0 );
+        m_Encoder->setVertexBuffer((MTL::Buffer*)indexBuffer->getBuffer(), 0, 1 );
+        m_Encoder->drawPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle, 
+                                  NS::UInteger(0), 
+                                  NS::UInteger(3));
     }
 }
 

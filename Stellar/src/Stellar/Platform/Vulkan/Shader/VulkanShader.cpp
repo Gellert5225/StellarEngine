@@ -19,20 +19,6 @@ namespace Stellar {
         m_StageInfo = shaderStageInfo;
     }
 
-    std::vector<char> VulkanShader::ReadFile(const std::string& fileName) {
-        std::ifstream file(fileName, std::ios::ate | std::ios::binary);
-        if (!file.is_open())
-            throw std::runtime_error("Failed to open shader file");
-
-        size_t fileSize = (size_t) file.tellg();
-        std::vector<char> buffer(fileSize);
-        file.seekg(0);
-        file.read(buffer.data(), fileSize);
-        file.close();
-
-        return buffer;
-    }
-
     const std::string VulkanShader::extractType(const std::string& filePath) const {
         return filePath.substr(filePath.find_first_of(".") + 1, 4);
     }

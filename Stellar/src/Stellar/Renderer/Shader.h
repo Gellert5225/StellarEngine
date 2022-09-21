@@ -9,6 +9,7 @@ namespace Stellar {
     class STLR_API Shader {
     public:
         static Shader* Create(const std::string& filePath);
+        static std::vector<char> ReadFile(const std::string& fileName);
 
     protected:
         std::string m_Name;

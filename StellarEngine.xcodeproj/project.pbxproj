@@ -45,6 +45,12 @@
 		89A08B7E28D968FF00E1A87E /* libglfw.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8904C10728D95D3C00256602 /* libglfw.3.dylib */; };
 		89A08B7F28D96CFA00E1A87E /* libglfw.3.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 8904C10728D95D3C00256602 /* libglfw.3.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		89A08B8128D96CFC00E1A87E /* libStellar.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 89A08B5B28D966A100E1A87E /* libStellar.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		89D1E02728DABB16007C723E /* Shader.h in Headers */ = {isa = PBXBuildFile; fileRef = 89D1E02328DABB16007C723E /* Shader.h */; };
+		89D1E02828DABB16007C723E /* Pipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89D1E02428DABB16007C723E /* Pipeline.cpp */; };
+		89D1E02928DABB16007C723E /* Pipeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 89D1E02528DABB16007C723E /* Pipeline.h */; };
+		89D1E02A28DABB16007C723E /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89D1E02628DABB16007C723E /* Shader.cpp */; };
+		89D1E03128DAD747007C723E /* MetalShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89D1E02F28DAD747007C723E /* MetalShader.cpp */; };
+		89D1E03228DAD747007C723E /* MetalShader.h in Headers */ = {isa = PBXBuildFile; fileRef = 89D1E03028DAD747007C723E /* MetalShader.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -1426,6 +1432,12 @@
 		89A08B4C28D9652E00E1A87E /* Sandbox */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Sandbox; sourceTree = BUILT_PRODUCTS_DIR; };
 		89A08B5B28D966A100E1A87E /* libStellar.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libStellar.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		89A08B8228D971F400E1A87E /* readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = readme.md; sourceTree = "<group>"; };
+		89D1E02328DABB16007C723E /* Shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shader.h; sourceTree = "<group>"; };
+		89D1E02428DABB16007C723E /* Pipeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Pipeline.cpp; sourceTree = "<group>"; };
+		89D1E02528DABB16007C723E /* Pipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pipeline.h; sourceTree = "<group>"; };
+		89D1E02628DABB16007C723E /* Shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shader.cpp; sourceTree = "<group>"; };
+		89D1E02F28DAD747007C723E /* MetalShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MetalShader.cpp; sourceTree = "<group>"; };
+		89D1E03028DAD747007C723E /* MetalShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetalShader.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -3200,6 +3212,10 @@
 		8904C74028D95D4200256602 /* Renderer */ = {
 			isa = PBXGroup;
 			children = (
+				89D1E02428DABB16007C723E /* Pipeline.cpp */,
+				89D1E02528DABB16007C723E /* Pipeline.h */,
+				89D1E02628DABB16007C723E /* Shader.cpp */,
+				89D1E02328DABB16007C723E /* Shader.h */,
 				8904C74128D95D4200256602 /* RendererAPI.h */,
 				8904C74228D95D4200256602 /* Camera.cpp */,
 				8904C74328D95D4200256602 /* Camera.h */,
@@ -3249,6 +3265,7 @@
 		8904C75E28D95D4200256602 /* Metal */ = {
 			isa = PBXGroup;
 			children = (
+				89D1E02E28DAD747007C723E /* Shader */,
 				8904C75F28D95D4200256602 /* glfw_bridge.mm */,
 				8904C76028D95D4200256602 /* Renderer */,
 				8904C76528D95D4200256602 /* SwapChain */,
@@ -3500,6 +3517,15 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		89D1E02E28DAD747007C723E /* Shader */ = {
+			isa = PBXGroup;
+			children = (
+				89D1E02F28DAD747007C723E /* MetalShader.cpp */,
+				89D1E03028DAD747007C723E /* MetalShader.h */,
+			);
+			path = Shader;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -3507,6 +3533,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				89D1E02928DABB16007C723E /* Pipeline.h in Headers */,
+				89D1E02728DABB16007C723E /* Shader.h in Headers */,
+				89D1E03228DAD747007C723E /* MetalShader.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3611,6 +3640,7 @@
 				89A08B6B28D966E700E1A87E /* glfw_bridge.mm in Sources */,
 				89A08B7328D966F700E1A87E /* imgui_impl_glfw.cpp in Sources */,
 				89A08B7828D967A200E1A87E /* imgui.cpp in Sources */,
+				89D1E03128DAD747007C723E /* MetalShader.cpp in Sources */,
 				89A08B7928D967A300E1A87E /* imgui_tables.cpp in Sources */,
 				89A08B6928D966E200E1A87E /* Renderer.cpp in Sources */,
 				89A08B7B28D967A400E1A87E /* imgui_draw.cpp in Sources */,
@@ -3618,9 +3648,11 @@
 				89A08B7728D967A100E1A87E /* imgui_widgets.cpp in Sources */,
 				89A08B6C28D966EA00E1A87E /* MetalRenderer.cpp in Sources */,
 				89A08B7028D966EF00E1A87E /* MetalImGuiLayer.cpp in Sources */,
+				89D1E02A28DABB16007C723E /* Shader.cpp in Sources */,
 				89A08B6128D966D400E1A87E /* Window.cpp in Sources */,
 				89A08B7128D966F100E1A87E /* MetalDevice.cpp in Sources */,
 				89A08B6F28D966EE00E1A87E /* imgui_impl_metal.mm in Sources */,
+				89D1E02828DABB16007C723E /* Pipeline.cpp in Sources */,
 				89A08B6E28D966EC00E1A87E /* MetalSwapChain.cpp in Sources */,
 				89A08B6D28D966EB00E1A87E /* MetalRendererContext.cpp in Sources */,
 				89A08B6728D966E000E1A87E /* SwapChain.cpp in Sources */,

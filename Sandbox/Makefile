@@ -110,7 +110,6 @@ all: $(BIN_DIR)/$(MAIN)
 	$(COMPILE_SHADERS)
 	@echo Sandbox has been built to bin
 
-override CPPFLAGS += -MMD
 -include $(shell find build -name "*.d" 2> /dev/null)
 
 $(BIN_DIR)/$(MAIN): $(OBJS)
@@ -119,7 +118,7 @@ $(BIN_DIR)/$(MAIN): $(OBJS)
 
 $(OUT_DIR)/build/%.o: %.cpp
 	@mkdir -p '$(@D)'
-	@$(call run_and_test, ($(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $<  -o $@))
+	@$(call run_and_test, ($(CXX) -c $(CXXFLAGS) $(CPPFLAGS) -MMD $< -o $@))
 
 run:
 	@export $(EXPORT_FLAG)="${PWD}/$(OUT_DIR)/bin"; \

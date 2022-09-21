@@ -4,10 +4,7 @@
 #include "Stellar/Renderer/Shader.h"
 
 #include <vulkan/vulkan.h>
-
-#include <string>
 #include <vector>
-#include <unordered_map>
 
 namespace Stellar {
     class STLR_API VulkanShader : public Shader {
@@ -22,7 +19,6 @@ namespace Stellar {
         
         const std::string extractType(const std::string& filePath) const;
         static VkShaderModule CreateShaderModule(const std::vector<char>& code);
-        static std::vector<char> ReadFile(const std::string& fileName);
 
         VkShaderModule m_ShaderModule;
 

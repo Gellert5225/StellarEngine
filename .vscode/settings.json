@@ -100,6 +100,7 @@
     "iterator": "cpp",
     "utility": "cpp",
     "*.tcc": "cpp",
-    "stop_token": "cpp"
+    "stop_token": "cpp",
+    "filesystem": "cpp"
   }
 }

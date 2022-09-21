@@ -4,6 +4,10 @@
 #if defined(__linux__) || defined(_WIN64)
 #include "Stellar/Platform/Vulkan/Buffer/VulkanBuffer.h"
 #endif
+
+#if defined(__APPLE__)
+#include "Stellar/Platform/Metal/Buffer/MetalBuffer.h"
+#endif
 #include "Stellar/Log.h"
 
 namespace Stellar {
@@ -11,7 +15,7 @@ namespace Stellar {
     Buffer* Buffer::Create(BufferType type, uint64_t size, const void *data) {
         switch (RendererAPI::Current()) {
             case RendererAPIType::Vulkan:
-            #if defined __linux__ || defined _WIN64
+            #if defined(__linux__) || defined(_WIN64)
                 switch (type) {
                     case BufferType::Vertex:
                         if (data) { // staging
@@ -47,8 +51,9 @@ namespace Stellar {
                 }
             #endif
             case RendererAPIType::Metal:
-                STLR_CORE_ASSERT(false, "Metal is not yet supported");
-                break;
+            #if defined(__APPLE__)
+                return new MetalBuffer(size, data);
+            #endif
             case RendererAPIType::None:
                 break;
         }
