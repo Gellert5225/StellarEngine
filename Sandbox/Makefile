@@ -2,7 +2,7 @@ DBG_OPT_FLAGS=-g
 ASAN_FLAGS=-fsanitize=address
 
 CXX = 
-CXXFLAGS = -std=c++17 -Wall -MD
+CXXFLAGS = -std=c++17 -Wall -MD -DGLM_FORCE_SIMD_AVX2 -DGLM_FORCE_DEFAULT_ALIGNED_GENTYPES -DGLM_FORCE_DEPTH_ZERO_TO_ONE
 CPPFLAGS = -I../Stellar/src/ -I../Stellar/vendor/spdlog/include -I../Stellar/vendor/glfw/include -I../Stellar/vendor/glm -I../Stellar/vendor/imgui
 LFLAGS = 
 LIBS = 
@@ -116,7 +116,7 @@ $(BIN_DIR)/$(MAIN): $(OBJS)
 
 $(OUT_DIR)/build/%.o: %.cpp
 	@mkdir -p '$(@D)'
-	@$(call run_and_test, ($(CXX) -c $(CXXFLAGS) $(CPPFLAGS) -MMD $< -o $@))
+	@$(call run_and_test, ($(CXX) -c $(CXXFLAGS) $(CPPFLAGS) $< -o $@))
 
 run:
 	@export $(EXPORT_FLAG)="${PWD}/$(OUT_DIR)/bin"; \

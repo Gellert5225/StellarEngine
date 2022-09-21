@@ -55,8 +55,8 @@ namespace Stellar {
                                        uint32_t indexCount,
                                        const glm::mat4 &transform) {
         m_Encoder->setRenderPipelineState(m_Pipeline->getPipelineState());
-        m_Encoder->setVertexBuffer((MTL::Buffer*)vertexBuffer->getBuffer(), 0, 0 );
-        m_Encoder->setVertexBuffer((MTL::Buffer*)indexBuffer->getBuffer(), 0, 1 );
+        m_Encoder->setVertexBuffer((MTL::Buffer*)vertexBuffer->getBuffer(), 0, 0);
+        m_Encoder->setVertexBuffer((MTL::Buffer*)indexBuffer->getBuffer(), 0, 1);
         m_Encoder->drawPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle, 
                                   NS::UInteger(0), 
                                   NS::UInteger(3));

@@ -18,7 +18,7 @@ private:
     Stellar::Camera m_Camera{};
 
     glm::vec3 vertices[3] = {
-        { -0.8f,  0.1f, 0.0f },
+        { -0.8f,  0.8f, 0.0f },
         {  0.0f, -0.8f, 0.0f },
         { +0.8f,  0.8f, 0.0f }
     };

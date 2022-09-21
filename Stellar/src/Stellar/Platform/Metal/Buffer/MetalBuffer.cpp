@@ -2,6 +2,7 @@
 #include "MetalBuffer.h"
 
 #include "Stellar/Platform/Metal/Device/MetalDevice.h"
+#include "Stellar/Log.h"
 
 namespace Stellar {
     MetalBuffer::MetalBuffer(uint64_t size,
