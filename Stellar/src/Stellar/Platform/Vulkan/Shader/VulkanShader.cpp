@@ -20,7 +20,9 @@ namespace Stellar {
     }
 
     const std::string VulkanShader::extractType(const std::string& filePath) const {
-        return filePath.substr(filePath.find_first_of(".") + 1, 4);
+        auto fileName = filePath.substr(filePath.find_last_of("/") + 1);
+        STLR_CORE_INFO("Shader file name: {0}", fileName);
+        return fileName.substr(fileName.find_first_of(".") + 1, 4);
     }
 
     VkShaderModule VulkanShader::CreateShaderModule(const std::vector<char>& code) {

@@ -95,9 +95,9 @@ include $(wildcard ../PrettyPrint.inc)
 .PHONY: depend clean
 
 all: $(BIN_DIR)/$(MAIN)
-	$(CP_RESOURCES)
 	@echo Compiling shaders
 	$(COMPILE_SHADERS)
+	$(CP_RESOURCES)
 	@echo Sandbox has been built to bin
 
 $(BIN_DIR)/$(MAIN): $(OBJS)
