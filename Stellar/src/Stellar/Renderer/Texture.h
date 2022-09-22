@@ -1,0 +1,20 @@
+#pragma once
+
+#include "Stellar/Core.h"
+#include "Stellar/Renderer/Image.h"
+
+#include <string>
+
+namespace Stellar {
+    class STLR_API Texture2D {
+    public:
+        Texture2D* Create(const std::string& filePath);
+        virtual Image2D* getImage() const = 0;
+    protected:
+        explicit Texture2D(std::string path) : m_Path(path) {}
+
+        virtual bool loadImage(const std::string& filePath) = 0;
+        std::string m_Path;
+        Image2D* m_Image;
+    };
+}

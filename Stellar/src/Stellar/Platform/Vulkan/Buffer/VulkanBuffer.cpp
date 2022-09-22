@@ -26,7 +26,7 @@ namespace Stellar {
         VkMemoryAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
         allocInfo.allocationSize = memRequirements.size;
-        allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits,
+        allocInfo.memoryTypeIndex = FindMemoryType(memRequirements.memoryTypeBits,
                                                    property);
         if (vkAllocateMemory(VulkanDevice::GetInstance()->logicalDevice(),
                              &allocInfo, nullptr, &m_BufferMemory) != VK_SUCCESS) {
@@ -65,7 +65,7 @@ namespace Stellar {
         return m_Buffer;
     }
 
-    uint32_t VulkanBuffer::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
+    uint32_t VulkanBuffer::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
         VkPhysicalDeviceMemoryProperties memProperties;
         vkGetPhysicalDeviceMemoryProperties(VulkanDevice::GetInstance()->physicalDevice(),
                                             &memProperties);
