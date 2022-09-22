@@ -15,9 +15,9 @@ BUILT_MSG = Sandbox has been built to bin
 INSTALL_NAME_TOOL_STELLAR =
 INSTALL_NAME_TOOL_GLFW =
 CP_LIBS =
-CP_SHADERS = 
-RM       	= rm -f
-OUT_DIR   = 
+CP_RESOURCES = 
+RM = rm -f
+OUT_DIR = 
 BUILD_MODE = 
 BIN_DIR = bin
 
@@ -50,13 +50,6 @@ else
 	UNAME := $(shell uname -s)
 	EXPORT = export
 	ifeq ($(UNAME),Darwin)
-		ifeq ($(BUILD_MODE),release)
-			BIN_DIR = ../macOS/StellarEngine.app/Contents/MacOS
-			INSTALL_NAME_TOOL_STELLAR = $(shell install_name_tool -change $(OUT_DIR)/bin/libStellar.dylib  "@executable_path/../Frameworks/libStellar.dylib" ../macOS/StellarEngine.app/Contents/MacOS/Sandbox)
-			INSTALL_NAME_TOOL_GLFW = $(shell install_name_tool -add_rpath "@executable_path/../Frameworks" ../macOS/StellarEngine.app/Contents/MacOS/Sandbox)
-			CP_LIBS = $(shell mkdir -p ../macOS/StellarEngine.app/Contents/Frameworks &&  cp $(OUT_DIR)/bin/libStellar.dylib ../macOS/StellarEngine.app/Contents/Frameworks && cp $(OUT_DIR)/bin/libglfw.3.dylib ../macOS/StellarEngine.app/Contents/Frameworks)
-			CP_SHADERS = $(shell cp -r ./Resources/Shader ../macOS/StellarEngine.app/Contents/Resources)
-		endif
 		OS = macos
 		EXPORT_FLAG = DYLD_LIBRARY_PATH
 		LIBS += -lglfw.3
@@ -87,7 +80,7 @@ VERT_SPIRV = $(VERT_SRCS:%.vert=$(SHADER_DIR)/%.spv)
 FRAG_SPIRV = $(FRAG_SRCS:%.frag=$(SHADER_DIR)/%.spv)
 
 COMPILE_SHADERS = $(shell chmod +x Resources/Shader/compile.sh && ./Resources/Shader/compile.sh)
-
+CP_RESOURCES = $(shell cp -r ./Resources ./$(OUT_DIR)/)
 ifeq ($(OS),linux)
 	LIBS += -lglfw -lvulkan
 endif
@@ -102,10 +95,7 @@ include $(wildcard ../PrettyPrint.inc)
 .PHONY: depend clean
 
 all: $(BIN_DIR)/$(MAIN)
-	$(CP_LIBS)
-	$(INSTALL_NAME_TOOL_STELLAR)
-	$(INSTALL_NAME_TOOL_GLFW)
-	$(CP_SHADERS)
+	$(CP_RESOURCES)
 	@echo Compiling shaders
 	$(COMPILE_SHADERS)
 	@echo Sandbox has been built to bin
@@ -120,7 +110,7 @@ $(OUT_DIR)/build/%.o: %.cpp
 
 run:
 	@export $(EXPORT_FLAG)="${PWD}/$(OUT_DIR)/bin"; \
-		$(BIN_DIR)/Sandbox$(EXE_EXT)
+		cd $(BIN_DIR) && ./Sandbox$(EXE_EXT)
 
 run_mac:
 	$(shell open ../macOS/StellarEngine.app)

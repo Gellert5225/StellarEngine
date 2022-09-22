@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		89A08B5328D965B700E1A87E /* Sandbox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89A08B2A28D964C600E1A87E /* Sandbox.cpp */; };
-		89A08B5428D965B800E1A87E /* ExampleMetalLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89A08B2C28D964C600E1A87E /* ExampleMetalLayer.cpp */; };
-		89A08B5528D965BA00E1A87E /* ExampleLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89A08B2D28D964C600E1A87E /* ExampleLayer.cpp */; };
-		89A08B5628D965BB00E1A87E /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89A08B2E28D964C600E1A87E /* main.cpp */; };
+		89656A1828DBD54A00802D0F /* libStellar.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 89A08B5B28D966A100E1A87E /* libStellar.dylib */; };
+		89656A1928DBD54F00802D0F /* libglfw.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8904C10728D95D3C00256602 /* libglfw.3.dylib */; };
+		89656A1D28DBD6D000802D0F /* libglfw.3.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 8904C10728D95D3C00256602 /* libglfw.3.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		89656A1F28DBD6D100802D0F /* libStellar.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 89A08B5B28D966A100E1A87E /* libStellar.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		89A08B5F28D966D100E1A87E /* Application.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8904C7AB28D95D4200256602 /* Application.cpp */; };
 		89A08B6028D966D200E1A87E /* Input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8904C75128D95D4200256602 /* Input.cpp */; };
 		89A08B6128D966D400E1A87E /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8904C75428D95D4200256602 /* Window.cpp */; };
@@ -41,10 +41,6 @@
 		89A08B7A28D967A300E1A87E /* imgui_demo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8904BDD828D95D3A00256602 /* imgui_demo.cpp */; };
 		89A08B7B28D967A400E1A87E /* imgui_draw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8904BDD928D95D3A00256602 /* imgui_draw.cpp */; };
 		89A08B7C28D967C300E1A87E /* libglfw.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8904C10728D95D3C00256602 /* libglfw.3.dylib */; };
-		89A08B7D28D967CF00E1A87E /* libStellar.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 89A08B5B28D966A100E1A87E /* libStellar.dylib */; };
-		89A08B7E28D968FF00E1A87E /* libglfw.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8904C10728D95D3C00256602 /* libglfw.3.dylib */; };
-		89A08B7F28D96CFA00E1A87E /* libglfw.3.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 8904C10728D95D3C00256602 /* libglfw.3.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		89A08B8128D96CFC00E1A87E /* libStellar.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 89A08B5B28D966A100E1A87E /* libStellar.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		89D1E02728DABB16007C723E /* Shader.h in Headers */ = {isa = PBXBuildFile; fileRef = 89D1E02328DABB16007C723E /* Shader.h */; };
 		89D1E02828DABB16007C723E /* Pipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89D1E02428DABB16007C723E /* Pipeline.cpp */; };
 		89D1E02928DABB16007C723E /* Pipeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 89D1E02528DABB16007C723E /* Pipeline.h */; };
@@ -55,31 +51,35 @@
 		89D1E03728DB0A15007C723E /* MetalPipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89D1E03528DB0A15007C723E /* MetalPipeline.cpp */; };
 		89D1E03B28DB0A2E007C723E /* MetalBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89D1E03928DB0A2E007C723E /* MetalBuffer.cpp */; };
 		89D1E03C28DB0A2E007C723E /* MetalBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 89D1E03A28DB0A2E007C723E /* MetalBuffer.h */; };
-		89D1E03F28DB0AB0007C723E /* shader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 89D1E03E28DB0AAF007C723E /* shader.metal */; };
-		89D1E04028DB0B16007C723E /* shader.metal in CopyFiles */ = {isa = PBXBuildFile; fileRef = 89D1E03E28DB0AAF007C723E /* shader.metal */; };
+		89EEA39428DBAB7B007ABEC8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 89EEA39328DBAB7B007ABEC8 /* Assets.xcassets */; };
+		89EEA3C828DBAE53007ABEC8 /* Sandbox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89EEA3C228DBAE53007ABEC8 /* Sandbox.cpp */; };
+		89EEA3C928DBAE53007ABEC8 /* ExampleMetalLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89EEA3C428DBAE53007ABEC8 /* ExampleMetalLayer.cpp */; };
+		89EEA3CA28DBAE53007ABEC8 /* ExampleLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89EEA3C528DBAE53007ABEC8 /* ExampleLayer.cpp */; };
+		89EEA3CC28DBAE53007ABEC8 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89EEA3C728DBAE53007ABEC8 /* main.cpp */; };
+		89EEA3E128DBB26C007ABEC8 /* shader.metal in CopyFiles */ = {isa = PBXBuildFile; fileRef = 89EEA3D228DBAE59007ABEC8 /* shader.metal */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		89A08B4A28D9652E00E1A87E /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = usr/share/man/man1;
-			dstSubfolderSpec = 16;
-			files = (
-				89D1E04028DB0B16007C723E /* shader.metal in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
-		89A08B8028D96CFA00E1A87E /* Embed Libraries */ = {
+		89656A1E28DBD6D000802D0F /* Embed Libraries */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				89A08B8128D96CFC00E1A87E /* libStellar.dylib in Embed Libraries */,
-				89A08B7F28D96CFA00E1A87E /* libglfw.3.dylib in Embed Libraries */,
+				89656A1F28DBD6D100802D0F /* libStellar.dylib in Embed Libraries */,
+				89656A1D28DBD6D000802D0F /* libglfw.3.dylib in Embed Libraries */,
 			);
 			name = "Embed Libraries";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		89EEA3E028DBB24C007ABEC8 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Shader/Metal;
+			dstSubfolderSpec = 7;
+			files = (
+				89EEA3E128DBB26C007ABEC8 /* shader.metal in CopyFiles */,
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -1423,18 +1423,6 @@
 		8904C91328D95EE200256602 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		8904C91528D95EE700256602 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		8904C91728D95EEC00256602 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
-		89A08B0228D964C600E1A87E /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		89A08B0528D964C600E1A87E /* ShaderFrag.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ShaderFrag.frag; sourceTree = "<group>"; };
-		89A08B0628D964C600E1A87E /* compile.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = compile.sh; sourceTree = "<group>"; };
-		89A08B0828D964C600E1A87E /* ShaderVert.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ShaderVert.vert; sourceTree = "<group>"; };
-		89A08B1828D964C600E1A87E /* imgui.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = imgui.ini; sourceTree = "<group>"; };
-		89A08B2928D964C600E1A87E /* ExampleMetalLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleMetalLayer.h; sourceTree = "<group>"; };
-		89A08B2A28D964C600E1A87E /* Sandbox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Sandbox.cpp; sourceTree = "<group>"; };
-		89A08B2B28D964C600E1A87E /* ExampleLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleLayer.h; sourceTree = "<group>"; };
-		89A08B2C28D964C600E1A87E /* ExampleMetalLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExampleMetalLayer.cpp; sourceTree = "<group>"; };
-		89A08B2D28D964C600E1A87E /* ExampleLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExampleLayer.cpp; sourceTree = "<group>"; };
-		89A08B2E28D964C600E1A87E /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		89A08B4C28D9652E00E1A87E /* Sandbox */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Sandbox; sourceTree = BUILT_PRODUCTS_DIR; };
 		89A08B5B28D966A100E1A87E /* libStellar.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libStellar.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		89A08B8228D971F400E1A87E /* readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = readme.md; sourceTree = "<group>"; };
 		89D1E02328DABB16007C723E /* Shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shader.h; sourceTree = "<group>"; };
@@ -1447,19 +1435,24 @@
 		89D1E03528DB0A15007C723E /* MetalPipeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MetalPipeline.cpp; sourceTree = "<group>"; };
 		89D1E03928DB0A2E007C723E /* MetalBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MetalBuffer.cpp; sourceTree = "<group>"; };
 		89D1E03A28DB0A2E007C723E /* MetalBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetalBuffer.h; sourceTree = "<group>"; };
-		89D1E03E28DB0AAF007C723E /* shader.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = shader.metal; sourceTree = "<group>"; };
+		89EEA38B28DBAB78007ABEC8 /* Sandbox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sandbox.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		89EEA39328DBAB7B007ABEC8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		89EEA3C128DBAE53007ABEC8 /* ExampleMetalLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleMetalLayer.h; sourceTree = "<group>"; };
+		89EEA3C228DBAE53007ABEC8 /* Sandbox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Sandbox.cpp; sourceTree = "<group>"; };
+		89EEA3C328DBAE53007ABEC8 /* ExampleLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleLayer.h; sourceTree = "<group>"; };
+		89EEA3C428DBAE53007ABEC8 /* ExampleMetalLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExampleMetalLayer.cpp; sourceTree = "<group>"; };
+		89EEA3C528DBAE53007ABEC8 /* ExampleLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExampleLayer.cpp; sourceTree = "<group>"; };
+		89EEA3C628DBAE53007ABEC8 /* imgui.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = imgui.ini; sourceTree = "<group>"; };
+		89EEA3C728DBAE53007ABEC8 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		89EEA3CF28DBAE59007ABEC8 /* ShaderFrag.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ShaderFrag.frag; sourceTree = "<group>"; };
+		89EEA3D028DBAE59007ABEC8 /* compile.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = compile.sh; sourceTree = "<group>"; };
+		89EEA3D228DBAE59007ABEC8 /* shader.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = shader.metal; sourceTree = "<group>"; };
+		89EEA3D328DBAE59007ABEC8 /* ShaderVert.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ShaderVert.vert; sourceTree = "<group>"; };
+		89EEA3D428DBAE59007ABEC8 /* shaderFrag.frag.spv */ = {isa = PBXFileReference; lastKnownFileType = file; path = shaderFrag.frag.spv; sourceTree = "<group>"; };
+		89EEA3D528DBAE59007ABEC8 /* shaderVert.vert.spv */ = {isa = PBXFileReference; lastKnownFileType = file; path = shaderVert.vert.spv; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		89A08B4928D9652E00E1A87E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				89A08B7D28D967CF00E1A87E /* libStellar.dylib in Frameworks */,
-				89A08B7E28D968FF00E1A87E /* libglfw.3.dylib in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		89A08B5928D966A100E1A87E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1471,6 +1464,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		89EEA38828DBAB78007ABEC8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				89656A1828DBD54A00802D0F /* libStellar.dylib in Frameworks */,
+				89656A1928DBD54F00802D0F /* libglfw.3.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -1478,8 +1480,8 @@
 			isa = PBXGroup;
 			children = (
 				89A08B8228D971F400E1A87E /* readme.md */,
-				89A08B0128D964C600E1A87E /* Sandbox */,
 				8904BD3B28D95D3900256602 /* Stellar */,
+				89EEA38C28DBAB78007ABEC8 /* Sandbox */,
 				8904BD3228D95CD600256602 /* Products */,
 				8904C91228D95EE200256602 /* Frameworks */,
 			);
@@ -1488,8 +1490,8 @@
 		8904BD3228D95CD600256602 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				89A08B4C28D9652E00E1A87E /* Sandbox */,
 				89A08B5B28D966A100E1A87E /* libStellar.dylib */,
+				89EEA38B28DBAB78007ABEC8 /* Sandbox.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3485,49 +3487,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		89A08B0128D964C600E1A87E /* Sandbox */ = {
-			isa = PBXGroup;
-			children = (
-				89A08B0228D964C600E1A87E /* Makefile */,
-				89A08B1828D964C600E1A87E /* imgui.ini */,
-				89A08B0328D964C600E1A87E /* Resources */,
-				89A08B2828D964C600E1A87E /* src */,
-			);
-			path = Sandbox;
-			sourceTree = "<group>";
-		};
-		89A08B0328D964C600E1A87E /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				89A08B0428D964C600E1A87E /* Shader */,
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
-		89A08B0428D964C600E1A87E /* Shader */ = {
-			isa = PBXGroup;
-			children = (
-				89D1E03D28DB0AAF007C723E /* Metal */,
-				89A08B0528D964C600E1A87E /* ShaderFrag.frag */,
-				89A08B0628D964C600E1A87E /* compile.sh */,
-				89A08B0828D964C600E1A87E /* ShaderVert.vert */,
-			);
-			path = Shader;
-			sourceTree = "<group>";
-		};
-		89A08B2828D964C600E1A87E /* src */ = {
-			isa = PBXGroup;
-			children = (
-				89A08B2928D964C600E1A87E /* ExampleMetalLayer.h */,
-				89A08B2A28D964C600E1A87E /* Sandbox.cpp */,
-				89A08B2B28D964C600E1A87E /* ExampleLayer.h */,
-				89A08B2C28D964C600E1A87E /* ExampleMetalLayer.cpp */,
-				89A08B2D28D964C600E1A87E /* ExampleLayer.cpp */,
-				89A08B2E28D964C600E1A87E /* main.cpp */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
 		89D1E02E28DAD747007C723E /* Shader */ = {
 			isa = PBXGroup;
 			children = (
@@ -3555,10 +3514,55 @@
 			path = Buffer;
 			sourceTree = "<group>";
 		};
-		89D1E03D28DB0AAF007C723E /* Metal */ = {
+		89EEA38C28DBAB78007ABEC8 /* Sandbox */ = {
 			isa = PBXGroup;
 			children = (
-				89D1E03E28DB0AAF007C723E /* shader.metal */,
+				89EEA3CD28DBAE59007ABEC8 /* Resources */,
+				89EEA3C028DBAE53007ABEC8 /* src */,
+				89EEA39328DBAB7B007ABEC8 /* Assets.xcassets */,
+			);
+			path = Sandbox;
+			sourceTree = "<group>";
+		};
+		89EEA3C028DBAE53007ABEC8 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				89EEA3C128DBAE53007ABEC8 /* ExampleMetalLayer.h */,
+				89EEA3C228DBAE53007ABEC8 /* Sandbox.cpp */,
+				89EEA3C328DBAE53007ABEC8 /* ExampleLayer.h */,
+				89EEA3C428DBAE53007ABEC8 /* ExampleMetalLayer.cpp */,
+				89EEA3C528DBAE53007ABEC8 /* ExampleLayer.cpp */,
+				89EEA3C628DBAE53007ABEC8 /* imgui.ini */,
+				89EEA3C728DBAE53007ABEC8 /* main.cpp */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		89EEA3CD28DBAE59007ABEC8 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				89EEA3CE28DBAE59007ABEC8 /* Shader */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		89EEA3CE28DBAE59007ABEC8 /* Shader */ = {
+			isa = PBXGroup;
+			children = (
+				89EEA3D128DBAE59007ABEC8 /* Metal */,
+				89EEA3CF28DBAE59007ABEC8 /* ShaderFrag.frag */,
+				89EEA3D028DBAE59007ABEC8 /* compile.sh */,
+				89EEA3D328DBAE59007ABEC8 /* ShaderVert.vert */,
+				89EEA3D428DBAE59007ABEC8 /* shaderFrag.frag.spv */,
+				89EEA3D528DBAE59007ABEC8 /* shaderVert.vert.spv */,
+			);
+			path = Shader;
+			sourceTree = "<group>";
+		};
+		89EEA3D128DBAE59007ABEC8 /* Metal */ = {
+			isa = PBXGroup;
+			children = (
+				89EEA3D228DBAE59007ABEC8 /* shader.metal */,
 			);
 			path = Metal;
 			sourceTree = "<group>";
@@ -3581,24 +3585,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		89A08B4B28D9652E00E1A87E /* Sandbox */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 89A08B5028D9652E00E1A87E /* Build configuration list for PBXNativeTarget "Sandbox" */;
-			buildPhases = (
-				89A08B4828D9652E00E1A87E /* Sources */,
-				89A08B4928D9652E00E1A87E /* Frameworks */,
-				89A08B4A28D9652E00E1A87E /* CopyFiles */,
-				89A08B8028D96CFA00E1A87E /* Embed Libraries */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = Sandbox;
-			productName = Sandbox;
-			productReference = 89A08B4C28D9652E00E1A87E /* Sandbox */;
-			productType = "com.apple.product-type.tool";
-		};
 		89A08B5A28D966A100E1A87E /* Stellar */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 89A08B5C28D966A100E1A87E /* Build configuration list for PBXNativeTarget "Stellar" */;
@@ -3616,6 +3602,26 @@
 			productReference = 89A08B5B28D966A100E1A87E /* libStellar.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
+		89EEA38A28DBAB78007ABEC8 /* Sandbox */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 89EEA39D28DBAB7B007ABEC8 /* Build configuration list for PBXNativeTarget "Sandbox" */;
+			buildPhases = (
+				89EEA38728DBAB78007ABEC8 /* Sources */,
+				89EEA38828DBAB78007ABEC8 /* Frameworks */,
+				89EEA3E028DBB24C007ABEC8 /* CopyFiles */,
+				89EEA38928DBAB78007ABEC8 /* Resources */,
+				89091FA628DBCE2200EEBE5D /* ShellScript */,
+				89656A1E28DBD6D000802D0F /* Embed Libraries */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Sandbox;
+			productName = StellarEditor;
+			productReference = 89EEA38B28DBAB78007ABEC8 /* Sandbox.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -3625,11 +3631,11 @@
 				BuildIndependentTargetsInParallel = 1;
 				LastUpgradeCheck = 1340;
 				TargetAttributes = {
-					89A08B4B28D9652E00E1A87E = {
-						CreatedOnToolsVersion = 13.4;
-					};
 					89A08B5A28D966A100E1A87E = {
 						CreatedOnToolsVersion = 13.4;
+					};
+					89EEA38A28DBAB78007ABEC8 = {
+						CreatedOnToolsVersion = 14.0;
 					};
 				};
 			};
@@ -3646,25 +3652,44 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				89A08B4B28D9652E00E1A87E /* Sandbox */,
 				89A08B5A28D966A100E1A87E /* Stellar */,
+				89EEA38A28DBAB78007ABEC8 /* Sandbox */,
 			);
 		};
 /* End PBXProject section */
 
-/* Begin PBXSourcesBuildPhase section */
-		89A08B4828D9652E00E1A87E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
+/* Begin PBXResourcesBuildPhase section */
+		89EEA38928DBAB78007ABEC8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				89A08B5628D965BB00E1A87E /* main.cpp in Sources */,
-				89A08B5328D965B700E1A87E /* Sandbox.cpp in Sources */,
-				89A08B5428D965B800E1A87E /* ExampleMetalLayer.cpp in Sources */,
-				89A08B5528D965BA00E1A87E /* ExampleLayer.cpp in Sources */,
-				89D1E03F28DB0AB0007C723E /* shader.metal in Sources */,
+				89EEA39428DBAB7B007ABEC8 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		89091FA628DBCE2200EEBE5D /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\ninstall_name_tool -change /usr/local/lib/libStellar.dylib  \"@executable_path/../Frameworks/libStellar.dylib\" $BUILT_PRODUCTS_DIR/Sandbox.app/Contents/MacOS/Sandbox\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
 		89A08B5828D966A100E1A87E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3700,6 +3725,17 @@
 				89A08B6428D966D900E1A87E /* Log.cpp in Sources */,
 				89A08B6228D966D600E1A87E /* Layer.cpp in Sources */,
 				89D1E03728DB0A15007C723E /* MetalPipeline.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		89EEA38728DBAB78007ABEC8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				89EEA3C928DBAE53007ABEC8 /* ExampleMetalLayer.cpp in Sources */,
+				89EEA3CA28DBAE53007ABEC8 /* ExampleLayer.cpp in Sources */,
+				89EEA3CC28DBAE53007ABEC8 /* main.cpp in Sources */,
+				89EEA3C828DBAE53007ABEC8 /* Sandbox.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3833,62 +3869,6 @@
 			};
 			name = Release;
 		};
-		89A08B5128D9652E00E1A87E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = XS2QV44L5G;
-				ENABLE_HARDENED_RUNTIME = YES;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Stellar/vendor/glfw/libs",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SYSTEM_HEADER_SEARCH_PATHS = /usr/local/include;
-				USER_HEADER_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/Stellar/src",
-					"$(PROJECT_DIR)/Stellar/vendor/glfw/include",
-					"$(PROJECT_DIR)/Stellar/vendor",
-					"$(PROJECT_DIR)/Stellar/vendor/spdlog/include",
-					"$(PROJECT_DIR)/Stellar/vendor/metal-cpp",
-					"$(PROJECT_DIR)/Stellar/vendor/imgui",
-					"$(PROJECT_DIR)/Stellar/vendor/glm",
-				);
-			};
-			name = Debug;
-		};
-		89A08B5228D9652E00E1A87E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = XS2QV44L5G;
-				ENABLE_HARDENED_RUNTIME = YES;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Stellar/vendor/glfw/libs",
-				);
-				OTHER_CPLUSPLUSFLAGS = (
-					"$(OTHER_CFLAGS)",
-					"-DNDEBUG",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SYSTEM_HEADER_SEARCH_PATHS = /usr/local/include;
-				USER_HEADER_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/Stellar/src",
-					"$(PROJECT_DIR)/Stellar/vendor/glfw/include",
-					"$(PROJECT_DIR)/Stellar/vendor",
-					"$(PROJECT_DIR)/Stellar/vendor/spdlog/include",
-					"$(PROJECT_DIR)/Stellar/vendor/metal-cpp",
-					"$(PROJECT_DIR)/Stellar/vendor/imgui",
-					"$(PROJECT_DIR)/Stellar/vendor/glm",
-				);
-			};
-			name = Release;
-		};
 		89A08B5D28D966A100E1A87E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3948,6 +3928,72 @@
 			};
 			name = Release;
 		};
+		89EEA39B28DBAB7B007ABEC8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = XS2QV44L5G;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Stellar/vendor/glfw/libs",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.StellarStudio.StellarEditor;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Debug;
+		};
+		89EEA39C28DBAB7B007ABEC8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = XS2QV44L5G;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Stellar/vendor/glfw/libs",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.StellarStudio.StellarEditor;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -3960,20 +4006,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		89A08B5028D9652E00E1A87E /* Build configuration list for PBXNativeTarget "Sandbox" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				89A08B5128D9652E00E1A87E /* Debug */,
-				89A08B5228D9652E00E1A87E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		89A08B5C28D966A100E1A87E /* Build configuration list for PBXNativeTarget "Stellar" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				89A08B5D28D966A100E1A87E /* Debug */,
 				89A08B5E28D966A100E1A87E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		89EEA39D28DBAB7B007ABEC8 /* Build configuration list for PBXNativeTarget "Sandbox" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				89EEA39B28DBAB7B007ABEC8 /* Debug */,
+				89EEA39C28DBAB7B007ABEC8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

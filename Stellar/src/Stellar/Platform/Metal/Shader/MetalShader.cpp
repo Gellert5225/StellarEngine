@@ -7,13 +7,7 @@
 
 namespace Stellar {
     MetalShader::MetalShader(const std::string& filePath) {
-        std::string pathCp = filePath;
-        #ifdef NDEBUG
-            pathCp.insert(0, "../");
-        #else
-            pathCp.insert(0, "Sandbox/");
-        #endif
-        auto shaderSrc = Shader::ReadFile(pathCp);
+        auto shaderSrc = Shader::ReadFile(filePath);
 
         NS::Error* error = nullptr;
         m_Library = MetalDevice::GetInstance()->getDevice()->newLibrary(

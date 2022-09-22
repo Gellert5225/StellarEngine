@@ -9,7 +9,7 @@
 
 namespace Stellar {
     void MetalRenderer::init() {
-        auto shader = new MetalShader("Resources/Shader/Metal/shader.metal");
+        auto shader = new MetalShader("../Resources/Shader/Metal/shader.metal");
         m_Pipeline = new MetalPipeline(shader);
         delete shader;
     }
