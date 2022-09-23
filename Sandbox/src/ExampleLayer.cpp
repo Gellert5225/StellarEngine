@@ -20,6 +20,8 @@ ExampleLayer::ExampleLayer() : Layer("Example") {
     indexStagingBuffer->copy(*m_IndexBuffer);
 
     delete indexStagingBuffer;
+
+    m_Texture = Stellar::Texture2D::Create("../Resources/Textures/StellarEngine_logo.png");
 }
 
 void ExampleLayer::onUpdate(Stellar::Timestep ts) {
@@ -47,6 +49,7 @@ void ExampleLayer::onUpdate(Stellar::Timestep ts) {
     Stellar::Renderer::BeginScene(m_Camera);
     Stellar::Renderer::SetClearColor({ 0.66f, 0.9f, 0.96f, 1.0f });
     Stellar::Renderer::BeginRenderPass();
+    m_Texture->bind();
     Stellar::Renderer::RenderGeometry(m_VertexBuffer, m_IndexBuffer, indices.size(), transform);
     Stellar::Renderer::EndRenderPass();
     Stellar::Renderer::EndScene();

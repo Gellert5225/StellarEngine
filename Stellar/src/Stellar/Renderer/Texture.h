@@ -8,8 +8,11 @@
 namespace Stellar {
     class STLR_API Texture2D {
     public:
-        Texture2D* Create(const std::string& filePath);
+        virtual ~Texture2D() {}
         virtual Image2D* getImage() const = 0;
+        virtual void bind() = 0;
+
+        static Texture2D* Create(const std::string& filePath);
     protected:
         explicit Texture2D(std::string path) : m_Path(path) {}
 

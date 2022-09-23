@@ -15,3 +15,4 @@
 #include "Stellar/Renderer/Renderer.h"
 #include "Stellar/Renderer/Buffer.h"
 #include "Stellar/Renderer/Camera.h"
+#include "Stellar/Renderer/Texture.h"

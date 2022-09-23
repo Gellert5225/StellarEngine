@@ -5,15 +5,13 @@
 
 #include <vulkan/vulkan.h>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-
 namespace Stellar {
     class STLR_API VulkanTexture : public Texture2D {
     public:
         VulkanTexture(const std::string& filePath);
+        ~VulkanTexture() override;
         virtual Image2D* getImage() const override;
-
+        virtual void bind() override;
         // Vulkan
         void invalidate();
     protected:
@@ -22,7 +20,7 @@ namespace Stellar {
         uint32_t m_Width;
         uint32_t m_Height;
         ImageFormat m_Format;
-        stbi_uc* m_Pixels;
+        unsigned char* m_Pixels;
         VkDeviceSize m_ImageSize;
     };
 }

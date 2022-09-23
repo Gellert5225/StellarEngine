@@ -9,12 +9,20 @@
 
 namespace Stellar {
 
+    struct VulkanRendererData {
+        VkDescriptorPool descriptorPool;
+        VkDescriptorSetLayout descriptorSetLayout;
+    };
+
+    static VulkanRendererData* s_Data = nullptr;
+
     void VulkanRenderer::init() {
         m_CommandBuffer = CommandBuffer::Create(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
         m_UniformBuffer = Buffer::Create(BufferType::Uniform, sizeof(GlobalUniforms));
 
         m_GraphicsPipeline = new GraphicsPipeline("../Resources/Shader/shaderVert.vert.spv",
                                                   "../Resources/Shader/shaderFrag.frag.spv");
+        s_Data = new VulkanRendererData();
         createDescriptorSets();
     }
 
@@ -117,6 +125,9 @@ namespace Stellar {
         std::vector<VkDescriptorSetLayout> layouts(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT,
                                                    m_GraphicsPipeline->getDescriptorSetLayout());
 
+        s_Data->descriptorPool = m_GraphicsPipeline->getDescriptorPool();
+        s_Data->descriptorSetLayout = m_GraphicsPipeline->getDescriptorSetLayout();
+
         VkDescriptorSetAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
         allocInfo.descriptorPool = m_GraphicsPipeline->getDescriptorPool();
@@ -149,6 +160,17 @@ namespace Stellar {
         }
 
     }
+
+     VkDescriptorSet VulkanRenderer::AllocateDescriptorSets(VkDescriptorSetAllocateInfo& info) {
+        info.descriptorPool = s_Data->descriptorPool;
+        info.pSetLayouts = &s_Data->descriptorSetLayout;
+        VkDescriptorSet result;
+		if (vkAllocateDescriptorSets(VulkanDevice::GetInstance()->logicalDevice(),
+                                     &info, &result) != VK_SUCCESS) {
+            throw std::runtime_error("failed to allocate descriptor sets!");
+        }
+        return result;
+     }
 
     void VulkanRenderer::endScene() {
         m_CommandBuffer->end();

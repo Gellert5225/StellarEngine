@@ -71,6 +71,12 @@ namespace Stellar {
 		m_Info.sampler = nullptr;
     }
 
+    void VulkanImage2D::updateDescriptor() {
+        m_DescriptorImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        m_DescriptorImageInfo.imageView = m_Info.imageView;
+		m_DescriptorImageInfo.sampler = m_Info.sampler;
+    }
+
     ImageSpecification& VulkanImage2D::GetSpecification() {
         return m_Specification;
     }

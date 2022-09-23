@@ -12,7 +12,7 @@ namespace Stellar {
 		VkImage image = VK_NULL_HANDLE;
 		VkImageView imageView = VK_NULL_HANDLE;
 		VkSampler sampler = VK_NULL_HANDLE;
-        VkDeviceMemory imageMemory;
+        VkDeviceMemory imageMemory = VK_NULL_HANDLE;
 	};
 
     class STLR_API VulkanImage2D : public Image2D {
@@ -26,8 +26,11 @@ namespace Stellar {
 
         // vulkan
         void* getImageInfo() override { return (VulkanImageInfo*)&m_Info; }
+        void updateDescriptor();
+        const VkDescriptorImageInfo& getDescriptorInfo() const { return m_DescriptorImageInfo; }
     private:
-        ImageSpecification m_Specification;
-        VulkanImageInfo m_Info;
+        ImageSpecification m_Specification{};
+        VulkanImageInfo m_Info{};
+        VkDescriptorImageInfo m_DescriptorImageInfo{};
     };
 }
