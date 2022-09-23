@@ -10,7 +10,7 @@
 #include "Stellar/KeyCodes.h"
 #include "Stellar/MouseButtonCodes.h"
 
-#include "Stellar/ImGUI/ImGuiLayer.h"
+#include "Stellar/ImGui/ImGuiLayer.h"
 
 #include "Stellar/Renderer/Renderer.h"
 #include "Stellar/Renderer/Buffer.h"

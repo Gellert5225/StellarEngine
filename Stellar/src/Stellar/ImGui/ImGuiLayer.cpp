@@ -6,7 +6,7 @@
 #include "Stellar/Log.h"
 
 #if defined __linux__ || defined _WIN64
-#include "Stellar/Platform/Vulkan/ImGUI/VulkanImGuiLayer.h"
+#include "Stellar/Platform/Vulkan/ImGui/VulkanImGuiLayer.h"
 #endif
 
 #if defined __APPLE__

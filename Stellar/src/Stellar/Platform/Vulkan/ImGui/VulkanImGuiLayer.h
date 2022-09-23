@@ -8,7 +8,7 @@
 #include "Stellar/Renderer/CommandBuffer.h"
 #include "Stellar/Platform/Vulkan/RenderPass/ImGuiRenderPass.h"
 
-#include "Stellar/ImGUI/ImGuiLayer.h"
+#include "Stellar/ImGui/ImGuiLayer.h"
 #include <vulkan/vulkan.h>
 
 namespace Stellar {

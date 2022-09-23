@@ -3,8 +3,8 @@
 
 #include <GLFW/glfw3.h>
 #include <imgui.h>
-#include "Stellar/ImGUI/imgui_impl_glfw.h"
-#include "Stellar/Platform/Vulkan/ImGUI/imgui_impl_vulkan.h"
+#include "Stellar/ImGui/imgui_impl_glfw.h"
+#include "Stellar/Platform/Vulkan/ImGui/imgui_impl_vulkan.h"
 
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 #include "Stellar/Platform/Vulkan/VulkanCommon.h"
