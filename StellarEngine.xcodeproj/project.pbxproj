@@ -41,6 +41,10 @@
 		89A08B7A28D967A300E1A87E /* imgui_demo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8904BDD828D95D3A00256602 /* imgui_demo.cpp */; };
 		89A08B7B28D967A400E1A87E /* imgui_draw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8904BDD928D95D3A00256602 /* imgui_draw.cpp */; };
 		89A08B7C28D967C300E1A87E /* libglfw.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8904C10728D95D3C00256602 /* libglfw.3.dylib */; };
+		89CC4ABD28DDBB4A0007A773 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89CC4ABC28DDBB4A0007A773 /* Image.cpp */; };
+		89CC4AC128DDBB560007A773 /* Texture.h in Headers */ = {isa = PBXBuildFile; fileRef = 89CC4ABE28DDBB560007A773 /* Texture.h */; };
+		89CC4AC228DDBB560007A773 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89CC4ABF28DDBB560007A773 /* Texture.cpp */; };
+		89CC4AC328DDBB560007A773 /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = 89CC4AC028DDBB560007A773 /* Image.h */; };
 		89D1E02728DABB16007C723E /* Shader.h in Headers */ = {isa = PBXBuildFile; fileRef = 89D1E02328DABB16007C723E /* Shader.h */; };
 		89D1E02828DABB16007C723E /* Pipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89D1E02428DABB16007C723E /* Pipeline.cpp */; };
 		89D1E02928DABB16007C723E /* Pipeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 89D1E02528DABB16007C723E /* Pipeline.h */; };
@@ -1425,6 +1429,10 @@
 		8904C91728D95EEC00256602 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		89A08B5B28D966A100E1A87E /* libStellar.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libStellar.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		89A08B8228D971F400E1A87E /* readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = readme.md; sourceTree = "<group>"; };
+		89CC4ABC28DDBB4A0007A773 /* Image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Image.cpp; sourceTree = "<group>"; };
+		89CC4ABE28DDBB560007A773 /* Texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Texture.h; sourceTree = "<group>"; };
+		89CC4ABF28DDBB560007A773 /* Texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Texture.cpp; sourceTree = "<group>"; };
+		89CC4AC028DDBB560007A773 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
 		89D1E02328DABB16007C723E /* Shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shader.h; sourceTree = "<group>"; };
 		89D1E02428DABB16007C723E /* Pipeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Pipeline.cpp; sourceTree = "<group>"; };
 		89D1E02528DABB16007C723E /* Pipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pipeline.h; sourceTree = "<group>"; };
@@ -3224,6 +3232,10 @@
 		8904C74028D95D4200256602 /* Renderer */ = {
 			isa = PBXGroup;
 			children = (
+				89CC4AC028DDBB560007A773 /* Image.h */,
+				89CC4ABF28DDBB560007A773 /* Texture.cpp */,
+				89CC4ABE28DDBB560007A773 /* Texture.h */,
+				89CC4ABC28DDBB4A0007A773 /* Image.cpp */,
 				89D1E02428DABB16007C723E /* Pipeline.cpp */,
 				89D1E02528DABB16007C723E /* Pipeline.h */,
 				89D1E02628DABB16007C723E /* Shader.cpp */,
@@ -3574,10 +3586,12 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				89CC4AC128DDBB560007A773 /* Texture.h in Headers */,
 				89D1E02928DABB16007C723E /* Pipeline.h in Headers */,
 				89D1E02728DABB16007C723E /* Shader.h in Headers */,
 				89D1E03628DB0A15007C723E /* MetalPipeline.h in Headers */,
 				89D1E03C28DB0A2E007C723E /* MetalBuffer.h in Headers */,
+				89CC4AC328DDBB560007A773 /* Image.h in Headers */,
 				89D1E03228DAD747007C723E /* MetalShader.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3715,6 +3729,7 @@
 				89D1E03B28DB0A2E007C723E /* MetalBuffer.cpp in Sources */,
 				89A08B7028D966EF00E1A87E /* MetalImGuiLayer.cpp in Sources */,
 				89D1E02A28DABB16007C723E /* Shader.cpp in Sources */,
+				89CC4AC228DDBB560007A773 /* Texture.cpp in Sources */,
 				89A08B6128D966D400E1A87E /* Window.cpp in Sources */,
 				89A08B7128D966F100E1A87E /* MetalDevice.cpp in Sources */,
 				89A08B6F28D966EE00E1A87E /* imgui_impl_metal.mm in Sources */,
@@ -3723,6 +3738,7 @@
 				89A08B6D28D966EB00E1A87E /* MetalRendererContext.cpp in Sources */,
 				89A08B6728D966E000E1A87E /* SwapChain.cpp in Sources */,
 				89A08B6428D966D900E1A87E /* Log.cpp in Sources */,
+				89CC4ABD28DDBB4A0007A773 /* Image.cpp in Sources */,
 				89A08B6228D966D600E1A87E /* Layer.cpp in Sources */,
 				89D1E03728DB0A15007C723E /* MetalPipeline.cpp in Sources */,
 			);

@@ -16,5 +16,6 @@ v2f vertex vertexMain(uint vertexId                   [[vertex_id]],
 }
 
 half4 fragment fragmentMain(v2f in [[stage_in]])  {
+    //return half4(pow(in.color, 2.2), 1.0);
     return half4(in.color, 1.0);
 }
