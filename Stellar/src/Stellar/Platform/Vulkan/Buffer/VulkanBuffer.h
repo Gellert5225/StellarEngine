@@ -20,8 +20,8 @@ namespace Stellar {
             return bindingDescription;
         }
 
-        static std::array<VkVertexInputAttributeDescription, 2> getAttributeDescriptions() {
-            std::array<VkVertexInputAttributeDescription, 2> attributeDescriptions{};
+        static std::array<VkVertexInputAttributeDescription, 3> getAttributeDescriptions() {
+            std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions{};
             attributeDescriptions[0].binding = 0;
             attributeDescriptions[0].location = 0;
             attributeDescriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
@@ -31,6 +31,11 @@ namespace Stellar {
             attributeDescriptions[1].location = 1;
             attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
             attributeDescriptions[1].offset = offsetof(VulkanVertex, color);
+
+            attributeDescriptions[2].binding = 0;
+            attributeDescriptions[2].location = 2;
+            attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
+            attributeDescriptions[2].offset = offsetof(Vertex, texCoord);
 
             return attributeDescriptions;
         }
@@ -44,6 +49,8 @@ namespace Stellar {
                               const void* data = nullptr);
         ~VulkanBuffer() override;
 
+        static uint32_t FindMemoryType(uint32_t, VkMemoryPropertyFlags);
+
         void copy(const Buffer& dst) override;
         void map(void** data) override;
         void unMap() override;
@@ -53,7 +60,6 @@ namespace Stellar {
     private:
         VkBuffer m_Buffer = VK_NULL_HANDLE;
         VkDeviceMemory m_BufferMemory = VK_NULL_HANDLE;
-        uint32_t findMemoryType(uint32_t, VkMemoryPropertyFlags);
     };
 
     class STLR_API VulkanUniformBuffer : public Buffer {

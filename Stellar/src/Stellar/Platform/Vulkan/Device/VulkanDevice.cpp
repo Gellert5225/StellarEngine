@@ -67,6 +67,7 @@ namespace Stellar {
         }
 
         VkPhysicalDeviceFeatures deviceFeatures{};
+        deviceFeatures.samplerAnisotropy = VK_TRUE;
         VkDeviceCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
         createInfo.pQueueCreateInfos = queueCreateInfos.data();
@@ -105,6 +106,8 @@ namespace Stellar {
     bool VulkanDevice::isDeviceSuitable(VkPhysicalDevice device) const {
         VkPhysicalDeviceProperties deviceProperties;
         VkPhysicalDeviceFeatures deviceFeatures;
+        VkPhysicalDeviceFeatures supportedFeatures;
+        vkGetPhysicalDeviceFeatures(device, &supportedFeatures);
         vkGetPhysicalDeviceProperties(device, &deviceProperties);
         vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
 
@@ -122,6 +125,7 @@ namespace Stellar {
 
         return deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU
                 && deviceFeatures.geometryShader
+                && supportedFeatures.samplerAnisotropy
                 && indices.isComplete()
                 && extensionSupported
                 && swapChainAdequate;

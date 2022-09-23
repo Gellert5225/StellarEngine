@@ -4,7 +4,7 @@
 #include "Window.h"
 #include "LayerStack.h"
 
-#include "ImGUI/ImGuiLayer.h"
+#include "ImGui/ImGuiLayer.h"
 
 #include "Core/Timestep.h"
 

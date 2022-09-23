@@ -7,7 +7,17 @@
 #include "Stellar/Log.h"
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 
+#include "Stellar/Platform/Vulkan/VulkanCommon.h"
+
 namespace Stellar {
+
+    struct VulkanRendererData {
+        VkDescriptorPool descriptorPool;
+        VkDescriptorSetLayout descriptorSetLayout;
+        std::vector<VkDescriptorSet> descriptorSets;
+    };
+
+    static VulkanRendererData* s_Data = nullptr;
 
     void VulkanRenderer::init() {
         m_CommandBuffer = CommandBuffer::Create(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
@@ -15,6 +25,7 @@ namespace Stellar {
 
         m_GraphicsPipeline = new GraphicsPipeline("../Resources/Shader/shaderVert.vert.spv",
                                                   "../Resources/Shader/shaderFrag.frag.spv");
+        s_Data = new VulkanRendererData();
         createDescriptorSets();
     }
 
@@ -117,6 +128,9 @@ namespace Stellar {
         std::vector<VkDescriptorSetLayout> layouts(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT,
                                                    m_GraphicsPipeline->getDescriptorSetLayout());
 
+        s_Data->descriptorPool = m_GraphicsPipeline->getDescriptorPool();
+        s_Data->descriptorSetLayout = m_GraphicsPipeline->getDescriptorSetLayout();
+
         VkDescriptorSetAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
         allocInfo.descriptorPool = m_GraphicsPipeline->getDescriptorPool();
@@ -129,6 +143,8 @@ namespace Stellar {
                                      &allocInfo, m_DescriptorSets.data()) != VK_SUCCESS) {
             throw std::runtime_error("failed to allocate descriptor sets!");
         }
+
+        s_Data->descriptorSets = m_DescriptorSets;
 
         for (size_t i = 0; i < VulkanSwapChain::MAX_FRAMES_IN_FLIGHT; i++) {
             VkDescriptorBufferInfo bufferInfo{};
@@ -149,6 +165,19 @@ namespace Stellar {
         }
 
     }
+
+     VkDescriptorSet VulkanRenderer::AllocateDescriptorSets(VkDescriptorSetAllocateInfo& info) {
+        info.descriptorPool = s_Data->descriptorPool;
+        info.pSetLayouts = &s_Data->descriptorSetLayout;
+        VkDescriptorSet result;
+        VK_CHECK_RESULT(vkAllocateDescriptorSets(VulkanDevice::GetInstance()->logicalDevice(),
+                                     &info, &result));
+        return result;
+     }
+
+     std::vector<VkDescriptorSet>& VulkanRenderer::GetDescriptorSets() {
+        return s_Data->descriptorSets;
+     }
 
     void VulkanRenderer::endScene() {
         m_CommandBuffer->end();

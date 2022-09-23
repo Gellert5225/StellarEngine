@@ -13,6 +13,7 @@ namespace Stellar {
     struct STLR_API Vertex {
         glm::vec2 position;
         glm::vec3 color;
+        glm::vec2 texCoord;
     };
 
     class STLR_API Buffer {
