@@ -160,10 +160,10 @@ namespace Stellar {
 
         m_CommandBuffers.resize(MAX_FRAMES_IN_FLIGHT);
         for (auto& commandBuffer : m_CommandBuffers) {
-            VK_CHECK_RESULT(vkCreateCommandPool(VulkanDevice::GetInstance()->logicalDevice(), &cmdPoolInfo, nullptr, &commandBuffer.CommandPool));
+            VK_CHECK_RESULT(vkCreateCommandPool(VulkanDevice::GetInstance()->logicalDevice(), &cmdPoolInfo, nullptr, &commandBuffer.CommandPool))
 
             commandBufferAllocateInfo.commandPool = commandBuffer.CommandPool;
-            VK_CHECK_RESULT(vkAllocateCommandBuffers(VulkanDevice::GetInstance()->logicalDevice(), &commandBufferAllocateInfo, &commandBuffer.CommandBuffer));
+            VK_CHECK_RESULT(vkAllocateCommandBuffers(VulkanDevice::GetInstance()->logicalDevice(), &commandBufferAllocateInfo, &commandBuffer.CommandBuffer))
         }
     }
 
@@ -333,8 +333,16 @@ namespace Stellar {
         for (uint32_t i = 0; i < m_Framebuffers.size(); i++) {
             frameBufferCreateInfo.pAttachments = &m_SwapChainImageViews[i];
             frameBufferCreateInfo2.pAttachments = &m_SwapChainImageViews[i];
-            VK_CHECK_RESULT(vkCreateFramebuffer(VulkanDevice::GetInstance()->logicalDevice(), &frameBufferCreateInfo, nullptr, &m_Framebuffers[i]));
-            VK_CHECK_RESULT(vkCreateFramebuffer(VulkanDevice::GetInstance()->logicalDevice(), &frameBufferCreateInfo2, nullptr, &m_ImGuiFramebuffers[i]));
+            VK_CHECK_RESULT(vkCreateFramebuffer(
+                    VulkanDevice::GetInstance()->logicalDevice(),
+                    &frameBufferCreateInfo,
+                    nullptr,
+                    &m_Framebuffers[i]))
+            VK_CHECK_RESULT(vkCreateFramebuffer(
+                    VulkanDevice::GetInstance()->logicalDevice(),
+                    &frameBufferCreateInfo2,
+                    nullptr,
+                    &m_ImGuiFramebuffers[i]))
         }
 
     }

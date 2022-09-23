@@ -16,8 +16,8 @@ namespace Stellar {
         VkDescriptorPool getDescriptorPool() { return m_DescriptorPool; }
 
     protected:
-        VkPipelineLayout m_PipelineLayout;
-        VkPipeline m_Pipeline;
+        VkPipelineLayout m_PipelineLayout{};
+        VkPipeline m_Pipeline{};
 
         VkDescriptorSetLayout m_DescriptorSetLayout = VK_NULL_HANDLE;
         VkDescriptorPool m_DescriptorPool = VK_NULL_HANDLE;

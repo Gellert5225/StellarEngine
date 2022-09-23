@@ -39,7 +39,7 @@ namespace Stellar {
         imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
         imageInfo.flags = 0; // Optional
         if (vkCreateImage(device, &imageInfo, nullptr, &m_Info.image) != VK_SUCCESS) {
-            STLR_CORE_ASSERT(false, "Fail to create image");
+            STLR_CORE_ASSERT(false, "Fail to create image")
         }
 
         VkMemoryRequirements memRequirements;

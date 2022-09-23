@@ -17,7 +17,7 @@ namespace Stellar {
 
     class STLR_API VulkanImage2D : public Image2D {
     public:
-        VulkanImage2D(const ImageSpecification& spec);
+        explicit VulkanImage2D(const ImageSpecification& spec);
         virtual ~VulkanImage2D() override;
 
         virtual void invalidate() override;
@@ -27,7 +27,7 @@ namespace Stellar {
         // vulkan
         void* getImageInfo() override { return (VulkanImageInfo*)&m_Info; }
         void updateDescriptor();
-        const VkDescriptorImageInfo& getDescriptorInfo() const { return m_DescriptorImageInfo; }
+        [[nodiscard]] const VkDescriptorImageInfo& getDescriptorInfo() const { return m_DescriptorImageInfo; }
     private:
         ImageSpecification m_Specification{};
         VulkanImageInfo m_Info{};

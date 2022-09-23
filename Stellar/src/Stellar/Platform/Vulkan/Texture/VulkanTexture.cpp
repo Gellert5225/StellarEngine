@@ -155,7 +155,7 @@ namespace Stellar {
         viewInfo.subresourceRange.layerCount = 1;
 
         if (vkCreateImageView(device->logicalDevice(), &viewInfo, nullptr, &info->imageView) != VK_SUCCESS) {
-            STLR_CORE_ASSERT(false, "failed to create texture image view!");
+            STLR_CORE_ASSERT(false, "failed to create texture image view!")
         }
 
         // create texture sampler
@@ -183,7 +183,7 @@ namespace Stellar {
         samplerInfo.maxLod = 0.0f;
 
         if (vkCreateSampler(device->logicalDevice(), &samplerInfo, nullptr, &info->sampler) != VK_SUCCESS) {
-            STLR_CORE_ASSERT(false, "failed to create texture sampler!");
+            STLR_CORE_ASSERT(false, "failed to create texture sampler!")
         }
 
         ((VulkanImage2D*)m_Image)->updateDescriptor();

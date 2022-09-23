@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Stellar/Core.h"
-#include <stdint.h> 
+#include <cstdint>
 
 namespace Stellar {
     enum class ImageFormat {

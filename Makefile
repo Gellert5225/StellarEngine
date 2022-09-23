@@ -4,10 +4,8 @@ export
 include $(wildcard ./PrettyPrint.inc)
 
 all:
-	@echo Building Stellar...
-	@make BUILD=$(BUILD) -C Stellar
-	@echo Building Sandbox...
-	@make BUILD=$(BUILD) -C Sandbox
+	$(MAKE) BUILD=$(BUILD) -C Stellar
+	$(MAKE) BUILD=$(BUILD) -C Sandbox
 
 stellar:
 	@make -C Stellar

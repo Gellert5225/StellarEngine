@@ -17,10 +17,9 @@ namespace Stellar {
     protected:
         virtual bool loadImage(const std::string& filePath) override;
     private:
-        uint32_t m_Width;
-        uint32_t m_Height;
-        ImageFormat m_Format;
-        unsigned char* m_Pixels;
-        VkDeviceSize m_ImageSize;
+        uint32_t m_Width{};
+        uint32_t m_Height{};
+        unsigned char* m_Pixels{};
+        VkDeviceSize m_ImageSize{};
     };
 }
