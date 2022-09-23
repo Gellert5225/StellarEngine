@@ -31,8 +31,6 @@ namespace Stellar {
     VulkanTexture::~VulkanTexture() {
         if (m_Image)
 			m_Image->release();
-        delete[] m_Pixels;
-        m_Pixels = nullptr;
     }
 
     bool VulkanTexture::loadImage(const std::string& filePath) {

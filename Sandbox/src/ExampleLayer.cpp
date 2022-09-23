@@ -58,6 +58,7 @@ void ExampleLayer::onUpdate(Stellar::Timestep ts) {
 void ExampleLayer::onDetach() {
     delete m_VertexBuffer;
     delete m_IndexBuffer;
+    delete m_Texture;
 }
 
 void ExampleLayer::onEvent(Stellar::Event &event) {
