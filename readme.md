@@ -151,10 +151,11 @@ Select `Sandbox` from Scheme, then `CMD + R`
 * [x] Triangle
 * [x] Shader library
 * [x] Camera
-* [ ] Texture
+* [x] Texture
 * [x] Renderer
 * [x] Metal-cpp
 * [x] macOS support
+* [ ] Better 2D renderer
 * [ ] Load model
 * [ ] PBR
 * [ ] IBL
