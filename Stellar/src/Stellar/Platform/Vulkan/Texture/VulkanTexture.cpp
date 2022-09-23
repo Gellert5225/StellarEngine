@@ -14,6 +14,10 @@
 namespace Stellar {
     VulkanTexture::VulkanTexture(const std::string& filePath) : Texture2D(filePath) {
         bool loaded = loadImage(filePath);
+        if (!loaded) {
+            STLR_CORE_ERROR("Failed to load texture {0}", filePath);
+            loadImage("../Resources/Textures/ErrorTexture.png");
+        }
         ImageSpecification imageSpec;
 		imageSpec.format = ImageFormat::SRGB;
 		imageSpec.width = m_Width;
@@ -35,8 +39,6 @@ namespace Stellar {
         int texWidth, texHeight, texChannels;
         m_Pixels = stbi_load(filePath.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
         m_ImageSize = texWidth * texHeight * 4;
-
-        STLR_CORE_ASSERT(m_Pixels, "Failed to load image {0}", filePath);
 
         if (!m_Pixels) return false;
 

@@ -21,7 +21,7 @@ ExampleLayer::ExampleLayer() : Layer("Example") {
 
     delete indexStagingBuffer;
 
-    m_Texture = Stellar::Texture2D::Create("../Resources/Textures/Example_texture.jpg");
+    m_Texture = Stellar::Texture2D::Create("../Resources/Textures/StellarEngine.png");
 }
 
 void ExampleLayer::onUpdate(Stellar::Timestep ts) {
