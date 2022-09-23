@@ -183,25 +183,26 @@ namespace Stellar {
         if (vkCreateSampler(device->logicalDevice(), &samplerInfo, nullptr, &info->sampler) != VK_SUCCESS) {
             STLR_CORE_ASSERT(false, "failed to create texture sampler!");
         }
+
+        ((VulkanImage2D*)m_Image)->updateDescriptor();
     }
 
     void VulkanTexture::bind() {
-        VkDescriptorSetAllocateInfo allocInfo = {};
-        allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-        allocInfo.descriptorSetCount = 1;
+        auto descriptorSets = VulkanRenderer::GetDescriptorSets();
 
-        auto descriptorSet = VulkanRenderer::AllocateDescriptorSets(allocInfo);
-        VkWriteDescriptorSet descriptorWrite{};
-        descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        descriptorWrite.dstSet = descriptorSet;
-        descriptorWrite.dstBinding = 1;
-        descriptorWrite.dstArrayElement = 0;
-        descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        descriptorWrite.descriptorCount = 1;
-        descriptorWrite.pImageInfo = &((VulkanImage2D*)m_Image)->getDescriptorInfo();
+        for (size_t i = 0; i < VulkanSwapChain::MAX_FRAMES_IN_FLIGHT; i++) {
+            VkWriteDescriptorSet descriptorWrite{};
+            descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            descriptorWrite.dstSet = descriptorSets[i];
+            descriptorWrite.dstBinding = 1;
+            descriptorWrite.dstArrayElement = 0;
+            descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+            descriptorWrite.descriptorCount = 1;
+            descriptorWrite.pImageInfo = &((VulkanImage2D*)m_Image)->getDescriptorInfo();
 
-        vkUpdateDescriptorSets(VulkanDevice::GetInstance()->logicalDevice(), 
-            1, &descriptorWrite, 0, nullptr);
+            vkUpdateDescriptorSets(VulkanDevice::GetInstance()->logicalDevice(), 
+                1, &descriptorWrite, 0, nullptr);
+        }        
     }
 
     Image2D* VulkanTexture::getImage() const {

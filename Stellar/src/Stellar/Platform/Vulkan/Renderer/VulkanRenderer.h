@@ -29,7 +29,7 @@ namespace Stellar {
 
         // vulkan
         static VkDescriptorSet AllocateDescriptorSets(VkDescriptorSetAllocateInfo& info);
-
+        static std::vector<VkDescriptorSet>& GetDescriptorSets();
     private:
         GraphicsPipeline* m_GraphicsPipeline = nullptr;
         VkClearColorValue m_ClearColor = {{0.66f, 0.9f, 0.96f, 1.0f}};
