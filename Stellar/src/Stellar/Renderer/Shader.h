@@ -6,6 +6,12 @@
 #include <unordered_map>
 
 namespace Stellar {
+    enum class ShaderType {
+        None = 0,
+        Vertex,
+        Fragment
+    };
+
     class STLR_API Shader {
     public:
         static Shader* Create(const std::string& filePath);
