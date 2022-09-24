@@ -8,8 +8,8 @@
 namespace Stellar {
     enum class ShaderType {
         None = 0,
-        Vertex,
-        Fragment
+        Vertex = 1,
+        Fragment = 2
     };
 
     class STLR_API Shader {

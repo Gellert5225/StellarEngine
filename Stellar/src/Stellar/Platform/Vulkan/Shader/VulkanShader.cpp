@@ -4,11 +4,17 @@
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 #include "Stellar/Log.h"
 
+#include "Stellar/Platform/Vulkan/Shader/VulkanShaderCompiler.h"
+
 namespace Stellar {
 
     VulkanShader::VulkanShader(const std::string& filePath) {
         m_ShaderModule = CreateShaderModule(ReadFile(filePath));
         const std::string shaderType = extractType(filePath);
+
+        auto source = ReadFile("../Resources/Shader/shader.glsl");
+        STLR_CORE_INFO("Preproecssing Shader: {0}", filePath.substr(filePath.find_last_of("/") + 1));
+        auto result = VulkanShaderCompiler::PreProcess(source.data());
 
         VkPipelineShaderStageCreateInfo shaderStageInfo{};
         shaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -21,7 +27,6 @@ namespace Stellar {
 
     const std::string VulkanShader::extractType(const std::string& filePath) const {
         auto fileName = filePath.substr(filePath.find_last_of("/") + 1);
-        STLR_CORE_INFO("Shader file name: {0}", fileName);
         return fileName.substr(fileName.find_first_of(".") + 1, 4);
     }
 
