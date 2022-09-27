@@ -13,14 +13,13 @@ namespace Stellar {
         ~VulkanShader();
 
         VkShaderModule getShaderModule(const std::string& filePath);
-        VkPipelineShaderStageCreateInfo getStageInfo() const;
+        const std::vector<VkPipelineShaderStageCreateInfo>& getStageInfos() const;
     private:
-        VkPipelineShaderStageCreateInfo m_StageInfo{};
+        std::vector<VkPipelineShaderStageCreateInfo> m_StageInfos;
+        std::vector<VkShaderModule> m_ShaderModules;
         
         const std::string extractType(const std::string& filePath) const;
-        static VkShaderModule CreateShaderModule(const std::vector<char>& code);
-
-        VkShaderModule m_ShaderModule;
+        static VkShaderModule CreateShaderModule(const std::vector<uint32_t>& code);
 
         std::unordered_map<std::string, VkShaderModule> loadedShaders;
     };

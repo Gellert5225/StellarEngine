@@ -9,18 +9,15 @@
 
 namespace Stellar {
 
-    GraphicsPipeline::GraphicsPipeline(const std::string& vertShaderPath,
-                                       const std::string& fragShaderPath) {
+    GraphicsPipeline::GraphicsPipeline(const std::string& shaderPath) {
         createDescriptorSetLayout();
         createDescriptorPool();
 
-        auto vertShader = new VulkanShader(vertShaderPath);
-        auto fragShader = new VulkanShader(fragShaderPath);
+        auto shader = new VulkanShader(shaderPath);
+        auto infos = shader->getStageInfos();
 
-        VkPipelineShaderStageCreateInfo shaderStages[] = {
-            vertShader->getStageInfo(), 
-            fragShader->getStageInfo()
-        };
+        VkPipelineShaderStageCreateInfo shaderStages[2];
+        std::copy(infos.begin(), infos.end(), shaderStages);
 
         auto bindingDescription = VulkanVertex::getBindingDescription();
         auto attributeDesctiptions = VulkanVertex::getAttributeDescriptions();
@@ -133,8 +130,7 @@ namespace Stellar {
             throw std::runtime_error("failed to create graphics pipeline!");
         }
 
-        delete vertShader;
-        delete fragShader;
+        delete shader;
     }
 
     void GraphicsPipeline::createDescriptorSetLayout() {

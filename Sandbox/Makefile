@@ -79,7 +79,6 @@ FRAG_SRCS := $(call rwildcard,$(SHADER_DIR)/,*.frag)
 VERT_SPIRV = $(VERT_SRCS:%.vert=$(SHADER_DIR)/%.spv)
 FRAG_SPIRV = $(FRAG_SRCS:%.frag=$(SHADER_DIR)/%.spv)
 
-COMPILE_SHADERS = $(shell chmod +x Resources/Shader/compile.sh && ./Resources/Shader/compile.sh)
 CP_RESOURCES = $(shell cp -r ./Resources ./$(OUT_DIR)/)
 ifeq ($(OS),linux)
 	LIBS += -lglfw -lvulkan
@@ -95,8 +94,6 @@ include $(wildcard ../PrettyPrint.inc)
 .PHONY: depend clean
 
 all: $(BIN_DIR)/$(MAIN)
-	@echo Compiling shaders
-	$(COMPILE_SHADERS)
 	$(CP_RESOURCES)
 	@echo Sandbox has been built to bin
 
