@@ -6,10 +6,16 @@
 #include <unordered_map>
 
 namespace Stellar {
+    enum class ShaderType {
+        None = 0,
+        Vertex = 1,
+        Fragment = 2
+    };
+
     class STLR_API Shader {
     public:
         static Shader* Create(const std::string& filePath);
-        static std::vector<char> ReadFile(const std::string& fileName);
+        static std::string ReadFile(const std::string& fileName);
 
     protected:
         std::string m_Name;

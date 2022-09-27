@@ -31,7 +31,7 @@ namespace Stellar {
         return nullptr;
     }
 
-    std::vector<char> Shader::ReadFile(const std::string& fileName) {
+    std::string Shader::ReadFile(const std::string& fileName) {
         std::ifstream file(fileName, std::ios::ate | std::ios::binary);
         if (!file.is_open())
             throw std::runtime_error("Failed to open shader file " + fileName);
@@ -42,6 +42,6 @@ namespace Stellar {
         file.read(buffer.data(), fileSize);
         file.close();
 
-        return buffer;
+        return std::string(buffer.begin(), buffer.end());
     }
 }
