@@ -23,6 +23,7 @@ ExampleLayer::ExampleLayer() : Layer("Example") {
     delete indexStagingBuffer;
 
     m_Texture = Stellar::Texture2D::Create("../Resources/Textures/StellarEngine.png");
+    m_Texture2 = Stellar::Texture2D::Create("../Resources/Textures/Example_texture.jpg");
 }
 
 void ExampleLayer::onUpdate(Stellar::Timestep ts) {
@@ -51,17 +52,20 @@ void ExampleLayer::onUpdate(Stellar::Timestep ts) {
     Stellar::Renderer::SetClearColor({ 0.66f, 0.9f, 0.96f, 1.0f });
     Stellar::Renderer::BeginRenderPass();
     for (int i = 0; i < 5; i++) {
-        glm::vec3 pos(i * 0.22f, 0.0f, 0.0f);
-        glm::mat4 transformTile = 
-            glm::translate(glm::mat4(1.f), pos) *
-            glm::rotate(glm::mat4(1.0f),
-                        glm::radians(90.0f),
-                        glm::vec3(1.0f, 0.0f, 0.0f)) *
-            glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
-        Stellar::Renderer::RenderGeometry(m_VertexBuffer, m_IndexBuffer, m_Color, indices.size(), transformTile);
+        for (int j = 0; j < 5; j++) {
+            glm::vec3 pos(i * 0.22f, 0.0f, j * 0.22f);
+            glm::mat4 transformTile = 
+                glm::translate(glm::mat4(1.f), pos) *
+                glm::rotate(glm::mat4(1.0f),
+                            glm::radians(90.0f),
+                            glm::vec3(1.0f, 0.0f, 0.0f)) *
+                glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
+            m_Texture2->bind();
+            Stellar::Renderer::RenderGeometry(m_VertexBuffer, m_IndexBuffer, m_Color, indices.size(), transformTile);
+        }
     }
-    Stellar::Renderer::RenderGeometry(m_VertexBuffer, m_IndexBuffer, glm::vec3(1.0f, 1.0f, 1.0f), indices.size(), transform);
     m_Texture->bind();
+    Stellar::Renderer::RenderGeometry(m_VertexBuffer, m_IndexBuffer, glm::vec3(1.0f, 1.0f, 1.0f), indices.size(), transform);
     Stellar::Renderer::EndRenderPass();
     Stellar::Renderer::EndScene();
 }
