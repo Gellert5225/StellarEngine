@@ -81,10 +81,12 @@ namespace Stellar {
 
     void VulkanRenderer::renderGeometry(Buffer* vertexBuffer,
                                         Buffer* indexBuffer,
+                                        const glm::vec3& color,
                                         uint32_t indexCount,
                                         const glm::mat4& transform) {
         Push push{};
         push.model = transform;
+        push.color = color;
 
         vkCmdPushConstants((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
                            *m_GraphicsPipeline->getPipelineLayout(),

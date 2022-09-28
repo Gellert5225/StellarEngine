@@ -50,7 +50,7 @@ void ExampleLayer::onUpdate(Stellar::Timestep ts) {
     Stellar::Renderer::SetClearColor({ 0.66f, 0.9f, 0.96f, 1.0f });
     Stellar::Renderer::BeginRenderPass();
     m_Texture->bind();
-    Stellar::Renderer::RenderGeometry(m_VertexBuffer, m_IndexBuffer, indices.size(), transform);
+    Stellar::Renderer::RenderGeometry(m_VertexBuffer, m_IndexBuffer, glm::vec3(1.0f, 0.0f, 0.0f), indices.size(), transform);
     Stellar::Renderer::EndRenderPass();
     Stellar::Renderer::EndScene();
 }

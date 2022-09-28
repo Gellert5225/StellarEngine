@@ -11,6 +11,7 @@ layout(set = 0, binding = 0) uniform GlobalUniforms {
 
 layout(push_constant) uniform Push {
     mat4 model;
+    vec3 color;
 } push;
 
 layout(location = 0) out vec3 fragColor;
@@ -18,7 +19,7 @@ layout(location = 1) out vec2 fragTexCoord;
 
 void main() {
     gl_Position = ubo.viewProjection * push.model * vec4(inPosition, 0.0, 1.0);
-    fragColor = inColor;
+    fragColor = push.color;
     fragTexCoord = inTexCoord;
 }
 
@@ -39,5 +40,5 @@ void main() {
     float g = pow(texture(texSampler, fragTexCoord).g, 1.0/2.2);
     float b = pow(texture(texSampler, fragTexCoord).b, 1.0/2.2);
 
-    outColor = vec4(r, g, b, 1.0);
+    outColor = vec4(fragColor, 1.0);
 }

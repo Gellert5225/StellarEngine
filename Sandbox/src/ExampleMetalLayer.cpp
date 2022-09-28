@@ -18,7 +18,7 @@ void ExampleMetalLayer::onUpdate(Stellar::Timestep ts) {
     Stellar::Renderer::BeginScene(m_Camera);
     Stellar::Renderer::SetClearColor({ 0.66f, 0.9f, 0.96f, 1.0f });
     Stellar::Renderer::BeginRenderPass();
-    Stellar::Renderer::RenderGeometry(m_VertexBuffer, m_ColorBuffer);
+    Stellar::Renderer::RenderGeometry(m_VertexBuffer, m_ColorBuffer, glm::vec3(1.0f, 0.0f,0.0f));
     Stellar::Renderer::EndRenderPass();
     Stellar::Renderer::EndScene();
 }
