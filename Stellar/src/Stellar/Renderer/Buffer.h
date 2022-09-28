@@ -14,6 +14,7 @@ namespace Stellar {
         glm::vec2 position;
         glm::vec3 color;
         glm::vec2 texCoord;
+        float tilingFactor;
     };
 
     class STLR_API Buffer {

@@ -1,4 +1,5 @@
 #include "ExampleLayer.h"
+#include "glm/gtc/type_ptr.hpp"
 
 ExampleLayer::ExampleLayer() : Layer("Example") {
     // vertex buffer
@@ -49,8 +50,18 @@ void ExampleLayer::onUpdate(Stellar::Timestep ts) {
     Stellar::Renderer::BeginScene(m_Camera);
     Stellar::Renderer::SetClearColor({ 0.66f, 0.9f, 0.96f, 1.0f });
     Stellar::Renderer::BeginRenderPass();
+    for (int i = 0; i < 5; i++) {
+        glm::vec3 pos(i * 0.22f, 0.0f, 0.0f);
+        glm::mat4 transformTile = 
+            glm::translate(glm::mat4(1.f), pos) *
+            glm::rotate(glm::mat4(1.0f),
+                        glm::radians(90.0f),
+                        glm::vec3(1.0f, 0.0f, 0.0f)) *
+            glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
+        Stellar::Renderer::RenderGeometry(m_VertexBuffer, m_IndexBuffer, m_Color, indices.size(), transformTile);
+    }
+    Stellar::Renderer::RenderGeometry(m_VertexBuffer, m_IndexBuffer, glm::vec3(1.0f, 1.0f, 1.0f), indices.size(), transform);
     m_Texture->bind();
-    Stellar::Renderer::RenderGeometry(m_VertexBuffer, m_IndexBuffer, glm::vec3(1.0f, 0.0f, 0.0f), indices.size(), transform);
     Stellar::Renderer::EndRenderPass();
     Stellar::Renderer::EndScene();
 }
@@ -69,13 +80,15 @@ void ExampleLayer::onImGuiRender() {
     auto appInfo = Stellar::Application::Get().getAppInfo();
 
     ImGui::Begin("Info");
-
     ImGui::Text("GPU: %s", appInfo.graphicsInfo.c_str());
     ImGui::Text("%s", appInfo.vulkanVersion.c_str());
-
     ImGui::Text(
             "Frame time: %.3f ms, FPS: %.1f FPS",
             1000.0f / ImGui::GetIO().Framerate,
             ImGui::GetIO().Framerate);
+    ImGui::End();
+
+    ImGui::Begin("Color Setting");
+    ImGui::ColorEdit3("Square Color", glm::value_ptr(m_Color));
     ImGui::End();
 }
