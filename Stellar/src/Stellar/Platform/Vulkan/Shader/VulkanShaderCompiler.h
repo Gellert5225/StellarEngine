@@ -30,17 +30,6 @@ namespace Stellar {
             if (type == ShaderType::Fragment) return VK_SHADER_STAGE_FRAGMENT_BIT;
             return VK_SHADER_STAGE_ALL;
         }
-
-        static std::string ShadercCompileErrorToString(const shaderc_compilation_status status) {
-            if (status == shaderc_compilation_status_invalid_stage) return "shaderc_compilation_status_invalid_stage";
-            if (status == shaderc_compilation_status_compilation_error) return "shaderc_compilation_status_compilation_error";
-            if (status == shaderc_compilation_status_internal_error) return "shaderc_compilation_status_internal_error";
-            if (status == shaderc_compilation_status_null_result_object) return "shaderc_compilation_status_null_result_object";
-            if (status == shaderc_compilation_status_invalid_assembly) return "shaderc_compilation_status_invalid_assembly";
-            if (status == shaderc_compilation_status_validation_error) return "shaderc_compilation_status_validation_error"; 
-            if (status == shaderc_compilation_status_transformation_error) return "shaderc_compilation_status_transformation_error"; 
-            if (status == shaderc_compilation_status_configuration_error) return "shaderc_compilation_status_configuration_error"; 
-        }
     }
 
     namespace VulkanShaderCompiler {

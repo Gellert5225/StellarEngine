@@ -8,13 +8,13 @@
 
 namespace Stellar {
 
-    VulkanShader::VulkanShader(const std::string& filePath) {
+    VulkanShader::VulkanShader(const std::string& filePath) : Shader(filePath) {
         auto source = ReadFile(filePath);
-        STLR_CORE_INFO("Preproecssing Shader: {0}", filePath.substr(filePath.find_last_of("/") + 1));
+        STLR_CORE_INFO("Preproecssing Shader: {0}", m_Name);
         auto result = VulkanShaderCompiler::PreProcess(source);
         std::unordered_map<ShaderType, std::vector<uint32_t>> spv;
 
-        STLR_CORE_INFO("Compiling Shader: {0}", filePath.substr(filePath.find_last_of("/") + 1));
+        STLR_CORE_INFO("Compiling Shader: {0}", m_Name);
         VulkanShaderCompiler::Compile(result, spv);
 
         for (auto& kv : spv) {

@@ -5,6 +5,7 @@
 #include "CommandBuffer.h"
 #include "Camera.h"
 #include "Stellar/Core.h"
+#include "Shader.h"
 
 #include <glm/glm.hpp>
 #include "Uniforms.h"
@@ -28,6 +29,8 @@ namespace Stellar {
                                    uint32_t indexCount = 0,
                                    const glm::mat4& transform = {});
 
+        static ShaderLibrary* GetShaderLibrary();
+        
         static uint32_t GetCurrentFrameIndex();
     };
 }

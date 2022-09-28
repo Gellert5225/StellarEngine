@@ -9,12 +9,11 @@
 
 namespace Stellar {
 
-    GraphicsPipeline::GraphicsPipeline(const std::string& shaderPath) {
+    GraphicsPipeline::GraphicsPipeline(Shader* shader) {
         createDescriptorSetLayout();
         createDescriptorPool();
-
-        auto shader = new VulkanShader(shaderPath);
-        auto infos = shader->getStageInfos();
+        
+        auto infos = ((VulkanShader*)shader)->getStageInfos();
 
         VkPipelineShaderStageCreateInfo shaderStages[2];
         std::copy(infos.begin(), infos.end(), shaderStages);
