@@ -20,7 +20,5 @@ namespace Stellar {
         
         const std::string extractType(const std::string& filePath) const;
         static VkShaderModule CreateShaderModule(const std::vector<uint32_t>& code);
-
-        std::unordered_map<std::string, VkShaderModule> loadedShaders;
     };
 }

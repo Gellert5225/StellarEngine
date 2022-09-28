@@ -8,7 +8,7 @@
 namespace Stellar {
     class STLR_API GraphicsPipeline : public VulkanPipeline {
     public:
-        GraphicsPipeline(const std::string& shaderPath);
+        GraphicsPipeline(Shader* shader);
     protected:
         void createDescriptorSetLayout() override;
         void createDescriptorPool() override;

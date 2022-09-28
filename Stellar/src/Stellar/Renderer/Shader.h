@@ -15,8 +15,12 @@ namespace Stellar {
     class STLR_API Shader {
     public:
         static Shader* Create(const std::string& filePath);
-        static std::string ReadFile(const std::string& fileName);
+        static const std::string ReadFile(const std::string& fileName);
 
+        Shader(const std::string& filePath);
+        virtual ~Shader() {};
+
+        virtual const std::string& getName() const { return m_Name; }
     protected:
         std::string m_Name;
 
@@ -25,11 +29,15 @@ namespace Stellar {
 
     class STLR_API ShaderLibrary {
     public:
-        ShaderLibrary();
-        ~ShaderLibrary();
+        ShaderLibrary() {};
+        ~ShaderLibrary() {};
 
+        void add(Shader* shader);
+        void add(const std::string& name, Shader* shader);
         void load(const std::string& filePath);
+        void load(const std::string& name, const std::string& filePath);
+        Shader* get(const std::string& name);
     private:
-        std::unordered_map<std::string, Shader> m_Shaders;
+        std::unordered_map<std::string, Shader*> m_Shaders;
     };
 }

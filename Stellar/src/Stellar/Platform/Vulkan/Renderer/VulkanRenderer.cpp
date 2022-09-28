@@ -23,7 +23,9 @@ namespace Stellar {
         m_CommandBuffer = CommandBuffer::Create(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
         m_UniformBuffer = Buffer::Create(BufferType::Uniform, sizeof(GlobalUniforms));
 
-        m_GraphicsPipeline = new GraphicsPipeline("../Resources/Shader/Vulkan/shader.glsl");
+        auto shaderLib = Renderer::GetShaderLibrary();
+        auto shader = Renderer::GetShaderLibrary()->get("shader");
+        m_GraphicsPipeline = new GraphicsPipeline(shader);
         s_Data = new VulkanRendererData();
         createDescriptorSets();
     }

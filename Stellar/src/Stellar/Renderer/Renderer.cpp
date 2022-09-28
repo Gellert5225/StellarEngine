@@ -13,7 +13,12 @@
 #include "Stellar/Log.h"
 
 namespace Stellar {
+    struct RendererData {
+        ShaderLibrary* m_ShaderLibrary;
+    };
+
     static RendererAPI* s_RendererAPI = nullptr;
+    static RendererData* s_Data = nullptr;
 
     static RendererAPI* InitRendererAPI() {
         switch (RendererAPI::Current()) {
@@ -32,7 +37,13 @@ namespace Stellar {
     }
 
     void Renderer::Init() {
+        s_Data = new RendererData();
+        s_Data->m_ShaderLibrary = new ShaderLibrary();
+        
         s_RendererAPI = InitRendererAPI();
+
+        Renderer::GetShaderLibrary()->load("../Resources/Shader/Vulkan/shader.glsl");
+
         s_RendererAPI->init();
     }
 
@@ -69,5 +80,9 @@ namespace Stellar {
 
     void Renderer::EndScene() {
         s_RendererAPI->endScene();
+    }
+
+    ShaderLibrary* Renderer::GetShaderLibrary() {
+        return s_Data->m_ShaderLibrary;
     }
 }
