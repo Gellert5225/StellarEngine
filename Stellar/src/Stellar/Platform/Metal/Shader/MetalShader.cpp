@@ -1,7 +1,7 @@
 #include "stlrpch.h"
 #include "MetalShader.h"
 
-#include "Stellar/Log.h"
+#include "Stellar/Core/Log.h"
 
 #include "Stellar/Platform/Metal/Device/MetalDevice.h"
 

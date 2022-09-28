@@ -3,8 +3,8 @@
 #include "MetalSwapChain.h"
 #include "Stellar/Platform/Metal/Device/MetalDevice.h"
 
-#include "Stellar/Application.h"
-#include "Stellar/Log.h"
+#include "Stellar/Core/Application.h"
+#include "Stellar/Core/Log.h"
 
 namespace Stellar {
 

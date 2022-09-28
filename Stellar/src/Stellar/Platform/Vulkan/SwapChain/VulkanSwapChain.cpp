@@ -5,9 +5,8 @@
 
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 #include "Stellar/Platform/Vulkan/VulkanCommon.h"
-#include "Stellar/Application.h"
-
-#include "Stellar/Log.h"
+#include "Stellar/Core/Application.h"
+#include "Stellar/Core/Log.h"
 
 namespace Stellar {
     VulkanSwapChain::VulkanSwapChain() {

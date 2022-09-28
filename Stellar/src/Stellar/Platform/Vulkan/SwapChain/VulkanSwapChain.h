@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Stellar/Core.h"
+#include "Stellar/Core/Core.h"
 #include "Stellar/Renderer/SwapChain.h"
 #include "Stellar/Platform/Vulkan/Buffer/FrameBuffer.h"
 #include "Stellar/Platform/Vulkan/Command/VulkanCommandBuffer.h"

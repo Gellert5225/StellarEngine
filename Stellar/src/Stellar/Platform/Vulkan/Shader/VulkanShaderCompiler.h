@@ -6,9 +6,10 @@
 #include <vector>
 #include <cstring>
 #include <shaderc/shaderc.hpp>
+#include <vulkan/vulkan.h>
 
-#include "Stellar/Core.h"
-#include "Stellar/Log.h"
+#include "Stellar/Core/Core.h"
+#include "Stellar/Core/Log.h"
 #include "Stellar/Renderer/Shader.h"
 
 namespace Stellar {

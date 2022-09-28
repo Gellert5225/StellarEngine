@@ -3,7 +3,7 @@
 
 #include "Stellar/Renderer/RendererAPI.h"
 
-#include "Stellar/Log.h"
+#include "Stellar/Core/Log.h"
 
 #if defined __linux__ || defined _WIN64
 #include "Stellar/Platform/Vulkan/ImGui/VulkanImGuiLayer.h"

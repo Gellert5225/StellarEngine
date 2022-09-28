@@ -1,10 +1,11 @@
 #include "stlrpch.h"
 
-#include "Stellar/Log.h"
 #include "VulkanRendererContext.h"
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 #include "Stellar/Platform/Vulkan/SwapChain/VulkanSurface.h"
-#include "Stellar/Application.h"
+
+#include "Stellar/Core/Application.h"
+#include "Stellar/Core/Log.h"
 
 namespace Stellar {
 

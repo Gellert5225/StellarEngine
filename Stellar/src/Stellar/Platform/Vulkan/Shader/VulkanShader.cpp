@@ -2,7 +2,7 @@
 #include "VulkanShader.h"
 
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
-#include "Stellar/Log.h"
+#include "Stellar/Core/Log.h"
 
 #include "Stellar/Platform/Vulkan/Shader/VulkanShaderCompiler.h"
 

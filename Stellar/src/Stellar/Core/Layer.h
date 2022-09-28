@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Core.h"
-#include "Events/Event.h"
-#include "Core/Timestep.h"
+#include "Timestep.h"
+
+#include "Stellar/Events/Event.h"
 
 namespace Stellar {
     class STLR_API Layer {

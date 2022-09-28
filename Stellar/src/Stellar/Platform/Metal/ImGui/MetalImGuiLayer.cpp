@@ -7,7 +7,7 @@
 #include "Stellar/Platform/Metal/Device/MetalDevice.h"
 #include "Stellar/Platform/Metal/SwapChain/MetalSwapChain.h"
 
-#include "Stellar/Application.h"
+#include "Stellar/Core/Application.h"
 
 namespace Stellar {
 

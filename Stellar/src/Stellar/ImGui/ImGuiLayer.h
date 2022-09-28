@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Stellar/Layer.h"
+#include "Stellar/Core/Layer.h"
 
 namespace Stellar {
     class STLR_API ImGuiLayer: public Layer {

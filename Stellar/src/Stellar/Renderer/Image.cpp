@@ -7,7 +7,7 @@
 
 #include "Stellar/Renderer/RendererAPI.h"
 
-#include "Stellar/Log.h"
+#include "Stellar/Core/Log.h"
 
 namespace Stellar {
     Image2D* Image2D::Create(ImageSpecification specification) {

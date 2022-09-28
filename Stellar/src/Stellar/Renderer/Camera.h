@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Stellar/Core.h"
+#include "Stellar/Core/Core.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/glm.hpp>

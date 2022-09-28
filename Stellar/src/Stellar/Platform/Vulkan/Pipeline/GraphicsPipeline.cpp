@@ -5,7 +5,7 @@
 #include "Stellar/Platform/Vulkan/Buffer/VulkanBuffer.h"
 #include "Stellar/Renderer/Uniforms.h"
 
-#include "Stellar/Application.h"
+#include "Stellar/Core/Application.h"
 
 namespace Stellar {
 

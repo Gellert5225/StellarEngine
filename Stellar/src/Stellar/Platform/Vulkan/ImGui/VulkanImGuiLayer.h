@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Stellar/Layer.h"
+#include "Stellar/Core/Layer.h"
 #include "Stellar/Events/KeyEvent.h"
 #include "Stellar/Events/MouseEvent.h"
 #include "Stellar/Events/ApplicationEvent.h"

@@ -4,7 +4,7 @@
 #include <vulkan/vulkan.h>
 #include <vulkan/vulkan_beta.h>
 
-#include "Stellar/Log.h"
+#include "Stellar/Core/Log.h"
 
 namespace Stellar {
     const std::vector<const char*> validationLayers = {

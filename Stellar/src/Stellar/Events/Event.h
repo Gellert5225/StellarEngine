@@ -1,7 +1,7 @@
 #pragma once
 
 #include "stlrpch.h"
-#include "Stellar/Core.h"
+#include "Stellar/Core/Core.h"
 
 namespace Stellar {
     enum class EventType {

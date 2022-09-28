@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Stellar/Core.h"
+#include "Stellar/Core/Core.h"
 #include "VulkanValidationLayer.h"
 
 #include <GLFW/glfw3.h>

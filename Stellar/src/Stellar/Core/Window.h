@@ -2,7 +2,7 @@
 
 #include "stlrpch.h"
 
-#include "Stellar/Core.h"
+#include "Stellar/Core/Core.h"
 #include "Stellar/Events/Event.h"
 #include "Stellar/Renderer/RendererContext.h"
 #include "Stellar/Renderer/SwapChain.h"

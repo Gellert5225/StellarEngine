@@ -8,7 +8,7 @@
 #if defined(__APPLE__)
 #include "Stellar/Platform/Metal/Buffer/MetalBuffer.h"
 #endif
-#include "Stellar/Log.h"
+#include "Stellar/Core/Log.h"
 
 namespace Stellar {
 

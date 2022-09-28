@@ -4,7 +4,7 @@
 #include "Stellar/Platform/Vulkan/Texture/VulkanTexture.h"
 #endif
 
-#include "Stellar/Log.h"
+#include "Stellar/Core/Log.h"
 #include "Stellar/Renderer/RendererAPI.h"
 
 namespace Stellar {

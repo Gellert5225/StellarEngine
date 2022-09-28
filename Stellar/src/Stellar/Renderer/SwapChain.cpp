@@ -11,7 +11,7 @@
 #include "Stellar/Platform/Metal/SwapChain/MetalSwapChain.h"
 #endif
 
-#include "Stellar/Log.h"
+#include "Stellar/Core/Log.h"
 
 namespace Stellar {
 

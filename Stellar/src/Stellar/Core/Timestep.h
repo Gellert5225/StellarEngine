@@ -1,7 +1,7 @@
 #pragma once
 
 #include <GLFW/glfw3.h>
-#include "Stellar/Core.h"
+#include "Stellar/Core/Core.h"
 
 namespace Stellar {
     class STLR_API Timestep {

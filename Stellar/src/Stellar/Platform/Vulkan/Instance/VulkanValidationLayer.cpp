@@ -1,9 +1,9 @@
 #include "stlrpch.h"
+#include "VulkanInstance.h"
 #include "VulkanValidationLayer.h"
 
 #include "Stellar/Platform/Vulkan/VulkanCommon.h"
-#include "VulkanInstance.h"
-#include "Stellar/Log.h"
+#include "Stellar/Core/Log.h"
 
 namespace Stellar {
     VulkanValidationLayer::VulkanValidationLayer() {

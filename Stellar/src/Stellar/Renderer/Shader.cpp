@@ -11,7 +11,7 @@
 #include "Stellar/Platform/Metal/Shader/MetalShader.h"
 #endif
 
-#include "Stellar/Log.h"
+#include "Stellar/Core/Log.h"
 
 namespace Stellar {
     Shader* Shader::Create(const std::string& filePath) {

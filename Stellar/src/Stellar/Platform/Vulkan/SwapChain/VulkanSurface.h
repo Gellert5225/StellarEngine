@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Stellar/Core.h"
-#include "Stellar/Window.h"
+#include "Stellar/Core/Core.h"
+#include "Stellar/Core/Window.h"
 
 #include <vulkan/vulkan.h>
 

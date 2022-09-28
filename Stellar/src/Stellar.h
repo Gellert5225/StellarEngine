@@ -1,14 +1,12 @@
 #pragma once
 
 #include "Stellar/Core/Timestep.h"
-
-#include "Stellar/Application.h"
-#include "Stellar/Layer.h"
-#include "Stellar/Log.h"
-
-#include "Stellar/Input.h"
-#include "Stellar/KeyCodes.h"
-#include "Stellar/MouseButtonCodes.h"
+#include "Stellar/Core/Application.h"
+#include "Stellar/Core/Layer.h"
+#include "Stellar/Core/Log.h"
+#include "Stellar/Core/Input.h"
+#include "Stellar/Core/KeyCodes.h"
+#include "Stellar/Core/MouseButtonCodes.h"
 
 #include "Stellar/ImGui/ImGuiLayer.h"
 

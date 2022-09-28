@@ -10,7 +10,7 @@
 #include "Stellar/Platform/Vulkan/VulkanCommon.h"
 #include "Stellar/Platform/Vulkan/RenderPass/ImGuiRenderPass.h"
 
-#include "Stellar/Application.h"
+#include "Stellar/Core/Application.h"
 
 namespace Stellar {
     static std::vector<VkCommandBuffer> s_ImGuiCommandBuffers;

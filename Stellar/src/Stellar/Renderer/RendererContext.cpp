@@ -3,7 +3,7 @@
 #include "RendererContext.h"
 #include "Stellar/Platform/Vulkan/Renderer/VulkanRendererContext.h"
 #include "Stellar/Platform/Metal/Renderer/MetalRendererContext.h"
-#include "Stellar/Log.h"
+#include "Stellar/Core/Log.h"
 
 namespace Stellar {
     RendererContext* RendererContext::Create() {

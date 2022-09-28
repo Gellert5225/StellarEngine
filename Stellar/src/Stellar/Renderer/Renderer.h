@@ -4,8 +4,9 @@
 #include "Buffer.h"
 #include "CommandBuffer.h"
 #include "Camera.h"
-#include "Stellar/Core.h"
 #include "Shader.h"
+
+#include "Stellar/Core/Core.h"
 
 #include <glm/glm.hpp>
 #include "Uniforms.h"

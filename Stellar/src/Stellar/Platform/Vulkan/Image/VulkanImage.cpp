@@ -1,7 +1,7 @@
 #include "stlrpch.h"
 #include "VulkanImage.h"
 
-#include "Stellar/Log.h"
+#include "Stellar/Core/Log.h"
 
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 #include "Stellar/Platform/Vulkan/Buffer/VulkanBuffer.h"

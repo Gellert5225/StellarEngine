@@ -9,8 +9,7 @@
 #include "Stellar/Platform/Vulkan/Renderer/VulkanRenderer.h"
 #endif
 
-#include "Stellar/Application.h"
-#include "Stellar/Log.h"
+#include "Stellar/Core/Log.h"
 
 namespace Stellar {
     struct RendererData {

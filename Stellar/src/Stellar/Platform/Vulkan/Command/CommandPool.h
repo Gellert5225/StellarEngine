@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Stellar/Core.h"
+#include "Stellar/Core/Core.h"
 #include "Stellar/Platform/Vulkan/Queue/Queue.h"
 #include <vulkan/vulkan.h>
 

@@ -2,7 +2,7 @@
 #include "VulkanInstance.h"
 
 #include "Stellar/Platform/Vulkan/VulkanCommon.h"
-#include "Stellar/Log.h"
+#include "Stellar/Core/Log.h"
 
 namespace Stellar {
     VulkanInstance* VulkanInstance::s_Instance = nullptr;

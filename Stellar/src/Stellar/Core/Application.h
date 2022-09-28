@@ -4,14 +4,12 @@
 #include "Window.h"
 #include "LayerStack.h"
 
-#include "ImGui/ImGuiLayer.h"
-
-#include "Core/Timestep.h"
-
-#include "Events/Event.h"
-#include "Events/ApplicationEvent.h"
-#include "Renderer/Renderer.h"
-#include "Renderer/Camera.h"
+#include "Stellar/ImGui/ImGuiLayer.h"
+#include "Stellar/Core/Timestep.h"
+#include "Stellar/Events/Event.h"
+#include "Stellar/Events/ApplicationEvent.h"
+#include "Stellar/Renderer/Renderer.h"
+#include "Stellar/Renderer/Camera.h"
 
 namespace Stellar {
     class STLR_API Application {

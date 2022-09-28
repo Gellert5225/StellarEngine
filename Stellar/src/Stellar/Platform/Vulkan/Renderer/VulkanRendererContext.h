@@ -1,14 +1,14 @@
 #pragma once
 
-#include "Stellar/Core.h"
+#include "Stellar/Core/Core.h"
+#include "Stellar/Core/Window.h"
+
 #include "Stellar/Renderer/RendererContext.h"
 #include "Stellar/Platform/Vulkan/SwapChain/VulkanSwapChain.h"
 #include "Stellar/Platform/Vulkan/Command/VulkanCommandBuffer.h"
 #include "Stellar/Platform/Vulkan/Pipeline/GraphicsPipeline.h"
 #include "Stellar/Platform/Vulkan/Instance/VulkanInstance.h"
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
-
-#include "Stellar/Window.h"
 
 #include <memory>
 

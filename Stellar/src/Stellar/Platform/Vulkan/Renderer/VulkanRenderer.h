@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Stellar/Core.h"
+#include "Stellar/Core/Core.h"
 
 #include "Stellar/Renderer/RendererAPI.h"
 #include "Stellar/Renderer/Buffer.h"
 #include "Stellar/Platform/Vulkan/SwapChain/VulkanSwapChain.h"
-#include "Stellar/Application.h"
+#include "Stellar/Core/Application.h"
 
 #include <vulkan/vulkan.h>
 

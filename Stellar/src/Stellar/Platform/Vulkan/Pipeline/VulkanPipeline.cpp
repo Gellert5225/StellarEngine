@@ -2,7 +2,7 @@
 #include "VulkanPipeline.h"
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 
-#include "Stellar/Log.h"
+#include "Stellar/Core/Log.h"
 
 namespace Stellar {
     VulkanPipeline::~VulkanPipeline() {

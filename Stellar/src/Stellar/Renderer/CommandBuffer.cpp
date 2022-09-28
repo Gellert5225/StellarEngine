@@ -7,7 +7,7 @@
 #include "Stellar/Platform/Vulkan/Command/VulkanCommandBuffer.h"
 #endif
 
-#include "Stellar/Log.h"
+#include "Stellar/Core/Log.h"
 
 namespace Stellar {
 

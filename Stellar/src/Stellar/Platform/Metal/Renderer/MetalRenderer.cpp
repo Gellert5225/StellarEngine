@@ -1,7 +1,7 @@
 #include "stlrpch.h"
 
 #include "MetalRenderer.h"
-#include "Stellar/Application.h"
+#include "Stellar/Core/Application.h"
 #include "Stellar/Platform/Metal/SwapChain/MetalSwapChain.h"
 #include "Stellar/Platform/Metal/Device/MetalDevice.h"
 #include "Stellar/Platform/Metal/Shader/MetalShader.h"
