@@ -19,6 +19,7 @@ private:
     float m_CameraSpeed = 1.0f;
     
     Stellar::Texture2D* m_Texture{};
+    Stellar::Texture2D* m_Texture2{};
 
     glm::vec3 m_Color{1.0f};
 };
