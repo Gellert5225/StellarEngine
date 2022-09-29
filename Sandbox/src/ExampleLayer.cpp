@@ -51,6 +51,7 @@ void ExampleLayer::onUpdate(Stellar::Timestep ts) {
     Stellar::Renderer::BeginScene(m_Camera);
     Stellar::Renderer::SetClearColor({ 0.66f, 0.9f, 0.96f, 1.0f });
     Stellar::Renderer::BeginRenderPass();
+    m_Texture2->bind();
     for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 5; j++) {
             glm::vec3 pos(i * 0.22f, 0.0f, j * 0.22f);
@@ -60,7 +61,6 @@ void ExampleLayer::onUpdate(Stellar::Timestep ts) {
                             glm::radians(90.0f),
                             glm::vec3(1.0f, 0.0f, 0.0f)) *
                 glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
-            m_Texture2->bind();
             Stellar::Renderer::RenderGeometry(m_VertexBuffer, m_IndexBuffer, m_Color, indices.size(), transformTile);
         }
     }
