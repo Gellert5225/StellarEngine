@@ -7,6 +7,7 @@
 
 class Sandbox2D : public Stellar::Layer {
 public:
+    Sandbox2D();
     void onAttach() override;
     void onDetach() override;
     void onUpdate(Stellar::Timestep ts) override;

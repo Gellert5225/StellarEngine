@@ -3,6 +3,7 @@
 #include "Buffer.h"
 #include "CommandBuffer.h"
 #include "Camera.h"
+#include "Uniforms.h"
 
 #include <glm/glm.hpp>
 
@@ -16,9 +17,6 @@ namespace Stellar {
         virtual void init() = 0;
         virtual void shutDown() = 0;
 
-        virtual void beginScene(Camera camera) = 0;
-        virtual void endScene() = 0;
-
         virtual void beginRenderPass() = 0;
         virtual void endRenderPass() = 0;
 
@@ -28,6 +26,8 @@ namespace Stellar {
                                     const glm::vec3& color,
                                     uint32_t indexCount = 0,
                                     const glm::mat4& transform = {}) = 0;
+        
+        virtual void bindUbo(const GlobalUniforms& ubo) = 0;
 
         static RendererAPIType Current() { return s_CurrentRendererAPI; }
     protected:
