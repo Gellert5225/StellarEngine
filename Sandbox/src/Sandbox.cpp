@@ -2,12 +2,14 @@
 
 #include "ExampleLayer.h"
 #include "ExampleMetalLayer.h"
+#include "Sandbox2D.h"
 
 class Sandbox: public Stellar::Application {
     public:
         Sandbox() {
             #if defined __linux__ || defined _WIN64 
-            pushLayer(new ExampleLayer());
+            //pushLayer(new ExampleLayer());
+            pushLayer(new Sandbox2D());
             #endif
 
             #if defined __APPLE__
