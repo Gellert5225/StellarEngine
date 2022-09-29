@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Camera.h"
+#include "Stellar/Core/Core.h"
 
 namespace Stellar {
-    class Renderer2D {
+    class STLR_API Renderer2D {
     public:
         static void Init();
         static void ShutDown();
@@ -13,6 +14,9 @@ namespace Stellar {
 
         static void DrawQuad(const glm::vec3& position, 
                              const glm::vec2& size, 
+                             const glm::vec3& color);
+
+        static void DrawQuad(const glm::mat4& transform, 
                              const glm::vec3& color);
     };
 }

@@ -5,11 +5,11 @@
 #include "CommandBuffer.h"
 #include "Camera.h"
 #include "Shader.h"
+#include "Uniforms.h"
 
 #include "Stellar/Core/Core.h"
 
 #include <glm/glm.hpp>
-#include "Uniforms.h"
 
 namespace Stellar {
 
@@ -17,9 +17,6 @@ namespace Stellar {
     public:
         static void Init();
         static void Shutdown();
-
-        static void BeginScene(Camera camera);
-        static void EndScene();
 
         static void BeginRenderPass();
         static void EndRenderPass();
@@ -30,6 +27,8 @@ namespace Stellar {
                                    const glm::vec3& color,
                                    uint32_t indexCount = 0,
                                    const glm::mat4& transform = {});
+
+        static void BindUbo(const GlobalUniforms& ubo);
 
         static ShaderLibrary* GetShaderLibrary();
         

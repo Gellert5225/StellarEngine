@@ -2,26 +2,6 @@
 #include "glm/gtc/type_ptr.hpp"
 
 ExampleLayer::ExampleLayer() : Layer("Example") {
-    // vertex buffer
-    auto vertexBufferSize = sizeof(vertices[0]) * vertices.size();
-    auto* stagingBuffer = Stellar::Buffer::Create(Stellar::BufferType::Vertex,
-                                                  vertexBufferSize,
-                                                  vertices.data());
-    m_VertexBuffer = Stellar::Buffer::Create(Stellar::BufferType::Vertex, vertexBufferSize);
-    stagingBuffer->copy(*m_VertexBuffer);
-
-    delete stagingBuffer;
-
-    // index buffer
-    auto indexBufferSize = sizeof(indices[0]) * indices.size();
-    auto indexStagingBuffer = Stellar::Buffer::Create(Stellar::BufferType::Index,
-                                                      indexBufferSize,
-                                                      indices.data());
-    m_IndexBuffer = Stellar::Buffer::Create(Stellar::BufferType::Index,  indexBufferSize);
-    indexStagingBuffer->copy(*m_IndexBuffer);
-
-    delete indexStagingBuffer;
-
     m_Texture = Stellar::Texture2D::Create("../Resources/Textures/StellarEngine.png");
     m_Texture2 = Stellar::Texture2D::Create("../Resources/Textures/Example_texture.jpg");
 }
@@ -48,8 +28,8 @@ void ExampleLayer::onUpdate(Stellar::Timestep ts) {
                           glm::vec3(1.0f, 0.0f, 0.0f));
 
     m_Camera.setPosition(m_CameraPosition);
-    Stellar::Renderer::BeginScene(m_Camera);
     Stellar::Renderer::SetClearColor({ 0.66f, 0.9f, 0.96f, 1.0f });
+    Stellar::Renderer2D::BeginScene(m_Camera);
     Stellar::Renderer::BeginRenderPass();
     m_Texture2->bind();
     for (int i = 0; i < 5; i++) {
@@ -65,9 +45,9 @@ void ExampleLayer::onUpdate(Stellar::Timestep ts) {
         }
     }
     m_Texture->bind();
+    Stellar::Renderer2D::DrawQuad(transform, m_Color);
     Stellar::Renderer::RenderGeometry(m_VertexBuffer, m_IndexBuffer, glm::vec3(1.0f, 1.0f, 1.0f), indices.size(), transform);
-    Stellar::Renderer::EndRenderPass();
-    Stellar::Renderer::EndScene();
+    Stellar::Renderer2D::EndScene();
 }
 
 void ExampleLayer::onDetach() {

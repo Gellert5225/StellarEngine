@@ -18,15 +18,6 @@ namespace Stellar {
         delete m_Pipeline;
     }
 
-    void MetalRenderer::beginScene(Stellar::Camera camera) {
-
-    }
-
-    void MetalRenderer::endScene() {
-        m_CommandBuffer->commit();
-        m_CommandBuffer->release();
-    }
-
     void MetalRenderer::beginRenderPass() {
         auto swapChain = (MetalSwapChain*)Application::Get().getWindow().getSwapChain();
 
@@ -44,6 +35,9 @@ namespace Stellar {
     void MetalRenderer::endRenderPass() {
         m_Encoder->endEncoding();
         m_Encoder->release();
+
+        m_CommandBuffer->commit();
+        m_CommandBuffer->release();
     }
 
     void MetalRenderer::setClearColor(const glm::vec4 &color) {
@@ -60,6 +54,10 @@ namespace Stellar {
         m_Encoder->drawPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle, 
                                   NS::UInteger(0), 
                                   NS::UInteger(3));
+    }
+
+    void MetalRenderer::bindUbo(const GlobalUniforms& ubo) {
+        
     }
 }
 
