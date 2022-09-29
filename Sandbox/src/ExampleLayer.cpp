@@ -74,6 +74,7 @@ void ExampleLayer::onDetach() {
     delete m_VertexBuffer;
     delete m_IndexBuffer;
     delete m_Texture;
+    delete m_Texture2;
 }
 
 void ExampleLayer::onEvent(Stellar::Event &event) {

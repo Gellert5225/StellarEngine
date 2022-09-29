@@ -69,10 +69,6 @@ namespace Stellar {
         scissor.extent.width = swapChain->getSwapChainExtent().width;
         scissor.extent.height = swapChain->getSwapChainExtent().height;
         vkCmdSetScissor((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(), 0, 1, &scissor);
-
-        vkCmdBindPipeline((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
-                          VK_PIPELINE_BIND_POINT_GRAPHICS,
-                          *m_GraphicsPipeline->getPipeline());
     }
 
     void VulkanRenderer::endRenderPass() {
@@ -87,6 +83,10 @@ namespace Stellar {
         Push push{};
         push.model = transform;
         push.color = color;
+
+        vkCmdBindPipeline((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
+                    VK_PIPELINE_BIND_POINT_GRAPHICS,
+                    *m_GraphicsPipeline->getPipeline());
 
         vkCmdPushConstants((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
                            *m_GraphicsPipeline->getPipelineLayout(),
