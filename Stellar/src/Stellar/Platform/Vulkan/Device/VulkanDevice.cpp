@@ -110,7 +110,7 @@ namespace Stellar {
         vkGetPhysicalDeviceFeatures(device, &supportedFeatures);
         vkGetPhysicalDeviceProperties(device, &deviceProperties);
         vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
-
+        STLR_CORE_INFO("GPU Max Descripor Sets: {0}", deviceProperties.limits.maxBoundDescriptorSets);
         STLR_CORE_INFO("GPU: {0}", deviceProperties.deviceName);
 
         Queue::QueueFamilyIndices indices = findQueueFamilies(device);

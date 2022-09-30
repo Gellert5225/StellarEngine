@@ -91,7 +91,11 @@ namespace Stellar {
         vkCmdBindPipeline((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
                     VK_PIPELINE_BIND_POINT_GRAPHICS,
                     *m_GraphicsPipeline->getPipeline());
-
+        vkCmdBindDescriptorSets((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
+                                VK_PIPELINE_BIND_POINT_GRAPHICS,
+                                *m_GraphicsPipeline->getPipelineLayout(),
+                                0, 1, &m_DescriptorSets[Renderer::GetCurrentFrameIndex()], 0, nullptr);
+        
         vkCmdPushConstants((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
                            *m_GraphicsPipeline->getPipelineLayout(),
                            VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
@@ -105,10 +109,6 @@ namespace Stellar {
                                0, 1, &buffers, offsets);
         vkCmdBindIndexBuffer((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
                              (VkBuffer)indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT16);
-        vkCmdBindDescriptorSets((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
-                                VK_PIPELINE_BIND_POINT_GRAPHICS,
-                                *m_GraphicsPipeline->getPipelineLayout(),
-                                0, 1, &m_DescriptorSets[Renderer::GetCurrentFrameIndex()], 0, nullptr);
         vkCmdDrawIndexed((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
                          indexCount, 1, 0, 0, 0);
     }
