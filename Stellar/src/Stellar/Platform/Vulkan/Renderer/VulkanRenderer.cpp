@@ -36,6 +36,8 @@ namespace Stellar {
     }
 
     void VulkanRenderer::beginRenderPass() {
+        m_CommandBuffer->begin();
+
         auto swapChain = (VulkanSwapChain*)Application::Get().getWindow().getSwapChain();
 
         std::array<VkClearValue, 2> clearValues{};
@@ -73,6 +75,8 @@ namespace Stellar {
 
     void VulkanRenderer::endRenderPass() {
         vkCmdEndRenderPass((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer());
+        m_CommandBuffer->end();
+        m_CommandBuffer->submit();
     }
 
     void VulkanRenderer::renderGeometry(Buffer* vertexBuffer,
@@ -87,7 +91,11 @@ namespace Stellar {
         vkCmdBindPipeline((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
                     VK_PIPELINE_BIND_POINT_GRAPHICS,
                     *m_GraphicsPipeline->getPipeline());
-
+        vkCmdBindDescriptorSets((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
+                                VK_PIPELINE_BIND_POINT_GRAPHICS,
+                                *m_GraphicsPipeline->getPipelineLayout(),
+                                0, 1, &m_DescriptorSets[Renderer::GetCurrentFrameIndex()], 0, nullptr);
+        
         vkCmdPushConstants((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
                            *m_GraphicsPipeline->getPipelineLayout(),
                            VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
@@ -101,10 +109,6 @@ namespace Stellar {
                                0, 1, &buffers, offsets);
         vkCmdBindIndexBuffer((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
                              (VkBuffer)indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT16);
-        vkCmdBindDescriptorSets((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
-                                VK_PIPELINE_BIND_POINT_GRAPHICS,
-                                *m_GraphicsPipeline->getPipelineLayout(),
-                                0, 1, &m_DescriptorSets[Renderer::GetCurrentFrameIndex()], 0, nullptr);
         vkCmdDrawIndexed((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
                          indexCount, 1, 0, 0, 0);
     }
@@ -113,17 +117,11 @@ namespace Stellar {
         m_ClearColor = {{ color.r, color.g, color.b, color.a }};
     }
 
-    void VulkanRenderer::beginScene(Camera camera) {
-        GlobalUniforms ubo{};
-
-        ubo.viewProjection = camera.getViewProjectionMatrix();
-
+    void VulkanRenderer::bindUbo(const GlobalUniforms& ubo) {
         void* data;
         m_UniformBuffer->map(&data);
         m_UniformBuffer->write(data, &ubo);
         m_UniformBuffer->unMap();
-
-        m_CommandBuffer->begin();
     }
 
     void VulkanRenderer::createDescriptorSets() {
@@ -180,9 +178,4 @@ namespace Stellar {
      std::vector<VkDescriptorSet>& VulkanRenderer::GetDescriptorSets() {
         return s_Data->descriptorSets;
      }
-
-    void VulkanRenderer::endScene() {
-        m_CommandBuffer->end();
-        m_CommandBuffer->submit();
-    }
 }

@@ -10,6 +10,7 @@
 #endif
 
 #include "Stellar/Core/Log.h"
+#include "Stellar/Renderer/Renderer2D.h"
 
 namespace Stellar {
     struct RendererData {
@@ -42,12 +43,15 @@ namespace Stellar {
         s_RendererAPI = InitRendererAPI();
 
         Renderer::GetShaderLibrary()->load("../Resources/Shader/Vulkan/shader.glsl");
+        Renderer::GetShaderLibrary()->load("../Resources/Shader/Vulkan/basicShader.glsl");
 
         s_RendererAPI->init();
+        Renderer2D::Init();
     }
 
     void Renderer::Shutdown() {
         s_RendererAPI->shutDown();
+        Renderer2D::ShutDown();
     }
 
     void Renderer::BeginRenderPass() {
@@ -74,12 +78,8 @@ namespace Stellar {
         return Application::Get().getWindow().getSwapChain()->getCurrentFrameIndex();
     }
 
-    void Renderer::BeginScene(Camera camera) {
-        s_RendererAPI->beginScene(camera);
-    }
-
-    void Renderer::EndScene() {
-        s_RendererAPI->endScene();
+    void Renderer::BindUbo(const GlobalUniforms& ubo) {
+        s_RendererAPI->bindUbo(ubo);
     }
 
     ShaderLibrary* Renderer::GetShaderLibrary() {

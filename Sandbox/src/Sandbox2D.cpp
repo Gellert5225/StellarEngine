@@ -1,12 +1,19 @@
-#include "ExampleLayer.h"
-#include "glm/gtc/type_ptr.hpp"
+#include "Sandbox2D.h"
 
-ExampleLayer::ExampleLayer() : Layer("Example") {
+Sandbox2D::Sandbox2D() : Stellar::Layer("Sandbox2D") {
     m_Texture = Stellar::Texture2D::Create("../Resources/Textures/StellarEngine.png");
     m_Texture2 = Stellar::Texture2D::Create("../Resources/Textures/Example_texture.jpg");
 }
 
-void ExampleLayer::onUpdate(Stellar::Timestep ts) {
+void Sandbox2D::onAttach() {
+
+}
+
+void Sandbox2D::onDetach() {
+
+}
+
+void Sandbox2D::onUpdate(Stellar::Timestep ts) {
     auto extent = Stellar::Application::Get().getWindow().getSwapChain()->getSwapChainExtent();
     auto perspective = (float)extent.width / (float)extent.height;
     //m_Camera.setOrtho(-perspective, perspective, -1, 1, -10, 10);
@@ -30,7 +37,6 @@ void ExampleLayer::onUpdate(Stellar::Timestep ts) {
     m_Camera.setPosition(m_CameraPosition);
     Stellar::Renderer::SetClearColor({ 0.66f, 0.9f, 0.96f, 1.0f });
     Stellar::Renderer2D::BeginScene(m_Camera);
-    Stellar::Renderer::BeginRenderPass();
     m_Texture2->bind();
     for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 5; j++) {
@@ -41,27 +47,19 @@ void ExampleLayer::onUpdate(Stellar::Timestep ts) {
                             glm::radians(90.0f),
                             glm::vec3(1.0f, 0.0f, 0.0f)) *
                 glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
-            Stellar::Renderer::RenderGeometry(m_VertexBuffer, m_IndexBuffer, m_Color, indices.size(), transformTile);
+            Stellar::Renderer2D::DrawQuad(transformTile, m_Color);
         }
     }
     m_Texture->bind();
     Stellar::Renderer2D::DrawQuad(transform, m_Color);
-    Stellar::Renderer::RenderGeometry(m_VertexBuffer, m_IndexBuffer, glm::vec3(1.0f, 1.0f, 1.0f), indices.size(), transform);
     Stellar::Renderer2D::EndScene();
 }
 
-void ExampleLayer::onDetach() {
-    delete m_VertexBuffer;
-    delete m_IndexBuffer;
-    delete m_Texture;
-    delete m_Texture2;
-}
-
-void ExampleLayer::onEvent(Stellar::Event &event) {
+void Sandbox2D::onEvent(Stellar::Event& event) {
 
 }
 
-void ExampleLayer::onImGuiRender() {
+void Sandbox2D::onImGuiRender() {
     auto appInfo = Stellar::Application::Get().getAppInfo();
 
     ImGui::Begin("Info");

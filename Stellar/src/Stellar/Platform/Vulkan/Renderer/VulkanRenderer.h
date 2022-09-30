@@ -15,9 +15,6 @@ namespace Stellar {
         void init() override;
         void shutDown() override;
 
-        void beginScene(Camera camera) override;
-        void endScene() override;
-
         void beginRenderPass() override;
         void endRenderPass() override;
 
@@ -27,6 +24,8 @@ namespace Stellar {
                             const glm::vec3& color,
                             uint32_t indexCount,
                             const glm::mat4& transform) override;
+        
+        void bindUbo(const GlobalUniforms& ubo) override;
 
         // vulkan
         static VkDescriptorSet AllocateDescriptorSets(VkDescriptorSetAllocateInfo& info);
