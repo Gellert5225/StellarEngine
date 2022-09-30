@@ -30,7 +30,7 @@ namespace Stellar {
     class STLR_API ShaderLibrary {
     public:
         ShaderLibrary() {};
-        ~ShaderLibrary() {};
+        ~ShaderLibrary();
 
         void add(Shader* shader);
         void add(const std::string& name, Shader* shader);

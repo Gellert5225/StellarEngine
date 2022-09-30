@@ -51,6 +51,8 @@ namespace Stellar {
     }
 
     void Renderer2D::ShutDown() {
+        delete s_Data->quadVertexBuffer;
+        delete s_Data->quadIndexBuffer;
         delete s_Data;
     }
     

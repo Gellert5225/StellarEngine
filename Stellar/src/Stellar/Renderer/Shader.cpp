@@ -56,6 +56,13 @@ namespace Stellar {
         return filePath.substr(lastSlashPos + 1, lastDotPos - lastSlashPos - 1);
     }
 
+    ShaderLibrary::~ShaderLibrary() {
+        for (auto kv : m_Shaders) {
+            delete kv.second;
+        }
+        m_Shaders.clear();
+    }
+
     void ShaderLibrary::add(const std::string& name, Shader* shader) {
         STLR_CORE_ASSERT(m_Shaders.find(name) == m_Shaders.end(), "Shader " + name + " already exists!");
         m_Shaders[name] = shader;

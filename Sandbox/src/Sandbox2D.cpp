@@ -10,7 +10,8 @@ void Sandbox2D::onAttach() {
 }
 
 void Sandbox2D::onDetach() {
-
+    delete m_Texture;
+    delete m_Texture2;
 }
 
 void Sandbox2D::onUpdate(Stellar::Timestep ts) {
@@ -51,7 +52,7 @@ void Sandbox2D::onUpdate(Stellar::Timestep ts) {
         }
     }
     m_Texture->bind();
-    Stellar::Renderer2D::DrawQuad(transform, m_Color);
+    Stellar::Renderer2D::DrawQuad(transform, {1.0f, 1.0f, 1.0f});
     Stellar::Renderer2D::EndScene();
 }
 

@@ -50,6 +50,7 @@ namespace Stellar {
     }
 
     void Renderer::Shutdown() {
+        delete Renderer::GetShaderLibrary();
         s_RendererAPI->shutDown();
         Renderer2D::ShutDown();
     }

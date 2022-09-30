@@ -128,8 +128,6 @@ namespace Stellar {
                                       &m_Pipeline) != VK_SUCCESS) {
             throw std::runtime_error("failed to create graphics pipeline!");
         }
-
-        delete shader;
     }
 
     void GraphicsPipeline::createDescriptorSetLayout() {
