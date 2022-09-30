@@ -26,6 +26,22 @@ namespace Stellar {
         m_Image = Image2D::Create(imageSpec);
 
         invalidate();
+
+        auto descriptorSets = VulkanRenderer::GetDescriptorSets();
+
+        for (size_t i = 0; i < VulkanSwapChain::MAX_FRAMES_IN_FLIGHT; i++) {
+            VkWriteDescriptorSet descriptorWrite{};
+            descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            descriptorWrite.dstSet = descriptorSets[i];
+            descriptorWrite.dstBinding = 1;
+            descriptorWrite.dstArrayElement = 0;
+            descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+            descriptorWrite.descriptorCount = 1;
+            descriptorWrite.pImageInfo = &((VulkanImage2D*)m_Image)->getDescriptorInfo();
+
+            vkUpdateDescriptorSets(VulkanDevice::GetInstance()->logicalDevice(), 
+                1, &descriptorWrite, 0, nullptr);
+        }
     }
 
     VulkanTexture::~VulkanTexture() {
@@ -188,21 +204,7 @@ namespace Stellar {
     }
 
     void VulkanTexture::bind() {
-        auto descriptorSets = VulkanRenderer::GetDescriptorSets();
-
-        for (size_t i = 0; i < VulkanSwapChain::MAX_FRAMES_IN_FLIGHT; i++) {
-            VkWriteDescriptorSet descriptorWrite{};
-            descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            descriptorWrite.dstSet = descriptorSets[i];
-            descriptorWrite.dstBinding = 1;
-            descriptorWrite.dstArrayElement = 0;
-            descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-            descriptorWrite.descriptorCount = 1;
-            descriptorWrite.pImageInfo = &((VulkanImage2D*)m_Image)->getDescriptorInfo();
-
-            vkUpdateDescriptorSets(VulkanDevice::GetInstance()->logicalDevice(), 
-                1, &descriptorWrite, 0, nullptr);
-        }        
+                
     }
 
     Image2D* VulkanTexture::getImage() const {
