@@ -53,8 +53,8 @@ namespace Stellar {
         renderPassInfo.clearValueCount = 2;
         renderPassInfo.pClearValues = clearValues.data();
 
-        vkCmdBeginRenderPass((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
-                             &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+        auto commandBuffer = (VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer();
+        vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
         VkViewport viewport{};
         viewport.x = 0.0f;
@@ -63,13 +63,13 @@ namespace Stellar {
         viewport.height = static_cast<float>(swapChain->getSwapChainExtent().height);
         viewport.minDepth = 0.0f;
         viewport.maxDepth = 1.0f;
-        vkCmdSetViewport((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(), 0, 1, &viewport);
+        vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
 
         VkRect2D scissor{};
         scissor.offset = {0, 0};
         scissor.extent.width = swapChain->getSwapChainExtent().width;
         scissor.extent.height = swapChain->getSwapChainExtent().height;
-        vkCmdSetScissor((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(), 0, 1, &scissor);
+        vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
     }
 
     void VulkanRenderer::endRenderPass() {
@@ -89,31 +89,23 @@ namespace Stellar {
         push.color = color;
 
         auto descriptorSet = ((VulkanTexture*)texture)->getDescriptorSets();
-        vkCmdBindPipeline((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
-                          VK_PIPELINE_BIND_POINT_GRAPHICS,
+        auto commandBuffer = (VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer();
+
+        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, 
                           *m_GraphicsPipeline->getPipeline());
-        vkCmdBindDescriptorSets((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
-                                VK_PIPELINE_BIND_POINT_GRAPHICS,
+        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
                                 *m_GraphicsPipeline->getPipelineLayout(),
-                                0, 1, 
-                                &descriptorSet,
-                                0, nullptr);
-        
-        vkCmdPushConstants((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
-                           *m_GraphicsPipeline->getPipelineLayout(),
+                                0, 1, &descriptorSet, 0, nullptr);
+        vkCmdPushConstants(commandBuffer, *m_GraphicsPipeline->getPipelineLayout(),
                            VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
-                           0,
-                           sizeof(Push),
-                           &push);
+                           0, sizeof(Push), &push);
 
         VkDeviceSize offsets[] = {0};
         auto buffers = (VkBuffer)vertexBuffer->getBuffer();
-        vkCmdBindVertexBuffers((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
-                               0, 1, &buffers, offsets);
-        vkCmdBindIndexBuffer((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
-                             (VkBuffer)indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT16);
-        vkCmdDrawIndexed((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
-                         indexCount, 1, 0, 0, 0);
+
+        vkCmdBindVertexBuffers(commandBuffer, 0, 1, &buffers, offsets);
+        vkCmdBindIndexBuffer(commandBuffer, (VkBuffer)indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT16);
+        vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
     }
 
     void VulkanRenderer::setClearColor(const glm::vec4 &color) {

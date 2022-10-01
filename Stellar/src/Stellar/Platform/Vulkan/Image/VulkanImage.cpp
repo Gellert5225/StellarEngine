@@ -5,6 +5,7 @@
 
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 #include "Stellar/Platform/Vulkan/Buffer/VulkanBuffer.h"
+#include "Stellar/Platform/Vulkan/VulkanCommon.h"
 
 namespace Stellar {
     VulkanImage2D::VulkanImage2D(const ImageSpecification& spec) : m_Specification(spec) {
@@ -38,9 +39,8 @@ namespace Stellar {
         imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
         imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
         imageInfo.flags = 0; // Optional
-        if (vkCreateImage(device, &imageInfo, nullptr, &m_Info.image) != VK_SUCCESS) {
-            STLR_CORE_ASSERT(false, "Fail to create image")
-        }
+        
+        VK_CHECK_RESULT(vkCreateImage(device, &imageInfo, nullptr, &m_Info.image));
 
         VkMemoryRequirements memRequirements;
         vkGetImageMemoryRequirements(device, m_Info.image, &memRequirements);
@@ -49,10 +49,8 @@ namespace Stellar {
         allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
         allocInfo.allocationSize = memRequirements.size;
         allocInfo.memoryTypeIndex = VulkanBuffer::FindMemoryType(memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-
-        if (vkAllocateMemory(device, &allocInfo, nullptr, &m_Info.imageMemory) != VK_SUCCESS) {
-            throw std::runtime_error("failed to allocate image memory!");
-        }
+        
+        VK_CHECK_RESULT(vkAllocateMemory(device, &allocInfo, nullptr, &m_Info.imageMemory));
 
         vkBindImageMemory(device, m_Info.image, m_Info.imageMemory, 0);
     }

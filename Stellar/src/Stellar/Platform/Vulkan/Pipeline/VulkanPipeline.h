@@ -19,14 +19,14 @@ namespace Stellar {
         VkDescriptorPool getDescriptorPool() { return m_DescriptorPool; }
 
     protected:
-        VkPipelineLayout m_PipelineLayout{};
-        VkPipeline m_Pipeline{};
+        VkPipelineLayout m_PipelineLayout = VK_NULL_HANDLE;
+        VkPipeline m_Pipeline = VK_NULL_HANDLE;
 
         std::vector<VkDescriptorSetLayout> m_DescriptorSetLayouts;
         VkDescriptorPool m_DescriptorPool = VK_NULL_HANDLE;
 
-        VkDescriptorSetLayout m_UboSetLayout;
-        VkDescriptorSetLayout m_TextureSetLayout;
+        VkDescriptorSetLayout m_UboSetLayout = VK_NULL_HANDLE;
+        VkDescriptorSetLayout m_TextureSetLayout = VK_NULL_HANDLE;
 
         virtual void createDescriptorSetLayout() = 0;
         virtual void createDescriptorPool() = 0;

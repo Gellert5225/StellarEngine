@@ -167,9 +167,9 @@ namespace Stellar {
     }
 
     void VulkanSwapChain::createImageViews() {
+        auto device = VulkanDevice::GetInstance()->logicalDevice();
         for (auto imageView : m_SwapChainImageViews) {
-            vkDestroyImageView(VulkanDevice::GetInstance()->logicalDevice(),
-                               imageView, nullptr);
+            vkDestroyImageView(device, imageView, nullptr);
         }
         m_SwapChainImageViews.clear();
 
@@ -191,14 +191,13 @@ namespace Stellar {
             createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
             createInfo.format = m_SwapChainImageFormat;
 
-            if (vkCreateImageView(VulkanDevice::GetInstance()->logicalDevice(), &createInfo,
-                                  nullptr, &m_SwapChainImageViews[i]) != VK_SUCCESS) {
-                throw std::runtime_error("failed to create image views!");
-            }
+            VK_CHECK_RESULT(vkCreateImageView(device, &createInfo, nullptr, &m_SwapChainImageViews[i]));
         }
     }
 
     void VulkanSwapChain::createSwapChain() {
+        auto device = VulkanDevice::GetInstance()->logicalDevice();
+
         SwapChainSupportDetails support = VulkanDevice::GetInstance()->getSwapChainSupport();
         VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(support.formats);
         VkPresentModeKHR presentMode = chooseSwapPresentMode(support.presentModes);
@@ -246,26 +245,22 @@ namespace Stellar {
         createInfo.clipped = VK_TRUE;
         createInfo.oldSwapchain = oldSwapchain;
 
-        if (vkCreateSwapchainKHR(VulkanDevice::GetInstance()->logicalDevice(),
-                                 &createInfo, nullptr, &m_VulkanSwapChain) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create swap chain!");
-        }
+        VK_CHECK_RESULT(vkCreateSwapchainKHR(device, &createInfo, nullptr, &m_VulkanSwapChain));
 
         if (oldSwapchain)
-            vkDestroySwapchainKHR(VulkanDevice::GetInstance()->logicalDevice(),
-                                  oldSwapchain, nullptr);
+            vkDestroySwapchainKHR(device, oldSwapchain, nullptr);
 
-        vkGetSwapchainImagesKHR(VulkanDevice::GetInstance()->logicalDevice(),
-                                m_VulkanSwapChain, &imageCount, nullptr);
+        vkGetSwapchainImagesKHR(device, m_VulkanSwapChain, &imageCount, nullptr);
         m_SwapChainImages.resize(imageCount);
-        vkGetSwapchainImagesKHR(VulkanDevice::GetInstance()->logicalDevice(),
-                                m_VulkanSwapChain, &imageCount, m_SwapChainImages.data());
+        vkGetSwapchainImagesKHR(device,  m_VulkanSwapChain, &imageCount, m_SwapChainImages.data());
 
         m_SwapChainImageFormat = surfaceFormat.format;
         m_SwapChainExtent = { extent.width, extent.height };
     }
 
     void VulkanSwapChain::createSemaphores() {
+        auto device = VulkanDevice::GetInstance()->logicalDevice();
+
         m_ImagesInFlight.resize(getImageCount(), VK_NULL_HANDLE);
         if (m_ImageAvailableSemaphores.size() != MAX_FRAMES_IN_FLIGHT ||
             m_RenderFinishedSemaphores.size() != MAX_FRAMES_IN_FLIGHT) {
@@ -276,14 +271,8 @@ namespace Stellar {
             semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
             for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-                vkCreateSemaphore(VulkanDevice::GetInstance()->logicalDevice(),
-                                  &semaphoreInfo,
-                                  nullptr,
-                                  &m_ImageAvailableSemaphores[i]);
-                vkCreateSemaphore(VulkanDevice::GetInstance()->logicalDevice(),
-                                  &semaphoreInfo,
-                                  nullptr,
-                                  &m_RenderFinishedSemaphores[i]);
+                vkCreateSemaphore(device, &semaphoreInfo, nullptr, &m_ImageAvailableSemaphores[i]);
+                vkCreateSemaphore(device, &semaphoreInfo, nullptr, &m_RenderFinishedSemaphores[i]);
             }
         }
 
@@ -295,12 +284,7 @@ namespace Stellar {
             fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
             for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-                if (vkCreateFence(VulkanDevice::GetInstance()->logicalDevice(),
-                                  &fenceInfo,
-                                  nullptr,
-                                  &m_InFlightFences[i]) != VK_SUCCESS) {
-                    throw std::runtime_error("failed to create semaphores!");
-                }
+                VK_CHECK_RESULT(vkCreateFence(device, &fenceInfo,nullptr, &m_InFlightFences[i]));
             }
         }
     }

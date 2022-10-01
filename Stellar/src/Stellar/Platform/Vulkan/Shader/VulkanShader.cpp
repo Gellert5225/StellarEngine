@@ -2,9 +2,10 @@
 #include "VulkanShader.h"
 
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
-#include "Stellar/Core/Log.h"
-
 #include "Stellar/Platform/Vulkan/Shader/VulkanShaderCompiler.h"
+#include "Stellar/Platform/Vulkan/VulkanCommon.h"
+
+#include "Stellar/Core/Log.h"
 
 namespace Stellar {
 
@@ -43,10 +44,8 @@ namespace Stellar {
 
         VkShaderModule shaderModule;
         auto device = VulkanDevice::GetInstance()->logicalDevice();
-        if (vkCreateShaderModule(device,
-                                 &createInfo, nullptr, &shaderModule) != VK_SUCCESS)
-            throw std::runtime_error("Failed to create shader module!");
 
+        VK_CHECK_RESULT(vkCreateShaderModule(device, &createInfo, nullptr, &shaderModule));
         return shaderModule;
     }
 
