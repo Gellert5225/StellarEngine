@@ -57,8 +57,8 @@ else
 
 			CXX = g++
 			INCLUDES += -I ./vendor/vulkan/linux/include
-			LDFLAGS += -L./vendor/glfw/libs -L./vendor/vulkan/linux/lib
-			LDLIBS += -lglfw -lvulkan
+			LDFLAGS += -L./vendor/glfw/libs -L./vendor/vulkan/linux
+			LDLIBS += -lglfw -lvulkan -lshaderc_shared
 		else
 			$(error OS not supported by this Makefile)
 		endif
