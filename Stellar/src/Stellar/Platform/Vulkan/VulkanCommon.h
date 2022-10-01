@@ -124,10 +124,13 @@ namespace Stellar {
         }
     }
 
-}
-
 #define VK_CHECK_RESULT(f)\
 {\
 	VkResult res = (f);\
-	Stellar::vulkanCheckResult(res);\
+	if (res != VK_SUCCESS) {\
+        STLR_CORE_ERROR("VkResult is '{0}' in {1}:{2}", VKResultToString(res), __FILE__, __LINE__);\
+        STLR_CORE_ASSERT(res == VK_SUCCESS, VKResultToString(res));\
+    }\
 }
+}
+

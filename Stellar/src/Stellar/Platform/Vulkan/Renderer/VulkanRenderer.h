@@ -21,6 +21,7 @@ namespace Stellar {
         void setClearColor(const glm::vec4& color) override;
         void renderGeometry(Buffer* vertexBuffer,
                             Buffer* indexBuffer,
+                            Texture2D* texture,
                             const glm::vec3& color,
                             uint32_t indexCount,
                             const glm::mat4& transform) override;
@@ -28,15 +29,15 @@ namespace Stellar {
         void bindUbo(const GlobalUniforms& ubo) override;
 
         // vulkan
-        static VkDescriptorSet AllocateDescriptorSets(VkDescriptorSetAllocateInfo& info);
-        static std::vector<VkDescriptorSet>& GetDescriptorSets();
+        static GraphicsPipeline* GetPipeline();
     private:
         GraphicsPipeline* m_GraphicsPipeline = nullptr;
         VkClearColorValue m_ClearColor = {{0.66f, 0.9f, 0.96f, 1.0f}};
 
         Buffer* m_UniformBuffer{};
 
-        std::vector<VkDescriptorSet> m_DescriptorSets;
+        VkDescriptorSet m_DescriptorSet;
+        std::array<VkWriteDescriptorSet, 2> m_DescriptorWrites{};
 
         void createDescriptorSets();
     };

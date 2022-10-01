@@ -3,6 +3,7 @@
 
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 #include "Stellar/Platform/Vulkan/Buffer/VulkanBuffer.h"
+#include "Stellar/Platform/Vulkan/VulkanCommon.h"
 #include "Stellar/Renderer/Uniforms.h"
 
 #include "Stellar/Core/Application.h"
@@ -20,6 +21,8 @@ namespace Stellar {
 
         auto bindingDescription = VulkanVertex::getBindingDescription();
         auto attributeDesctiptions = VulkanVertex::getAttributeDescriptions();
+
+        auto device = VulkanDevice::GetInstance()->logicalDevice();
 
         VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
         vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -95,15 +98,12 @@ namespace Stellar {
 
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
         pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-        pipelineLayoutInfo.setLayoutCount = 1;
-        pipelineLayoutInfo.pSetLayouts = &m_DescriptorSetLayout;
+        pipelineLayoutInfo.setLayoutCount = m_DescriptorSetLayouts.size();
+        pipelineLayoutInfo.pSetLayouts = m_DescriptorSetLayouts.data();
         pipelineLayoutInfo.pushConstantRangeCount = 1; // Optional
         pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange; // Optional
 
-        if (vkCreatePipelineLayout(VulkanDevice::GetInstance()->logicalDevice(),
-                                   &pipelineLayoutInfo, nullptr, &m_PipelineLayout) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create pipeline layout!");
-        }
+        VK_CHECK_RESULT(vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &m_PipelineLayout));
 
         auto swapChain = (VulkanSwapChain*)Application::Get().getWindow().getSwapChain();
         VkGraphicsPipelineCreateInfo pipelineInfo{};
@@ -123,20 +123,26 @@ namespace Stellar {
         pipelineInfo.subpass = 0;
         pipelineInfo.basePipelineHandle = VK_NULL_HANDLE; // Optional
 
-        if (vkCreateGraphicsPipelines(VulkanDevice::GetInstance()->logicalDevice(),
-                                      VK_NULL_HANDLE, 1, &pipelineInfo, nullptr,
-                                      &m_Pipeline) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create graphics pipeline!");
-        }
+        VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_Pipeline));
     }
 
     void GraphicsPipeline::createDescriptorSetLayout() {
+        //m_DescriptorSetLayouts.resize(2);
+        auto device = VulkanDevice::GetInstance()->logicalDevice();
+        // ubo
         VkDescriptorSetLayoutBinding uboLayoutBinding{};
         uboLayoutBinding.binding = 0;
         uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
         uboLayoutBinding.descriptorCount = 1;
         uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 
+        VkDescriptorSetLayoutCreateInfo layoutInfoUbo{};
+        layoutInfoUbo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+        layoutInfoUbo.bindingCount = 1;
+        layoutInfoUbo.pBindings = &uboLayoutBinding;
+        VK_CHECK_RESULT(vkCreateDescriptorSetLayout(device, &layoutInfoUbo, nullptr, &m_UboSetLayout));
+
+        // texture
         VkDescriptorSetLayoutBinding samplerLayoutBinding{};
         samplerLayoutBinding.binding = 1;
         samplerLayoutBinding.descriptorCount = 1;
@@ -144,39 +150,30 @@ namespace Stellar {
         samplerLayoutBinding.pImmutableSamplers = nullptr;
         samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 
-        std::array<VkDescriptorSetLayoutBinding, 2> bindings = {
-            uboLayoutBinding, samplerLayoutBinding
-        };
-
-        VkDescriptorSetLayoutCreateInfo layoutInfo{};
-        layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-        layoutInfo.bindingCount = static_cast<uint32_t>(bindings.size());;
-        layoutInfo.pBindings = bindings.data();
-
-        if (vkCreateDescriptorSetLayout(VulkanDevice::GetInstance()->logicalDevice(),
-                                        &layoutInfo,
-                                        nullptr,
-                                        &m_DescriptorSetLayout) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create descriptor set layout!");
-        }
+        VkDescriptorSetLayoutCreateInfo layoutInfoTexture{};
+        layoutInfoTexture.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+        layoutInfoTexture.bindingCount = 1;
+        layoutInfoTexture.pBindings = &samplerLayoutBinding;
+        VK_CHECK_RESULT(vkCreateDescriptorSetLayout(device, &layoutInfoTexture, nullptr, &m_TextureSetLayout));
+        
+        m_DescriptorSetLayouts.push_back(m_UboSetLayout);
+        m_DescriptorSetLayouts.push_back(m_TextureSetLayout);
     }
 
     void GraphicsPipeline::createDescriptorPool() {
         std::array<VkDescriptorPoolSize, 2> poolSizes{};
         poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        poolSizes[0].descriptorCount = static_cast<uint32_t>(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
+        poolSizes[0].descriptorCount = 1000;
         poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        poolSizes[1].descriptorCount = static_cast<uint32_t>(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
+        poolSizes[1].descriptorCount = 1000;
 
         VkDescriptorPoolCreateInfo poolInfo{};
         poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
         poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
         poolInfo.pPoolSizes = poolSizes.data();
-        poolInfo.maxSets = static_cast<uint32_t>(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
+        poolInfo.maxSets = 100000;
 
-        if (vkCreateDescriptorPool(VulkanDevice::GetInstance()->logicalDevice(),
-                                   &poolInfo, nullptr, &m_DescriptorPool) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create descriptor pool!");
-        }
+        auto device = VulkanDevice::GetInstance()->logicalDevice();
+        VK_CHECK_RESULT(vkCreateDescriptorPool(device, &poolInfo, nullptr, &m_DescriptorPool));
     }
 }

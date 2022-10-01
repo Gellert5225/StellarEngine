@@ -38,18 +38,16 @@ void Sandbox2D::onUpdate(Stellar::Timestep ts) {
     m_Camera.setPosition(m_CameraPosition);
     Stellar::Renderer::SetClearColor({ 0.66f, 0.9f, 0.96f, 1.0f });
     Stellar::Renderer2D::BeginScene(m_Camera);
-    m_Texture2->bind();
-    for (int i = 0; i < 5; i++) {
-        for (int j = 0; j < 5; j++) {
-            glm::vec3 pos(i * 0.22f, j * 0.22f, 0.0f);
-            glm::mat4 transformTile = 
-                glm::translate(glm::mat4(1.f), pos) * 
-                glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
-            Stellar::Renderer2D::DrawQuad(transformTile, m_Color);
-        }
-    }
-    m_Texture->bind();
-    Stellar::Renderer2D::DrawQuad(transform, {1.0f, 1.0f, 1.0f});
+    // for (int i = 0; i < 1; i++) {
+    //     for (int j = 0; j < 1; j++) {
+    //         glm::vec3 pos(i * 0.22f, j * 0.22f, 0.0f);
+    //         glm::mat4 transformTile = 
+    //             glm::translate(glm::mat4(1.f), pos) * 
+    //             glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
+    //         Stellar::Renderer2D::DrawQuad(transformTile, m_Color, m_Texture2);
+    //     }
+    // }
+    Stellar::Renderer2D::DrawQuad(transform, {1.0f, 1.0f, 1.0f}, m_Texture);
     Stellar::Renderer2D::EndScene();
 }
 

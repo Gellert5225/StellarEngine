@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Camera.h"
+#include "Texture.h"
 #include "Stellar/Core/Core.h"
 
 namespace Stellar {
@@ -17,6 +18,7 @@ namespace Stellar {
                              const glm::vec3& color);
 
         static void DrawQuad(const glm::mat4& transform, 
-                             const glm::vec3& color);
+                             const glm::vec3& color,
+                             Texture2D* texture);
     };
 }

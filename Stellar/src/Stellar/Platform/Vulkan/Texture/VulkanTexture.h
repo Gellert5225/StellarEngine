@@ -14,6 +14,7 @@ namespace Stellar {
         virtual void bind() override;
         // Vulkan
         void invalidate();
+        VkDescriptorSet getDescriptorSets() { return m_DescriptorSet; };
     protected:
         virtual bool loadImage(const std::string& filePath) override;
     private:

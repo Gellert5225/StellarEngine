@@ -2,9 +2,11 @@
 
 #include "Stellar/Core/Core.h"
 #include "Stellar/Renderer/Image.h"
+#include <vulkan/vulkan.h>
 
 #include <string>
 #include <utility>
+#include <vector>
 
 namespace Stellar {
     class STLR_API Texture2D {
@@ -20,5 +22,6 @@ namespace Stellar {
         virtual bool loadImage(const std::string& filePath) = 0;
         std::string m_Path;
         Image2D* m_Image{};
+        VkDescriptorSet m_DescriptorSet;
     };
 }

@@ -6,6 +6,7 @@
 #include "Camera.h"
 #include "Shader.h"
 #include "Uniforms.h"
+#include "Texture.h"
 
 #include "Stellar/Core/Core.h"
 
@@ -24,6 +25,7 @@ namespace Stellar {
         static void SetClearColor(const glm::vec4& color);
         static void RenderGeometry(Buffer* vertexBuffer,
                                    Buffer* indexBuffer,
+                                   Texture2D* texture,
                                    const glm::vec3& color,
                                    uint32_t indexCount = 0,
                                    const glm::mat4& transform = {});

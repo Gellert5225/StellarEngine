@@ -69,10 +69,10 @@ namespace Stellar {
     }
 
     void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec3& color) {
-        Renderer::RenderGeometry(s_Data->quadVertexBuffer, s_Data->quadIndexBuffer, color, s_Data->indexCount);
+        //Renderer::RenderGeometry(s_Data->quadVertexBuffer, s_Data->quadIndexBuffer, color, s_Data->indexCount);
     }
 
-    void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec3& color) {
-        Renderer::RenderGeometry(s_Data->quadVertexBuffer, s_Data->quadIndexBuffer, color, s_Data->indexCount, transform);
+    void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec3& color, Texture2D* texture) {
+        Renderer::RenderGeometry(s_Data->quadVertexBuffer, s_Data->quadIndexBuffer, texture, color, s_Data->indexCount, transform);
     }
 } 

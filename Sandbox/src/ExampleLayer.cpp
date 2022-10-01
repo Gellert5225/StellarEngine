@@ -41,12 +41,12 @@ void ExampleLayer::onUpdate(Stellar::Timestep ts) {
                             glm::radians(90.0f),
                             glm::vec3(1.0f, 0.0f, 0.0f)) *
                 glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
-            Stellar::Renderer::RenderGeometry(m_VertexBuffer, m_IndexBuffer, m_Color, indices.size(), transformTile);
+            //Stellar::Renderer::RenderGeometry(m_VertexBuffer, m_IndexBuffer, m_Texture2 m_Color, indices.size(), transformTile);
         }
     }
     m_Texture->bind();
-    Stellar::Renderer2D::DrawQuad(transform, m_Color);
-    Stellar::Renderer::RenderGeometry(m_VertexBuffer, m_IndexBuffer, glm::vec3(1.0f, 1.0f, 1.0f), indices.size(), transform);
+    Stellar::Renderer2D::DrawQuad(transform, m_Color, m_Texture);
+    //Stellar::Renderer::RenderGeometry(m_VertexBuffer, m_IndexBuffer, glm::vec3(1.0f, 1.0f, 1.0f), indices.size(), transform);
     Stellar::Renderer2D::EndScene();
 }
 

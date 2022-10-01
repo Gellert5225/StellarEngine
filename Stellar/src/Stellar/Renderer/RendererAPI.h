@@ -4,6 +4,7 @@
 #include "CommandBuffer.h"
 #include "Camera.h"
 #include "Uniforms.h"
+#include "Texture.h"
 
 #include <glm/glm.hpp>
 
@@ -23,6 +24,7 @@ namespace Stellar {
         virtual void setClearColor(const glm::vec4& color) = 0;
         virtual void renderGeometry(Buffer* vertexBuffers,
                                     Buffer* indexBuffer,
+                                    Texture2D*  texture,
                                     const glm::vec3& color,
                                     uint32_t indexCount = 0,
                                     const glm::mat4& transform = {}) = 0;

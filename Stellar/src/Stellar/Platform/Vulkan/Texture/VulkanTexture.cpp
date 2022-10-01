@@ -7,6 +7,7 @@
 #include "Stellar/Platform/Vulkan/Image/VulkanImage.h"
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 #include "Stellar/Platform/Vulkan/Renderer/VulkanRenderer.h"
+#include "Stellar/Platform/Vulkan/VulkanCommon.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -27,21 +28,29 @@ namespace Stellar {
 
         invalidate();
 
-        auto descriptorSets = VulkanRenderer::GetDescriptorSets();
+        // binding
+        auto device = VulkanDevice::GetInstance()->logicalDevice();
+        auto pipeline = VulkanRenderer::GetPipeline();
+        auto textureLayout = pipeline->getTextureSetLayout();
 
-        for (size_t i = 0; i < VulkanSwapChain::MAX_FRAMES_IN_FLIGHT; i++) {
-            VkWriteDescriptorSet descriptorWrite{};
-            descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            descriptorWrite.dstSet = descriptorSets[i];
-            descriptorWrite.dstBinding = 1;
-            descriptorWrite.dstArrayElement = 0;
-            descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-            descriptorWrite.descriptorCount = 1;
-            descriptorWrite.pImageInfo = &((VulkanImage2D*)m_Image)->getDescriptorInfo();
+        VkDescriptorSetAllocateInfo allocInfo{};
+        allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+        allocInfo.descriptorPool = pipeline->getDescriptorPool();
+        allocInfo.descriptorSetCount = 1;
+        allocInfo.pSetLayouts = &textureLayout;
 
-            vkUpdateDescriptorSets(VulkanDevice::GetInstance()->logicalDevice(), 
-                1, &descriptorWrite, 0, nullptr);
-        }
+        VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocInfo, &m_DescriptorSet));
+
+        VkWriteDescriptorSet descriptorWrite;
+        descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrite.dstSet = m_DescriptorSet;
+        descriptorWrite.dstBinding = 1;
+        descriptorWrite.dstArrayElement = 0;
+        descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        descriptorWrite.descriptorCount = 1;
+        descriptorWrite.pImageInfo = &((VulkanImage2D*)m_Image)->getDescriptorInfo();
+
+        vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
     }
 
     VulkanTexture::~VulkanTexture() {

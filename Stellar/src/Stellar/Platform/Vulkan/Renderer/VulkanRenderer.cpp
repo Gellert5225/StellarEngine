@@ -6,15 +6,13 @@
 
 #include "Stellar/Core/Log.h"
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
-
 #include "Stellar/Platform/Vulkan/VulkanCommon.h"
+#include "Stellar/Platform/Vulkan/Texture/VulkanTexture.h"
 
 namespace Stellar {
 
     struct VulkanRendererData {
-        VkDescriptorPool descriptorPool;
-        VkDescriptorSetLayout descriptorSetLayout;
-        std::vector<VkDescriptorSet> descriptorSets;
+        GraphicsPipeline* pipeline;
     };
 
     static VulkanRendererData* s_Data = nullptr;
@@ -26,6 +24,7 @@ namespace Stellar {
         auto shader = Renderer::GetShaderLibrary()->get("shader");
         m_GraphicsPipeline = new GraphicsPipeline(shader);
         s_Data = new VulkanRendererData();
+        s_Data->pipeline = m_GraphicsPipeline;
         createDescriptorSets();
     }
 
@@ -81,6 +80,7 @@ namespace Stellar {
 
     void VulkanRenderer::renderGeometry(Buffer* vertexBuffer,
                                         Buffer* indexBuffer,
+                                        Texture2D* texture,
                                         const glm::vec3& color,
                                         uint32_t indexCount,
                                         const glm::mat4& transform) {
@@ -88,13 +88,16 @@ namespace Stellar {
         push.model = transform;
         push.color = color;
 
+        auto descriptorSet = ((VulkanTexture*)texture)->getDescriptorSets();
         vkCmdBindPipeline((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
-                    VK_PIPELINE_BIND_POINT_GRAPHICS,
-                    *m_GraphicsPipeline->getPipeline());
+                          VK_PIPELINE_BIND_POINT_GRAPHICS,
+                          *m_GraphicsPipeline->getPipeline());
         vkCmdBindDescriptorSets((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
                                 VK_PIPELINE_BIND_POINT_GRAPHICS,
                                 *m_GraphicsPipeline->getPipelineLayout(),
-                                0, 1, &m_DescriptorSets[Renderer::GetCurrentFrameIndex()], 0, nullptr);
+                                0, 1, 
+                                &descriptorSet,
+                                0, nullptr);
         
         vkCmdPushConstants((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer(),
                            *m_GraphicsPipeline->getPipelineLayout(),
@@ -125,57 +128,35 @@ namespace Stellar {
     }
 
     void VulkanRenderer::createDescriptorSets() {
-        std::vector<VkDescriptorSetLayout> layouts(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT,
-                                                   m_GraphicsPipeline->getDescriptorSetLayout());
-
-        s_Data->descriptorPool = m_GraphicsPipeline->getDescriptorPool();
-        s_Data->descriptorSetLayout = m_GraphicsPipeline->getDescriptorSetLayout();
+        auto device = VulkanDevice::GetInstance()->logicalDevice();
+        auto uboSetLayout = m_GraphicsPipeline->getUboSetLayout();
 
         VkDescriptorSetAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
         allocInfo.descriptorPool = m_GraphicsPipeline->getDescriptorPool();
-        allocInfo.descriptorSetCount = VulkanSwapChain::MAX_FRAMES_IN_FLIGHT;
-        allocInfo.pSetLayouts = layouts.data();
+        allocInfo.descriptorSetCount = 1;
+        allocInfo.pSetLayouts = &uboSetLayout;
 
-        m_DescriptorSets.resize(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
+        VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocInfo, &m_DescriptorSet));
 
-        if (vkAllocateDescriptorSets(VulkanDevice::GetInstance()->logicalDevice(),
-                                     &allocInfo, m_DescriptorSets.data()) != VK_SUCCESS) {
-            throw std::runtime_error("failed to allocate descriptor sets!");
-        }
+        VkDescriptorBufferInfo bufferInfo{};
+        bufferInfo.buffer = (VkBuffer)m_UniformBuffer->getBuffer();
+        bufferInfo.offset = 0;
+        bufferInfo.range = sizeof(GlobalUniforms);
 
-        s_Data->descriptorSets = m_DescriptorSets;
+        VkWriteDescriptorSet descriptorWrite;
+        descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrite.dstSet = m_DescriptorSet;
+        descriptorWrite.dstBinding = 0;
+        descriptorWrite.dstArrayElement = 0;
+        descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        descriptorWrite.descriptorCount = 1;
+        descriptorWrite.pBufferInfo = &bufferInfo;
 
-        for (size_t i = 0; i < VulkanSwapChain::MAX_FRAMES_IN_FLIGHT; i++) {
-            VkDescriptorBufferInfo bufferInfo{};
-            bufferInfo.buffer = (VkBuffer)m_UniformBuffer->getBuffer();
-            bufferInfo.offset = 0;
-            bufferInfo.range = sizeof(GlobalUniforms);
-
-            VkWriteDescriptorSet descriptorWrite{};
-            descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            descriptorWrite.dstSet = m_DescriptorSets[i];
-            descriptorWrite.dstBinding = 0;
-            descriptorWrite.dstArrayElement = 0;
-            descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-            descriptorWrite.descriptorCount = 1;
-            descriptorWrite.pBufferInfo = &bufferInfo;
-
-            vkUpdateDescriptorSets(VulkanDevice::GetInstance()->logicalDevice(), 1, &descriptorWrite, 0, nullptr);
-        }
-
+        vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
     }
 
-     VkDescriptorSet VulkanRenderer::AllocateDescriptorSets(VkDescriptorSetAllocateInfo& info) {
-        info.descriptorPool = s_Data->descriptorPool;
-        info.pSetLayouts = &s_Data->descriptorSetLayout;
-        VkDescriptorSet result;
-        VK_CHECK_RESULT(vkAllocateDescriptorSets(VulkanDevice::GetInstance()->logicalDevice(),
-                                     &info, &result));
-        return result;
-     }
-
-     std::vector<VkDescriptorSet>& VulkanRenderer::GetDescriptorSets() {
-        return s_Data->descriptorSets;
-     }
+    GraphicsPipeline* VulkanRenderer::GetPipeline() {
+        return s_Data->pipeline;
+    }
 }
