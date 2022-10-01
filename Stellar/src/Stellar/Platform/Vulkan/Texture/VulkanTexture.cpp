@@ -41,7 +41,7 @@ namespace Stellar {
 
         VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocInfo, &m_DescriptorSet));
 
-        VkWriteDescriptorSet descriptorWrite;
+        VkWriteDescriptorSet descriptorWrite{};
         descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
         descriptorWrite.dstSet = m_DescriptorSet;
         descriptorWrite.dstBinding = 1;

@@ -25,7 +25,7 @@ namespace Stellar {
         m_GraphicsPipeline = new GraphicsPipeline(shader);
         s_Data = new VulkanRendererData();
         s_Data->pipeline = m_GraphicsPipeline;
-        createDescriptorSets();
+        createUboDescriptorSet();
     }
 
     void VulkanRenderer::shutDown() {
@@ -70,6 +70,10 @@ namespace Stellar {
         scissor.extent.width = swapChain->getSwapChainExtent().width;
         scissor.extent.height = swapChain->getSwapChainExtent().height;
         vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
+
+        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
+                                *m_GraphicsPipeline->getPipelineLayout(),
+                                0, 1, &m_UboDescriptorSet, 0, nullptr);
     }
 
     void VulkanRenderer::endRenderPass() {
@@ -88,14 +92,13 @@ namespace Stellar {
         push.model = transform;
         push.color = color;
 
-        auto descriptorSet = ((VulkanTexture*)texture)->getDescriptorSets();
+        auto textureDescriptorSet = ((VulkanTexture*)texture)->getDescriptorSets();
         auto commandBuffer = (VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer();
 
-        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, 
-                          *m_GraphicsPipeline->getPipeline());
+        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, *m_GraphicsPipeline->getPipeline());
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
                                 *m_GraphicsPipeline->getPipelineLayout(),
-                                0, 1, &descriptorSet, 0, nullptr);
+                                1, 1, &textureDescriptorSet, 0, nullptr);
         vkCmdPushConstants(commandBuffer, *m_GraphicsPipeline->getPipelineLayout(),
                            VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
                            0, sizeof(Push), &push);
@@ -119,7 +122,7 @@ namespace Stellar {
         m_UniformBuffer->unMap();
     }
 
-    void VulkanRenderer::createDescriptorSets() {
+    void VulkanRenderer::createUboDescriptorSet() {
         auto device = VulkanDevice::GetInstance()->logicalDevice();
         auto uboSetLayout = m_GraphicsPipeline->getUboSetLayout();
 
@@ -129,16 +132,16 @@ namespace Stellar {
         allocInfo.descriptorSetCount = 1;
         allocInfo.pSetLayouts = &uboSetLayout;
 
-        VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocInfo, &m_DescriptorSet));
+        VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocInfo, &m_UboDescriptorSet));
 
         VkDescriptorBufferInfo bufferInfo{};
         bufferInfo.buffer = (VkBuffer)m_UniformBuffer->getBuffer();
         bufferInfo.offset = 0;
         bufferInfo.range = sizeof(GlobalUniforms);
 
-        VkWriteDescriptorSet descriptorWrite;
+        VkWriteDescriptorSet descriptorWrite{};
         descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        descriptorWrite.dstSet = m_DescriptorSet;
+        descriptorWrite.dstSet = m_UboDescriptorSet;
         descriptorWrite.dstBinding = 0;
         descriptorWrite.dstArrayElement = 0;
         descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;

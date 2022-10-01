@@ -11,8 +11,8 @@
 namespace Stellar {
 
     GraphicsPipeline::GraphicsPipeline(Shader* shader) {
-        createDescriptorSetLayout();
         createDescriptorPool();
+        createDescriptorSetLayout();
         
         auto infos = ((VulkanShader*)shader)->getStageInfos();
 
@@ -127,7 +127,6 @@ namespace Stellar {
     }
 
     void GraphicsPipeline::createDescriptorSetLayout() {
-        //m_DescriptorSetLayouts.resize(2);
         auto device = VulkanDevice::GetInstance()->logicalDevice();
         // ubo
         VkDescriptorSetLayoutBinding uboLayoutBinding{};

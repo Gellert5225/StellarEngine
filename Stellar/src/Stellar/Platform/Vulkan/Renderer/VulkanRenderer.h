@@ -36,9 +36,8 @@ namespace Stellar {
 
         Buffer* m_UniformBuffer{};
 
-        VkDescriptorSet m_DescriptorSet;
-        std::array<VkWriteDescriptorSet, 2> m_DescriptorWrites{};
+        VkDescriptorSet m_UboDescriptorSet;
 
-        void createDescriptorSets();
+        void createUboDescriptorSet();
     };
 }

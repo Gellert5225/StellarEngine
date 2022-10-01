@@ -6,7 +6,11 @@ Sandbox2D::Sandbox2D() : Stellar::Layer("Sandbox2D") {
 }
 
 void Sandbox2D::onAttach() {
-
+    Stellar::Renderer::SetClearColor({ 0.66f, 0.9f, 0.96f, 1.0f });
+    auto extent = Stellar::Application::Get().getWindow().getSwapChain()->getSwapChainExtent();
+    auto perspective = (float)extent.width / (float)extent.height;
+    //m_Camera.setOrtho(-perspective, perspective, -1, 1, -10, 10);
+    m_Camera.setPerspectiveProjection(glm::radians(60.0f), perspective, 0.1f, 100.0f);
 }
 
 void Sandbox2D::onDetach() {
@@ -15,11 +19,6 @@ void Sandbox2D::onDetach() {
 }
 
 void Sandbox2D::onUpdate(Stellar::Timestep ts) {
-    auto extent = Stellar::Application::Get().getWindow().getSwapChain()->getSwapChainExtent();
-    auto perspective = (float)extent.width / (float)extent.height;
-    m_Camera.setOrtho(-perspective, perspective, -1, 1, -10, 10);
-    //m_Camera.setPerspectiveProjection(glm::radians(60.0f), perspective, 0.1f, 100.0f);
-
     // camera movement
     if (Stellar::Input::IsKeyPressed(STLR_KEY_LEFT))
         m_CameraPosition.x += m_CameraSpeed * ts;
@@ -36,17 +35,17 @@ void Sandbox2D::onUpdate(Stellar::Timestep ts) {
                           glm::vec3(1.0f, 0.0f, 0.0f));
 
     m_Camera.setPosition(m_CameraPosition);
-    Stellar::Renderer::SetClearColor({ 0.66f, 0.9f, 0.96f, 1.0f });
+    
     Stellar::Renderer2D::BeginScene(m_Camera);
-    // for (int i = 0; i < 1; i++) {
-    //     for (int j = 0; j < 1; j++) {
-    //         glm::vec3 pos(i * 0.22f, j * 0.22f, 0.0f);
-    //         glm::mat4 transformTile = 
-    //             glm::translate(glm::mat4(1.f), pos) * 
-    //             glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
-    //         Stellar::Renderer2D::DrawQuad(transformTile, m_Color, m_Texture2);
-    //     }
-    // }
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            glm::vec3 pos(i * 0.22f, j * 0.22f, 0.0f);
+            glm::mat4 transformTile = 
+                glm::translate(glm::mat4(1.f), pos) * 
+                glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
+            Stellar::Renderer2D::DrawQuad(transformTile, m_Color, m_Texture2);
+        }
+    }
     Stellar::Renderer2D::DrawQuad(transform, {1.0f, 1.0f, 1.0f}, m_Texture);
     Stellar::Renderer2D::EndScene();
 }

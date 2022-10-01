@@ -22,5 +22,6 @@ namespace Stellar {
         uint32_t m_Height{};
         unsigned char* m_Pixels{};
         VkDeviceSize m_ImageSize{};
+        VkDescriptorSet m_DescriptorSet = VK_NULL_HANDLE;
     };
 }
