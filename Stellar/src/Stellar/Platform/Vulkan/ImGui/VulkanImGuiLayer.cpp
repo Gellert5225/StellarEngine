@@ -94,7 +94,7 @@ namespace Stellar {
             VkCommandBufferAllocateInfo cmdBufAllocateInfo = {};
             cmdBufAllocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
             cmdBufAllocateInfo.commandPool = VulkanDevice::GetInstance()->getCommandPool();
-            cmdBufAllocateInfo.level = VK_COMMAND_BUFFER_LEVEL_SECONDARY;
+            cmdBufAllocateInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
             cmdBufAllocateInfo.commandBufferCount = 1;
 
             VK_CHECK_RESULT(vkAllocateCommandBuffers(VulkanDevice::GetInstance()->logicalDevice(),
@@ -125,10 +125,10 @@ namespace Stellar {
     void VulkanImGuiLayer::end() const {
         ImGuiIO& io = ImGui::GetIO();
         Application& app = Application::Get();
-        io.DisplaySize = ImVec2(app.getWindow().getWidth(), app.getWindow().getHeight());
+        // io.DisplaySize = ImVec2(app.getWindow().getWidth(), app.getWindow().getHeight());
 
-        auto time = (float)glfwGetTime();
-        io.DeltaTime = m_Time > 0.0 ? (time - m_Time) : (1.0f / 60.0f);
+        // auto time = (float)glfwGetTime();
+        // io.DeltaTime = m_Time > 0.0 ? (time - m_Time) : (1.0f / 60.0f);
 
         ImGui::Render();
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
@@ -164,43 +164,24 @@ namespace Stellar {
 
         vkCmdBeginRenderPass(swapChain->getCurrentCommandBuffer(), &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-//        VkCommandBufferInheritanceInfo inheritanceInfo = {};
-//        inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
-//        inheritanceInfo.renderPass = swapChain->getImGuiRenderPass();
-//        inheritanceInfo.framebuffer = swapChain->getCurrentImGuiFrameBuffer();
-//
-//        VkCommandBufferBeginInfo cmdBufInfo = {};
-//        cmdBufInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-//        cmdBufInfo.flags = VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT;
-//        cmdBufInfo.pInheritanceInfo = &inheritanceInfo;
-//
-//        VK_CHECK_RESULT(vkBeginCommandBuffer(s_ImGuiCommandBuffers[commandBufferIndex], &cmdBufInfo));
-//
-//        VkViewport viewport = {};
-//        viewport.x = 0.0f;
-//        viewport.y = (float)swapChain->getSwapChainExtent().height;
-//        viewport.height = (float)swapChain->getSwapChainExtent().height;
-//        viewport.width = (float)swapChain->getSwapChainExtent().width;
-//        viewport.minDepth = 0.0f;
-//        viewport.maxDepth = 1.0f;
-//        vkCmdSetViewport(s_ImGuiCommandBuffers[commandBufferIndex], 0, 1, &viewport);
-//
-//        VkRect2D scissor = {};
-//        scissor.extent.width = swapChain->getSwapChainExtent().width;
-//        scissor.extent.height = swapChain->getSwapChainExtent().height;
-//        scissor.offset.x = 0;
-//        scissor.offset.y = 0;
-//        vkCmdSetScissor(s_ImGuiCommandBuffers[commandBufferIndex], 0, 1, &scissor);
+        VkViewport viewport = {};
+        viewport.x = 0;
+        viewport.y = 1;
+        viewport.height = io.DisplaySize.x;
+        viewport.width = io.DisplaySize.y;
+        viewport.minDepth = 0.0f;
+        viewport.maxDepth = 1.0f;
+        vkCmdSetViewport(swapChain->getCurrentCommandBuffer(), 0, 1, &viewport);
+
+        // VkRect2D scissor = {};
+        // scissor.extent.width = swapChain->getSwapChainExtent().width;
+        // scissor.extent.height = swapChain->getSwapChainExtent().height;
+        // scissor.offset.x = 0;
+        // scissor.offset.y = 0;
+        // vkCmdSetScissor(swapChain->getCurrentCommandBuffer(), 0, 1, &scissor);
 
         ImDrawData* main_draw_data = ImGui::GetDrawData();
         ImGui_ImplVulkan_RenderDrawData(main_draw_data, swapChain->getCurrentCommandBuffer());
-
-//        VK_CHECK_RESULT(vkEndCommandBuffer(s_ImGuiCommandBuffers[commandBufferIndex]));
-//
-//        std::vector<VkCommandBuffer> commandBuffers;
-//        commandBuffers.push_back(s_ImGuiCommandBuffers[commandBufferIndex]);
-//
-//        vkCmdExecuteCommands(swapChain->getCurrentCommandBuffer(), uint32_t(commandBuffers.size()), commandBuffers.data());
 
         vkCmdEndRenderPass(swapChain->getCurrentCommandBuffer());
 
@@ -212,7 +193,6 @@ namespace Stellar {
     }
 
     void VulkanImGuiLayer::onImGuiRender() {
-        static bool show = true;
-        ImGui::ShowDemoWindow(&show);
+  
     }
 }

@@ -27,12 +27,9 @@ namespace Stellar {
         VkDebugUtilsMessengerCreateInfoEXT createInfo;
         PopulateDebugMessengerCreateInfo(createInfo);
 
-        if (CreateDebugUtilsMessengerEXT(VulkanInstance::GetInstance()->getVkInstance(),
-                                         &createInfo,
-                                         nullptr,
-                                         &debugMessenger) != VK_SUCCESS) {
-            throw std::runtime_error("failed to set up debug messenger!");
-        }
+        auto instance = VulkanInstance::GetInstance()->getVkInstance();
+        VK_CHECK_RESULT(CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger));
+
     }
 
     VkResult VulkanValidationLayer::CreateDebugUtilsMessengerEXT(

@@ -57,6 +57,42 @@ void Sandbox2D::onEvent(Stellar::Event& event) {
 void Sandbox2D::onImGuiRender() {
     auto appInfo = Stellar::Application::Get().getAppInfo();
 
+    ImGuiViewport* viewport = ImGui::GetMainViewport();
+    ImGui::SetNextWindowPos(viewport->Pos);
+    ImGui::SetNextWindowSize(viewport->Size);
+    ImGui::SetNextWindowViewport(viewport->ID);
+
+    ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
+    ImGuiWindowFlags host_window_flags = 0;
+    host_window_flags |= ImGuiWindowFlags_NoTitleBar | 
+                            ImGuiWindowFlags_NoCollapse | 
+                            ImGuiWindowFlags_NoResize | 
+                            ImGuiWindowFlags_NoMove | 
+                            ImGuiWindowFlags_NoDocking;
+    host_window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | 
+                            ImGuiWindowFlags_NoNavFocus;
+    if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
+        host_window_flags |= ImGuiWindowFlags_NoBackground;
+
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+    ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0.0f);
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(255,255,255,0));
+    ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(255,255,255,0));
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(255,255,255,0));
+
+    ImGui::Begin("DockSpace Window", nullptr, host_window_flags);
+    ImGui::PopStyleVar(4);
+    ImGui::PopStyleColor(3);
+
+    ImGuiID dockspaceID = 0;
+    
+    dockspaceID = ImGui::GetID("HUB_DockSpace");
+    ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), dockspace_flags, nullptr);
+
+    ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
+
     ImGui::Begin("Info");
     ImGui::Text("GPU: %s", appInfo.graphicsInfo.c_str());
     ImGui::Text("%s", appInfo.vulkanVersion.c_str());
@@ -66,7 +102,19 @@ void Sandbox2D::onImGuiRender() {
             ImGui::GetIO().Framerate);
     ImGui::End();
 
+    ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
     ImGui::Begin("Color Setting");
     ImGui::ColorEdit3("Square Color", glm::value_ptr(m_Color));
     ImGui::End();
+    ImGui::End();
+
+    ImGuiIO& io = ImGui::GetIO();
+
+    ImGuiViewport* vport = ImGui::GetMainViewport();
+    ImGui::SetNextWindowViewport(vport->ID);
+    ImGui::SetNextWindowBgAlpha(0.0f);
+
+    ImGui::Begin("Editor" , nullptr, ImGuiWindowFlags_NoBringToFrontOnFocus);
+    io.ConfigWindowsMoveFromTitleBarOnly = true;
+    ImGui::End();  
 }

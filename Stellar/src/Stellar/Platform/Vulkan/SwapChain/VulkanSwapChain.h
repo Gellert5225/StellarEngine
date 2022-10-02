@@ -59,7 +59,7 @@ namespace Stellar {
             VkCommandPool CommandPool = nullptr;
             VkCommandBuffer CommandBuffer = nullptr;
         };
-        std::vector<SwapchainCommandBuffer> m_CommandBuffers;
+        std::vector<VkCommandBuffer> m_CommandBuffers;
 
         std::vector<VkImage> m_SwapChainImages;
         std::vector<VkImageView> m_SwapChainImageViews;
