@@ -250,16 +250,8 @@ namespace Stellar {
         submitInfo.commandBufferCount = 1;
         submitInfo.pCommandBuffers = &commandBuffer;
 
-//        VkFenceCreateInfo fenceCreateInfo = {};
-//        fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-//        fenceCreateInfo.flags = 0;
-//        VkFence fence;
-//        VK_CHECK_RESULT(vkCreateFence(m_LogicalDevice, &fenceCreateInfo, nullptr, &fence));
         VK_CHECK_RESULT(vkQueueSubmit(m_GraphicsQueue, 1, &submitInfo, VK_NULL_HANDLE));
         VK_CHECK_RESULT(vkQueueWaitIdle(m_GraphicsQueue));
-
-//        VK_CHECK_RESULT(vkWaitForFences(m_LogicalDevice, 1, &fence, VK_TRUE, UINT64_MAX));
-//        vkDestroyFence(m_LogicalDevice, fence, nullptr);
 
         vkFreeCommandBuffers(m_LogicalDevice, m_CommandPool, 1, &commandBuffer);
     }

@@ -74,7 +74,7 @@ namespace Stellar {
         beginInfo.pNext = nullptr;
 
         VkCommandBuffer commandBuffer = nullptr;
-        commandBuffer = m_CommandBuffers[frameIndex];//swapChain->getCommandBuffer(frameIndex);
+        commandBuffer = m_CommandBuffers[frameIndex];
         m_ActiveCommandBuffer = commandBuffer;
 
         if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
