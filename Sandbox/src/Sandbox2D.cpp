@@ -7,10 +7,6 @@ Sandbox2D::Sandbox2D() : Stellar::Layer("Sandbox2D") {
 
 void Sandbox2D::onAttach() {
     Stellar::Renderer::SetClearColor({ 0.66f, 0.9f, 0.96f, 1.0f });
-    auto extent = Stellar::Application::Get().getWindow().getSwapChain()->getSwapChainExtent();
-    auto perspective = (float)extent.width / (float)extent.height;
-    //m_Camera.setOrtho(-perspective, perspective, -1, 1, -10, 10);
-    m_Camera.setPerspectiveProjection(glm::radians(60.0f), perspective, 0.1f, 100.0f);
 }
 
 void Sandbox2D::onDetach() {
@@ -19,6 +15,10 @@ void Sandbox2D::onDetach() {
 }
 
 void Sandbox2D::onUpdate(Stellar::Timestep ts) {
+    auto extent = Stellar::Application::Get().getWindow().getSwapChain()->getSwapChainExtent();
+    auto perspective = (float)extent.width / (float)extent.height;
+    //m_Camera.setOrtho(-perspective, perspective, -1, 1, -10, 10);
+    m_Camera.setPerspectiveProjection(glm::radians(60.0f), perspective, 0.1f, 100.0f);
     // camera movement
     if (Stellar::Input::IsKeyPressed(STLR_KEY_LEFT))
         m_CameraPosition.x += m_CameraSpeed * ts;
