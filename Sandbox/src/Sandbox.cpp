@@ -1,6 +1,5 @@
 #include <Stellar.h>
 
-#include "ExampleLayer.h"
 #include "ExampleMetalLayer.h"
 #include "Sandbox2D.h"
 

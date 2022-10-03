@@ -77,6 +77,7 @@ namespace Stellar {
     }
 
     void VulkanRenderer::endRenderPass() {
+        //vkResetDescriptorPool(VulkanDevice::GetInstance()->logicalDevice(), m_GraphicsPipeline->getDescriptorPool(), 0);
         vkCmdEndRenderPass((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer());
         m_CommandBuffer->end();
         m_CommandBuffer->submit();
