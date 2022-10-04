@@ -16,7 +16,7 @@
         "showReuseMessage": true,
         "clear": false,
         "revealProblems": "onProblem",
-        "close": true
+        "close": false
       }
     },
     {
@@ -32,7 +32,7 @@
         "showReuseMessage": true,
         "clear": false,
         "revealProblems": "onProblem",
-        "close": true
+        "close": false
       }
     },
     {

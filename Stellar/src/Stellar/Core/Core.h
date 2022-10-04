@@ -1,6 +1,7 @@
 #pragma once
 
 #include <csignal>
+#include <cstdint>
 
 #define GLFW_INCLUDE_VULKAN
 

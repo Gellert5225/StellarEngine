@@ -21,7 +21,8 @@ namespace Stellar {
             loadImage("../Resources/Textures/ErrorTexture.png");
         }
         ImageSpecification imageSpec;
-		imageSpec.format = ImageFormat::SRGB;
+		imageSpec.format = ImageFormat::RGBA;
+        imageSpec.usage = ImageUsage::Texture;
 		imageSpec.width = m_Width;
 		imageSpec.height = m_Height;
 		imageSpec.mips = 1;

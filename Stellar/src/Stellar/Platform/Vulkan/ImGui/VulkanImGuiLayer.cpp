@@ -154,7 +154,7 @@ namespace Stellar {
         renderPassBeginInfo.renderArea.extent.height = swapChain->getSwapChainExtent().height;
         renderPassBeginInfo.clearValueCount = 1;
         renderPassBeginInfo.pClearValues = clearValues;
-        renderPassBeginInfo.framebuffer = swapChain->getCurrentImGuiFrameBuffer();
+        renderPassBeginInfo.framebuffer = swapChain->getCurrentFrameBuffer();
 
         vkCmdBeginRenderPass(swapChain->getCurrentCommandBuffer(), &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
