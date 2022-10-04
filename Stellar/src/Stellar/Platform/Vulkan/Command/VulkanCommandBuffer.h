@@ -7,7 +7,7 @@
 #include "Stellar/Platform/Vulkan/RenderPass/StandardRenderPass.h"
 #include "Stellar/Platform/Vulkan/Pipeline/GraphicsPipeline.h"
 #include "Stellar/Platform/Vulkan/Buffer/VulkanBuffer.h"
-#include "Stellar/Platform/Vulkan/Buffer/FrameBuffer.h"
+#include "Stellar/Platform/Vulkan/Buffer/VulkanFrameBuffer.h"
 
 #include <vulkan/vulkan.h>
 

@@ -6,7 +6,10 @@
 #include "Stellar/Platform/Vulkan/ImGui/imgui_impl_vulkan.h"
 #include "Stellar/Platform/Vulkan/Image/VulkanImage.h"
 #include "Stellar/Platform/Vulkan/Texture/VulkanTexture.h"
+#include "Stellar/Platform/Vulkan/Buffer/VulkanFrameBuffer.h"
 #endif
+
+#include "Stellar/Renderer/FrameBuffer.h"
 
 namespace Stellar {
     class STLR_API ImGuiLayer: public Layer {
@@ -22,6 +25,6 @@ namespace Stellar {
 }
 
 namespace Stellar::UI {
-    void Image(Image2D* image);
-    void Texture(Texture2D* texture, const ImVec2& size);
+    void Image(Image2D* image, const ImVec2& size);
+    void ImageFromFB(FrameBuffer* frameBuffer, const ImVec2& size);
 }

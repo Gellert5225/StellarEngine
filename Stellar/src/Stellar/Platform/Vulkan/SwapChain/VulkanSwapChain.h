@@ -2,7 +2,7 @@
 
 #include "Stellar/Core/Core.h"
 #include "Stellar/Renderer/SwapChain.h"
-#include "Stellar/Platform/Vulkan/Buffer/FrameBuffer.h"
+#include "Stellar/Platform/Vulkan/Buffer/VulkanFrameBuffer.h"
 #include "Stellar/Platform/Vulkan/Command/VulkanCommandBuffer.h"
 #include "Stellar/Platform/Vulkan/RenderPass/StandardRenderPass.h"
 #include "Stellar/Platform/Vulkan/RenderPass/ImGuiRenderPass.h"

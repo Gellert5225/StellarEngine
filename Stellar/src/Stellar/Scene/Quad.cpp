@@ -3,8 +3,6 @@
 
 namespace Stellar {
     Quad::Quad() {
-        auto uniformBuffer = Buffer::Create(BufferType::Uniform, sizeof(GlobalUniforms));
-
         // Vulkan
         #if defined(__linux__) || defined(_WIN64)
         auto device = VulkanDevice::GetInstance()->logicalDevice();

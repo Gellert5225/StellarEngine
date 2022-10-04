@@ -7,6 +7,7 @@
 #include "Shader.h"
 #include "Uniforms.h"
 #include "Texture.h"
+#include "FrameBuffer.h"
 
 #include "Stellar/Core/Core.h"
 
@@ -31,6 +32,10 @@ namespace Stellar {
                                    const glm::mat4& transform = {});
 
         static void BindUbo(const GlobalUniforms& ubo);
+
+        static FrameBuffer* GetFrameBuffer();
+
+        static void ResizeFrameBuffer(uint32_t width, uint32_t height);
 
         static ShaderLibrary* GetShaderLibrary();
         

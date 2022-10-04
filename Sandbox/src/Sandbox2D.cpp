@@ -7,6 +7,10 @@ Sandbox2D::Sandbox2D() : Stellar::Layer("Sandbox2D") {
 
 void Sandbox2D::onAttach() {
     Stellar::Renderer::SetClearColor({ 0.66f, 0.9f, 0.96f, 1.0f });
+    auto extent = Stellar::Application::Get().getWindow().getSwapChain()->getSwapChainExtent();
+    auto perspective = (float)extent.width / (float)extent.height;
+    //m_Camera.setOrtho(-perspective, perspective, -1, 1, -10, 10);
+    m_Camera.setPerspectiveProjection(glm::radians(60.0f), perspective, 0.1f, 100.0f);
 }
 
 void Sandbox2D::onDetach() {
@@ -15,10 +19,6 @@ void Sandbox2D::onDetach() {
 }
 
 void Sandbox2D::onUpdate(Stellar::Timestep ts) {
-    auto extent = Stellar::Application::Get().getWindow().getSwapChain()->getSwapChainExtent();
-    auto perspective = (float)extent.width / (float)extent.height;
-    //m_Camera.setOrtho(-perspective, perspective, -1, 1, -10, 10);
-    m_Camera.setPerspectiveProjection(glm::radians(60.0f), perspective, 0.1f, 100.0f);
     // camera movement
     if (Stellar::Input::IsKeyPressed(STLR_KEY_LEFT))
         m_CameraPosition.x += m_CameraSpeed * ts;
@@ -112,21 +112,25 @@ void Sandbox2D::onImGuiRender() {
     ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
     ImGui::Begin("Color Setting");
     ImGui::ColorEdit3("Square Color", glm::value_ptr(m_Color));
-    Stellar::UI::Texture(m_Texture2, { 200, 200 });
+    Stellar::UI::Image(m_Texture2->getImage(), { 200, 200 });
     ImGui::End();
     ImGui::End();
 
+    // view port
     ImGuiIO& io = ImGui::GetIO();
-
-    // ImGuiViewport* vport = ImGui::GetMainViewport();
-    // ImGui::SetNextWindowViewport(vport->ID);
-    // ImGui::SetNextWindowBgAlpha(0.0f);
-
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(255,255,255,0));
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
     ImGui::Begin("Editor" , nullptr, ImGuiWindowFlags_NoBringToFrontOnFocus);
+    ImGui::PopStyleVar();
     ImGui::PopStyleColor();
-    //Stellar::UI::Image(m_Texture->getImage());
     io.ConfigWindowsMoveFromTitleBarOnly = true;
-    ImGui::End();  
-    ;
+    auto viewPortSize = ImGui::GetContentRegionAvail();
+    auto perspective = viewPortSize.x / viewPortSize.y;
+    //m_Camera.setOrtho(-perspective, perspective, -1, 1, -10, 10);
+    m_Camera.setPerspectiveProjection(glm::radians(60.0f), perspective, 0.1f, 100.0f);
+    STLR_INFO("View port: {0}, {1}", viewPortSize.x, viewPortSize.y);
+    Stellar::Renderer::ResizeFrameBuffer(viewPortSize.x, viewPortSize.y);
+    Stellar::UI::ImageFromFB(Stellar::Renderer::GetFrameBuffer(), viewPortSize);
+
+    ImGui::End();
 }
