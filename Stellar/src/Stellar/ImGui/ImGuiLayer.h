@@ -25,8 +25,6 @@ namespace Stellar {
 }
 
 namespace Stellar::UI {
-    void Image(Image2D* image);
-    void Texture(Texture2D* texture, const ImVec2& size);
-    void ImageFromFB(FrameBuffer* frameBuffer);
-    ImTextureID TextureIDFromFB(FrameBuffer* frameBuffer);
+    void Image(Image2D* image, const ImVec2& size);
+    void ImageFromFB(FrameBuffer* frameBuffer, const ImVec2& size);
 }

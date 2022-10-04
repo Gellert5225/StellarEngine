@@ -118,12 +118,6 @@ namespace Stellar {
 
     void VulkanImGuiLayer::end() const {
         ImGuiIO& io = ImGui::GetIO();
-        Application& app = Application::Get();
-        io.DisplaySize = ImVec2(app.getWindow().getWidth(), app.getWindow().getHeight());
-
-        auto time = (float)glfwGetTime();
-        io.DeltaTime = m_Time > 0.0 ? (time - m_Time) : (1.0f / 60.0f);
-
         ImGui::Render();
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
             ImGui::UpdatePlatformWindows();
@@ -132,11 +126,8 @@ namespace Stellar {
 
         auto swapChain = (VulkanSwapChain*)Application::Get().getWindow().getSwapChain();
 
-#if 1
         VkClearValue clearValues[1];
         clearValues[0].color = { {0.1f, 0.1f,0.1f, 1.0f} };
-
-//        auto commandBufferIndex = swapChain->getCurrentFrameIndex();
 
         VkCommandBufferBeginInfo drawCmdBufInfo = {};
         drawCmdBufInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -161,18 +152,18 @@ namespace Stellar {
         VkViewport viewport = {};
         viewport.x = 0;
         viewport.y = 1;
-        viewport.height = io.DisplaySize.x;
-        viewport.width = io.DisplaySize.y;
+        viewport.height = swapChain->getSwapChainExtent().width;
+        viewport.width = swapChain->getSwapChainExtent().height;
         viewport.minDepth = 0.0f;
         viewport.maxDepth = 1.0f;
         vkCmdSetViewport(swapChain->getCurrentCommandBuffer(), 0, 1, &viewport);
 
-        // VkRect2D scissor = {};
-        // scissor.extent.width = swapChain->getSwapChainExtent().width;
-        // scissor.extent.height = swapChain->getSwapChainExtent().height;
-        // scissor.offset.x = 0;
-        // scissor.offset.y = 0;
-        // vkCmdSetScissor(swapChain->getCurrentCommandBuffer(), 0, 1, &scissor);
+        VkRect2D scissor = {};
+        scissor.extent.width = swapChain->getSwapChainExtent().width;
+        scissor.extent.height = swapChain->getSwapChainExtent().height;
+        scissor.offset.x = 0;
+        scissor.offset.y = 0;
+        vkCmdSetScissor(swapChain->getCurrentCommandBuffer(), 0, 1, &scissor);
 
         ImDrawData* main_draw_data = ImGui::GetDrawData();
         
@@ -181,10 +172,6 @@ namespace Stellar {
         vkCmdEndRenderPass(swapChain->getCurrentCommandBuffer());
 
         VK_CHECK_RESULT(vkEndCommandBuffer(swapChain->getCurrentCommandBuffer()));
-#else
-        ImDrawData *drawdata = ImGui::GetDrawData();
-        ImGui_ImplVulkan_RenderDrawData(drawdata, (VkCommandBuffer)commandBuffer->getActiveCommandBuffer());
-#endif
     }
 
     void VulkanImGuiLayer::onImGuiRender() {

@@ -32,6 +32,7 @@ namespace Stellar {
         
         virtual void bindUbo(const GlobalUniforms& ubo) = 0;
         virtual FrameBuffer* getFrameBuffer() = 0;
+        virtual void resizeFrameBuffer(uint32_t width, uint32_t height) = 0;
 
         static RendererAPIType Current() { return s_CurrentRendererAPI; }
     protected:

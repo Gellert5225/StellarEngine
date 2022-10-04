@@ -61,15 +61,15 @@ namespace Stellar {
 
             auto swapChain = m_Window->getSwapChain();
             swapChain->beginFrame();
-            
+
+            for (Layer* layer : m_LayerStack)
+                layer->onUpdate(timestep);
+
             // imGui
             m_ImGuiLayer->begin();
             for (Layer* layer : m_LayerStack)
                 layer->onImGuiRender();
             m_ImGuiLayer->end();
-
-            for (Layer* layer : m_LayerStack)
-                layer->onUpdate(timestep);
 
             // present
             m_Window->swapBuffers();

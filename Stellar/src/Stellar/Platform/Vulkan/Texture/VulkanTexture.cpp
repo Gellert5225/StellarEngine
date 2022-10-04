@@ -53,8 +53,8 @@ namespace Stellar {
         descriptorWrite.pImageInfo = &((VulkanImage2D*)m_Image)->getDescriptorInfo();
 
         vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
-        auto imageInfo = (VulkanImageInfo*)m_Image->getImageInfo();
-        m_ImGuiDescriptorSet = ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+        // auto imageInfo = (VulkanImageInfo*)m_Image->getImageInfo();
+        // m_ImGuiDescriptorSet = ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
     }
 
     VulkanTexture::~VulkanTexture() {

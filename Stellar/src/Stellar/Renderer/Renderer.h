@@ -35,6 +35,8 @@ namespace Stellar {
 
         static FrameBuffer* GetFrameBuffer();
 
+        static void ResizeFrameBuffer(uint32_t width, uint32_t height);
+
         static ShaderLibrary* GetShaderLibrary();
         
         static uint32_t GetCurrentFrameIndex();

@@ -14,6 +14,7 @@ namespace Stellar {
 
     struct VulkanRendererData {
         GraphicsPipeline* pipeline;
+        std::vector<VkDescriptorPool> DescriptorPools;
     };
 
     static VulkanRendererData* s_Data = nullptr;
@@ -31,10 +32,41 @@ namespace Stellar {
         m_GraphicsPipeline = new GraphicsPipeline(shader, ((VulkanFrameBuffer*)m_FrameBuffer)->getRenderPass());
         s_Data = new VulkanRendererData();
         s_Data->pipeline = m_GraphicsPipeline;
+
+        // descriptor pool
+        s_Data->DescriptorPools.resize(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
+        VkDescriptorPoolSize pool_sizes[] = {
+            { VK_DESCRIPTOR_TYPE_SAMPLER, 1000 },
+            { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000 },
+            { VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000 },
+            { VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000 },
+            { VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000 },
+            { VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000 },
+            { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000 },
+            { VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000 },
+            { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000 },
+            { VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000 },
+            { VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000 }
+        };
+        VkDescriptorPoolCreateInfo pool_info = {};
+        pool_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+        pool_info.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
+        pool_info.maxSets = 100000;
+        pool_info.poolSizeCount = (uint32_t)IM_ARRAYSIZE(pool_sizes);
+        pool_info.pPoolSizes = pool_sizes;
+        auto device = VulkanDevice::GetInstance()->logicalDevice();
+        for (uint32_t i = 0; i < VulkanSwapChain::MAX_FRAMES_IN_FLIGHT; i++) {
+            VK_CHECK_RESULT(vkCreateDescriptorPool(device, &pool_info, nullptr, &s_Data->DescriptorPools[i]));
+        }
+
         createUboDescriptorSet();
     }
 
     void VulkanRenderer::shutDown() {
+        auto device = VulkanDevice::GetInstance()->logicalDevice();
+        for (uint32_t i = 0; i < VulkanSwapChain::MAX_FRAMES_IN_FLIGHT; i++) {
+            vkDestroyDescriptorPool(device, s_Data->DescriptorPools[i], nullptr);
+        }
         delete m_GraphicsPipeline;
         delete m_UniformBuffer;
         delete m_CommandBuffer;
@@ -42,9 +74,18 @@ namespace Stellar {
     }
 
     void VulkanRenderer::beginRenderPass() {
-        m_CommandBuffer->begin();
-
+        auto device = VulkanDevice::GetInstance()->logicalDevice();
         auto swapChain = (VulkanSwapChain*)Application::Get().getWindow().getSwapChain();
+        uint32_t bufferIndex = swapChain->getCurrentFrameIndex();
+        vkResetDescriptorPool(device, s_Data->DescriptorPools[bufferIndex], 0);
+
+        if (m_NeedResize) {
+            m_NeedResize = false;
+
+            m_FrameBuffer->resize(m_ViewPortWidth, m_ViewPortHeight);
+        }
+
+        m_CommandBuffer->begin();
 
         std::array<VkClearValue, 2> clearValues{};
         clearValues[0].color = m_ClearColor;
@@ -165,5 +206,22 @@ namespace Stellar {
 
     FrameBuffer* VulkanRenderer::getFrameBuffer() {
         return m_FrameBuffer;
+    }
+
+    void VulkanRenderer::resizeFrameBuffer(uint32_t width, uint32_t height) {
+        if (m_ViewPortWidth != width || m_ViewPortHeight != height) {
+            m_ViewPortWidth = width;
+            m_ViewPortHeight = height;
+            m_NeedResize = true;
+        }
+    }
+
+    VkDescriptorSet VulkanRenderer::AllocateDesriptorSet(VkDescriptorSetAllocateInfo& allocInfo) {
+        uint32_t bufferIndex = Renderer::GetCurrentFrameIndex();
+		allocInfo.descriptorPool = s_Data->DescriptorPools[bufferIndex];
+		auto device = VulkanDevice::GetInstance()->logicalDevice();
+		VkDescriptorSet result;
+		VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocInfo, &result));
+		return result;
     }
 }

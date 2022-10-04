@@ -36,26 +36,16 @@ namespace Stellar {
 }
 
 namespace Stellar::UI {
-    void STLR_API Image(Image2D* image) {
+    void STLR_API Image(Image2D* image, const ImVec2& size) {
         auto imageInfo = (VulkanImageInfo*)image->getImageInfo();
         const auto textureID = ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-        ImGui::Image(textureID, { 100, 100 });
+        ImGui::Image(textureID, size);
     }
 
-    void STLR_API Texture(Texture2D* texture, const ImVec2& size) {
-        ImGui::Image((ImTextureID)((VulkanTexture*)texture)->getImGuiDescriptorSets(), size);
-    }
-
-    void STLR_API ImageFromFB(FrameBuffer* frameBuffer) {
+    void STLR_API ImageFromFB(FrameBuffer* frameBuffer, const ImVec2& size) {
         auto fb = (VulkanFrameBuffer*)frameBuffer;
         auto imageInfo = (VulkanImageInfo*)fb->getAttachmentImage()->getImageInfo();
         const auto textureID = ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-        ImGui::Image(textureID, { 100, 100 });
-    }
-
-    ImTextureID STLR_API TextureIDFromFB(FrameBuffer* frameBuffer) {
-        auto fb = (VulkanFrameBuffer*)frameBuffer;
-        auto imageInfo = (VulkanImageInfo*)fb->getAttachmentImage()->getImageInfo();
-        return ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+        ImGui::Image(textureID, size);
     }
 }

@@ -91,4 +91,8 @@ namespace Stellar {
     FrameBuffer* Renderer::GetFrameBuffer() {
         return s_RendererAPI->getFrameBuffer();
     }
+
+    void Renderer::ResizeFrameBuffer(uint32_t width, uint32_t height) {
+        s_RendererAPI->resizeFrameBuffer(width, height);
+    }
 }

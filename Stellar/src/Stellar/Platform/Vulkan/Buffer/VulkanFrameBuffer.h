@@ -14,7 +14,10 @@ namespace Stellar {
         VulkanFrameBuffer(const FrameBufferSpec& spec);
         ~VulkanFrameBuffer();
 
+        void resize(uint32_t width, uint32_t height) override;
+
         void invalidate();
+        void release();
         Image2D* getAttachmentImage() { return m_AttachmentImage; }
 
         [[nodiscard]] VkFramebuffer getFramebuffer() const;
@@ -26,5 +29,6 @@ namespace Stellar {
         FrameBufferSpec m_Spec;
         Image2D* m_AttachmentImage;
         StandardRenderPass* m_RenderPass;
+        uint32_t m_Width, m_Height;
     };
 }
