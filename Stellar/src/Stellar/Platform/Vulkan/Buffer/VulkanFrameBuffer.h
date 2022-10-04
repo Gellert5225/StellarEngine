@@ -18,7 +18,7 @@ namespace Stellar {
 
         void invalidate();
         void release();
-        Image2D* getAttachmentImage() { return m_AttachmentImage; }
+        Image2D* getAttachmentImage() override { return m_AttachmentImage; }
 
         [[nodiscard]] VkFramebuffer getFramebuffer() const;
         [[nodiscard]] VkRenderPass getRenderPass() const;
@@ -26,9 +26,6 @@ namespace Stellar {
         const FrameBufferSpec& getSpecification() const { return m_Spec; };
     private:
         VkFramebuffer m_Framebuffer;
-        FrameBufferSpec m_Spec;
-        Image2D* m_AttachmentImage;
         StandardRenderPass* m_RenderPass;
-        uint32_t m_Width, m_Height;
     };
 }

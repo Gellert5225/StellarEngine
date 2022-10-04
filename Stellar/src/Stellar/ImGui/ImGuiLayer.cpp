@@ -43,8 +43,7 @@ namespace Stellar::UI {
     }
 
     void STLR_API ImageFromFB(FrameBuffer* frameBuffer, const ImVec2& size) {
-        auto fb = (VulkanFrameBuffer*)frameBuffer;
-        auto imageInfo = (VulkanImageInfo*)fb->getAttachmentImage()->getImageInfo();
+        auto imageInfo = (VulkanImageInfo*)frameBuffer->getAttachmentImage()->getImageInfo();
         const auto textureID = ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
         ImGui::Image(textureID, size);
     }

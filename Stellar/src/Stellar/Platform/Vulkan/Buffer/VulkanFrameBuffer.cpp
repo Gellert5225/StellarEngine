@@ -6,9 +6,10 @@
 
 namespace Stellar {
 
-    VulkanFrameBuffer::VulkanFrameBuffer(const FrameBufferSpec& spec): m_Spec(spec) {
+    VulkanFrameBuffer::VulkanFrameBuffer(const FrameBufferSpec& spec) {
         m_Width = spec.width;
         m_Height = spec.height;
+        m_Spec = spec;
         invalidate();
     }
 
