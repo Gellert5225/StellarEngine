@@ -33,12 +33,10 @@ namespace Stellar {
         [[nodiscard]] VkFormat getSwapChainImageFormat() const;
         [[nodiscard]] SwapChainExtent2D getSwapChainExtent() const override;
         [[nodiscard]] VkSwapchainKHR& getSwapChain();
-        [[nodiscard]] VkRenderPass getRenderPass() const;
         [[nodiscard]] VkRenderPass getImGuiRenderPass() const;
         [[nodiscard]] uint32_t getImageCount() const;
         [[nodiscard]] uint32_t getCurrentFrameIndex() const override;
         [[nodiscard]] VkFramebuffer getCurrentFrameBuffer() const;
-        [[nodiscard]] VkFramebuffer getCurrentImGuiFrameBuffer() const;
         [[nodiscard]] VkCommandBuffer getCurrentCommandBuffer() const;
         [[nodiscard]] VkCommandBuffer getCommandBuffer(uint32_t index) const;
 
@@ -50,10 +48,8 @@ namespace Stellar {
         VkFormat m_SwapChainImageFormat{};
         SwapChainExtent2D m_SwapChainExtent{};
 
-        StandardRenderPass* m_RenderPass = nullptr;
         ImGuiRenderPass* m_ImGuiRenderPass = nullptr;
         std::vector<VkFramebuffer> m_Framebuffers;
-        std::vector<VkFramebuffer> m_ImGuiFramebuffers;
 
         struct SwapchainCommandBuffer {
             VkCommandPool CommandPool = nullptr;

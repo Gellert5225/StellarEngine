@@ -76,10 +76,6 @@ namespace Stellar {
 
         for (auto& framebuffer : m_Framebuffers)
             vkDestroyFramebuffer(device, framebuffer, nullptr);
-        for (auto& framebuffer : m_ImGuiFramebuffers)
-            vkDestroyFramebuffer(device, framebuffer, nullptr);
-
-        delete m_RenderPass;
         delete m_ImGuiRenderPass;
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
@@ -121,20 +117,12 @@ namespace Stellar {
         return m_CurrentFrameIndex;
     }
 
-    VkRenderPass VulkanSwapChain::getRenderPass() const {
-        return m_RenderPass->getVkRenderPass();
-    }
-
     uint32_t VulkanSwapChain::getImageCount() const {
         return m_SwapChainImages.size();
     }
 
     VkRenderPass VulkanSwapChain::getImGuiRenderPass() const {
         return m_ImGuiRenderPass->getVkRenderPass();
-    }
-
-    VkFramebuffer VulkanSwapChain::getCurrentImGuiFrameBuffer() const {
-        return m_ImGuiFramebuffers[m_CurrentImageIndex];
     }
 
     void VulkanSwapChain::createCommandBuffers() {
@@ -287,40 +275,25 @@ namespace Stellar {
         auto device = VulkanDevice::GetInstance()->logicalDevice();
         for (auto& framebuffer : m_Framebuffers)
             vkDestroyFramebuffer(device, framebuffer, nullptr);
-        for (auto& framebuffer : m_ImGuiFramebuffers)
-            vkDestroyFramebuffer(device, framebuffer, nullptr);
 
         VkFramebufferCreateInfo info = {};
         info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-        info.renderPass = m_RenderPass->getVkRenderPass();
+        info.renderPass = m_ImGuiRenderPass->getVkRenderPass();
         info.attachmentCount = 1;
         info.width = m_SwapChainExtent.width;
         info.height = m_SwapChainExtent.height;
         info.layers = 1;
 
-        VkFramebufferCreateInfo info2 = {};
-        info2.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-        info2.renderPass = m_ImGuiRenderPass->getVkRenderPass();
-        info2.attachmentCount = 1;
-        info2.width = m_SwapChainExtent.width;
-        info2.height = m_SwapChainExtent.height;
-        info2.layers = 1;
-
         m_Framebuffers.resize(getImageCount());
-        m_ImGuiFramebuffers.resize(getImageCount());
         for (uint32_t i = 0; i < m_Framebuffers.size(); i++) {
             info.pAttachments = &m_SwapChainImageViews[i];
-            info2.pAttachments = &m_SwapChainImageViews[i];
             VK_CHECK_RESULT(vkCreateFramebuffer(device, &info, nullptr,  &m_Framebuffers[i]))
-            VK_CHECK_RESULT(vkCreateFramebuffer(device, &info2, nullptr, &m_ImGuiFramebuffers[i]))
         }
 
     }
 
     void VulkanSwapChain::createRenderPass() {
-        delete m_RenderPass;
         delete m_ImGuiRenderPass;
-        m_RenderPass = new StandardRenderPass(m_SwapChainImageFormat);
         m_ImGuiRenderPass = new ImGuiRenderPass(m_SwapChainImageFormat);
     }
 
