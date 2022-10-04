@@ -112,6 +112,8 @@ void Sandbox2D::onImGuiRender() {
     ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
     ImGui::Begin("Color Setting");
     ImGui::ColorEdit3("Square Color", glm::value_ptr(m_Color));
+    Stellar::UI::Texture(m_Texture2, { 200, 200 });
+    ImGui::End();
     ImGui::End();
 
     ImGuiIO& io = ImGui::GetIO();
@@ -123,9 +125,8 @@ void Sandbox2D::onImGuiRender() {
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(255,255,255,0));
     ImGui::Begin("Editor" , nullptr, ImGuiWindowFlags_NoBringToFrontOnFocus);
     ImGui::PopStyleColor();
-    Stellar::UI::Image(m_Texture->getImage());
+    //Stellar::UI::Image(m_Texture->getImage());
     io.ConfigWindowsMoveFromTitleBarOnly = true;
     ImGui::End();  
-    ImGui::End();
     ;
 }

@@ -55,10 +55,8 @@ namespace Stellar {
         pool_info.poolSizeCount = (uint32_t)IM_ARRAYSIZE(pool_sizes);
         pool_info.pPoolSizes = pool_sizes;
 
-        if (vkCreateDescriptorPool(VulkanDevice::GetInstance()->logicalDevice(),
-                                   &pool_info, nullptr, &m_DescriptorPool) != VK_SUCCESS) {
-            throw std::runtime_error("failed to set up descriptor pool for imgui");
-        }
+        auto device = VulkanDevice::GetInstance()->logicalDevice();
+        VK_CHECK_RESULT(vkCreateDescriptorPool(device, &pool_info, nullptr, &m_DescriptorPool));
 
         ImGui_ImplGlfw_InitForVulkan(Application::Get().getWindow().getGLFWWindow(), true);
 
@@ -68,8 +66,6 @@ namespace Stellar {
         init_info.Device = VulkanDevice::GetInstance()->logicalDevice();
         init_info.QueueFamily = VulkanDevice::GetInstance()->getIndices().graphicsFamily.value();
         init_info.Queue = VulkanDevice::GetInstance()->getGraphicsQueue();
-
-        // pipeline cache is a potential future optimization, ignoring for now
         init_info.PipelineCache = VK_NULL_HANDLE;
         init_info.DescriptorPool = m_DescriptorPool;
         init_info.Allocator = VK_NULL_HANDLE;
@@ -78,12 +74,11 @@ namespace Stellar {
         init_info.CheckVkResultFn = vulkanCheckResult;
         ImGui_ImplVulkan_Init(&init_info, swapChain->getRenderPass());
 
-        auto device = VulkanDevice::GetInstance();
-        VkCommandBuffer commandBuffer = device->beginSingleTimeCommands();
+        VkCommandBuffer commandBuffer = VulkanDevice::GetInstance()->beginSingleTimeCommands();
         ImGui_ImplVulkan_CreateFontsTexture(commandBuffer);
-        device->endSingleTimeCommands(commandBuffer);
+        VulkanDevice::GetInstance()->endSingleTimeCommands(commandBuffer);
 
-        VK_CHECK_RESULT(vkDeviceWaitIdle(VulkanDevice::GetInstance()->logicalDevice()));
+        VK_CHECK_RESULT(vkDeviceWaitIdle(device));
         ImGui_ImplVulkan_DestroyFontUploadObjects();
 
         uint32_t framesInFlight = VulkanSwapChain::MAX_FRAMES_IN_FLIGHT;
@@ -97,8 +92,7 @@ namespace Stellar {
             cmdBufAllocateInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
             cmdBufAllocateInfo.commandBufferCount = 1;
 
-            VK_CHECK_RESULT(vkAllocateCommandBuffers(VulkanDevice::GetInstance()->logicalDevice(),
-                                                     &cmdBufAllocateInfo, &cmdBuffer));
+            VK_CHECK_RESULT(vkAllocateCommandBuffers(device, &cmdBufAllocateInfo, &cmdBuffer));
             s_ImGuiCommandBuffers[i] = cmdBuffer;
         }
     }
@@ -181,6 +175,7 @@ namespace Stellar {
         // vkCmdSetScissor(swapChain->getCurrentCommandBuffer(), 0, 1, &scissor);
 
         ImDrawData* main_draw_data = ImGui::GetDrawData();
+        
         ImGui_ImplVulkan_RenderDrawData(main_draw_data, swapChain->getCurrentCommandBuffer());
 
         vkCmdEndRenderPass(swapChain->getCurrentCommandBuffer());

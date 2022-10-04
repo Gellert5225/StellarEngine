@@ -5,6 +5,7 @@
 #if defined __linux__ || defined _WIN64
 #include "Stellar/Platform/Vulkan/ImGui/imgui_impl_vulkan.h"
 #include "Stellar/Platform/Vulkan/Image/VulkanImage.h"
+#include "Stellar/Platform/Vulkan/Texture/VulkanTexture.h"
 #endif
 
 namespace Stellar {
@@ -22,4 +23,5 @@ namespace Stellar {
 
 namespace Stellar::UI {
     void Image(Image2D* image);
+    void Texture(Texture2D* texture, const ImVec2& size);
 }

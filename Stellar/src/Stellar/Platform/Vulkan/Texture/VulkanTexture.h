@@ -14,7 +14,8 @@ namespace Stellar {
         virtual void bind() override;
         // Vulkan
         void invalidate();
-        VkDescriptorSet getDescriptorSets() { return m_DescriptorSet; };
+        VkDescriptorSet getDescriptorSets() { return m_DescriptorSet; }
+        VkDescriptorSet getImGuiDescriptorSets() { return m_ImGuiDescriptorSet; };
     protected:
         virtual bool loadImage(const std::string& filePath) override;
     private:
@@ -23,5 +24,6 @@ namespace Stellar {
         unsigned char* m_Pixels{};
         VkDeviceSize m_ImageSize{};
         VkDescriptorSet m_DescriptorSet = VK_NULL_HANDLE;
+        VkDescriptorSet m_ImGuiDescriptorSet = VK_NULL_HANDLE;
     };
 }

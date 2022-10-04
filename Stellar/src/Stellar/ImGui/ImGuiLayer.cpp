@@ -41,4 +41,8 @@ namespace Stellar::UI {
         const auto textureID = ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
         ImGui::Image(textureID, { 100, 100 });
     }
+
+    void STLR_API Texture(Texture2D* texture, const ImVec2& size) {
+        ImGui::Image((ImTextureID)((VulkanTexture*)texture)->getImGuiDescriptorSets(), size);
+    }
 }
