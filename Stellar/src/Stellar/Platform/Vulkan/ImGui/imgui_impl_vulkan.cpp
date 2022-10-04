@@ -636,7 +636,6 @@ bool ImGui_ImplVulkan_CreateDeviceObjects()
 
     if (!g_DescriptorSetLayout)
     {
-        VkSampler sampler[1] = { g_FontSampler };
         VkDescriptorSetLayoutBinding binding[1] = {};
         binding[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
         binding[0].descriptorCount = 1;
@@ -1255,8 +1254,6 @@ static std::unordered_map<void*, VkDetails> s_VulkanCache;
 
 ImTextureID ImGui_ImplVulkan_AddTexture(VkSampler sampler, VkImageView image_view, VkImageLayout image_layout)
 {
-    ImGui_ImplVulkan_InitInfo* v = &g_VulkanInitInfo;
-
     VkDescriptorSetAllocateInfo alloc_info = {};
     alloc_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
     alloc_info.descriptorSetCount = 1;

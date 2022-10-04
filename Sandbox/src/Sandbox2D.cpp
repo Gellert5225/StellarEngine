@@ -128,7 +128,6 @@ void Sandbox2D::onImGuiRender() {
     auto perspective = viewPortSize.x / viewPortSize.y;
     //m_Camera.setOrtho(-perspective, perspective, -1, 1, -10, 10);
     m_Camera.setPerspectiveProjection(glm::radians(60.0f), perspective, 0.1f, 100.0f);
-    STLR_INFO("View port: {0}, {1}", viewPortSize.x, viewPortSize.y);
     Stellar::Renderer::ResizeFrameBuffer(viewPortSize.x, viewPortSize.y);
     Stellar::UI::ImageFromFB(Stellar::Renderer::GetFrameBuffer(), viewPortSize);
 

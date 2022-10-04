@@ -197,7 +197,6 @@ namespace Stellar {
         SwapChainSupportDetails support = VulkanDevice::GetInstance()->getSwapChainSupport();
         VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(support.formats);
         VkPresentModeKHR presentMode = chooseSwapPresentMode(support.presentModes);
-        STLR_CORE_INFO("Present mode: {0}", presentMode);
         VkExtent2D extent = chooseSwapExtent(support.capabilities);
 
         VkSwapchainKHR oldSwapchain = m_VulkanSwapChain;
