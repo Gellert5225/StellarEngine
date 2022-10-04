@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "Uniforms.h"
 #include "Texture.h"
+#include "FrameBuffer.h"
 
 #include <glm/glm.hpp>
 
@@ -30,6 +31,7 @@ namespace Stellar {
                                     const glm::mat4& transform = {}) = 0;
         
         virtual void bindUbo(const GlobalUniforms& ubo) = 0;
+        virtual FrameBuffer* getFrameBuffer() = 0;
 
         static RendererAPIType Current() { return s_CurrentRendererAPI; }
     protected:

@@ -4,7 +4,9 @@
 
 #include "Stellar/Renderer/RendererAPI.h"
 #include "Stellar/Renderer/Buffer.h"
+
 #include "Stellar/Platform/Vulkan/SwapChain/VulkanSwapChain.h"
+#include "Stellar/Platform/Vulkan/Buffer/VulkanFrameBuffer.h"
 #include "Stellar/Core/Application.h"
 
 #include <vulkan/vulkan.h>
@@ -25,6 +27,8 @@ namespace Stellar {
                             const glm::vec3& color,
                             uint32_t indexCount,
                             const glm::mat4& transform) override;
+
+        FrameBuffer* getFrameBuffer() override;
         
         void bindUbo(const GlobalUniforms& ubo) override;
 
@@ -35,6 +39,7 @@ namespace Stellar {
         VkClearColorValue m_ClearColor = {{0.66f, 0.9f, 0.96f, 1.0f}};
 
         Buffer* m_UniformBuffer{};
+        FrameBuffer* m_FrameBuffer;
 
         VkDescriptorSet m_UboDescriptorSet;
 

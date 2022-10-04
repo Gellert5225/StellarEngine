@@ -72,7 +72,7 @@ namespace Stellar {
         init_info.MinImageCount = 2;
         init_info.ImageCount = swapChain->getImageCount();
         init_info.CheckVkResultFn = vulkanCheckResult;
-        ImGui_ImplVulkan_Init(&init_info, swapChain->getRenderPass());
+        ImGui_ImplVulkan_Init(&init_info, swapChain->getImGuiRenderPass());
 
         VkCommandBuffer commandBuffer = VulkanDevice::GetInstance()->beginSingleTimeCommands();
         ImGui_ImplVulkan_CreateFontsTexture(commandBuffer);

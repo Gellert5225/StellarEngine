@@ -48,7 +48,6 @@ namespace Stellar {
         imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
         imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
         imageInfo.flags = 0; // Optional
-        
         VK_CHECK_RESULT(vkCreateImage(device, &imageInfo, nullptr, &m_Info.image));
 
         VkMemoryRequirements memRequirements;
@@ -62,6 +61,20 @@ namespace Stellar {
         VK_CHECK_RESULT(vkAllocateMemory(device, &allocInfo, nullptr, &m_Info.imageMemory));
 
         vkBindImageMemory(device, m_Info.image, m_Info.imageMemory, 0);
+
+        // default image view
+        VkImageViewCreateInfo imageViewCreateInfo = {};
+		imageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+		imageViewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+		imageViewCreateInfo.format = Utils::VulkanImageFormat(m_Specification.format);
+		imageViewCreateInfo.flags = 0;
+		imageViewCreateInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		imageViewCreateInfo.image = m_Info.image;
+        imageViewCreateInfo.subresourceRange.baseMipLevel = 0;
+        imageViewCreateInfo.subresourceRange.levelCount = 1;
+        imageViewCreateInfo.subresourceRange.baseArrayLayer = 0;
+        imageViewCreateInfo.subresourceRange.layerCount = 1;
+		VK_CHECK_RESULT(vkCreateImageView(device, &imageViewCreateInfo, nullptr, &m_Info.imageView));
     }
 
     void VulkanImage2D::release() {

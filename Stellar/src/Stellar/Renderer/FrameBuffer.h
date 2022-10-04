@@ -10,6 +10,8 @@ namespace Stellar {
 
     class STLR_API FrameBuffer {
     public:
+        virtual ~FrameBuffer() = default;
+
         static FrameBuffer* Create(const FrameBufferSpec& spec);
 
         virtual const FrameBufferSpec& getSpecification() const = 0;

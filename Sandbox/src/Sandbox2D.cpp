@@ -7,6 +7,7 @@ Sandbox2D::Sandbox2D() : Stellar::Layer("Sandbox2D") {
 
 void Sandbox2D::onAttach() {
     Stellar::Renderer::SetClearColor({ 0.66f, 0.9f, 0.96f, 1.0f });
+    m_ViewPortID = Stellar::UI::TextureIDFromFB(Stellar::Renderer::GetFrameBuffer());
 }
 
 void Sandbox2D::onDetach() {
@@ -125,7 +126,8 @@ void Sandbox2D::onImGuiRender() {
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(255,255,255,0));
     ImGui::Begin("Editor" , nullptr, ImGuiWindowFlags_NoBringToFrontOnFocus);
     ImGui::PopStyleColor();
-    //Stellar::UI::Image(m_Texture->getImage());
+    ImGui::Image(m_ViewPortID, ImGui::GetContentRegionAvail());
+    //Stellar::UI::ImageFromFB(Stellar::Renderer::GetFrameBuffer());
     io.ConfigWindowsMoveFromTitleBarOnly = true;
     ImGui::End();  
     ;

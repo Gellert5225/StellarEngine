@@ -5,6 +5,7 @@
 #include <chrono>
 
 #include "Stellar/Core/Log.h"
+
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 #include "Stellar/Platform/Vulkan/VulkanCommon.h"
 #include "Stellar/Platform/Vulkan/Texture/VulkanTexture.h"
@@ -21,8 +22,13 @@ namespace Stellar {
         m_CommandBuffer = CommandBuffer::Create(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
         m_UniformBuffer = Buffer::Create(BufferType::Uniform, sizeof(GlobalUniforms));
 
+        FrameBufferSpec framebufferSpec;
+        framebufferSpec.width = 1280;
+        framebufferSpec.height = 720;
+        m_FrameBuffer = FrameBuffer::Create(framebufferSpec);
+
         auto shader = Renderer::GetShaderLibrary()->get("shader");
-        m_GraphicsPipeline = new GraphicsPipeline(shader);
+        m_GraphicsPipeline = new GraphicsPipeline(shader, ((VulkanFrameBuffer*)m_FrameBuffer)->getRenderPass());
         s_Data = new VulkanRendererData();
         s_Data->pipeline = m_GraphicsPipeline;
         createUboDescriptorSet();
@@ -32,6 +38,7 @@ namespace Stellar {
         delete m_GraphicsPipeline;
         delete m_UniformBuffer;
         delete m_CommandBuffer;
+        delete m_FrameBuffer;
     }
 
     void VulkanRenderer::beginRenderPass() {
@@ -45,11 +52,11 @@ namespace Stellar {
 
         VkRenderPassBeginInfo renderPassInfo{};
         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        renderPassInfo.renderPass = swapChain->getRenderPass();
-        renderPassInfo.framebuffer = swapChain->getCurrentFrameBuffer();
+        renderPassInfo.renderPass = ((VulkanFrameBuffer*)m_FrameBuffer)->getRenderPass();
+        renderPassInfo.framebuffer = ((VulkanFrameBuffer*)m_FrameBuffer)->getFramebuffer();
         renderPassInfo.renderArea.offset = {0, 0};
-        renderPassInfo.renderArea.extent.width = swapChain->getSwapChainExtent().width;
-        renderPassInfo.renderArea.extent.height = swapChain->getSwapChainExtent().height;
+        renderPassInfo.renderArea.extent.width = m_FrameBuffer->getSpecification().width;
+        renderPassInfo.renderArea.extent.height = m_FrameBuffer->getSpecification().height;
         renderPassInfo.clearValueCount = 2;
         renderPassInfo.pClearValues = clearValues.data();
 
@@ -154,5 +161,9 @@ namespace Stellar {
 
     GraphicsPipeline* VulkanRenderer::GetPipeline() {
         return s_Data->pipeline;
+    }
+
+    FrameBuffer* VulkanRenderer::getFrameBuffer() {
+        return m_FrameBuffer;
     }
 }

@@ -10,7 +10,7 @@
 
 namespace Stellar {
 
-    GraphicsPipeline::GraphicsPipeline(Shader* shader) {
+    GraphicsPipeline::GraphicsPipeline(Shader* shader, VkRenderPass renderPass) {
         createDescriptorPool();
         createDescriptorSetLayout();
         
@@ -119,7 +119,7 @@ namespace Stellar {
         pipelineInfo.pColorBlendState = &colorBlending;
         pipelineInfo.pDynamicState = &dynamicState;
         pipelineInfo.layout = m_PipelineLayout;
-        pipelineInfo.renderPass = swapChain->getRenderPass();
+        pipelineInfo.renderPass = renderPass;
         pipelineInfo.subpass = 0;
         pipelineInfo.basePipelineHandle = VK_NULL_HANDLE; // Optional
 

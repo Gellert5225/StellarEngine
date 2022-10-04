@@ -87,4 +87,8 @@ namespace Stellar {
     ShaderLibrary* Renderer::GetShaderLibrary() {
         return s_Data->m_ShaderLibrary;
     }
+
+    FrameBuffer* Renderer::GetFrameBuffer() {
+        return s_RendererAPI->getFrameBuffer();
+    }
 }
