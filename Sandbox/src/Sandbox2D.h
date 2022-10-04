@@ -21,5 +21,7 @@ private:
     Stellar::Texture2D* m_Texture{};
     Stellar::Texture2D* m_Texture2{};
 
+    ImTextureID m_TexID;
+
     glm::vec3 m_Color{1.0f};
 };

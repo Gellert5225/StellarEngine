@@ -73,10 +73,11 @@ namespace Stellar {
 
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
                                 *m_GraphicsPipeline->getPipelineLayout(),
-                                0, 1, &m_UboDescriptorSet, 0, nullptr);
+                                1, 1, &m_UboDescriptorSet, 0, nullptr);
     }
 
     void VulkanRenderer::endRenderPass() {
+        //vkResetDescriptorPool(VulkanDevice::GetInstance()->logicalDevice(), m_GraphicsPipeline->getDescriptorPool(), 0);
         vkCmdEndRenderPass((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer());
         m_CommandBuffer->end();
         m_CommandBuffer->submit();
@@ -98,7 +99,7 @@ namespace Stellar {
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, *m_GraphicsPipeline->getPipeline());
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
                                 *m_GraphicsPipeline->getPipelineLayout(),
-                                1, 1, &textureDescriptorSet, 0, nullptr);
+                                0, 1, &textureDescriptorSet, 0, nullptr);
         vkCmdPushConstants(commandBuffer, *m_GraphicsPipeline->getPipelineLayout(),
                            VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
                            0, sizeof(Push), &push);

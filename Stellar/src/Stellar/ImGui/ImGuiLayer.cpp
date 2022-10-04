@@ -2,11 +2,14 @@
 #include "ImGuiLayer.h" 
 
 #include "Stellar/Renderer/RendererAPI.h"
+#include "Stellar/Renderer/Image.h"
 
 #include "Stellar/Core/Log.h"
 
 #if defined __linux__ || defined _WIN64
 #include "Stellar/Platform/Vulkan/ImGui/VulkanImGuiLayer.h"
+#include "Stellar/Platform/Vulkan/ImGui/imgui_impl_vulkan.h"
+#include "Stellar/Platform/Vulkan/Image/VulkanImage.h"
 #endif
 
 #if defined __APPLE__
@@ -29,5 +32,17 @@ namespace Stellar {
         STLR_CORE_ASSERT(false, "Unknown RendererAPI");
         return nullptr;
 
+    }
+}
+
+namespace Stellar::UI {
+    void STLR_API Image(Image2D* image) {
+        auto imageInfo = (VulkanImageInfo*)image->getImageInfo();
+        const auto textureID = ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+        ImGui::Image(textureID, { 100, 100 });
+    }
+
+    void STLR_API Texture(Texture2D* texture, const ImVec2& size) {
+        ImGui::Image((ImTextureID)((VulkanTexture*)texture)->getImGuiDescriptorSets(), size);
     }
 }

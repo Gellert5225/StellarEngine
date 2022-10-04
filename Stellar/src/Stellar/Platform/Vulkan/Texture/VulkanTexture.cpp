@@ -7,6 +7,7 @@
 #include "Stellar/Platform/Vulkan/Image/VulkanImage.h"
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 #include "Stellar/Platform/Vulkan/Renderer/VulkanRenderer.h"
+#include "Stellar/Platform/Vulkan/ImGui/imgui_impl_vulkan.h"
 #include "Stellar/Platform/Vulkan/VulkanCommon.h"
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -44,13 +45,15 @@ namespace Stellar {
         VkWriteDescriptorSet descriptorWrite{};
         descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
         descriptorWrite.dstSet = m_DescriptorSet;
-        descriptorWrite.dstBinding = 1;
+        descriptorWrite.dstBinding = 0;
         descriptorWrite.dstArrayElement = 0;
         descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
         descriptorWrite.descriptorCount = 1;
         descriptorWrite.pImageInfo = &((VulkanImage2D*)m_Image)->getDescriptorInfo();
 
         vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
+        auto imageInfo = (VulkanImageInfo*)m_Image->getImageInfo();
+        m_ImGuiDescriptorSet = ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
     }
 
     VulkanTexture::~VulkanTexture() {
@@ -170,7 +173,7 @@ namespace Stellar {
         viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
         viewInfo.image = info->image;
         viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-        viewInfo.format = VK_FORMAT_R8G8B8A8_SRGB;
+        viewInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
         viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
         viewInfo.subresourceRange.baseMipLevel = 0;
         viewInfo.subresourceRange.levelCount = 1;

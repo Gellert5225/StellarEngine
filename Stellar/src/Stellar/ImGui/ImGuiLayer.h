@@ -2,6 +2,12 @@
 
 #include "Stellar/Core/Layer.h"
 
+#if defined __linux__ || defined _WIN64
+#include "Stellar/Platform/Vulkan/ImGui/imgui_impl_vulkan.h"
+#include "Stellar/Platform/Vulkan/Image/VulkanImage.h"
+#include "Stellar/Platform/Vulkan/Texture/VulkanTexture.h"
+#endif
+
 namespace Stellar {
     class STLR_API ImGuiLayer: public Layer {
     public:
@@ -13,4 +19,9 @@ namespace Stellar {
         float m_Time = 0.0f;
 
     };
+}
+
+namespace Stellar::UI {
+    void Image(Image2D* image);
+    void Texture(Texture2D* texture, const ImVec2& size);
 }

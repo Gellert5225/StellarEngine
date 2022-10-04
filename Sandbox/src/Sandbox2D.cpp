@@ -65,12 +65,12 @@ void Sandbox2D::onImGuiRender() {
     ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
     ImGuiWindowFlags host_window_flags = 0;
     host_window_flags |= ImGuiWindowFlags_NoTitleBar | 
-                            ImGuiWindowFlags_NoCollapse | 
-                            ImGuiWindowFlags_NoResize | 
-                            ImGuiWindowFlags_NoMove | 
-                            ImGuiWindowFlags_NoDocking;
-    host_window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | 
-                            ImGuiWindowFlags_NoNavFocus;
+                         ImGuiWindowFlags_NoCollapse | 
+                         ImGuiWindowFlags_NoResize | 
+                         ImGuiWindowFlags_NoMove;
+    host_window_flags |= ImGuiWindowFlags_MenuBar | 
+                         ImGuiWindowFlags_NoBringToFrontOnFocus | 
+                         ImGuiWindowFlags_NoNavFocus;
     if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
         host_window_flags |= ImGuiWindowFlags_NoBackground;
 
@@ -91,8 +91,15 @@ void Sandbox2D::onImGuiRender() {
     dockspaceID = ImGui::GetID("HUB_DockSpace");
     ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), dockspace_flags, nullptr);
 
-    ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
+    if (ImGui::BeginMenuBar()) {
+        if (ImGui::BeginMenu("File")) {
+            if (ImGui::MenuItem("Exit"))
+            ImGui::EndMenu();
+        }
+        ImGui::EndMenuBar();
+    }
 
+    ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
     ImGui::Begin("Info");
     ImGui::Text("GPU: %s", appInfo.graphicsInfo.c_str());
     ImGui::Text("%s", appInfo.vulkanVersion.c_str());
@@ -105,16 +112,21 @@ void Sandbox2D::onImGuiRender() {
     ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
     ImGui::Begin("Color Setting");
     ImGui::ColorEdit3("Square Color", glm::value_ptr(m_Color));
+    Stellar::UI::Texture(m_Texture2, { 200, 200 });
     ImGui::End();
     ImGui::End();
 
     ImGuiIO& io = ImGui::GetIO();
 
-    ImGuiViewport* vport = ImGui::GetMainViewport();
-    ImGui::SetNextWindowViewport(vport->ID);
-    ImGui::SetNextWindowBgAlpha(0.0f);
+    // ImGuiViewport* vport = ImGui::GetMainViewport();
+    // ImGui::SetNextWindowViewport(vport->ID);
+    // ImGui::SetNextWindowBgAlpha(0.0f);
 
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(255,255,255,0));
     ImGui::Begin("Editor" , nullptr, ImGuiWindowFlags_NoBringToFrontOnFocus);
+    ImGui::PopStyleColor();
+    //Stellar::UI::Image(m_Texture->getImage());
     io.ConfigWindowsMoveFromTitleBarOnly = true;
     ImGui::End();  
+    ;
 }

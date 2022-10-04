@@ -118,7 +118,7 @@ namespace Stellar {
 
     inline void vulkanCheckResult(VkResult result) {
         if (result != VK_SUCCESS) {
-            STLR_CORE_ERROR("VkResult is '{0}' in {1}:{2}", VKResultToString(result), __FILE__, __LINE__);
+            STLR_CORE_ERROR("VkResult isssss '{0}' in {1}:{2}", VKResultToString(result), __FILE__, __LINE__);
 
             STLR_CORE_ASSERT(result == VK_SUCCESS, VKResultToString(result));
         }
