@@ -42,8 +42,8 @@ namespace Stellar {
         
         s_RendererAPI = InitRendererAPI();
 
-        Renderer::GetShaderLibrary()->load("../Resources/Shader/Vulkan/shader.glsl");
-        Renderer::GetShaderLibrary()->load("../Resources/Shader/Vulkan/basicShader.glsl");
+        Renderer::GetShaderLibrary()->load("shader");
+        Renderer::GetShaderLibrary()->load("basicShader");
 
         s_RendererAPI->init();
         Renderer2D::Init();

@@ -73,12 +73,26 @@ namespace Stellar {
         add(name, shader);
     }
 
-    void ShaderLibrary::load(const std::string& filePath) {
+    void ShaderLibrary::load(const std::string& fileName) {
+        // get filepath based on platform
+        std::string filePath;
+        #if defined(_WIN64) || defined(__linux__)
+        filePath = "../../Resources/Shader/Vulkan/" + fileName + ".glsl";
+        #elif defined(__APPLE__)
+        filePath = "../../Resources/Shader/Metal/" + fileName + ".metal";
+        #endif
         auto shader = Shader::Create(filePath);
         add(shader);
     }
 
-    void ShaderLibrary::load(const std::string& name, const std::string& filePath) {
+    void ShaderLibrary::load(const std::string& name, const std::string& fileName) {
+        // get filepath based on platform
+        std::string filePath;
+        #if defined(_WIN64) || defined(__linux__)
+        filePath = "../../Resources/Shader/Vulkan/" + fileName + ".glsl";
+        #elif defined(__APPLE__)
+        filePath = "../../Resources/Shader/Metal/" + fileName + ".metal";
+        #endif
         auto shader = Shader::Create(filePath);
         add(name, shader);
     }

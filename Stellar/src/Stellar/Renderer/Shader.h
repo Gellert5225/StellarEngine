@@ -34,8 +34,8 @@ namespace Stellar {
 
         void add(Shader* shader);
         void add(const std::string& name, Shader* shader);
-        void load(const std::string& filePath);
-        void load(const std::string& name, const std::string& filePath);
+        void load(const std::string& fileName);
+        void load(const std::string& name, const std::string& fileName);
         Shader* get(const std::string& name);
     private:
         std::unordered_map<std::string, Shader*> m_Shaders;
