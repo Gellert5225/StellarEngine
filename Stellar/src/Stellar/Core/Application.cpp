@@ -76,8 +76,6 @@ namespace Stellar {
 
             m_Window->onUpdate();
         }
-
-        // vkDeviceWaitIdle(VulkanDevice::GetInstance()->logicalDevice());
     }
 
     bool Application::onWindowClose(WindowCloseEvent& e) {

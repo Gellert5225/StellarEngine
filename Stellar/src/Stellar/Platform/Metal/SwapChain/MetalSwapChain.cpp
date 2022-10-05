@@ -14,7 +14,8 @@ namespace Stellar {
 
     MetalSwapChain::~MetalSwapChain() {
         m_MetalSwapChain = nullptr;
-        //m_CommandBuffer->release();
+        m_CommandBuffer->release();
+        m_RenderPass->release();
     }
 
     void MetalSwapChain::init() {

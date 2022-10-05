@@ -11,7 +11,7 @@ namespace Stellar {
         MTL::TextureDescriptor* pTextureDesc = MTL::TextureDescriptor::alloc()->init();
         pTextureDesc->setWidth(m_Width);
         pTextureDesc->setHeight(m_Height);
-        pTextureDesc->setPixelFormat(MTL::PixelFormatRGBA8Unorm);
+        pTextureDesc->setPixelFormat(MTL::PixelFormatBGRA8Unorm);
         pTextureDesc->setTextureType(MTL::TextureType2D);
         pTextureDesc->setStorageMode(MTL::StorageModePrivate);
         pTextureDesc->setUsage(MTL::TextureUsageRenderTarget | MTL::TextureUsageShaderRead);

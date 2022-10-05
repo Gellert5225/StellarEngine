@@ -17,15 +17,26 @@ struct VertexData {
     float tilingFactor;
 };
 
+struct GlobalUniforms {
+    float4x4 viewProjection;
+};
+
+struct Push {
+    float4x4 model;
+    packed_float3 color;
+};
+
 v2f vertex vertexMain(uint vertexId                         [[vertex_id]],
-                      device const VertexData* vertexData   [[buffer(0)]]) {
+                      device const VertexData* vertexData   [[buffer(0)]],
+                      device const GlobalUniforms& uniform  [[buffer(1)]],
+                      constant Push& push                   [[buffer(2)]]) {
     v2f o;
-    float4 pos = float4(vertexData[vertexId].position, 1.0, 1.0);
+    float4 pos = float4(vertexData[vertexId].position, 0.0, 1.0);
+    pos = uniform.viewProjection * push.model * pos;
     o.position = pos;
     return o;
 }
 
 half4 fragment fragmentMain(v2f in [[stage_in]])  {
-    //return half4(pow(in.color, 2.2), 1.0);
     return half4(1.0, 1.0, 1.0, 1.0);
 }

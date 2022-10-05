@@ -36,5 +36,6 @@ namespace Stellar {
         MTL::CommandBuffer* m_CommandBuffer;
         MetalPipeline* m_Pipeline;
         FrameBuffer* m_FrameBuffer;
+        Buffer* m_UniformBuffer;
     };
 }

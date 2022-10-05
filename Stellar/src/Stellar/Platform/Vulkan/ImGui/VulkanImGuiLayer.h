@@ -18,7 +18,7 @@ namespace Stellar {
         ~VulkanImGuiLayer() override;
 
         void begin() override;
-        void end() const override;
+        void end() override;
 
         void onAttach() override;
         void onDetach() override;

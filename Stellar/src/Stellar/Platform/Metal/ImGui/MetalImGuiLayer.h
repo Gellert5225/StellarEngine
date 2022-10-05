@@ -12,7 +12,7 @@ namespace Stellar {
         ~MetalImGuiLayer() override;
 
         void begin() override;
-        void end() const override;
+        void end() override;
 
         void onAttach() override;
         void onDetach() override;

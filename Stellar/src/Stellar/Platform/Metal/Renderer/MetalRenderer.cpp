@@ -7,6 +7,8 @@
 #include "Stellar/Platform/Metal/Shader/MetalShader.h"
 #include "Stellar/Platform/Metal/Buffer/MetalBuffer.h"
 
+#include "Stellar/Core/Log.h"
+
 namespace Stellar {
     void MetalRenderer::init() {
         // create framebuffer
@@ -17,25 +19,22 @@ namespace Stellar {
 
         auto shader = Renderer::GetShaderLibrary()->get("shader");
         m_Pipeline = new MetalPipeline(shader);
+
+        m_UniformBuffer = Buffer::Create(BufferType::Uniform, sizeof(GlobalUniforms));
     }
 
     void MetalRenderer::shutDown() {
         delete m_Pipeline;
+        delete m_UniformBuffer;
     }
 
     void MetalRenderer::beginRenderPass() {
         // resize framebuffer
-
-        // auto fb = ((MetalFrameBuffer*)m_FrameBuffer)->getFrameBuffer();
-        // auto colorAttachment = swapChain->getRenderPass()->colorAttachments()->object(0);
-        // colorAttachment->setClearColor(m_ClearColor);
-        // colorAttachment->setLoadAction(MTL::LoadActionClear);
-        // colorAttachment->setStoreAction(MTL::StoreActionStore);
-        // colorAttachment->setTexture(swapChain->getCurrentFrameBuffer()->texture());
-        
         m_CommandBuffer = MetalDevice::GetInstance()->getCommandQueue()->commandBuffer();
 
         m_Encoder = m_CommandBuffer->renderCommandEncoder(((MetalFrameBuffer*)m_FrameBuffer)->getFrameBuffer());
+        m_Encoder->setRenderPipelineState(m_Pipeline->getPipelineState());
+        m_Encoder->setVertexBuffer((MTL::Buffer*)m_UniformBuffer->getBuffer(), 0, 1);
     }
 
     void MetalRenderer::endRenderPass() {
@@ -56,21 +55,22 @@ namespace Stellar {
                                        const glm::vec3& color,
                                        uint32_t indexCount,
                                        const glm::mat4 &transform) {
-        m_Encoder->setRenderPipelineState(m_Pipeline->getPipelineState());
+        Push p{};
+        p.model = transform;
+        p.color = color;
+
         m_Encoder->setVertexBuffer((MTL::Buffer*)vertexBuffer->getBuffer(), 0, 0);
-        //m_Encoder->setVertexBuffer((MTL::Buffer*)indexBuffer->getBuffer(), 0, 1);
+        m_Encoder->setVertexBytes(&p, sizeof(Push), 2);
         m_Encoder->drawIndexedPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle,
                                          indexCount, 
                                          MTL::IndexType::IndexTypeUInt16,
                                          (MTL::Buffer*)indexBuffer->getBuffer(),
                                          0);
-        m_Encoder->drawPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle, 
-                                  NS::UInteger(0), 
-                                  NS::UInteger(3));
     }
 
     void MetalRenderer::bindUbo(const GlobalUniforms& ubo) {
-        
+        reinterpret_cast<GlobalUniforms*>(((MTL::Buffer*)m_UniformBuffer->getBuffer())->contents())->viewProjection = ubo.viewProjection;
+        ((MetalBuffer*)m_UniformBuffer)->didModifyrange();
     }
 
     FrameBuffer* MetalRenderer::getFrameBuffer() {

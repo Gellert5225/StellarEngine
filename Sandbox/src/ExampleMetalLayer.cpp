@@ -2,17 +2,7 @@
 #include "ExampleMetalLayer.h"
 #include "imgui.h"
 
-ExampleMetalLayer::ExampleMetalLayer() {
-    // auto vertexBufferSize = sizeof(vertices[0]) * 3;
-    // m_VertexBuffer = Stellar::Buffer::Create(Stellar::BufferType::Vertex,
-    //                                          vertexBufferSize,
-    //                                          vertices);
-
-    // auto colorBufferSize = sizeof(colors[0]) * 3;
-    // m_ColorBuffer = Stellar::Buffer::Create(Stellar::BufferType::Vertex,
-    //                                         colorBufferSize,
-    //                                         colors);
-}
+ExampleMetalLayer::ExampleMetalLayer() { }
 
 void ExampleMetalLayer::onAttach() {
     Stellar::Renderer::SetClearColor({ 0.66f, 0.9f, 0.96f, 1.0f });
@@ -41,31 +31,22 @@ void ExampleMetalLayer::onUpdate(Stellar::Timestep ts) {
     m_Camera.setPosition(m_CameraPosition);
     
     Stellar::Renderer2D::BeginScene(m_Camera);
-    for (int i = 0; i < 5; i++) {
-        for (int j = 0; j < 5; j++) {
-            glm::vec3 pos(i * 0.22f, j * 0.22f, 0.0f);
-            glm::mat4 transformTile = 
-                glm::translate(glm::mat4(1.f), pos) * 
-                glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
-            Stellar::Renderer2D::DrawQuad(transformTile, m_Color, nullptr);
-        }
-    }
+   for (int i = 0; i < 5; i++) {
+       for (int j = 0; j < 5; j++) {
+           glm::vec3 pos(i * 0.22f, j * 0.22f, 0.0f);
+           glm::mat4 transformTile =
+               glm::translate(glm::mat4(1.f), pos) *
+               glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
+           Stellar::Renderer2D::DrawQuad(transformTile, m_Color, nullptr);
+       }
+   }
     Stellar::Renderer2D::DrawQuad(transform, {1.0f, 1.0f, 1.0f}, nullptr);
     Stellar::Renderer2D::EndScene();
-
-    // Stellar::Renderer::SetClearColor({ 0.66f, 0.9f, 0.96f, 1.0f });
-    // Stellar::Renderer::BeginRenderPass();
-    // Stellar::Renderer::RenderGeometry(m_VertexBuffer, m_ColorBuffer, nullptr, glm::vec3(1.0f, 0.0f,0.0f));
-    // Stellar::Renderer::EndRenderPass();
 }
 
-void ExampleMetalLayer::onDetach() {
-    delete m_VertexBuffer;
-    delete m_ColorBuffer;
-}
+void ExampleMetalLayer::onDetach() { }
 
-void ExampleMetalLayer::onEvent(Stellar::Event &event) {
-}
+void ExampleMetalLayer::onEvent(Stellar::Event &event) { }
 
 void ExampleMetalLayer::onImGuiRender() {
     auto appInfo = Stellar::Application::Get().getAppInfo();

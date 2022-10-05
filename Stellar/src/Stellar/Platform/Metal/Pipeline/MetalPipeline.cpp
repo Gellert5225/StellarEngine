@@ -18,6 +18,7 @@ namespace Stellar {
         m_PipelineState =  MetalDevice::GetInstance()->getDevice()->newRenderPipelineState(descriptor, &error);
         STLR_CORE_ASSERT(m_PipelineState,  error->localizedDescription()->utf8String());
 
+        descriptor->release();
         vertexFn->release();
         fragFn->release();
     }
