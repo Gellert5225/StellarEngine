@@ -10,8 +10,10 @@ namespace Stellar {
         auto device = MetalDevice::GetInstance()->getDevice();
         m_Buffer = device->newBuffer(size, MTL::ResourceStorageModeManaged);
 
-        write(m_Buffer->contents(), data);
-        m_Buffer->didModifyRange( NS::Range::Make(0, m_Buffer->length()));
+        if (data) {
+            write(m_Buffer->contents(), data);
+            didModifyrange();
+        }
     }
 
     MetalBuffer::~MetalBuffer() {
@@ -33,5 +35,9 @@ namespace Stellar {
 
     void* MetalBuffer::getBuffer() const { 
         return m_Buffer;
+    }
+
+    void MetalBuffer::didModifyrange() {
+        m_Buffer->didModifyRange(NS::Range::Make(0, m_Buffer->length()));
     }
 }

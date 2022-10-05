@@ -2,7 +2,7 @@
 #include "MetalImGuiLayer.h"
 
 #include <imgui.h>
-#include "Stellar/ImGUI/imgui_impl_glfw.h"
+#include "Stellar/ImGui/imgui_impl_glfw.h"
 #include "Stellar/Platform/Metal/ImGui/imgui_impl_metal.h"
 #include "Stellar/Platform/Metal/Device/MetalDevice.h"
 #include "Stellar/Platform/Metal/SwapChain/MetalSwapChain.h"
@@ -11,13 +11,9 @@
 
 namespace Stellar {
 
-    MetalImGuiLayer::MetalImGuiLayer() {
+    MetalImGuiLayer::MetalImGuiLayer() { }
 
-    }
-
-    MetalImGuiLayer::~MetalImGuiLayer() {
-
-    }
+    MetalImGuiLayer::~MetalImGuiLayer() { }
 
     void MetalImGuiLayer::onAttach() {
         ImGui::CreateContext();
@@ -41,18 +37,17 @@ namespace Stellar {
     void MetalImGuiLayer::begin() {
         auto swapChain = (MetalSwapChain*)Application::Get().getWindow().getSwapChain();
         auto colorAttachment = swapChain->getRenderPass()->colorAttachments()->object(0);
-        colorAttachment->setClearColor({1, 0, 0, 1});
-        colorAttachment->setLoadAction(MTL::LoadActionLoad);
+        colorAttachment->setClearColor({1, 1, 1, 1});
+        colorAttachment->setLoadAction(MTL::LoadActionClear);
         colorAttachment->setStoreAction(MTL::StoreActionStore);
-        m_CommandBuffer = MetalDevice::GetInstance()->getCommandQueue()->commandBuffer();
-        m_Encoder = m_CommandBuffer->renderCommandEncoder(swapChain->getRenderPass());
+        colorAttachment->setTexture(swapChain->getCurrentFrameBuffer()->texture());
 
         ImGui_ImplMetal_NewFrame(swapChain->getRenderPass());
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
     }
 
-    void MetalImGuiLayer::end() const {
+    void MetalImGuiLayer::end() {
         ImGuiIO& io = ImGui::GetIO();
         Application& app = Application::Get();
         io.DisplaySize = ImVec2(app.getWindow().getWidth(), app.getWindow().getHeight());
@@ -69,12 +64,15 @@ namespace Stellar {
             ImGui::RenderPlatformWindowsDefault();
         }
 
-        ImGui_ImplMetal_RenderDrawData(ImGui::GetDrawData(), m_CommandBuffer, m_Encoder);
+        NS::AutoreleasePool* pPool = NS::AutoreleasePool::alloc()->init();
+        auto swapChain = (MetalSwapChain*)Application::Get().getWindow().getSwapChain();
+        auto commandBuffer = MetalDevice::GetInstance()->getCommandQueue()->commandBuffer();
+        auto encoder = commandBuffer->renderCommandEncoder(swapChain->getRenderPass());
+        ImGui_ImplMetal_RenderDrawData(ImGui::GetDrawData(), commandBuffer, encoder);
 
-        m_Encoder->endEncoding();
-        m_Encoder->release();
-        m_CommandBuffer->commit();
-        m_CommandBuffer->release();
+        encoder->endEncoding();
+        commandBuffer->commit();
+        pPool->release();
     }
 
     void MetalImGuiLayer::onDetach() {
@@ -83,8 +81,5 @@ namespace Stellar {
         ImGui::DestroyContext();
     }
 
-    void MetalImGuiLayer::onImGuiRender() {
-        static bool show = true;
-        ImGui::ShowDemoWindow(&show);
-    }
+    void MetalImGuiLayer::onImGuiRender() { }
 }

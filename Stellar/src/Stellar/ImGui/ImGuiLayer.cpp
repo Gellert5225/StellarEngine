@@ -7,13 +7,15 @@
 #include "Stellar/Core/Log.h"
 
 #if defined __linux__ || defined _WIN64
-#include "Stellar/Platform/Vulkan/ImGui/VulkanImGuiLayer.h"
 #include "Stellar/Platform/Vulkan/ImGui/imgui_impl_vulkan.h"
+#include "Stellar/Platform/Vulkan/ImGui/VulkanImGuiLayer.h"
 #include "Stellar/Platform/Vulkan/Image/VulkanImage.h"
-#endif
-
-#if defined __APPLE__
+#include "Stellar/Platform/Vulkan/Texture/VulkanTexture.h"
+#include "Stellar/Platform/Vulkan/Buffer/VulkanFrameBuffer.h"
+#elif defined __APPLE__
+#include "Stellar/Platform/Metal/ImGui/imgui_impl_metal.h"
 #include "Stellar/Platform/Metal/ImGui/MetalImGuiLayer.h"
+#include "Stellar/Platform/Metal/Buffer/MetalFrameBuffer.h"
 #endif
 
 namespace Stellar {
@@ -37,14 +39,20 @@ namespace Stellar {
 
 namespace Stellar::UI {
     void STLR_API Image(Image2D* image, const ImVec2& size) {
+        #if defined __linux__ || defined _WIN64
         auto imageInfo = (VulkanImageInfo*)image->getImageInfo();
         const auto textureID = ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
         ImGui::Image(textureID, size);
+        #endif
     }
 
     void STLR_API ImageFromFB(FrameBuffer* frameBuffer, const ImVec2& size) {
+        #if defined __linux__ || defined _WIN64
         auto imageInfo = (VulkanImageInfo*)frameBuffer->getAttachmentImage()->getImageInfo();
         const auto textureID = ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
         ImGui::Image(textureID, size);
+        #endif
+
+        ImGui::Image(((MetalFrameBuffer*)frameBuffer)->getAttachmentTexture(), size);
     }
 }

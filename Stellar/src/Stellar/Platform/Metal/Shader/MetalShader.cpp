@@ -6,7 +6,7 @@
 #include "Stellar/Platform/Metal/Device/MetalDevice.h"
 
 namespace Stellar {
-    MetalShader::MetalShader(const std::string& filePath) {
+    MetalShader::MetalShader(const std::string& filePath): Shader(filePath) {
         auto shaderSrc = Shader::ReadFile(filePath);
 
         NS::Error* error = nullptr;

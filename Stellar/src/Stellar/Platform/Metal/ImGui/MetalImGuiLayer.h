@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Stellar/Core/Core.h"
-#include "Stellar/ImGUI/ImGuiLayer.h"
+#include "Stellar/ImGui/ImGuiLayer.h"
 #include "Stellar/Platform/Metal/MetalAPI.h"
 
 namespace Stellar {
@@ -12,7 +12,7 @@ namespace Stellar {
         ~MetalImGuiLayer() override;
 
         void begin() override;
-        void end() const override;
+        void end() override;
 
         void onAttach() override;
         void onDetach() override;

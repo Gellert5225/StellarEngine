@@ -116,7 +116,7 @@ namespace Stellar {
         ImGui::NewFrame();
     }
 
-    void VulkanImGuiLayer::end() const {
+    void VulkanImGuiLayer::end() {
         ImGuiIO& io = ImGui::GetIO();
         ImGui::Render();
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {

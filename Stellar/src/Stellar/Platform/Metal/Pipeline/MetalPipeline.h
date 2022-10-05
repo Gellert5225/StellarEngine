@@ -8,7 +8,7 @@
 namespace Stellar {
     class STLR_API MetalPipeline {
     public:
-        MetalPipeline(MetalShader* shader);
+        MetalPipeline(Shader* shader);
         ~MetalPipeline();
 
         MTL::RenderPipelineState* getPipelineState();

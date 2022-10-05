@@ -18,6 +18,9 @@ namespace Stellar {
         void write(void* dst, const void* src) override;
 
         [[nodiscard]] void* getBuffer() const override;
+
+        // Metal
+        void didModifyrange();
     private:
         MTL::Buffer* m_Buffer;
     };
