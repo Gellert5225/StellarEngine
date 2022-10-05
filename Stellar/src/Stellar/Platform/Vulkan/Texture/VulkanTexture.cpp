@@ -172,10 +172,6 @@ namespace Stellar {
         ((VulkanImage2D*)m_Image)->updateDescriptor();
     }
 
-    void VulkanTexture::bind() {
-                
-    }
-
     Image2D* VulkanTexture::getImage() const {
         return m_Image;
     }
