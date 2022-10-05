@@ -3,6 +3,7 @@
 #include "Stellar/Core/Layer.h"
 
 #include "Stellar/Renderer/FrameBuffer.h"
+#include "Stellar/Renderer/Texture.h"
 #include <imgui.h>
 
 namespace Stellar {
@@ -19,6 +20,6 @@ namespace Stellar {
 }
 
 namespace Stellar::UI {
-    void Image(Image2D* image, const ImVec2& size);
+    void Image(Texture2D* texture, const ImVec2& size);
     void ImageFromFB(FrameBuffer* frameBuffer, const ImVec2& size);
 }

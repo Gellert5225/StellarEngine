@@ -17,10 +17,6 @@ namespace Stellar {
         void onAttach() override;
         void onDetach() override;
         void onImGuiRender() override;
-
-    private:
-        MTL::CommandBuffer* m_CommandBuffer = nullptr;
-        MTL::RenderCommandEncoder* m_Encoder;
     };
 
 }

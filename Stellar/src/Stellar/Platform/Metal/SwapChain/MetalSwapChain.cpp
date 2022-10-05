@@ -64,7 +64,9 @@ namespace Stellar {
 
     void MetalSwapChain::onResize() {
         m_MetalSwapChain = nullptr;
+        m_RenderPass->release();
         createSwapChain();
+        createRenderPass();
     }
 
     SwapChain::SwapChainExtent2D MetalSwapChain::getSwapChainExtent() const {
