@@ -1,13 +1,13 @@
 #include "stlrpch.h"
 
 #include "MetalRenderer.h"
+#include "Stellar/Core/Log.h"
 #include "Stellar/Core/Application.h"
 #include "Stellar/Platform/Metal/SwapChain/MetalSwapChain.h"
 #include "Stellar/Platform/Metal/Device/MetalDevice.h"
 #include "Stellar/Platform/Metal/Shader/MetalShader.h"
 #include "Stellar/Platform/Metal/Buffer/MetalBuffer.h"
-
-#include "Stellar/Core/Log.h"
+#include "Stellar/Platform/Metal/Texture/MetalTexture.h"
 
 namespace Stellar {
     void MetalRenderer::init() {
@@ -64,6 +64,7 @@ namespace Stellar {
 
         m_Encoder->setVertexBuffer((MTL::Buffer*)vertexBuffer->getBuffer(), 0, 0);
         m_Encoder->setVertexBytes(&p, sizeof(Push), 2);
+        m_Encoder->setFragmentTexture(((MetalTexture*)texture)->getTexture(), 0);
         m_Encoder->drawIndexedPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle,
                                          indexCount, 
                                          MTL::IndexType::IndexTypeUInt16,

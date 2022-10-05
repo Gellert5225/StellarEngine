@@ -10,10 +10,9 @@ namespace Stellar {
     public:
         VulkanTexture(const std::string& filePath);
         ~VulkanTexture() override;
-        virtual Image2D* getImage() const override;
-        virtual void bind() override;
         // Vulkan
         void invalidate();
+        Image2D* getImage() const;
         VkDescriptorSet getDescriptorSets() { return m_DescriptorSet; }
         VkDescriptorSet getImGuiDescriptorSets() { return m_ImGuiDescriptorSet; };
     protected:

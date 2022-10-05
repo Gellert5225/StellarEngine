@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include "RendererAPI.h"
 
 namespace Stellar {
     void Camera::recalculateViewMatrix() {
@@ -10,7 +11,8 @@ namespace Stellar {
 
     void Camera::setPerspectiveProjection(float fovy, float aspect, float near, float far) {
         m_ProjectionMatrix = glm::perspective(fovy, aspect, near, far);
-        //m_ProjectionMatrix[0][0] *= -1;
+        if (RendererAPI::Current() == RendererAPIType::Metal)
+            m_ProjectionMatrix[1][1] *= -1;
         m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
     }
 

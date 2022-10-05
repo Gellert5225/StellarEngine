@@ -1,8 +1,13 @@
 #include "stlrpch.h"
 
 #include "RendererContext.h"
+#if defined(__linux__) || defined(_WIN64)
 #include "Stellar/Platform/Vulkan/Renderer/VulkanRendererContext.h"
+#endif
+
+#if defined(__APPLE__)
 #include "Stellar/Platform/Metal/Renderer/MetalRendererContext.h"
+#endif
 #include "Stellar/Core/Log.h"
 
 namespace Stellar {

@@ -1,8 +1,12 @@
 
 #include "ExampleMetalLayer.h"
 #include "imgui.h"
+#include "glm/gtc/type_ptr.hpp"
 
-ExampleMetalLayer::ExampleMetalLayer() { }
+ExampleMetalLayer::ExampleMetalLayer() { 
+    m_Texture = Stellar::Texture2D::Create("../Resources/Textures/StellarEngine.png");
+    m_Texture2 = Stellar::Texture2D::Create("../Resources/Textures/Example_texture.jpg");
+}
 
 void ExampleMetalLayer::onAttach() {
     Stellar::Renderer::SetClearColor({ 0.66f, 0.9f, 0.96f, 1.0f });
@@ -37,10 +41,10 @@ void ExampleMetalLayer::onUpdate(Stellar::Timestep ts) {
            glm::mat4 transformTile =
                glm::translate(glm::mat4(1.f), pos) *
                glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
-           Stellar::Renderer2D::DrawQuad(transformTile, m_Color, nullptr);
+           Stellar::Renderer2D::DrawQuad(transformTile, m_Color, m_Texture2);
        }
    }
-    Stellar::Renderer2D::DrawQuad(transform, {1.0f, 1.0f, 1.0f}, nullptr);
+    Stellar::Renderer2D::DrawQuad(transform, {1.0f, 1.0f, 1.0f}, m_Texture);
     Stellar::Renderer2D::EndScene();
 }
 
@@ -103,6 +107,11 @@ void ExampleMetalLayer::onImGuiRender() {
             ImGui::GetIO().Framerate);
     ImGui::End();
 
+    ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
+    ImGui::Begin("Color Setting");
+    ImGui::ColorEdit3("Square Color", glm::value_ptr(m_Color));
+    // Stellar::UI::Image(m_Texture2->getImage(), { 200, 200 });
+    ImGui::End();
     ImGui::End();
 
     // view port

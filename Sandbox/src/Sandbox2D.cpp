@@ -112,7 +112,7 @@ void Sandbox2D::onImGuiRender() {
     ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
     ImGui::Begin("Color Setting");
     ImGui::ColorEdit3("Square Color", glm::value_ptr(m_Color));
-    Stellar::UI::Image(m_Texture2->getImage(), { 200, 200 });
+    Stellar::UI::Image(m_Texture2, { 200, 200 });
     ImGui::End();
     ImGui::End();
 
