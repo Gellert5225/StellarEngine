@@ -35,6 +35,8 @@ namespace Stellar {
                                        width * xscale,
                                        height * yscale,
                                        MetalDevice::GetInstance()->getDevice());
+        m_SwapChainExtant.width = width * xscale;
+        m_SwapChainExtant.height = height * yscale;
 
         pPool->release();
 
@@ -70,7 +72,7 @@ namespace Stellar {
     }
 
     SwapChain::SwapChainExtent2D MetalSwapChain::getSwapChainExtent() const {
-        return SwapChain::SwapChainExtent2D();
+        return m_SwapChainExtant;
     }
 
     uint32_t MetalSwapChain::getCurrentFrameIndex() const {
