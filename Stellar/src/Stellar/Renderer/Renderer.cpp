@@ -47,7 +47,7 @@ namespace Stellar {
         //Renderer::GetShaderLibrary()->load("basicShader");
 
         s_RendererAPI->init();
-        Renderer2D::Init();
+        //Renderer2D::Init();
     }
 
     void Renderer::Shutdown() {
