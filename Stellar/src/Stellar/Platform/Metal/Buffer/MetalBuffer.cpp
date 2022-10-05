@@ -11,7 +11,7 @@ namespace Stellar {
         m_Buffer = device->newBuffer(size, MTL::ResourceStorageModeManaged);
 
         write(m_Buffer->contents(), data);
-        m_Buffer->didModifyRange( NS::Range::Make(0, m_Buffer->length()));
+        m_Buffer->didModifyRange(NS::Range::Make(0, m_Buffer->length()));
     }
 
     MetalBuffer::~MetalBuffer() {

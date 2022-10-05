@@ -2,12 +2,12 @@
 #include "MetalPipeline.h"
 
 #include "Stellar/Platform/Metal/Device/MetalDevice.h"
-#include "Stellar/Log.h"
+#include "Stellar/Core/Log.h"
 
 namespace Stellar {
-    MetalPipeline::MetalPipeline(MetalShader* shader) {
-        MTL::Function* vertexFn = shader->getLibrary()->newFunction(NS::String::string("vertexMain", NS::StringEncoding::UTF8StringEncoding));
-        MTL::Function* fragFn = shader->getLibrary()->newFunction(NS::String::string("fragmentMain", NS::StringEncoding::UTF8StringEncoding));
+    MetalPipeline::MetalPipeline(Shader* shader) {
+        MTL::Function* vertexFn = ((MetalShader*)shader)->getLibrary()->newFunction(NS::String::string("vertexMain", NS::StringEncoding::UTF8StringEncoding));
+        MTL::Function* fragFn = ((MetalShader*)shader)->getLibrary()->newFunction(NS::String::string("fragmentMain", NS::StringEncoding::UTF8StringEncoding));
 
         MTL::RenderPipelineDescriptor* descriptor = MTL::RenderPipelineDescriptor::alloc()->init();
         descriptor->setVertexFunction(vertexFn);

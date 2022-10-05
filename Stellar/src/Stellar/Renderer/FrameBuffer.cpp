@@ -6,7 +6,7 @@
 #endif
 
 #if defined(__APPLE__)
-#include "Stellar/Platform/Metal/Buffer/MetalBuffer.h"
+#include "Stellar/Platform/Metal/Buffer/MetalFrameBuffer.h"
 #endif
 #include "Stellar/Core/Log.h"
 
@@ -18,7 +18,7 @@ namespace Stellar {
                     return new VulkanFrameBuffer(spec);
                 #endif
             case RendererAPIType::Metal:
-                STLR_CORE_ASSERT(false, "Metal is not supported");
+                return new MetalFrameBuffer(spec);
             case RendererAPIType::None:
                 break;
         }

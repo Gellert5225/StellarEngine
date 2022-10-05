@@ -9,9 +9,14 @@
 
 namespace Stellar {
     void MetalRenderer::init() {
-        auto shader = new MetalShader("../Resources/Shader/Metal/shader.metal");
+        // create framebuffer
+        FrameBufferSpec framebufferSpec;
+        framebufferSpec.width = 1280;
+        framebufferSpec.height = 720;
+        m_FrameBuffer = FrameBuffer::Create(framebufferSpec);
+
+        auto shader = Renderer::GetShaderLibrary()->get("shader");
         m_Pipeline = new MetalPipeline(shader);
-        delete shader;
     }
 
     void MetalRenderer::shutDown() {
@@ -19,17 +24,18 @@ namespace Stellar {
     }
 
     void MetalRenderer::beginRenderPass() {
-        auto swapChain = (MetalSwapChain*)Application::Get().getWindow().getSwapChain();
+        // resize framebuffer
 
-        auto colorAttachment = swapChain->getRenderPass()->colorAttachments()->object(0);
-        colorAttachment->setClearColor(m_ClearColor);
-        colorAttachment->setLoadAction(MTL::LoadActionClear);
-        colorAttachment->setStoreAction(MTL::StoreActionStore);
-        colorAttachment->setTexture(swapChain->getCurrentFrameBuffer()->texture());
-
+        // auto fb = ((MetalFrameBuffer*)m_FrameBuffer)->getFrameBuffer();
+        // auto colorAttachment = swapChain->getRenderPass()->colorAttachments()->object(0);
+        // colorAttachment->setClearColor(m_ClearColor);
+        // colorAttachment->setLoadAction(MTL::LoadActionClear);
+        // colorAttachment->setStoreAction(MTL::StoreActionStore);
+        // colorAttachment->setTexture(swapChain->getCurrentFrameBuffer()->texture());
+        
         m_CommandBuffer = MetalDevice::GetInstance()->getCommandQueue()->commandBuffer();
 
-        m_Encoder = m_CommandBuffer->renderCommandEncoder(swapChain->getRenderPass());
+        m_Encoder = m_CommandBuffer->renderCommandEncoder(((MetalFrameBuffer*)m_FrameBuffer)->getFrameBuffer());
     }
 
     void MetalRenderer::endRenderPass() {
@@ -44,8 +50,10 @@ namespace Stellar {
         m_ClearColor = {color.r, color.g, color.b, color.a};
     }
 
-    void MetalRenderer::renderGeometry(Stellar::Buffer *vertexBuffer,
-                                       Stellar::Buffer *indexBuffer,
+    void MetalRenderer::renderGeometry(Buffer *vertexBuffer,
+                                       Buffer *indexBuffer,
+                                       Texture2D* texture,
+                                       const glm::vec3& color,
                                        uint32_t indexCount,
                                        const glm::mat4 &transform) {
         m_Encoder->setRenderPipelineState(m_Pipeline->getPipelineState());
@@ -58,6 +66,14 @@ namespace Stellar {
 
     void MetalRenderer::bindUbo(const GlobalUniforms& ubo) {
         
+    }
+
+    FrameBuffer* MetalRenderer::getFrameBuffer() {
+        return m_FrameBuffer;
+    }
+
+    void MetalRenderer::resizeFrameBuffer(uint32_t width, uint32_t height) {
+
     }
 }
 
