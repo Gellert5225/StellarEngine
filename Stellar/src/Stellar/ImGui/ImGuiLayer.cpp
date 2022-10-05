@@ -51,8 +51,8 @@ namespace Stellar::UI {
         auto imageInfo = (VulkanImageInfo*)frameBuffer->getAttachmentImage()->getImageInfo();
         const auto textureID = ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
         ImGui::Image(textureID, size);
-        #endif
-
+        #elif defined __APPLE__
         ImGui::Image(((MetalFrameBuffer*)frameBuffer)->getAttachmentTexture(), size);
+        #endif
     }
 }

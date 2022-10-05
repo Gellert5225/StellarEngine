@@ -18,7 +18,9 @@ namespace Stellar {
                     return new VulkanFrameBuffer(spec);
                 #endif
             case RendererAPIType::Metal:
-                return new MetalFrameBuffer(spec);
+                #if defined __APPLE__
+                    return new MetalFrameBuffer(spec);
+                #endif
             case RendererAPIType::None:
                 break;
         }
