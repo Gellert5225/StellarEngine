@@ -46,7 +46,8 @@ namespace Stellar {
         explicit VulkanBuffer(VkDeviceSize size,
                               VkCommandBufferUsageFlags usage,
                               VkMemoryPropertyFlags property,
-                              const void* data = nullptr);
+                              const void* data = nullptr,
+                              bool useStaging = true);
         ~VulkanBuffer() override;
 
         static uint32_t FindMemoryType(uint32_t, VkMemoryPropertyFlags);

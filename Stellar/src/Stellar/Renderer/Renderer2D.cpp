@@ -35,19 +35,11 @@ namespace Stellar {
 
         // vertex buffer
         auto vertexBufferSize = sizeof(vertices[0]) * vertices.size();
-        auto* stagingBuffer = Buffer::Create(BufferType::Vertex, vertexBufferSize, vertices.data());
-        s_Data->quadVertexBuffer = Buffer::Create(BufferType::Vertex, vertexBufferSize);
-        stagingBuffer->copy(*s_Data->quadVertexBuffer);
-
-        delete stagingBuffer;
+        s_Data->quadVertexBuffer = Buffer::Create(BufferType::Vertex, vertexBufferSize, vertices.data());
 
         // index buffer
         auto indexBufferSize = sizeof(indices[0]) * indices.size();
-        auto indexStagingBuffer = Buffer::Create(BufferType::Index, indexBufferSize, indices.data());
-        s_Data->quadIndexBuffer = Buffer::Create(BufferType::Index, indexBufferSize);
-        indexStagingBuffer->copy(*s_Data->quadIndexBuffer);
-
-        delete indexStagingBuffer;
+        s_Data->quadIndexBuffer = Buffer::Create(BufferType::Index, indexBufferSize, indices.data());
     }
 
     void Renderer2D::ShutDown() {

@@ -2,45 +2,86 @@
 
 #include "VulkanBuffer.h"
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
+#include "Stellar/Platform/Vulkan/VulkanCommon.h"
 
 namespace Stellar {
 
     VulkanBuffer::VulkanBuffer(VkDeviceSize size,
                                VkCommandBufferUsageFlags usage,
                                VkMemoryPropertyFlags property,
-                               const void *data) : Buffer(size) {
+                               const void *data,
+                               bool useStaging) : Buffer(size) {
+        auto device = VulkanDevice::GetInstance()->logicalDevice();
         VkBufferCreateInfo bufferInfo{};
         bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
         bufferInfo.size = size;
         bufferInfo.usage = usage;
         bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
-        if (vkCreateBuffer(VulkanDevice::GetInstance()->logicalDevice(),
-                           &bufferInfo, nullptr, &m_Buffer) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create vertex buffer!");
-        }
+        VK_CHECK_RESULT(vkCreateBuffer(device, &bufferInfo, nullptr, &m_Buffer));
 
         VkMemoryRequirements memRequirements;
-        vkGetBufferMemoryRequirements(VulkanDevice::GetInstance()->logicalDevice(),
-                                      m_Buffer, &memRequirements);
+        vkGetBufferMemoryRequirements(device, m_Buffer, &memRequirements);
+
         VkMemoryAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
         allocInfo.allocationSize = memRequirements.size;
-        allocInfo.memoryTypeIndex = FindMemoryType(memRequirements.memoryTypeBits,
-                                                   property);
-        if (vkAllocateMemory(VulkanDevice::GetInstance()->logicalDevice(),
-                             &allocInfo, nullptr, &m_BufferMemory) != VK_SUCCESS) {
-            throw std::runtime_error("failed to allocate vertex buffer memory!");
-        }
-        vkBindBufferMemory(VulkanDevice::GetInstance()->logicalDevice(),
-                           m_Buffer, m_BufferMemory, 0);
+        allocInfo.memoryTypeIndex = FindMemoryType(memRequirements.memoryTypeBits, property);
+
+        VK_CHECK_RESULT(vkAllocateMemory(device, &allocInfo, nullptr, &m_BufferMemory));
+
+        vkBindBufferMemory(device, m_Buffer, m_BufferMemory, 0);
 
         // staging
         if (data) {
-            void* mapped;
-            map(&mapped);
-            write(mapped, data);
-            unMap();
+            if (useStaging) {
+                VkDeviceMemory stagingBufferMemory;
+                VkBuffer stagingBuffer;
+                VkMemoryPropertyFlags stagingProperty = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
+                                                        VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+
+                VkBufferCreateInfo bufferInfo{};
+                bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+                bufferInfo.size = size;
+                bufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+                bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+                VK_CHECK_RESULT(vkCreateBuffer(device, &bufferInfo, nullptr, &stagingBuffer));
+
+                VkMemoryRequirements memRequirements;
+                vkGetBufferMemoryRequirements(device, stagingBuffer, &memRequirements);
+
+                VkMemoryAllocateInfo allocInfo{};
+                allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+                allocInfo.allocationSize = memRequirements.size;
+                allocInfo.memoryTypeIndex = FindMemoryType(memRequirements.memoryTypeBits, stagingProperty);
+                VK_CHECK_RESULT(vkAllocateMemory(device, &allocInfo, nullptr, &stagingBufferMemory));
+
+                vkBindBufferMemory(device, stagingBuffer, stagingBufferMemory, 0);
+
+                void* mapped;
+                vkMapMemory(device, stagingBufferMemory, 0, m_Size, 0, &mapped);
+                write(mapped, data);
+                vkUnmapMemory(device, stagingBufferMemory);
+                
+                VkCommandBuffer cb = VulkanDevice::GetInstance()->beginSingleTimeCommands();
+
+                VkBufferCopy copyRegion{};
+                copyRegion.srcOffset = 0;  // Optional
+                copyRegion.dstOffset = 0;  // Optional
+                copyRegion.size = m_Size;
+                vkCmdCopyBuffer(cb, stagingBuffer, m_Buffer, 1, &copyRegion);
+
+                VulkanDevice::GetInstance()->endSingleTimeCommands(cb);
+
+                vkDestroyBuffer(device, stagingBuffer, nullptr);
+                vkFreeMemory(device, stagingBufferMemory, nullptr);
+            } else {
+                void* mapped;
+                map(&mapped);
+                write(mapped, data);
+                unMap();
+            }
         }
     }
 
