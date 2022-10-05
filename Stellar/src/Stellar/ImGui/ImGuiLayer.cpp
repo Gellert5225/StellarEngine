@@ -16,6 +16,7 @@
 #include "Stellar/Platform/Metal/ImGui/imgui_impl_metal.h"
 #include "Stellar/Platform/Metal/ImGui/MetalImGuiLayer.h"
 #include "Stellar/Platform/Metal/Buffer/MetalFrameBuffer.h"
+#include "Stellar/Platform/Metal/Texture/MetalTexture.h"
 #endif
 
 namespace Stellar {
@@ -45,7 +46,10 @@ namespace Stellar::UI {
         auto imageInfo = (VulkanImageInfo*)image->getImageInfo();
         const auto textureID = ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
         ImGui::Image(textureID, size);
+        #elif defined __APPLE__
+        ImGui::Image(((MetalTexture*)texture)->getTexture(), size);
         #endif
+
     }
 
     void STLR_API ImageFromFB(FrameBuffer* frameBuffer, const ImVec2& size) {

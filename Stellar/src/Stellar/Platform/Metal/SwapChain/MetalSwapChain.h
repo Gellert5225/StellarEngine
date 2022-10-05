@@ -33,6 +33,7 @@ namespace Stellar {
         MTL::RenderPassDescriptor* m_RenderPass;
         MTL::RenderPassDescriptor* m_ImGuiRenderPass;
         MTL::CommandBuffer* m_CommandBuffer = nullptr;
+        SwapChainExtent2D m_SwapChainExtant;
 
         void init();
         void createSwapChain();
