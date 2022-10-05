@@ -11,4 +11,9 @@ namespace Stellar {
         alignas(16) glm::mat4 model{1.f};
         alignas(16) glm::vec3 color{1.f};
     };
+
+    struct InstanceData {
+        alignas(16) glm::mat4 transform{1.f};
+        alignas(16) glm::vec4 color;
+    };
 }
