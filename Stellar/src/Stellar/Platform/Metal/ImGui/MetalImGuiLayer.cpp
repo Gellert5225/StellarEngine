@@ -64,15 +64,15 @@ namespace Stellar {
             ImGui::RenderPlatformWindowsDefault();
         }
 
+        NS::AutoreleasePool* pPool = NS::AutoreleasePool::alloc()->init();
         auto swapChain = (MetalSwapChain*)Application::Get().getWindow().getSwapChain();
         auto commandBuffer = MetalDevice::GetInstance()->getCommandQueue()->commandBuffer();
         auto encoder = commandBuffer->renderCommandEncoder(swapChain->getRenderPass());
         ImGui_ImplMetal_RenderDrawData(ImGui::GetDrawData(), commandBuffer, encoder);
 
         encoder->endEncoding();
-        encoder->release();
         commandBuffer->commit();
-        m_CommandBuffer->release();
+        pPool->release();
     }
 
     void MetalImGuiLayer::onDetach() {

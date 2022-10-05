@@ -21,7 +21,7 @@ namespace Stellar {
     void MetalSwapChain::init() {
         createSwapChain();
         createRenderPass();
-        createCommandBuffer();
+        //createCommandBuffer();
     }
 
     void MetalSwapChain::createSwapChain() {

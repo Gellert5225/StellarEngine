@@ -37,5 +37,6 @@ namespace Stellar {
         MetalPipeline* m_Pipeline;
         FrameBuffer* m_FrameBuffer;
         Buffer* m_UniformBuffer;
+        NS::AutoreleasePool* pool;
     };
 }

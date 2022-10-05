@@ -30,6 +30,8 @@ namespace Stellar {
 
     void MetalRenderer::beginRenderPass() {
         // resize framebuffer
+
+        pool = NS::AutoreleasePool::alloc()->init();
         m_CommandBuffer = MetalDevice::GetInstance()->getCommandQueue()->commandBuffer();
 
         m_Encoder = m_CommandBuffer->renderCommandEncoder(((MetalFrameBuffer*)m_FrameBuffer)->getFrameBuffer());
@@ -39,10 +41,11 @@ namespace Stellar {
 
     void MetalRenderer::endRenderPass() {
         m_Encoder->endEncoding();
-        m_Encoder->release();
-
         m_CommandBuffer->commit();
-        m_CommandBuffer->release();
+
+        pool->release();
+        //STLR_CORE_INFO("Command Buffer retain count: {0}", m_CommandBuffer->retainCount());
+        //STLR_CORE_INFO("Command Encoder retain count: {0}", m_Encoder->retainCount());
     }
 
     void MetalRenderer::setClearColor(const glm::vec4 &color) {
