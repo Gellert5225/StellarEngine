@@ -10,6 +10,7 @@
 #endif
 
 #include "Stellar/Core/Log.h"
+#include "Stellar/Core/Application.h"
 #include "Stellar/Renderer/Renderer2D.h"
 
 namespace Stellar {
@@ -43,10 +44,10 @@ namespace Stellar {
         s_RendererAPI = InitRendererAPI();
 
         Renderer::GetShaderLibrary()->load("shader");
-        Renderer::GetShaderLibrary()->load("basicShader");
+        //Renderer::GetShaderLibrary()->load("basicShader");
 
         s_RendererAPI->init();
-        Renderer2D::Init();
+        //Renderer2D::Init();
     }
 
     void Renderer::Shutdown() {
