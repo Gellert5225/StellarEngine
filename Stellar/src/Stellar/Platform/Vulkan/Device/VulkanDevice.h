@@ -26,6 +26,7 @@ namespace Stellar {
         [[nodiscard]] VulkanSwapChain::SwapChainSupportDetails getSwapChainSupport() const;
 
         [[nodiscard]] VkPhysicalDeviceProperties getDeviceProperties() const;
+        [[nodiscard]] VkFormat getDepthFormat() const { return m_DepthFormat; }
 
         VkCommandBuffer beginSingleTimeCommands();
         void endSingleTimeCommands(VkCommandBuffer);
@@ -34,6 +35,7 @@ namespace Stellar {
 
         VkPhysicalDevice m_PhysicalDevice = VK_NULL_HANDLE;
         VkDevice m_LogicalDevice = VK_NULL_HANDLE;
+        VkFormat m_DepthFormat = VK_FORMAT_UNDEFINED;
 
         VkQueue m_GraphicsQueue = VK_NULL_HANDLE;
         VkQueue m_PresentQueue = VK_NULL_HANDLE;
@@ -51,6 +53,8 @@ namespace Stellar {
         void pickPhysicalDevice();
         void createLogicalDevice();
         void createCommandPool();
+
+        VkFormat findDepthFormat() const;
 
         Queue::QueueFamilyIndices findQueueFamilies(VkPhysicalDevice) const;
         VulkanSwapChain::SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice) const;

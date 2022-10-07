@@ -1,7 +1,8 @@
-#include "stlrpch.h"
+ #include "stlrpch.h"
 #include "VulkanFrameBuffer.h"
 
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
+#include "Stellar/Platform/Vulkan/Image/VulkanImage.h"
 #include "Stellar/Platform/Vulkan/VulkanCommon.h"
 
 namespace Stellar {

@@ -2,11 +2,13 @@
 
 #include "Stellar/Core/Core.h"
 #include "Stellar/Renderer/Image.h"
+#include <vector>
 
 namespace Stellar {
     struct FrameBufferSpec {
         uint32_t width, height;
         bool swapChainTarget = false;
+        std::vector<ImageFormat> attachments;
     };
 
     class STLR_API FrameBuffer {

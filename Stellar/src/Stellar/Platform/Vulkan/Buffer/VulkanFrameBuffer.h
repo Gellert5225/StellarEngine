@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Stellar/Renderer/FrameBuffer.h"
+#include "Stellar/Renderer/Image.h"
 
-#include "Stellar/Platform/Vulkan/Image/VulkanImage.h"
 #include "Stellar/Platform/Vulkan/RenderPass/StandardRenderPass.h"
 
 #include <vulkan/vulkan.h>

@@ -24,10 +24,10 @@ namespace Stellar {
 
 		DEPTH32FSTENCIL8UINT,
 		DEPTH32F,
-		//DEPTH24STENCIL8,
+		DEPTH24STENCIL8,
 
 		// Defaults
-		//Depth = DEPTH24STENCIL8,
+		Depth = DEPTH24STENCIL8,
 	};
 
 	enum class ImageUsage {

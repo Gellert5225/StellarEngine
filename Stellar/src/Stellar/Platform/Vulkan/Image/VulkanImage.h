@@ -5,6 +5,8 @@
 
 #include "Stellar/Renderer/Image.h"
 
+#include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
+
 #include <vulkan/vulkan.h>
 
 namespace Stellar {
@@ -54,6 +56,7 @@ namespace Stellar {
                 case ImageFormat::B10R11G11UF:			return VK_FORMAT_B10G11R11_UFLOAT_PACK32;
                 case ImageFormat::DEPTH32FSTENCIL8UINT: return VK_FORMAT_D32_SFLOAT_S8_UINT;
                 case ImageFormat::DEPTH32F:				return VK_FORMAT_D32_SFLOAT;
+                case ImageFormat::DEPTH24STENCIL8:		return VulkanDevice::GetInstance()->getDepthFormat();
                 case ImageFormat::None:                 return VK_FORMAT_UNDEFINED;
 			}
 			STLR_CORE_ASSERT(false, "Unknown image format");

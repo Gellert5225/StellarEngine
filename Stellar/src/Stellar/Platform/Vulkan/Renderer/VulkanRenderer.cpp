@@ -26,6 +26,7 @@ namespace Stellar {
         FrameBufferSpec framebufferSpec;
         framebufferSpec.width = 1280;
         framebufferSpec.height = 720;
+        framebufferSpec.attachments = { ImageFormat::RGBA32F, ImageFormat::Depth };
         m_FrameBuffer = FrameBuffer::Create(framebufferSpec);
 
         auto shader = Renderer::GetShaderLibrary()->get("shader");

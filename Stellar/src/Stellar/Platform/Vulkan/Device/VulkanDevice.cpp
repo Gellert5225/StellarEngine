@@ -23,6 +23,26 @@ namespace Stellar {
         pickPhysicalDevice();
         createLogicalDevice();
         createCommandPool();
+        m_DepthFormat = findDepthFormat();
+    }
+
+    VkFormat VulkanDevice::findDepthFormat() const {
+        std::vector<VkFormat> depthFormats = {
+			VK_FORMAT_D32_SFLOAT_S8_UINT,
+			VK_FORMAT_D32_SFLOAT,
+			VK_FORMAT_D24_UNORM_S8_UINT,
+			VK_FORMAT_D16_UNORM_S8_UINT,
+			VK_FORMAT_D16_UNORM
+		};
+
+		for (auto& format : depthFormats) {
+			VkFormatProperties formatProps;
+			vkGetPhysicalDeviceFormatProperties(m_PhysicalDevice, format, &formatProps);
+			// Format must support depth stencil attachment for optimal tiling
+			if (formatProps.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT)
+				return format;
+		}
+		return VK_FORMAT_UNDEFINED;
     }
 
     void VulkanDevice::pickPhysicalDevice() {
