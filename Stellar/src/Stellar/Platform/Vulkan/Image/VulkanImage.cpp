@@ -28,10 +28,17 @@ namespace Stellar {
         VkImageUsageFlags usage = VK_IMAGE_USAGE_SAMPLED_BIT;
 
         if (m_Specification.usage == ImageUsage::Attachment) {
-            usage |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+            if (Utils::IsDepthFormat(m_Specification.format))
+                usage |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+            else
+                usage |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
         } else if (m_Specification.usage == ImageUsage::Texture) {
             usage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
         }
+
+        VkImageAspectFlags aspectMask = Utils::IsDepthFormat(m_Specification.format) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
+        if (m_Specification.format == ImageFormat::DEPTH24STENCIL8)
+			aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
 
         VkImageCreateInfo imageInfo{};
         imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -68,7 +75,7 @@ namespace Stellar {
 		imageViewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
 		imageViewCreateInfo.format = Utils::VulkanImageFormat(m_Specification.format);
 		imageViewCreateInfo.flags = 0;
-		imageViewCreateInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		imageViewCreateInfo.subresourceRange.aspectMask = aspectMask;
 		imageViewCreateInfo.image = m_Info.image;
         imageViewCreateInfo.subresourceRange.baseMipLevel = 0;
         imageViewCreateInfo.subresourceRange.levelCount = 1;

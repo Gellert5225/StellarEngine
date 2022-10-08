@@ -17,30 +17,57 @@ namespace Stellar {
     void VulkanFrameBuffer::invalidate() {
         auto device = VulkanDevice::GetInstance()->logicalDevice();
 
+        VkFormat imageFormat;
+        VkFormat depthFormat;
+
+        for (auto attachment : m_Spec.attachments) {
+            if (Utils::IsDepthFormat(attachment)) { // depth attachment
+                depthFormat = Utils::VulkanImageFormat(attachment);
+                ImageSpecification imageSpec;
+                imageSpec.format = attachment;
+                imageSpec.usage = ImageUsage::Attachment;
+                imageSpec.width = m_Width;
+                imageSpec.height = m_Height;
+                imageSpec.mips = 1;
+                m_DepthAttachmentImage = Image2D::Create(imageSpec);
+
+                m_DepthAttachmentImage->invalidate();
+            } else {
+                imageFormat = Utils::VulkanImageFormat(attachment);
+                ImageSpecification imageSpec;
+                imageSpec.format = attachment;
+                imageSpec.usage = ImageUsage::Attachment;
+                imageSpec.width = m_Width;
+                imageSpec.height = m_Height;
+                imageSpec.mips = 1;
+                m_AttachmentImage = Image2D::Create(imageSpec);
+
+                m_AttachmentImage->invalidate();
+            }
+        }
+
         // create render pass
-        m_RenderPass = new StandardRenderPass(VK_FORMAT_R32G32B32A32_SFLOAT);
-        // create image
-        ImageSpecification imageSpec;
-		imageSpec.format = ImageFormat::RGBA32F;
-        imageSpec.usage = ImageUsage::Attachment;
-		imageSpec.width = m_Width;
-		imageSpec.height = m_Height;
-		imageSpec.mips = 1;
-        m_AttachmentImage = Image2D::Create(imageSpec);
+        m_RenderPass = new StandardRenderPass(imageFormat, depthFormat);
 
-        m_AttachmentImage->invalidate();
+        VulkanImage2D* image = (VulkanImage2D*)m_AttachmentImage;
+        VulkanImageInfo* info = (VulkanImageInfo*)image->getImageInfo();
 
-        auto image = (VulkanImage2D*)m_AttachmentImage;
-        auto info = (VulkanImageInfo*)image->getImageInfo();
+        VulkanImage2D* depthImage = (VulkanImage2D*)m_DepthAttachmentImage;
+        VulkanImageInfo* depthInfo = (VulkanImageInfo*)depthImage->getImageInfo();
 
+        std::array<VkImageView, 2> attachments = {
+            info->imageView,
+            depthInfo->imageView
+        };
+        
         // create framebuffer
         VkFramebufferCreateInfo framebufferInfo{};
         framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
         framebufferInfo.renderPass = m_RenderPass->getVkRenderPass();
-        framebufferInfo.attachmentCount = 1;
+        framebufferInfo.attachmentCount = 2;
         framebufferInfo.width = m_Width;
         framebufferInfo.height = m_Height;
-        framebufferInfo.pAttachments = &info->imageView;
+        framebufferInfo.pAttachments = attachments.data();
         framebufferInfo.layers = 1;
 
         VK_CHECK_RESULT(vkCreateFramebuffer(device, &framebufferInfo, nullptr, &m_Framebuffer));

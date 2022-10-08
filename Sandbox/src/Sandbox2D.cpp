@@ -25,11 +25,11 @@ void Sandbox2D::onUpdate(Stellar::Timestep ts) {
     else if (Stellar::Input::IsKeyPressed(STLR_KEY_RIGHT))
         m_CameraPosition.x -= m_CameraSpeed * ts;
     if (Stellar::Input::IsKeyPressed(STLR_KEY_UP))
-        m_CameraPosition.y -= m_CameraSpeed * ts;
-    else if (Stellar::Input::IsKeyPressed(STLR_KEY_DOWN))
         m_CameraPosition.y += m_CameraSpeed * ts;
+    else if (Stellar::Input::IsKeyPressed(STLR_KEY_DOWN))
+        m_CameraPosition.y -= m_CameraSpeed * ts;
 
-    glm::mat4 transform = glm::translate(glm::mat4(1.f), glm::vec3(0.0f, 0.0f, 0.0f))
+    glm::mat4 transform = glm::translate(glm::mat4(1.f), glm::vec3(0.0f, 1.0f, -0.2f))
             * glm::rotate(glm::mat4(1.0f),
                           Stellar::Timestep::GetTime()* glm::radians(90.0f),
                           glm::vec3(1.0f, 0.0f, 0.0f));

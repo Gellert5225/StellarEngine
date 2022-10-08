@@ -59,4 +59,14 @@ namespace Stellar {
     public:
         static Image2D* Create(ImageSpecification specification);
     };
+
+	namespace Utils {
+		inline bool IsDepthFormat(ImageFormat format) {
+			if (format == ImageFormat::DEPTH24STENCIL8 || 
+				format == ImageFormat::DEPTH32F || 
+				format == ImageFormat::DEPTH32FSTENCIL8UINT)
+				return true;
+			return false;
+		}
+	}
 }

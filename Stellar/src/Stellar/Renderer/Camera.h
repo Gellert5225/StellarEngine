@@ -13,7 +13,11 @@ namespace Stellar {
         void setPerspectiveProjection(float fovy, float aspect, float near, float far);
         void setOrtho(float left, float right, float top, float bottom, float near, float far);
 
-        void setPosition(const glm::vec3 position) { m_Position = position; recalculateViewMatrix(); }
+        void setPosition(const glm::vec3 position) { 
+            m_Position = position; 
+            m_Position.y *= -1;
+            recalculateViewMatrix(); 
+        }
         void setRotation(float rotation) { m_Rotation = rotation; recalculateViewMatrix(); }
 
         [[nodiscard]] const glm::mat4& getViewmatrix() const { return m_ViewMatrix; }
