@@ -28,17 +28,4 @@ namespace Stellar {
                                    glm::vec3(m_Position.x, m_Position.y, 1.0f),
                                    glm::vec3(0.0f, 1.0f, 0.0f));
     }
-
-    void Camera::setOrtho(float left, float right, float top, float bottom, float near, float far) {
-        m_ProjectionMatrix = glm::mat4{1.0f};
-        m_ProjectionMatrix[0][0] = 2.f / (right - left);
-        m_ProjectionMatrix[1][1] = 2.f / (bottom - top);
-        m_ProjectionMatrix[2][2] = 1.f / (far - near);
-        m_ProjectionMatrix[3][0] = -(right + left) / (right - left);
-        m_ProjectionMatrix[3][1] = -(bottom + top) / (bottom - top);
-        m_ProjectionMatrix[3][2] = -near / (far - near);
-        //m_ProjectionMatrix[1][1] *= -1;
-
-        m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
-    }
 }
