@@ -23,6 +23,10 @@ namespace Stellar {
 
     }
 
+    entt::entity Scene::createEntity() {
+
+    }
+
     void Scene::onUpdate(Timestep ts) {
         
     }

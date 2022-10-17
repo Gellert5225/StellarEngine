@@ -3,7 +3,7 @@ ASAN_FLAGS=-fsanitize=address
 
 CXX = 
 CXXFLAGS = -std=c++17 -Wall -MD -DGLM_FORCE_SIMD_AVX2 -DGLM_FORCE_DEFAULT_ALIGNED_GENTYPES -DGLM_FORCE_DEPTH_ZERO_TO_ONE
-CPPFLAGS = -I../Stellar/src/ -I../Stellar/vendor/spdlog/include -I../Stellar/vendor/glfw/include -I../Stellar/vendor/glm -I../Stellar/vendor/imgui -I../Stellar/vendor/entt
+CPPFLAGS = -I../Stellar/src/ -I../Stellar/vendor/spdlog/include -I../Stellar/vendor/glfw/include -I../Stellar/vendor/glm -I../Stellar/vendor/imgui
 LFLAGS = 
 LIBS = 
 PWD = $(shell pwd)
@@ -11,7 +11,6 @@ EXPORT_FLAG =
 SHADER_FLAG = glslc
 
 # Other
-BUILT_MSG = Sandbox has been built to bin
 INSTALL_NAME_TOOL_STELLAR =
 INSTALL_NAME_TOOL_GLFW =
 CP_LIBS =
@@ -85,7 +84,7 @@ ifeq ($(OS),linux)
 endif
 
 # define the executable file 
-MAIN = Sandbox
+MAIN = StellarEditor
 
 .SECONDARY:
 
@@ -95,7 +94,7 @@ include $(wildcard ../PrettyPrint.inc)
 
 all: $(BIN_DIR)/$(MAIN)
 	$(CP_RESOURCES)
-	@echo Sandbox has been built to bin
+	@echo StellarEditor has been built to bin
 
 $(BIN_DIR)/$(MAIN): $(OBJS)
 	@mkdir -p '$(@D)'
@@ -107,7 +106,7 @@ $(OUT_DIR)/build/%.o: %.cpp
 
 run:
 	@export $(EXPORT_FLAG)="${PWD}/$(OUT_DIR)/bin"; \
-		cd $(BIN_DIR) && ./Sandbox$(EXE_EXT)
+		cd $(BIN_DIR) && ./StellarEditor$(EXE_EXT)
 
 run_mac:
 	$(shell open ../macOS/StellarEngine.app)

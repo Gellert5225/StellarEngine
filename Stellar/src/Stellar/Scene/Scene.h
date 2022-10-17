@@ -10,6 +10,8 @@ namespace Stellar {
         Scene();
         ~Scene();
 
+        entt::entity createEntity();
+
         void onUpdate(Timestep ts);
     private:
         entt::registry m_Registry;
