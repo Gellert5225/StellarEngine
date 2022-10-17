@@ -87,6 +87,7 @@ namespace Stellar {
             auto device = VulkanDevice::GetInstance()->logicalDevice();
             vkDestroyFramebuffer(device, m_Framebuffer, nullptr);
             m_AttachmentImage->release();
+            m_DepthAttachmentImage->release();
             delete m_RenderPass;
         }
     }
@@ -94,6 +95,7 @@ namespace Stellar {
     VulkanFrameBuffer::~VulkanFrameBuffer() {
         vkDestroyFramebuffer(VulkanDevice::GetInstance()->logicalDevice(), m_Framebuffer, nullptr);
         delete m_AttachmentImage;
+        delete m_DepthAttachmentImage;
         delete m_RenderPass;
     }
 
