@@ -102,5 +102,6 @@
     "*.tcc": "cpp",
     "stop_token": "cpp",
     "filesystem": "cpp"
-  }
+  },
+  "C_Cpp.errorSquiggles": "Enabled"
 }
