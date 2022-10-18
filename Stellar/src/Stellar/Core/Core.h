@@ -2,6 +2,7 @@
 
 #include <csignal>
 #include <cstdint>
+#include <memory>
 
 #define GLFW_INCLUDE_VULKAN
 

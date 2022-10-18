@@ -95,6 +95,9 @@ all: $(OUT_DIR)/lib/lib$(LIB_NAME)$(LIB_EXT)
 	@mkdir -p ../Sandbox/$(OUT_DIR)/bin
 	@cp $(OUT_DIR)/lib/lib$(LIB_NAME)$(LIB_EXT) ../Sandbox/$(OUT_DIR)/bin
 	@cp ./vendor/glfw/libs/$(GLFW_LIB) ../Sandbox/$(OUT_DIR)/bin
+	@mkdir -p ../StellarEditor/$(OUT_DIR)/bin
+	@cp $(OUT_DIR)/lib/lib$(LIB_NAME)$(LIB_EXT) ../StellarEditor/$(OUT_DIR)/bin
+	@cp ./vendor/glfw/libs/$(GLFW_LIB) ../StellarEditor/$(OUT_DIR)/bin
 
 
 # Compiles PCH

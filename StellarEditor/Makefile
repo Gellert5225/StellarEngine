@@ -3,7 +3,7 @@ ASAN_FLAGS=-fsanitize=address
 
 CXX = 
 CXXFLAGS = -std=c++17 -Wall -MD -DGLM_FORCE_SIMD_AVX2 -DGLM_FORCE_DEFAULT_ALIGNED_GENTYPES -DGLM_FORCE_DEPTH_ZERO_TO_ONE
-CPPFLAGS = -I../Stellar/src/ -I../Stellar/vendor/spdlog/include -I../Stellar/vendor/glfw/include -I../Stellar/vendor/glm -I../Stellar/vendor/imgui
+CPPFLAGS = -I../Stellar/src/ -I../Stellar/vendor/spdlog/include -I../Stellar/vendor/glfw/include -I../Stellar/vendor/glm -I../Stellar/vendor/imgui -I../Stellar/vendor/entt
 LFLAGS = 
 LIBS = 
 PWD = $(shell pwd)

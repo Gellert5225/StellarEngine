@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Stellar/Core/Core.h"
+
 #include "Stellar/Core/Timestep.h"
 #include "Stellar/Core/Application.h"
 #include "Stellar/Core/Layer.h"

@@ -5,7 +5,7 @@ include $(wildcard ./PrettyPrint.inc)
 
 all:
 	$(MAKE) BUILD=$(BUILD) -C Stellar
-	$(MAKE) BUILD=$(BUILD) -C Sandbox
+	$(MAKE) BUILD=$(BUILD) -C StellarEditor
 
 stellar:
 	@make -C Stellar
@@ -14,7 +14,7 @@ sandbox:
 	@make -C Sandbox
 
 run:
-	@make -C Sandbox run BUILD=$(BUILD)
+	@make -C StellarEditor run BUILD=$(BUILD)
 
 UNAME := $(shell uname -s)
 
@@ -30,4 +30,6 @@ clean:
 	@make -C Stellar clean
 	@echo Cleaning Sandbox...
 	@make -C Sandbox clean
+	@echo Cleaning Editor...
+	@make -C StellarEditor clean
 	@echo Done
