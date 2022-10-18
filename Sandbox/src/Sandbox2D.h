@@ -22,6 +22,4 @@ private:
     Stellar::Texture2D* m_Texture2{};
 
     glm::vec3 m_Color{1.0f};
-
-    Stellar::Scene* m_ActiveScene;
 };
