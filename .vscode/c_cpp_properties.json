@@ -6,7 +6,8 @@
                 "${workspaceFolder}/**"
             ],
             "defines": [
-                "STLR_BUILD_DLL"
+                "STLR_BUILD_DLL",
+                "__STRICT_ANSI__"
             ],
             "compilerPath": "C:\\msys64\\mingw64\\bin\\g++.exe",
             "cStandard": "gnu17",

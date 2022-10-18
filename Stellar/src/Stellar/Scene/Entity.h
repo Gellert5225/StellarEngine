@@ -36,7 +36,7 @@ namespace Stellar {
             m_Scene->m_Registry.remove<T>(m_Entity);
         }
     private:
-        entt::entity m_Entity;
-        Scene* m_Scene;
+        entt::entity m_Entity{ entt::null };
+        Scene* m_Scene = nullptr;
     };
 }

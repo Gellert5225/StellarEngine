@@ -2,6 +2,7 @@
 
 #include "Stellar/Core/Core.h"
 #include "Stellar/Renderer/Texture.h"
+#include "Stellar/Renderer/Camera.h"
 
 #include <glm/glm.hpp>
 #include <string>
@@ -37,5 +38,14 @@ namespace Stellar {
     struct STLR_API MeshComponent {
         bool data;
         MeshComponent() = default;
+    };
+
+    struct STLR_API CameraComponent {
+        Camera camera;
+        bool primary = true;
+        bool fixedAspectRatio = false;
+
+        CameraComponent() = default;
+        CameraComponent(const CameraComponent&) = default;
     };
 }
