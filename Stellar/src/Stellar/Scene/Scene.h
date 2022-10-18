@@ -6,16 +6,19 @@
 #include <entt.h>
 
 namespace Stellar {
+    class Entity;
+
     class STLR_API Scene {
     public:
         Scene();
         ~Scene();
 
-        entt::entity createEntity();
-        entt::registry& reg() { return m_Registry; }
+        Entity createEntity(const std::string& name = "");
 
         void onUpdate(Timestep ts);
     private:
         entt::registry m_Registry;
+
+        friend class Entity;
     };
 }

@@ -14,9 +14,9 @@ namespace Stellar {
         m_Camera.setPerspectiveProjection(glm::radians(60.0f), perspective, 0.1f, 100.0f);
 
         m_ActiveScene = CreateRef<Scene>();
-        auto square = m_ActiveScene->createEntity();
-        m_ActiveScene->reg().emplace<TransformComponent>(square);
-        m_ActiveScene->reg().emplace<SpriteRendererComponent>(square, glm::vec4{0.0f, 1.0f, 0.0f, 1.0f}, m_Texture);
+        m_LogoEntity = m_ActiveScene->createEntity("Logo Square");
+        
+        m_LogoEntity.addComponent<SpriteRendererComponent>(m_LogoColor, m_Texture);
     }
 
     void EditorLayer::onDetach() {
@@ -44,6 +44,10 @@ namespace Stellar {
         
         Renderer2D::BeginScene(m_Camera);
         m_ActiveScene->onUpdate(ts);
+        auto& squareTransform = m_LogoEntity.getComponent<TransformComponent>().transform;
+        auto& squareColor = m_LogoEntity.getComponent<SpriteRendererComponent>().color;
+        squareTransform = transform;
+        squareColor = m_LogoColor;
         // for (int i = 0; i < 5; i++) {
         //     for (int j = 0; j < 5; j++) {
         //         glm::vec3 pos(i * 0.22f, j * 0.22f, 0.0f);
@@ -121,6 +125,15 @@ namespace Stellar {
         ImGui::ColorEdit3("Square Color", glm::value_ptr(m_Color));
         UI::Image(m_Texture2, { 200, 200 });
         ImGui::End();
+
+        ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
+        ImGui::Begin("Color Setting 2");
+        auto& tag = m_LogoEntity.getComponent<TagComponent>().tag;
+        ImGui::Text("%s", tag.c_str());
+        ImGui::ColorEdit3("Square Color", glm::value_ptr(m_LogoColor));
+        UI::Image(m_Texture, { 200, 200 });
+        ImGui::End();
+
         ImGui::End();
 
         // view port

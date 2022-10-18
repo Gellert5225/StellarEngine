@@ -60,11 +60,11 @@ namespace Stellar {
         Renderer::EndRenderPass();
     }
 
-    void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec3& color) {
+    void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color) {
         //Renderer::RenderGeometry(s_Data->quadVertexBuffer, s_Data->quadIndexBuffer, color, s_Data->indexCount);
     }
 
-    void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec3& color, Texture2D* texture) {
+    void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color, Texture2D* texture) {
         Renderer::RenderGeometry(s_Data->quadVertexBuffer, s_Data->quadIndexBuffer, texture, color, s_Data->indexCount, transform);
     }
 } 

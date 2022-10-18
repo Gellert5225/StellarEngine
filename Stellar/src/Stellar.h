@@ -20,3 +20,4 @@
 
 #include "Stellar/Scene/Scene.h"
 #include "Stellar/Scene/Components.h"
+#include "Stellar/Scene/Entity.h"

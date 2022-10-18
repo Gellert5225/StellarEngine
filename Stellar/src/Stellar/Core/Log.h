@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Core.h"
-#include "spdlog/spdlog.h"
-#include "spdlog/fmt/ostr.h"
+#include <spdlog/spdlog.h>
+#include <spdlog/fmt/ostr.h>
 
 namespace Stellar {
     class STLR_API Log {
@@ -22,6 +22,7 @@ namespace Stellar {
 #define STLR_CORE_WARN(...)  ::Stellar::Log::GetCoreLogger()->warn(__VA_ARGS__)
 #define STLR_CORE_ERROR(...) ::Stellar::Log::GetCoreLogger()->error(__VA_ARGS__)
 #define STLR_CORE_FATAL(...) ::Stellar::Log::GetCoreLogger()->critical(__VA_ARGS__)
+#define STLR_CORE_ASSERT(x, ...) { if(!(x)) { STLR_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); DEBUG_BREAK;} }
 
 // client
 #define STLR_TRACE(...) ::Stellar::Log::GetClientLogger()->trace(__VA_ARGS__)
@@ -29,3 +30,4 @@ namespace Stellar {
 #define STLR_WARN(...)  ::Stellar::Log::GetClientLogger()->warn(__VA_ARGS__)
 #define STLR_ERROR(...) ::Stellar::Log::GetClientLogger()->error(__VA_ARGS__)
 #define STLR_FATAL(...) ::Stellar::Log::GetClientLogger()->critical(__VA_ARGS__)
+#define STLR_ASSERT(x, ...) { if(!(x)) { STLR_ERROR("Assertion Failed: {0}", __VA_ARGS__); DEBUG_BREAK;} }

@@ -55,7 +55,7 @@ namespace Stellar {
     void MetalRenderer::renderGeometry(Buffer *vertexBuffer,
                                        Buffer *indexBuffer,
                                        Texture2D* texture,
-                                       const glm::vec3& color,
+                                       const glm::vec4& color,
                                        uint32_t indexCount,
                                        const glm::mat4 &transform) {
         Push p{};

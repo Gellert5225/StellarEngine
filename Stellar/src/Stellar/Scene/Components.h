@@ -4,8 +4,16 @@
 #include "Stellar/Renderer/Texture.h"
 
 #include <glm/glm.hpp>
+#include <string>
 
 namespace Stellar {
+    struct STLR_API TagComponent {
+        std::string tag;
+        TagComponent() = default;
+        TagComponent(const TagComponent&) = default;
+        TagComponent(const std::string& tag) : tag(tag) {}
+    };
+
     struct STLR_API TransformComponent {
         glm::mat4 transform = glm::mat4(1.0f);
 

@@ -23,7 +23,9 @@ namespace Stellar {
         Texture2D* m_Texture2{};
 
         glm::vec3 m_Color{1.0f};
+        glm::vec4 m_LogoColor{1.0f};
 
         Ref<Scene> m_ActiveScene;
+        Entity m_LogoEntity;
     };
 }

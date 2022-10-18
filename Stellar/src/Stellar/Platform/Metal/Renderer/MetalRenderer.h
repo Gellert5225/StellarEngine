@@ -22,7 +22,7 @@ namespace Stellar {
         void renderGeometry(Buffer* vertexBuffer,
                             Buffer* indexBuffer,
                             Texture2D* texture,
-                            const glm::vec3& color,
+                            const glm::vec4& color,
                             uint32_t indexCount = 0,
                             const glm::mat4& transform = {}) override;
 
