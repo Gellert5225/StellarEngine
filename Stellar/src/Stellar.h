@@ -19,3 +19,4 @@
 #include "Stellar/Renderer/Texture.h"
 
 #include "Stellar/Scene/Scene.h"
+#include "Stellar/Scene/Components.h"
