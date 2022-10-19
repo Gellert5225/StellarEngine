@@ -28,17 +28,25 @@ namespace Stellar {
         m_Camera.setPerspectiveProjection(glm::radians(60.0f), perspective, 0.1f, 100.0f);
         // camera movement
         if (Input::IsKeyPressed(STLR_KEY_W))
-            m_CameraPosition.z += m_CameraSpeed * ts;
+            m_CameraPosition += m_Camera.getFront() * m_CameraSpeed * float(ts);
         else if (Input::IsKeyPressed(STLR_KEY_S))
-            m_CameraPosition.z -= m_CameraSpeed * ts;
+            m_CameraPosition -= m_Camera.getFront() * m_CameraSpeed * float(ts);
         if (Input::IsKeyPressed(STLR_KEY_A))
-            m_CameraPosition.x -= m_Camera.getRight().x * m_CameraSpeed * ts;
+            m_CameraPosition -= m_Camera.getRight() * m_CameraSpeed * float(ts);
         else if (Input::IsKeyPressed(STLR_KEY_D))
-            m_CameraPosition.x += m_Camera.getRight().x * m_CameraSpeed * ts;
+            m_CameraPosition += m_Camera.getRight() * m_CameraSpeed * float(ts);
         if (Input::IsKeyPressed(STLR_KEY_SPACE))
-            m_CameraPosition.y += m_CameraSpeed * ts;
-        else if (Input::IsKeyPressed(STLR_KEY_LEFT_CONTROL))
             m_CameraPosition.y -= m_CameraSpeed * ts;
+        else if (Input::IsKeyPressed(STLR_KEY_LEFT_CONTROL))
+            m_CameraPosition.y += m_CameraSpeed * ts;
+        if (Input::IsKeyPressed(STLR_KEY_LEFT))
+            m_Camera.setYaw(-m_CameraSpeed * ts * 40);
+        else if (Input::IsKeyPressed(STLR_KEY_RIGHT))
+            m_Camera.setYaw(m_CameraSpeed * ts * 40);
+        if (Input::IsKeyPressed(STLR_KEY_UP))
+            m_Camera.setPitch(-m_CameraSpeed * ts * 40);
+        else if (Input::IsKeyPressed(STLR_KEY_DOWN))
+            m_Camera.setPitch(m_CameraSpeed * ts * 40);
 
         m_Camera.setPosition(m_CameraPosition);
 

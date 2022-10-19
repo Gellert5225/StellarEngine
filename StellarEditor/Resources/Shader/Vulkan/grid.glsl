@@ -56,7 +56,7 @@ vec4 grid(vec3 fragPos3D, float scale, bool drawAxis) {
     float minimumz = min(derivative.y, 1);
     float minimumx = min(derivative.x, 1);
     vec4 color = vec4(0.35, 0.4, 0.4, (1.0 - min(line, 1.0)) / scaleFactor(scale));
-        // z axis
+    // z axis
     if(fragPos3D.x > -0.1 * minimumx && fragPos3D.x < 0.1 * minimumx)
         color = vec4(0.0, 0.0, 1.0, 1.0);
     // x axis
