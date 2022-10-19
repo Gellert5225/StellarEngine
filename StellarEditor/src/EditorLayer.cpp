@@ -152,9 +152,6 @@ namespace Stellar {
         ImGui::PopStyleColor();
         io.ConfigWindowsMoveFromTitleBarOnly = true;
         m_ViewPortSize = ImGui::GetContentRegionAvail();
-        // auto perspective = m_ViewPortSize.x / m_ViewPortSize.y;
-        // //m_Camera.setOrtho(-perspective, perspective, -1, 1, -10, 10);
-        // m_Camera.setPerspectiveProjection(glm::radians(60.0f), perspective, 0.1f, 100.0f);
         Renderer::ResizeFrameBuffer(m_ViewPortSize.x, m_ViewPortSize.y);
         UI::ImageFromFB(Renderer::GetFrameBuffer(), m_ViewPortSize);
 
