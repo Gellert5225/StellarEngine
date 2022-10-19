@@ -44,7 +44,8 @@ namespace Stellar {
         s_RendererAPI = InitRendererAPI();
 
         Renderer::GetShaderLibrary()->load("shader");
-        //Renderer::GetShaderLibrary()->load("basicShader");
+        Renderer::GetShaderLibrary()->load("grid");
+        Renderer::GetShaderLibrary()->load("basicShader");
 
         s_RendererAPI->init();
         Renderer2D::Init();
@@ -71,6 +72,10 @@ namespace Stellar {
                                   uint32_t indexCount,
                                   const glm::mat4& transform) {
         s_RendererAPI->renderGeometry(vertexBuffer, indexBuffer, texture, color, indexCount, transform);
+    }
+
+    void Renderer::RenderGrid(Buffer* vertexBuffer, Buffer* indexBuffer, uint32_t indexCount) {
+        s_RendererAPI->renderGrid(vertexBuffer, indexBuffer, indexCount);
     }
 
     void Renderer::SetClearColor(const glm::vec4 &color) {

@@ -3,7 +3,7 @@
 
 namespace Stellar {
     EditorLayer::EditorLayer() : Layer("Sandbox2D") {
-        m_Texture = Texture2D::Create("../Resources/Textures/StellarEngine.png");
+        m_Texture = Texture2D::Create("../Resources/Textures/Hermanos.png");
         m_Texture2 = Texture2D::Create("../Resources/Textures/Example_texture.jpg");
     }
 
@@ -27,20 +27,25 @@ namespace Stellar {
         //m_Camera.setOrtho(-perspective, perspective, -1, 1, -10, 10);
         m_Camera.setPerspectiveProjection(glm::radians(60.0f), perspective, 0.1f, 100.0f);
         // camera movement
-        if (Input::IsKeyPressed(STLR_KEY_LEFT))
+        if (Input::IsKeyPressed(STLR_KEY_W))
+            m_CameraPosition.z += m_CameraSpeed * ts;
+        else if (Input::IsKeyPressed(STLR_KEY_S))
+            m_CameraPosition.z -= m_CameraSpeed * ts;
+        if (Input::IsKeyPressed(STLR_KEY_A))
             m_CameraPosition.x += m_CameraSpeed * ts;
-        else if (Input::IsKeyPressed(STLR_KEY_RIGHT))
+        else if (Input::IsKeyPressed(STLR_KEY_D))
             m_CameraPosition.x -= m_CameraSpeed * ts;
-        if (Input::IsKeyPressed(STLR_KEY_UP))
+        if (Input::IsKeyPressed(STLR_KEY_SPACE))
             m_CameraPosition.y += m_CameraSpeed * ts;
-        else if (Input::IsKeyPressed(STLR_KEY_DOWN))
+        else if (Input::IsKeyPressed(STLR_KEY_LEFT_CONTROL))
             m_CameraPosition.y -= m_CameraSpeed * ts;
 
         m_Camera.setPosition(m_CameraPosition);
 
         float angle = Timestep::GetTime()* glm::radians(90.0f);
-        glm::mat4 transform = glm::translate(glm::mat4(1.f), glm::vec3(0.0f, 1.0f, -0.2f)) * 
-                              glm::rotate(glm::mat4(1.0f), angle, glm::vec3(1.0f, 0.0f, 0.0f));
+        glm::mat4 transform = glm::translate(glm::mat4(1.f), glm::vec3(0.0f, -1.0f, -0.2f)) * 
+                              glm::rotate(glm::mat4(1.0f), angle, glm::vec3(1.0f, 0.0f, 0.0f)) *
+                              glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
         
         auto& camera = m_CameraEntity.getComponent<CameraComponent>().camera;
         auto& squareTransform = m_LogoEntity.getComponent<TransformComponent>().transform;

@@ -27,6 +27,9 @@ namespace Stellar {
                             const glm::vec4& color,
                             uint32_t indexCount,
                             const glm::mat4& transform) override;
+        void renderGrid(Buffer* vertexBuffer,
+                        Buffer* indexBuffer,
+                        uint32_t indexCount = 0) override;
 
         FrameBuffer* getFrameBuffer() override;
         void resizeFrameBuffer(uint32_t width, uint32_t height) override;
@@ -38,6 +41,7 @@ namespace Stellar {
         static VkDescriptorSet AllocateDesriptorSet(VkDescriptorSetAllocateInfo& allocInfo);
     private:
         GraphicsPipeline* m_GraphicsPipeline = nullptr;
+        GraphicsPipeline* m_GridPipeline = nullptr;
         VkClearColorValue m_ClearColor = {{0.66f, 0.9f, 0.96f, 1.0f}};
 
         Buffer* m_UniformBuffer{};

@@ -29,8 +29,10 @@ namespace Stellar {
         framebufferSpec.attachments = { ImageFormat::RGBA32F, ImageFormat::Depth };
         m_FrameBuffer = FrameBuffer::Create(framebufferSpec);
 
-        auto shader = Renderer::GetShaderLibrary()->get("shader");
-        m_GraphicsPipeline = new GraphicsPipeline(shader, ((VulkanFrameBuffer*)m_FrameBuffer)->getRenderPass());
+        auto quadShader = Renderer::GetShaderLibrary()->get("shader");
+        auto gridShader = Renderer::GetShaderLibrary()->get("grid");
+        m_GraphicsPipeline = new GraphicsPipeline(quadShader, ((VulkanFrameBuffer*)m_FrameBuffer)->getRenderPass());
+        m_GridPipeline = new GraphicsPipeline(gridShader, ((VulkanFrameBuffer*)m_FrameBuffer)->getRenderPass());
         s_Data = new VulkanRendererData();
         s_Data->pipeline = m_GraphicsPipeline;
 
@@ -152,6 +154,19 @@ namespace Stellar {
         vkCmdPushConstants(commandBuffer, *m_GraphicsPipeline->getPipelineLayout(),
                            VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
                            0, sizeof(Push), &push);
+
+        VkDeviceSize offsets[] = {0};
+        auto buffers = (VkBuffer)vertexBuffer->getBuffer();
+
+        vkCmdBindVertexBuffers(commandBuffer, 0, 1, &buffers, offsets);
+        vkCmdBindIndexBuffer(commandBuffer, (VkBuffer)indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT16);
+        vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
+    }
+
+    void VulkanRenderer::renderGrid(Buffer* vertexBuffer, Buffer* indexBuffer, uint32_t indexCount) {
+        auto commandBuffer = (VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer();
+
+        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, *m_GridPipeline->getPipeline());
 
         VkDeviceSize offsets[] = {0};
         auto buffers = (VkBuffer)vertexBuffer->getBuffer();

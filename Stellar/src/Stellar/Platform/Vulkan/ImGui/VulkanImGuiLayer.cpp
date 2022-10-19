@@ -126,8 +126,9 @@ namespace Stellar {
 
         auto swapChain = (VulkanSwapChain*)Application::Get().getWindow().getSwapChain();
 
-        VkClearValue clearValues[1];
-        clearValues[0].color = { {0.1f, 0.1f,0.1f, 1.0f} };
+		VkClearValue clearValues[2];
+		clearValues[0].color = { {0.1f, 0.1f,0.1f, 1.0f} };
+		clearValues[1].depthStencil = { 1.0f, 0 };
 
         VkCommandBufferBeginInfo drawCmdBufInfo = {};
         drawCmdBufInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -143,7 +144,7 @@ namespace Stellar {
         renderPassBeginInfo.renderArea.offset.y = 0;
         renderPassBeginInfo.renderArea.extent.width = swapChain->getSwapChainExtent().width;
         renderPassBeginInfo.renderArea.extent.height = swapChain->getSwapChainExtent().height;
-        renderPassBeginInfo.clearValueCount = 1;
+        renderPassBeginInfo.clearValueCount = 2;
         renderPassBeginInfo.pClearValues = clearValues;
         renderPassBeginInfo.framebuffer = swapChain->getCurrentFrameBuffer();
 

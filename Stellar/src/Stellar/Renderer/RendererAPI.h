@@ -29,6 +29,9 @@ namespace Stellar {
                                     const glm::vec4& color,
                                     uint32_t indexCount = 0,
                                     const glm::mat4& transform = {}) = 0;
+        virtual void renderGrid(Buffer* vertexBuffer,
+                                Buffer* indexBuffer,
+                                uint32_t indexCount = 0) = 0;
         
         virtual void bindUbo(const GlobalUniforms& ubo) = 0;
         virtual FrameBuffer* getFrameBuffer() = 0;

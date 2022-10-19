@@ -3,7 +3,8 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/Stellar/vendor/imgui/"
             ],
             "defines": [
                 "STLR_BUILD_DLL",
