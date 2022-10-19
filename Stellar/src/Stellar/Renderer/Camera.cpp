@@ -3,9 +3,7 @@
 
 namespace Stellar {
     void Camera::recalculateViewMatrix() {
-        m_ViewMatrix = glm::lookAt(m_Position,
-                                   glm::vec3(m_Position.x, m_Position.y, 1.0f),
-                                   glm::vec3(0.0f, 1.0f, 0.0f));
+        m_ViewMatrix = glm::lookAt(m_Position, m_Position + m_Front, m_Up);
         m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
     }
 
@@ -24,8 +22,7 @@ namespace Stellar {
     Camera::Camera() {
         m_Position = glm::vec3(0.0f, 0.0f, 0.0f);
         m_Rotation = 0.0f;
-        m_ViewMatrix = glm::lookAt(m_Position,
-                                   glm::vec3(m_Position.x, m_Position.y, 1.0f),
-                                   glm::vec3(0.0f, 1.0f, 0.0f));
+        m_Right = glm::normalize(glm::cross(m_Front, glm::vec3(0.0f, 1.0f, 0.0f)));
+        m_ViewMatrix = glm::lookAt(m_Position, m_Position + m_Front, m_Up);
     }
 }

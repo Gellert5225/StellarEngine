@@ -24,6 +24,7 @@ namespace Stellar {
         [[nodiscard]] const glm::mat4& getViewProjectionMatrix() const { return m_ViewProjectionMatrix; }
 
         [[nodiscard]] const glm::vec3& getPosition() const { return m_Position; }
+        [[nodiscard]] const glm::vec3& getRight() const { return m_Right; }
         [[nodiscard]] float getRotation() const { return m_Rotation; }
     private:
         glm::mat4 m_ProjectionMatrix{};
@@ -31,6 +32,12 @@ namespace Stellar {
         glm::mat4 m_ViewProjectionMatrix{};
 
         glm::vec3 m_Position{};
+        glm::vec3 m_Front{ 0.0f, 0.0f, 1.0f };
+        glm::vec3 m_Up{ 0.0f, 1.0f, 0.0f };
+        glm::vec3 m_Right{};
+
+        float m_Yaw = 0.0f;
+        float m_Pitch = 0.0f;
         float m_Rotation = 0.0f;
 
         void recalculateViewMatrix();

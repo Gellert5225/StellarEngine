@@ -56,7 +56,13 @@ vec4 grid(vec3 fragPos3D, float scale, bool drawAxis) {
     float minimumz = min(derivative.y, 1);
     float minimumx = min(derivative.x, 1);
     vec4 color = vec4(0.35, 0.4, 0.4, (1.0 - min(line, 1.0)) / scaleFactor(scale));
-
+        // z axis
+    if(fragPos3D.x > -0.1 * minimumx && fragPos3D.x < 0.1 * minimumx)
+        color = vec4(0.0, 0.0, 1.0, 1.0);
+    // x axis
+    if(fragPos3D.z > -0.1 * minimumz && fragPos3D.z < 0.1 * minimumz)
+        color = vec4(1.0, 0.0, 0.0, 1.0);;
+        
     return color;
 }
 float computeDepth(vec3 pos) {
@@ -66,7 +72,7 @@ float computeDepth(vec3 pos) {
 float computeLinearDepth(vec3 pos) {
     vec4 clip_space_pos = viewProjection * vec4(pos.xyz, 1.0);
     float clip_space_depth = (clip_space_pos.z / clip_space_pos.w) * 2.0 - 1.0; // put back between -1 and 1
-    float linearDepth = (2.0 * near * far) / (far + near - clip_space_depth * (far - near));
+    float linearDepth = (5.0 * near * far) / (far + near - clip_space_depth * (far - near));
     return linearDepth / far; 
 }
 void main() {
