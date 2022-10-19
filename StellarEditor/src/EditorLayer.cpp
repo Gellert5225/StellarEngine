@@ -1,4 +1,5 @@
 #include "EditorLayer.h"
+#include <imgui_internal.h>
 
 namespace Stellar {
     EditorLayer::EditorLayer() : Layer("Sandbox2D") {
@@ -89,20 +90,39 @@ namespace Stellar {
         ImGui::PopStyleVar(4);
         ImGui::PopStyleColor(3);
 
-        ImGuiID dockspaceID = 0;
-        
-        dockspaceID = ImGui::GetID("HUB_DockSpace");
-        ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), dockspace_flags, nullptr);
-
         if (ImGui::BeginMenuBar()) {
             if (ImGui::BeginMenu("File")) {
-                if (ImGui::MenuItem("Exit"))
+                if (ImGui::MenuItem("Exit")) {
+                    
+                }
                 ImGui::EndMenu();
             }
             ImGui::EndMenuBar();
         }
+        
+        ImGuiID dockspaceID = ImGui::GetID("HUB_DockSpace");
+        ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), dockspace_flags, nullptr);
 
-        ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
+        static auto first_time = true;
+        if (first_time) {
+            first_time = false;
+
+            ImGui::DockBuilderRemoveNode(dockspaceID);
+            ImGui::DockBuilderAddNode(dockspaceID, dockspace_flags | ImGuiDockNodeFlags_DockSpace);
+            ImGui::DockBuilderSetNodeSize(dockspaceID, viewport->Size);
+
+            auto dock_id_left = ImGui::DockBuilderSplitNode(dockspaceID, ImGuiDir_Left, 0.2f, nullptr, &dockspaceID);
+            auto colorSetting1 = ImGui::DockBuilderSplitNode(dock_id_left, ImGuiDir_Down, 0.75f, nullptr, &dock_id_left);
+            ImGui::DockBuilderDockWindow("Info", dock_id_left);
+            ImGui::DockBuilderDockWindow("Color Setting", colorSetting1);
+            ImGui::DockBuilderDockWindow("Color Setting 2", colorSetting1);
+            ImGui::DockBuilderDockWindow("View Port", dockspaceID);
+            ImGui::DockBuilderFinish(dockspaceID);
+        }
+
+        ImGui::End();
+
+        //ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
         ImGui::Begin("Info");
         ImGui::Text("GPU: %s", appInfo.graphicsInfo.c_str());
         ImGui::Text("%s", appInfo.vulkanVersion.c_str());
@@ -112,13 +132,13 @@ namespace Stellar {
                 ImGui::GetIO().Framerate);
         ImGui::End();
 
-        ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
+        //ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
         ImGui::Begin("Color Setting");
         ImGui::ColorEdit3("Square Color", glm::value_ptr(m_Color));
         UI::Image(m_Texture2, { 200, 200 });
         ImGui::End();
 
-        ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
+        //ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
         ImGui::Begin("Color Setting 2");
         auto& tag = m_LogoEntity.getComponent<TagComponent>().tag;
         ImGui::Text("%s", tag.c_str());
@@ -126,13 +146,11 @@ namespace Stellar {
         UI::Image(m_Texture, { 200, 200 });
         ImGui::End();
 
-        ImGui::End();
-
         // view port
         ImGuiIO& io = ImGui::GetIO();
         ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(255,255,255,0));
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-        ImGui::Begin("Editor" , nullptr, ImGuiWindowFlags_NoBringToFrontOnFocus);
+        ImGui::Begin("View Port" , nullptr, ImGuiWindowFlags_NoBringToFrontOnFocus);
         ImGui::PopStyleVar();
         ImGui::PopStyleColor();
         io.ConfigWindowsMoveFromTitleBarOnly = true;
