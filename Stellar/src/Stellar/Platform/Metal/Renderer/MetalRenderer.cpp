@@ -84,5 +84,9 @@ namespace Stellar {
     void MetalRenderer::resizeFrameBuffer(uint32_t width, uint32_t height) {
 
     }
+
+    void MetalRenderer::renderGrid(Buffer* vertexBuffer, Buffer* indexBuffer, uint32_t indexCount) {
+        
+    }
 }
 

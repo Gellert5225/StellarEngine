@@ -4,13 +4,13 @@
 #include <cstdint>
 #include <memory>
 
-#define GLFW_INCLUDE_VULKAN
-
 #if defined(_WIN64)
+    #define GLFW_INCLUDE_VULKAN
     #define EXPORT __declspec(dllexport)
     #define IMPORT __declspec(dllimport)
     #define DEBUG_BREAK __debugbreak()
 #elif defined(__linux__)
+    #define GLFW_INCLUDE_VULKAN
     #define EXPORT __attribute__((visibility("default")))
     #define IMPORT
     #define DEBUG_BREAK raise(SIGTRAP)
