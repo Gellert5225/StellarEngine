@@ -25,13 +25,12 @@ void Sandbox2D::onUpdate(Stellar::Timestep ts) {
     else if (Stellar::Input::IsKeyPressed(STLR_KEY_RIGHT))
         m_CameraPosition.x -= m_CameraSpeed * ts;
     if (Stellar::Input::IsKeyPressed(STLR_KEY_UP))
-        m_CameraPosition.y += m_CameraSpeed * ts;
-    else if (Stellar::Input::IsKeyPressed(STLR_KEY_DOWN))
         m_CameraPosition.y -= m_CameraSpeed * ts;
+    else if (Stellar::Input::IsKeyPressed(STLR_KEY_DOWN))
+        m_CameraPosition.y += m_CameraSpeed * ts;
 
-    glm::mat4 transform = glm::translate(glm::mat4(1.f), glm::vec3(0.0f, 1.0f, -0.2f))
-            * glm::rotate(glm::mat4(1.0f),
-                          Stellar::Timestep::GetTime()* glm::radians(90.0f),
+    glm::mat4 transform = glm::translate(glm::mat4(1.f), glm::vec3(0.0f, -1.0f, 1.0f)) * 
+                          glm::rotate(glm::mat4(1.0f), Stellar::Timestep::GetTime()* glm::radians(90.0f),
                           glm::vec3(1.0f, 0.0f, 0.0f));
 
     m_Camera.setPosition(m_CameraPosition);
@@ -43,10 +42,10 @@ void Sandbox2D::onUpdate(Stellar::Timestep ts) {
             glm::mat4 transformTile = 
                 glm::translate(glm::mat4(1.f), pos) * 
                 glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
-            Stellar::Renderer2D::DrawQuad(transformTile, m_Color, m_Texture2);
+            Stellar::Renderer2D::DrawQuad(transformTile, {m_Color,  1.0f}, m_Texture2);
         }
     }
-    Stellar::Renderer2D::DrawQuad(transform, {1.0f, 1.0f, 1.0f}, m_Texture);
+    Stellar::Renderer2D::DrawQuad(transform, {1.0f, 1.0f, 1.0f, 1.0f}, m_Texture);
     Stellar::Renderer2D::EndScene();
 }
 

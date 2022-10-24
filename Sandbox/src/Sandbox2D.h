@@ -15,7 +15,7 @@ public:
     void onImGuiRender() override;
 private:
     Stellar::Camera m_Camera{};
-    glm::vec3 m_CameraPosition{0.0f, 0.0f, -2.0f};
+    glm::vec3 m_CameraPosition{0.0f, -1.0f, -2.0f};
     float m_CameraSpeed = 1.0f;
     
     Stellar::Texture2D* m_Texture{};
