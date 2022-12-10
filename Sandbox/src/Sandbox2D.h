@@ -18,7 +18,8 @@ private:
     glm::vec3 m_CameraPosition{0.0f, -1.0f, -2.0f};
     float m_CameraSpeed = 1.0f;
     
-    Stellar::Texture2D* m_Texture{};
+    std::shared_ptr<Stellar::Texture2D> m_Texture;
+    // std::unique_ptr<Stellar::Texture2D> m_Texture2{};
     Stellar::Texture2D* m_Texture2{};
 
     glm::vec3 m_Color{1.0f};

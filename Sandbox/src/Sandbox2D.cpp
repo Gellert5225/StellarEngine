@@ -1,7 +1,8 @@
 #include "Sandbox2D.h"
 
 Sandbox2D::Sandbox2D() : Stellar::Layer("Sandbox2D") {
-    m_Texture = Stellar::Texture2D::Create("../Resources/Textures/StellarEngine.png");
+    m_Texture = std::make_shared<Stellar::Texture2D>(Stellar::Texture2D::Create("../Resources/Textures/StellarEngine.png"));
+    // m_Texture2 = std::make_unique<Stellar::Texture2D>(Stellar::Texture2D::Create("../Resources/Textures/Example_texture.jpg"));
     m_Texture2 = Stellar::Texture2D::Create("../Resources/Textures/Example_texture.jpg");
 }
 
@@ -14,7 +15,9 @@ void Sandbox2D::onAttach() {
 }
 
 void Sandbox2D::onDetach() {
-    delete m_Texture;
+    m_Texture.get_deleter();
+    // m_Texture.get_deleter();
+    // delete m_Texture;
     delete m_Texture2;
 }
 
@@ -45,7 +48,7 @@ void Sandbox2D::onUpdate(Stellar::Timestep ts) {
             Stellar::Renderer2D::DrawQuad(transformTile, {m_Color,  1.0f}, m_Texture2);
         }
     }
-    Stellar::Renderer2D::DrawQuad(transform, {1.0f, 1.0f, 1.0f, 1.0f}, m_Texture);
+    Stellar::Renderer2D::DrawQuad(transform, {1.0f, 1.0f, 1.0f, 1.0f}, m_Texture.get());
     Stellar::Renderer2D::EndScene();
 }
 
