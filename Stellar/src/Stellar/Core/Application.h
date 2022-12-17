@@ -31,10 +31,10 @@ namespace Stellar {
 
         [[nodiscard]] AppInfo getAppInfo() const;
 
-        inline static Application& Get() { return *s_Instance; }
+        inline static Application& Get() { return *s_Instance.get(); }
         inline Window& getWindow() { return *m_Window; }
     private:
-        static Application* s_Instance;
+        static std::unique_ptr<Application> s_Instance;
 
         bool m_Running = true;
 

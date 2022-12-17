@@ -5,11 +5,12 @@
 #include "Input.h"
 
 namespace Stellar {
-    Application* Application::s_Instance = nullptr;
+    std::unique_ptr<Application> Application::s_Instance = nullptr;
 
     Application::Application() {
-        STLR_CORE_ASSERT(!s_Instance, "Application already exists")
-        s_Instance = this;
+        STLR_CORE_ASSERT(!s_Instance.get(), "Application already exists")
+        // s_Instance = this;
+        s_Instance.reset(this);
         m_Window = std::unique_ptr<Window>(Window::Create());
         m_Window->init();
         m_Window->setEventCallback(BIND_EVENT_FN(Application::onEvent));
