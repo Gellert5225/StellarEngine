@@ -10,13 +10,14 @@ namespace Stellar {
     Application::Application() {
         STLR_CORE_ASSERT(!s_Instance.get(), "Application already exists")
         // s_Instance = this;
-        s_Instance.reset(this);
+        s_Instance = std::unique_ptr<Application>(this);
         m_Window = std::unique_ptr<Window>(Window::Create());
         m_Window->init();
         m_Window->setEventCallback(BIND_EVENT_FN(Application::onEvent));
 
         Renderer::Init();
-        m_ImGuiLayer = ImGuiLayer::Create();
+        // m_ImGuiLayer = ImGuiLayer::Create();
+        m_ImGuiLayer = std::unique_ptr<ImGuiLayer>(ImGuiLayer::Create());
     }
 
     Application::~Application() {

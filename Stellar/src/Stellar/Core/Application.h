@@ -31,7 +31,7 @@ namespace Stellar {
 
         [[nodiscard]] AppInfo getAppInfo() const;
 
-        inline static Application& Get() { return *s_Instance.get(); }
+        inline static Application& Get() { return *s_Instance; }
         inline Window& getWindow() { return *m_Window; }
     private:
         static std::unique_ptr<Application> s_Instance;
@@ -39,7 +39,7 @@ namespace Stellar {
         bool m_Running = true;
 
         std::unique_ptr<Window> m_Window;
-        ImGuiLayer *m_ImGuiLayer;
+        std::unique_ptr<ImGuiLayer> m_ImGuiLayer;
         LayerStack m_LayerStack;
         float m_LastFrameTime = 0.0f;
 
