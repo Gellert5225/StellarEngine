@@ -17,7 +17,7 @@ namespace Stellar {
 
         Renderer::Init();
         // m_ImGuiLayer = ImGuiLayer::Create();
-        m_ImGuiLayer = std::unique_ptr<ImGuiLayer>(ImGuiLayer::Create());
+        m_ImGuiLayer = ImGuiLayer::Create();
     }
 
     Application::~Application() {

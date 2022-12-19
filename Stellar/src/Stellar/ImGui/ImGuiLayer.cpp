@@ -20,15 +20,18 @@
 #endif
 
 namespace Stellar {
-    ImGuiLayer *ImGuiLayer::Create() {
+    // ImGuiLayer *ImGuiLayer::Create() {
+    std::shared_ptr<ImGuiLayer> ImGuiLayer::Create() {
         switch (RendererAPI::Current()) {
             case RendererAPIType::Vulkan: 
                 #if defined __linux__ || defined _WIN64
-                    return new VulkanImGuiLayer();
+                    return std::make_shared<VulkanImGuiLayer>();
+                    // return new VulkanImGuiLayer();
                 #endif
             case RendererAPIType::Metal:  
                 #if defined __APPLE__
-                    return new MetalImGuiLayer();
+                    return std::make_shared<MetalImGuiLayer();
+                    // return new MetalImGuiLayer();
                 #endif
             case RendererAPIType::None:   return nullptr;
         }

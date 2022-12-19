@@ -39,7 +39,7 @@ namespace Stellar {
         bool m_Running = true;
 
         std::unique_ptr<Window> m_Window;
-        std::unique_ptr<ImGuiLayer> m_ImGuiLayer;
+        std::shared_ptr<ImGuiLayer> m_ImGuiLayer;
         LayerStack m_LayerStack;
         float m_LastFrameTime = 0.0f;
 
