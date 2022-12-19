@@ -23,10 +23,10 @@ namespace Stellar {
     Application::~Application() {
         STLR_CORE_INFO("Shutting down");
 
-        for (Layer* layer : m_LayerStack) {
-            layer->onDetach();
-            delete layer;
-        }
+        // for (Layer* layer : m_LayerStack) {
+        //     layer->onDetach();
+        //     delete layer;
+        // }
 
         Renderer::Shutdown();
 
@@ -45,12 +45,12 @@ namespace Stellar {
         }
     }
 
-    void Application::pushLayer(Layer* layer) {
+    void Application::pushLayer(std::shared_ptr<Layer> layer) {
         m_LayerStack.pushLayer(layer);
         layer->onAttach();
     }
 
-    void Application::pushOverlay(Layer* layer) {
+    void Application::pushOverlay(std::shared_ptr<Layer> layer) {
         m_LayerStack.pushOverlay(layer);
         layer->onAttach();
     }
@@ -64,12 +64,12 @@ namespace Stellar {
             auto swapChain = m_Window->getSwapChain();
             swapChain->beginFrame();
 
-            for (Layer* layer : m_LayerStack)
+            for (std::shared_ptr<Layer> layer : m_LayerStack)
                 layer->onUpdate(timestep);
 
             // imGui
             m_ImGuiLayer->begin();
-            for (Layer* layer : m_LayerStack)
+            for (std::shared_ptr<Layer> layer : m_LayerStack)
                 layer->onImGuiRender();
             m_ImGuiLayer->end();
 

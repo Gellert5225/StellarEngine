@@ -26,8 +26,8 @@ namespace Stellar {
         void run();
         void onEvent(Event&);
 
-        void pushLayer(Layer*);
-        void pushOverlay(Layer*);
+        void pushLayer(std::shared_ptr<Layer>);
+        void pushOverlay(std::shared_ptr<Layer>);
 
         [[nodiscard]] AppInfo getAppInfo() const;
 
