@@ -12,7 +12,7 @@ namespace Stellar {
         virtual void begin() = 0;
         virtual void end() = 0;
 
-        static ImGuiLayer* Create();
+        static std::shared_ptr<ImGuiLayer> Create();
     protected:
         float m_Time = 0.0f;
 

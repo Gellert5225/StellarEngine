@@ -5,26 +5,28 @@
 #include "Input.h"
 
 namespace Stellar {
-    Application* Application::s_Instance = nullptr;
+    std::unique_ptr<Application> Application::s_Instance = nullptr;
 
     Application::Application() {
-        STLR_CORE_ASSERT(!s_Instance, "Application already exists")
-        s_Instance = this;
+        STLR_CORE_ASSERT(!s_Instance.get(), "Application already exists")
+        // s_Instance = this;
+        s_Instance = std::unique_ptr<Application>(this);
         m_Window = std::unique_ptr<Window>(Window::Create());
         m_Window->init();
         m_Window->setEventCallback(BIND_EVENT_FN(Application::onEvent));
 
         Renderer::Init();
+        // m_ImGuiLayer = ImGuiLayer::Create();
         m_ImGuiLayer = ImGuiLayer::Create();
     }
 
     Application::~Application() {
         STLR_CORE_INFO("Shutting down");
 
-        for (Layer* layer : m_LayerStack) {
-            layer->onDetach();
-            delete layer;
-        }
+        // for (Layer* layer : m_LayerStack) {
+        //     layer->onDetach();
+        //     delete layer;
+        // }
 
         Renderer::Shutdown();
 
@@ -43,12 +45,12 @@ namespace Stellar {
         }
     }
 
-    void Application::pushLayer(Layer* layer) {
+    void Application::pushLayer(std::shared_ptr<Layer> layer) {
         m_LayerStack.pushLayer(layer);
         layer->onAttach();
     }
 
-    void Application::pushOverlay(Layer* layer) {
+    void Application::pushOverlay(std::shared_ptr<Layer> layer) {
         m_LayerStack.pushOverlay(layer);
         layer->onAttach();
     }
@@ -62,12 +64,12 @@ namespace Stellar {
             auto swapChain = m_Window->getSwapChain();
             swapChain->beginFrame();
 
-            for (Layer* layer : m_LayerStack)
+            for (std::shared_ptr<Layer> layer : m_LayerStack)
                 layer->onUpdate(timestep);
 
             // imGui
             m_ImGuiLayer->begin();
-            for (Layer* layer : m_LayerStack)
+            for (std::shared_ptr<Layer> layer : m_LayerStack)
                 layer->onImGuiRender();
             m_ImGuiLayer->end();
 

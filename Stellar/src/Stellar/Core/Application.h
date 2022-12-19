@@ -26,20 +26,20 @@ namespace Stellar {
         void run();
         void onEvent(Event&);
 
-        void pushLayer(Layer*);
-        void pushOverlay(Layer*);
+        void pushLayer(std::shared_ptr<Layer>);
+        void pushOverlay(std::shared_ptr<Layer>);
 
         [[nodiscard]] AppInfo getAppInfo() const;
 
         inline static Application& Get() { return *s_Instance; }
         inline Window& getWindow() { return *m_Window; }
     private:
-        static Application* s_Instance;
+        static std::unique_ptr<Application> s_Instance;
 
         bool m_Running = true;
 
         std::unique_ptr<Window> m_Window;
-        ImGuiLayer *m_ImGuiLayer;
+        std::shared_ptr<ImGuiLayer> m_ImGuiLayer;
         LayerStack m_LayerStack;
         float m_LastFrameTime = 0.0f;
 

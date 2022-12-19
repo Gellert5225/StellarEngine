@@ -11,15 +11,15 @@ namespace Stellar {
         LayerStack();
         ~LayerStack();
 
-        void pushLayer(Layer* layer);
-        void pushOverlay(Layer* overlay);
-        void popLayer(Layer* layer);
-        void popOverlay(Layer* overlay);
+        void pushLayer(std::shared_ptr<Layer> layer);
+        void pushOverlay(std::shared_ptr<Layer> overlay);
+        void popLayer(std::shared_ptr<Layer> layer);
+        void popOverlay(std::shared_ptr<Layer> overlay);
 
-        std::vector<Layer*>::iterator begin() { return m_Layers.begin(); }
-        std::vector<Layer*>::iterator end() { return m_Layers.end(); }
+        std::vector<std::shared_ptr<Layer>>::iterator begin() { return m_Layers.begin(); }
+        std::vector<std::shared_ptr<Layer>>::iterator end() { return m_Layers.end(); }
     private:
-        std::vector<Layer*> m_Layers;
-        std::vector<Layer*>::iterator m_LayerInsert;
+        std::vector<std::shared_ptr<Layer>> m_Layers;
+        std::vector<std::shared_ptr<Layer>>::iterator m_LayerInsert;
     };
 }

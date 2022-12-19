@@ -7,8 +7,10 @@ namespace Stellar {
     class StellarEditor: public Application {
         public:
             StellarEditor() {
+                // pushLayer(ImGuiLayer::Create());
+                // pushLayer(new EditorLayer());
                 pushLayer(ImGuiLayer::Create());
-                pushLayer(new EditorLayer());
+                pushLayer(std::make_shared<EditorLayer>());
             }
             ~StellarEditor() override = default;
     };
