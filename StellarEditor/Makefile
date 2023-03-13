@@ -7,7 +7,8 @@ CPPFLAGS = -I../Stellar/src/ -I../Stellar/vendor/spdlog/include -I../Stellar/ven
 LFLAGS = 
 LIBS = 
 PWD = $(shell pwd)
-EXPORT_FLAG =
+EXPORT_FLAG = 
+EXPORT_CMD = 
 SHADER_FLAG = glslc
 
 # Other

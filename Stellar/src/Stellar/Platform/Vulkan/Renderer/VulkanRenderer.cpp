@@ -70,6 +70,7 @@ namespace Stellar {
         for (uint32_t i = 0; i < VulkanSwapChain::MAX_FRAMES_IN_FLIGHT; i++) {
             vkDestroyDescriptorPool(device, s_Data->DescriptorPools[i], nullptr);
         }
+		delete s_Data->pipeline;
         delete m_GraphicsPipeline;
         delete m_UniformBuffer;
         delete m_CommandBuffer;
