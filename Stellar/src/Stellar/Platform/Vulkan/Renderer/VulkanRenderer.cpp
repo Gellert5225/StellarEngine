@@ -71,7 +71,7 @@ namespace Stellar {
             vkDestroyDescriptorPool(device, s_Data->DescriptorPools[i], nullptr);
         }
 		delete s_Data->pipeline;
-        delete m_GraphicsPipeline;
+        delete m_GridPipeline;
         delete m_UniformBuffer;
         delete m_CommandBuffer;
         delete m_FrameBuffer;
