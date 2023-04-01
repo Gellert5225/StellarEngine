@@ -5,6 +5,8 @@ namespace Stellar {
     EditorLayer::EditorLayer() : Layer("Sandbox2D") {
         m_Texture = Texture2D::Create("../Resources/Textures/Hermanos.png");
         m_Texture2 = Texture2D::Create("../Resources/Textures/Example_texture.jpg");
+		auto perspective = (float)m_ViewPortSize.x / (float)m_ViewPortSize.y;
+		m_Camera = new EditorCamera(glm::radians(60.0f), perspective, 0.1f, 100.0f);
     }
 
     void EditorLayer::onAttach() {
@@ -14,7 +16,7 @@ namespace Stellar {
         m_LogoEntity = m_ActiveScene->createEntity("Logo Square");
         m_LogoEntity.addComponent<SpriteRendererComponent>(m_LogoColor, m_Texture);
         m_CameraEntity = m_ActiveScene->createEntity("Camera");
-        m_CameraEntity.addComponent<CameraComponent>(m_Camera);
+        m_CameraEntity.addComponent<EditorCameraComponent>(*m_Camera);
     }
 
     void EditorLayer::onDetach() {
@@ -25,43 +27,24 @@ namespace Stellar {
     void EditorLayer::onUpdate(Timestep ts) {
         auto perspective = (float)m_ViewPortSize.x / (float)m_ViewPortSize.y;
         //m_Camera.setOrtho(-perspective, perspective, -1, 1, -10, 10);
-        m_Camera.setPerspectiveProjection(glm::radians(60.0f), perspective, 0.1f, 100.0f);
+        m_Camera->setPerspectiveProjection(glm::radians(60.0f), perspective, 0.1f, 100.0f);
         // camera movement
-        if (Input::IsKeyPressed(STLR_KEY_W))
-            m_CameraPosition += m_Camera.getFront() * m_CameraSpeed * float(ts);
-        else if (Input::IsKeyPressed(STLR_KEY_S))
-            m_CameraPosition -= m_Camera.getFront() * m_CameraSpeed * float(ts);
-        if (Input::IsKeyPressed(STLR_KEY_A))
-            m_CameraPosition -= m_Camera.getRight() * m_CameraSpeed * float(ts);
-        else if (Input::IsKeyPressed(STLR_KEY_D))
-            m_CameraPosition += m_Camera.getRight() * m_CameraSpeed * float(ts);
-        if (Input::IsKeyPressed(STLR_KEY_SPACE))
-            m_CameraPosition.y -= m_CameraSpeed * ts;
-        else if (Input::IsKeyPressed(STLR_KEY_LEFT_CONTROL))
-            m_CameraPosition.y += m_CameraSpeed * ts;
-        if (Input::IsKeyPressed(STLR_KEY_LEFT))
-            m_Camera.setYaw(-m_CameraSpeed * ts * 40);
-        else if (Input::IsKeyPressed(STLR_KEY_RIGHT))
-            m_Camera.setYaw(m_CameraSpeed * ts * 40);
-        if (Input::IsKeyPressed(STLR_KEY_UP))
-            m_Camera.setPitch(-m_CameraSpeed * ts * 40);
-        else if (Input::IsKeyPressed(STLR_KEY_DOWN))
-            m_Camera.setPitch(m_CameraSpeed * ts * 40);
 
-        m_Camera.setPosition(m_CameraPosition);
+		m_Camera->onUpdate(ts);
 
         float angle = Timestep::GetTime()* glm::radians(90.0f);
         glm::mat4 transform = glm::translate(glm::mat4(1.f), glm::vec3(0.0f, -1.0f, 1.0f)) * 
                               glm::rotate(glm::mat4(1.0f), angle, glm::vec3(1.0f, 0.0f, 0.0f)) *
                               glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
         
-        auto& camera = m_CameraEntity.getComponent<CameraComponent>().camera;
+        auto& camera = m_CameraEntity.getComponent<EditorCameraComponent>().camera;
         auto& squareTransform = m_LogoEntity.getComponent<TransformComponent>().transform;
         auto& squareColor = m_LogoEntity.getComponent<SpriteRendererComponent>().color;
         squareTransform = transform;
         squareColor = m_LogoColor;
-        camera = m_Camera;
-        m_ActiveScene->onUpdate(ts);
+        camera = *m_Camera;
+        //m_ActiveScene->onUpdate(ts);
+		m_ActiveScene->onEditorUpdate(ts, *m_Camera);
     }
 
     void EditorLayer::onEvent(Event& event) {
