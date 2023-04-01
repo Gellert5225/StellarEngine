@@ -48,6 +48,10 @@ namespace Stellar {
         }
     }
 
+	void Scene::onEditorUpdate(Timestep ts, EditorCamera& camera) {
+		renderScene(camera);
+	}
+
     void Scene::onViewportResize(uint32_t width, uint32_t height) {
         m_ViewportWidth = width;
         m_ViewportHeight = height;
@@ -60,4 +64,14 @@ namespace Stellar {
             }
         }
     }
+
+	void Scene::renderScene(EditorCamera& camera) {
+		Renderer2D::BeginScene(camera);
+		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+		for (auto entity : group) {
+			auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+			Renderer2D::DrawQuad(transform.transform, sprite.color, sprite.texture);
+		}
+		Renderer2D::EndScene();
+	}
 }

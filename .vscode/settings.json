@@ -103,5 +103,6 @@
     "stop_token": "cpp",
     "filesystem": "cpp"
   },
-  "C_Cpp.errorSquiggles": "Enabled"
+"C_Cpp.errorSquiggles": "Enabled",
+"restructuredtext.syntaxHighlighting.disabled": true
 }

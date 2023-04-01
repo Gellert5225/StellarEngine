@@ -18,6 +18,8 @@
 #include "Stellar/Renderer/Camera.h"
 #include "Stellar/Renderer/Texture.h"
 
+#include "Stellar/Editor/EditorCamera.h"
+
 #include "Stellar/Scene/Scene.h"
 #include "Stellar/Scene/Components.h"
 #include "Stellar/Scene/Entity.h"
