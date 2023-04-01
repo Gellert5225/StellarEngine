@@ -25,11 +25,7 @@ namespace Stellar {
     }
 
     void EditorLayer::onUpdate(Timestep ts) {
-        auto perspective = (float)m_ViewPortSize.x / (float)m_ViewPortSize.y;
-        //m_Camera.setOrtho(-perspective, perspective, -1, 1, -10, 10);
-        m_Camera->setPerspectiveProjection(glm::radians(60.0f), perspective, 0.1f, 100.0f);
-        // camera movement
-
+		m_Camera->SetViewportSize(m_ViewPortSize.x, m_ViewPortSize.y);
 		m_Camera->onUpdate(ts);
 
         float angle = Timestep::GetTime()* glm::radians(90.0f);

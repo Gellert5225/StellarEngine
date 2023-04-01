@@ -7,7 +7,7 @@
 
 namespace Stellar {
 	EditorCamera::EditorCamera(const float fovy, const float aspect, const float near, const float far)
-		: Camera(fovy, aspect, near, far) {
+		: Camera(fovy, aspect, near, far), m_VerticalFOV(fovy), m_AspectRatio(aspect), m_NearClip(near), m_FarClip(far) {
 		recalculateViewMatrix();
 	}
 
@@ -48,5 +48,13 @@ namespace Stellar {
             setPitch(m_Speed * ts * 40);
 
 		recalculateViewMatrix();
+	}
+
+	void EditorCamera::SetViewportSize(uint32_t width, uint32_t height) {
+		if (m_ViewportWidth == width && m_ViewportHeight == height)
+			return;
+		setPerspectiveProjection(m_VerticalFOV, (float)width / (float)height, m_NearClip, m_FarClip);
+		m_ViewportWidth = width;
+		m_ViewportHeight = height;
 	}
 } 
