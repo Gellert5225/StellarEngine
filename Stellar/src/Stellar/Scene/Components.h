@@ -28,11 +28,11 @@ namespace Stellar {
 
     struct STLR_API SpriteRendererComponent {
         glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
-        Texture2D* texture;
+        Ref<Texture2D> texture;
 
         SpriteRendererComponent() = default;
         SpriteRendererComponent(const SpriteRendererComponent&) = default;
-        SpriteRendererComponent(const glm::vec4& color, Texture2D* texture) 
+        SpriteRendererComponent(const glm::vec4& color, Ref<Texture2D> texture) 
             : color(color), texture(texture) {}
     };
 

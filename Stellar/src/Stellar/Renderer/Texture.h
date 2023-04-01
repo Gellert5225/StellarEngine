@@ -12,7 +12,7 @@ namespace Stellar {
     public:
         virtual ~Texture2D() = default;
 
-        static Texture2D* Create(const std::string& filePath);
+        static Ref<Texture2D> Create(const std::string& filePath);
     protected:
         explicit Texture2D(std::string  path) : m_Path(std::move(path)) {}
 

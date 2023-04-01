@@ -137,7 +137,7 @@ namespace Stellar {
 
     void VulkanRenderer::renderGeometry(Buffer* vertexBuffer,
                                         Buffer* indexBuffer,
-                                        Texture2D* texture,
+                                        Ref<Texture2D> texture,
                                         const glm::vec4& color,
                                         uint32_t indexCount,
                                         const glm::mat4& transform) {
@@ -145,7 +145,7 @@ namespace Stellar {
         push.model = transform;
         push.color = color;
 
-        auto textureDescriptorSet = ((VulkanTexture*)texture)->getDescriptorSets();
+        auto textureDescriptorSet = ((VulkanTexture*)texture.get())->getDescriptorSets();
         auto commandBuffer = (VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer();
 
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, *m_GraphicsPipeline->getPipeline());

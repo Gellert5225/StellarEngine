@@ -15,12 +15,12 @@ namespace Stellar {
         void onEvent(Event& event) override;
         void onImGuiRender() override;
     private:
-        EditorCamera* m_Camera;
+        EditorCamera m_EditorCamera;
         // glm::vec3 m_CameraPosition{0.0f, -1.0f, -2.0f};
         // float m_CameraSpeed = 1.0f;
         
-        Texture2D* m_Texture{};
-        Texture2D* m_Texture2{};
+        Ref<Texture2D> m_Texture{};
+        Ref<Texture2D> m_Texture2{};
 
         glm::vec3 m_Color{1.0f};
         glm::vec4 m_LogoColor{1.0f};

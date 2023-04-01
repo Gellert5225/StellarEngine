@@ -19,6 +19,6 @@ namespace Stellar {
 
         static void DrawQuad(const glm::mat4& transform, 
                              const glm::vec4& color,
-                             Texture2D* texture);
+                             Ref<Texture2D> texture);
     };
 }

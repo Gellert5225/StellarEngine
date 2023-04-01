@@ -2,11 +2,9 @@
 #include <imgui_internal.h>
 
 namespace Stellar {
-    EditorLayer::EditorLayer() : Layer("Sandbox2D") {
+    EditorLayer::EditorLayer() : Layer("Sandbox2D"), m_EditorCamera(glm::radians(60.0f), 1.0f, 0.1f, 1000.0f) {
         m_Texture = Texture2D::Create("../Resources/Textures/Hermanos.png");
         m_Texture2 = Texture2D::Create("../Resources/Textures/Example_texture.jpg");
-		auto perspective = (float)m_ViewPortSize.x / (float)m_ViewPortSize.y;
-		m_Camera = new EditorCamera(glm::radians(60.0f), perspective, 0.1f, 100.0f);
     }
 
     void EditorLayer::onAttach() {
@@ -15,32 +13,35 @@ namespace Stellar {
         m_ActiveScene = CreateRef<Scene>();
         m_LogoEntity = m_ActiveScene->createEntity("Logo Square");
         m_LogoEntity.addComponent<SpriteRendererComponent>(m_LogoColor, m_Texture);
-        m_CameraEntity = m_ActiveScene->createEntity("Camera");
-        m_CameraEntity.addComponent<EditorCameraComponent>(*m_Camera);
+        // m_CameraEntity = m_ActiveScene->createEntity("Camera");
+        // m_CameraEntity.addComponent<EditorCameraComponent>(m_Camera);
+
+		auto perspective = (float)m_ViewPortSize.x / (float)m_ViewPortSize.y;
+		m_EditorCamera = EditorCamera(glm::radians(60.0f), perspective, 0.1f, 100.0f);
     }
 
     void EditorLayer::onDetach() {
-        delete m_Texture;
-        delete m_Texture2;
+        // delete m_Texture;
+        // delete m_Texture2;
     }
 
     void EditorLayer::onUpdate(Timestep ts) {
-		m_Camera->SetViewportSize(m_ViewPortSize.x, m_ViewPortSize.y);
-		m_Camera->onUpdate(ts);
+		m_EditorCamera.SetViewportSize(m_ViewPortSize.x, m_ViewPortSize.y);
+		m_EditorCamera.onUpdate(ts);
 
         float angle = Timestep::GetTime()* glm::radians(90.0f);
         glm::mat4 transform = glm::translate(glm::mat4(1.f), glm::vec3(0.0f, -1.0f, 1.0f)) * 
                               glm::rotate(glm::mat4(1.0f), angle, glm::vec3(1.0f, 0.0f, 0.0f)) *
                               glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
         
-        auto& camera = m_CameraEntity.getComponent<EditorCameraComponent>().camera;
+        //auto& camera = m_CameraEntity.getComponent<EditorCameraComponent>().camera;
         auto& squareTransform = m_LogoEntity.getComponent<TransformComponent>().transform;
         auto& squareColor = m_LogoEntity.getComponent<SpriteRendererComponent>().color;
         squareTransform = transform;
         squareColor = m_LogoColor;
-        camera = *m_Camera;
+        //camera = *m_Camera;
         //m_ActiveScene->onUpdate(ts);
-		m_ActiveScene->onEditorUpdate(ts, *m_Camera);
+		m_ActiveScene->onEditorUpdate(ts, m_EditorCamera);
     }
 
     void EditorLayer::onEvent(Event& event) {
@@ -124,7 +125,7 @@ namespace Stellar {
         //ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
         ImGui::Begin("Color Setting");
         ImGui::ColorEdit3("Square Color", glm::value_ptr(m_Color));
-        UI::Image(m_Texture2, { 200, 200 });
+        UI::Image(m_Texture2.get(), { 200, 200 });
         ImGui::End();
 
         //ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
@@ -132,7 +133,7 @@ namespace Stellar {
         auto& tag = m_LogoEntity.getComponent<TagComponent>().tag;
         ImGui::Text("%s", tag.c_str());
         ImGui::ColorEdit3("Square Color", glm::value_ptr(m_LogoColor));
-        UI::Image(m_Texture, { 200, 200 });
+        UI::Image(m_Texture.get(), { 200, 200 });
         ImGui::End();
 
         // view port
