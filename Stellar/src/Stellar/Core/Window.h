@@ -12,59 +12,59 @@
 #include <utility>
 
 namespace Stellar {
-    struct WindowProperty {
-        std::string title;
-        unsigned int width;
-        unsigned int height;
+	struct WindowProperty {
+		std::string title;
+		unsigned int width;
+		unsigned int height;
 
-        explicit WindowProperty(std::string title = "Stellar Engine",
-                                unsigned int width = 1280,
-                                unsigned int height = 720)
-            : title(std::move(title)), width(width), height(height) {}
-    };
+		explicit WindowProperty(std::string title = "Stellar Engine",
+								unsigned int width = 1280,
+								unsigned int height = 720)
+			: title(std::move(title)), width(width), height(height) {}
+	};
 
-    class STLR_API Window {
-    public:
-        using EventCallbackFn = std::function<void(Event&)>;
+	class STLR_API Window {
+	public:
+		using EventCallbackFn = std::function<void(Event&)>;
 
-        explicit Window(WindowProperty  property);
-        virtual ~Window();
+		explicit Window(WindowProperty  property);
+		virtual ~Window();
 
-        virtual void init();
-        virtual void onUpdate();
-        virtual void setEventCallback(const EventCallbackFn& callback);
-        virtual void setVsync(bool enabled);
-        virtual void swapBuffers();
+		virtual void init();
+		virtual void onUpdate();
+		virtual void setEventCallback(const EventCallbackFn& callback);
+		virtual void setVsync(bool enabled);
+		virtual void swapBuffers();
 
-        [[nodiscard]] virtual unsigned int getWidth() const;
-        [[nodiscard]] virtual unsigned int getHeight() const;
+		[[nodiscard]] virtual unsigned int getWidth() const;
+		[[nodiscard]] virtual unsigned int getHeight() const;
 
-        [[nodiscard]] virtual bool isVsync() const;
+		[[nodiscard]] virtual bool isVsync() const;
 
-        [[nodiscard]] virtual GLFWwindow* getGLFWWindow() const;
+		[[nodiscard]] virtual GLFWwindow* getGLFWWindow() const;
 
-        [[nodiscard]] SwapChain* getSwapChain() const;
-        [[nodiscard]] Ref<RendererContext> getRendererContext() const;
+		[[nodiscard]] SwapChain* getSwapChain() const;
+		[[nodiscard]] Ref<RendererContext> getRendererContext() const;
 
-        static Scope<Window> Create(const WindowProperty& property = WindowProperty());
-    private:
-        GLFWwindow* m_Window{};
+		static Scope<Window> Create(const WindowProperty& property = WindowProperty());
+	private:
+		GLFWwindow* m_Window{};
 
-        Ref<RendererContext> m_Context = nullptr;
-        // TODO: Abstract this into different platforms
-        SwapChain* m_SwapChain = nullptr;
+		Ref<RendererContext> m_Context = nullptr;
+		// TODO: Abstract this into different platforms
+		SwapChain* m_SwapChain = nullptr;
 
-        struct WindowData {
+		struct WindowData {
 			std::string Title;
 			unsigned int Width, Height;
 			bool VSync;
 
 			EventCallbackFn EventCallback;
 		};
-        WindowData m_Data;
-        WindowProperty m_Property;
+		WindowData m_Data;
+		WindowProperty m_Property;
 
-    private:
-        virtual void shutDown();
-    };
+	private:
+		virtual void shutDown();
+	};
 }
