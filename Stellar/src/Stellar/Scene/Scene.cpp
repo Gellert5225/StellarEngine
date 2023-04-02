@@ -8,62 +8,62 @@
 #include <glm/glm.hpp>
 
 namespace Stellar {
-    Scene::Scene() {
+	Scene::Scene() {
 
-    }
+	}
 
-    Scene::~Scene() {
+	Scene::~Scene() {
 
-    }
+	}
 
-    Entity Scene::createEntity(const std::string& name) {
-        Entity entity = { m_Registry.create(), this };
-        
-        entity.addComponent<TransformComponent>();
-        auto& tag = entity.addComponent<TagComponent>();
-        tag.tag = name == "" ? "Entity" : name ;
+	Entity Scene::createEntity(const std::string& name) {
+		Entity entity = { m_Registry.create(), this };
+		
+		entity.addComponent<TransformComponent>();
+		auto& tag = entity.addComponent<TagComponent>();
+		tag.tag = name == "" ? "Entity" : name ;
 
-        return entity;
-    }
+		return entity;
+	}
 
-    void Scene::onUpdate(Timestep ts) {
-        Camera* mainCamera = nullptr;
-        auto view = m_Registry.view<CameraComponent, TransformComponent>();
-        for (auto entity : view) {
-            auto [camera, transform] = view.get<CameraComponent, TransformComponent>(entity);
-            if (camera.primary) {
-                mainCamera = &camera.camera;
-                break;
-            }
-        }
+	void Scene::onUpdate(Timestep ts) {
+		Camera* mainCamera = nullptr;
+		auto view = m_Registry.view<CameraComponent, TransformComponent>();
+		for (auto entity : view) {
+			auto [camera, transform] = view.get<CameraComponent, TransformComponent>(entity);
+			if (camera.primary) {
+				mainCamera = &camera.camera;
+				break;
+			}
+		}
 
-        if (mainCamera) {
-            Renderer2D::BeginScene(*mainCamera);
-            auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-            for (auto entity : group) {
-                auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-                Renderer2D::DrawQuad(transform.transform, sprite.color, sprite.texture);
-            }
-            Renderer2D::EndScene();
-        }
-    }
+		if (mainCamera) {
+			Renderer2D::BeginScene(*mainCamera);
+			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+			for (auto entity : group) {
+				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+				Renderer2D::DrawQuad(transform.transform, sprite.color, sprite.texture);
+			}
+			Renderer2D::EndScene();
+		}
+	}
 
 	void Scene::onEditorUpdate(Timestep ts, EditorCamera& camera) {
 		renderScene(camera);
 	}
 
-    void Scene::onViewportResize(uint32_t width, uint32_t height) {
-        m_ViewportWidth = width;
-        m_ViewportHeight = height;
+	void Scene::onViewportResize(uint32_t width, uint32_t height) {
+		m_ViewportWidth = width;
+		m_ViewportHeight = height;
 
-        auto view = m_Registry.view<CameraComponent>();
-        for (auto entity : view) {
-            auto camera = view.get<CameraComponent>(entity);
-            if (!camera.fixedAspectRatio) {
-                
-            }
-        }
-    }
+		auto view = m_Registry.view<CameraComponent>();
+		for (auto entity : view) {
+			auto camera = view.get<CameraComponent>(entity);
+			if (!camera.fixedAspectRatio) {
+				
+			}
+		}
+	}
 
 	void Scene::renderScene(EditorCamera& camera) {
 		Renderer2D::BeginScene(camera);
