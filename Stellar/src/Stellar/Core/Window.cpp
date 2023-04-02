@@ -172,7 +172,6 @@ namespace Stellar {
 
     Window::~Window() {
         delete m_SwapChain;
-        delete m_Context;
         shutDown();
     }
 
@@ -180,7 +179,7 @@ namespace Stellar {
         return m_SwapChain;
     }
 
-    RendererContext* Window::getRendererContext() const {
+    Ref<RendererContext> Window::getRendererContext() const {
         return m_Context;
     }
 

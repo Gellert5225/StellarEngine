@@ -8,7 +8,7 @@ namespace Stellar {
     public:
         virtual ~RendererContext() = default;
 
-        static RendererContext* Create();
+        static Ref<RendererContext> Create();
 
         [[nodiscard]] virtual std::string getGPUInfo() const = 0;
         [[nodiscard]] virtual std::string getGraphicsAPI() const = 0;

@@ -11,11 +11,11 @@
 #include "Stellar/Core/Log.h"
 
 namespace Stellar {
-    RendererContext* RendererContext::Create() {
+    Ref<RendererContext> RendererContext::Create() {
         switch (RendererAPI::Current()) {
             case RendererAPIType::Vulkan:
                 #if defined __linux__ || defined _WIN64
-                    return new VulkanRendererContext();
+                    return CreateRef<VulkanRendererContext>();
                 #endif
             case RendererAPIType::Metal:
                 #if defined __APPLE__

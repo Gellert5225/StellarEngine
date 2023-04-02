@@ -44,13 +44,13 @@ namespace Stellar {
         [[nodiscard]] virtual GLFWwindow* getGLFWWindow() const;
 
         [[nodiscard]] SwapChain* getSwapChain() const;
-        [[nodiscard]] RendererContext* getRendererContext() const;
+        [[nodiscard]] Ref<RendererContext> getRendererContext() const;
 
         static Scope<Window> Create(const WindowProperty& property = WindowProperty());
     private:
         GLFWwindow* m_Window{};
 
-        RendererContext* m_Context = nullptr;
+        Ref<RendererContext> m_Context = nullptr;
         // TODO: Abstract this into different platforms
         SwapChain* m_SwapChain = nullptr;
 
