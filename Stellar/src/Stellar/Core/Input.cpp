@@ -6,33 +6,33 @@
 #include "Log.h"
 
 namespace Stellar {
-    class Input* Input::s_Instance = new Input();
+	class Input* Input::s_Instance = new Input();
 
-    bool Input::isKeypressedImpl(int keycode) {
-        auto window = Application::Get().getWindow().getGLFWWindow();
-        auto state = glfwGetKey(window, keycode);
-        return state == GLFW_PRESS || state == GLFW_REPEAT;
-    }
+	bool Input::isKeypressedImpl(int keycode) {
+		auto window = Application::Get().getWindow().getGLFWWindow();
+		auto state = glfwGetKey(window, keycode);
+		return state == GLFW_PRESS || state == GLFW_REPEAT;
+	}
 
-    bool Input::isMouseButtonPressedImpl(int button) {
-        auto window = Application::Get().getWindow().getGLFWWindow();
-        auto state = glfwGetMouseButton(window, button);
-        return state == GLFW_PRESS;
-    }
+	bool Input::isMouseButtonPressedImpl(int button) {
+		auto window = Application::Get().getWindow().getGLFWWindow();
+		auto state = glfwGetMouseButton(window, button);
+		return state == GLFW_PRESS;
+	}
 
-    float Input::getMouseXImpl() {
-        auto window = Application::Get().getWindow().getGLFWWindow();
-        double x, y;
-        glfwGetCursorPos(window, &x, &y);
+	float Input::getMouseXImpl() {
+		auto window = Application::Get().getWindow().getGLFWWindow();
+		double x, y;
+		glfwGetCursorPos(window, &x, &y);
 
-        return float(x);
-    }
+		return float(x);
+	}
 
-    float Input::getMouseYImpl() {
-        auto window = Application::Get().getWindow().getGLFWWindow();
-        double x, y;
-        glfwGetCursorPos(window, &x, &y);
+	float Input::getMouseYImpl() {
+		auto window = Application::Get().getWindow().getGLFWWindow();
+		double x, y;
+		glfwGetCursorPos(window, &x, &y);
 
-        return float(y);
-    }
+		return float(y);
+	}
 }
