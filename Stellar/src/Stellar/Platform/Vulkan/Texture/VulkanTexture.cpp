@@ -50,7 +50,7 @@ namespace Stellar {
         descriptorWrite.dstArrayElement = 0;
         descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
         descriptorWrite.descriptorCount = 1;
-        descriptorWrite.pImageInfo = &((VulkanImage2D*)m_Image.get())->getDescriptorInfo();
+        descriptorWrite.pImageInfo = &((VulkanImage2D*)m_Image)->getDescriptorInfo();
 
         vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
         // auto imageInfo = (VulkanImageInfo*)m_Image->getImageInfo();
@@ -169,10 +169,10 @@ namespace Stellar {
 
         delete stagingBuffer;
 
-        ((VulkanImage2D*)m_Image.get())->updateDescriptor();
+        ((VulkanImage2D*)m_Image)->updateDescriptor();
     }
 
-    Ref<Image2D> VulkanTexture::getImage() const {
+    Image2D* VulkanTexture::getImage() const {
         return m_Image;
     }
 }
