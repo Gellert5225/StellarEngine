@@ -4,7 +4,7 @@
 #include "Event.h"
 
 namespace Stellar {
-    class STLR_API MouseMovedEvent : public Event {
+	class STLR_API MouseMovedEvent : public Event {
 	public:
 		MouseMovedEvent(float x, float y)
 			: m_MouseX(x), m_MouseY(y) {}

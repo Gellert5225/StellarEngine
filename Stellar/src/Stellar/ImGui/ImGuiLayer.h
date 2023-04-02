@@ -7,19 +7,19 @@
 #include <imgui.h>
 
 namespace Stellar {
-    class STLR_API ImGuiLayer: public Layer {
-    public:
-        virtual void begin() = 0;
-        virtual void end() = 0;
+	class STLR_API ImGuiLayer: public Layer {
+	public:
+		virtual void begin() = 0;
+		virtual void end() = 0;
 
-        static ImGuiLayer* Create();
-    protected:
-        float m_Time = 0.0f;
+		static ImGuiLayer* Create();
+	protected:
+		float m_Time = 0.0f;
 
-    };
+	};
 }
 
 namespace Stellar::UI {
-    void Image(Texture2D* texture, const ImVec2& size);
-    void ImageFromFB(FrameBuffer* frameBuffer, const ImVec2& size);
+	void Image(Texture2D* texture, const ImVec2& size);
+	void ImageFromFB(FrameBuffer* frameBuffer, const ImVec2& size);
 }

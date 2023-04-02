@@ -20,45 +20,45 @@
 #endif
 
 namespace Stellar {
-    ImGuiLayer *ImGuiLayer::Create() {
-        switch (RendererAPI::Current()) {
-            case RendererAPIType::Vulkan: 
-                #if defined __linux__ || defined _WIN64
-                    return new VulkanImGuiLayer();
-                #endif
-            case RendererAPIType::Metal:  
-                #if defined __APPLE__
-                    return new MetalImGuiLayer();
-                #endif
-            case RendererAPIType::None:   return nullptr;
-        }
-        STLR_CORE_ASSERT(false, "Unknown RendererAPI");
-        return nullptr;
+	ImGuiLayer *ImGuiLayer::Create() {
+		switch (RendererAPI::Current()) {
+			case RendererAPIType::Vulkan: 
+				#if defined __linux__ || defined _WIN64
+					return new VulkanImGuiLayer();
+				#endif
+			case RendererAPIType::Metal:  
+				#if defined __APPLE__
+					return new MetalImGuiLayer();
+				#endif
+			case RendererAPIType::None:   return nullptr;
+		}
+		STLR_CORE_ASSERT(false, "Unknown RendererAPI");
+		return nullptr;
 
-    }
+	}
 }
 
 namespace Stellar::UI {
-    void STLR_API Image(Texture2D* texture, const ImVec2& size) {
-        #if defined __linux__ || defined _WIN64
-        auto tex = (VulkanTexture*)texture;
-        auto image = tex->getImage();
-        auto imageInfo = (VulkanImageInfo*)image->getImageInfo();
-        const auto textureID = ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-        ImGui::Image(textureID, size);
-        #elif defined __APPLE__
-        ImGui::Image(((MetalTexture*)texture)->getTexture(), size);
-        #endif
+	void STLR_API Image(Texture2D* texture, const ImVec2& size) {
+		#if defined __linux__ || defined _WIN64
+		auto tex = (VulkanTexture*)texture;
+		auto image = tex->getImage();
+		auto imageInfo = (VulkanImageInfo*)image->getImageInfo();
+		const auto textureID = ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+		ImGui::Image(textureID, size);
+		#elif defined __APPLE__
+		ImGui::Image(((MetalTexture*)texture)->getTexture(), size);
+		#endif
 
-    }
+	}
 
-    void STLR_API ImageFromFB(FrameBuffer* frameBuffer, const ImVec2& size) {
-        #if defined __linux__ || defined _WIN64
-        auto imageInfo = (VulkanImageInfo*)frameBuffer->getAttachmentImage()->getImageInfo();
-        const auto textureID = ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-        ImGui::Image(textureID, size);
-        #elif defined __APPLE__
-        ImGui::Image(((MetalFrameBuffer*)frameBuffer)->getAttachmentTexture(), size);
-        #endif
-    }
+	void STLR_API ImageFromFB(FrameBuffer* frameBuffer, const ImVec2& size) {
+		#if defined __linux__ || defined _WIN64
+		auto imageInfo = (VulkanImageInfo*)frameBuffer->getAttachmentImage()->getImageInfo();
+		const auto textureID = ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+		ImGui::Image(textureID, size);
+		#elif defined __APPLE__
+		ImGui::Image(((MetalFrameBuffer*)frameBuffer)->getAttachmentTexture(), size);
+		#endif
+	}
 }
