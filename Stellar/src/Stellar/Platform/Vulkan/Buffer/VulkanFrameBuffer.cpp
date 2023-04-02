@@ -49,10 +49,10 @@ namespace Stellar {
         // create render pass
         m_RenderPass = new StandardRenderPass(imageFormat, depthFormat);
 
-        Ref<VulkanImage2D> image = std::static_pointer_cast<VulkanImage2D>(m_AttachmentImage);
+        VulkanImage2D* image = (VulkanImage2D*)m_AttachmentImage.get();
         VulkanImageInfo* info = (VulkanImageInfo*)image->getImageInfo();
 
-       	Ref<VulkanImage2D> depthImage = std::static_pointer_cast<VulkanImage2D>(m_DepthAttachmentImage);
+        VulkanImage2D* depthImage = (VulkanImage2D*)m_DepthAttachmentImage.get();
         VulkanImageInfo* depthInfo = (VulkanImageInfo*)depthImage->getImageInfo();
 
         std::array<VkImageView, 2> attachments = {
