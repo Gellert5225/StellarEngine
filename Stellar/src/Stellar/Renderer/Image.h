@@ -57,7 +57,7 @@ namespace Stellar {
 
     class STLR_API Image2D : public Image {
     public:
-        static Ref<Image2D> Create(ImageSpecification specification);
+        static Image2D* Create(ImageSpecification specification);
     };
 
 	namespace Utils {

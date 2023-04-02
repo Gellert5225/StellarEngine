@@ -12,7 +12,7 @@ namespace Stellar {
         ~VulkanTexture() override;
         // Vulkan
         void invalidate();
-        Ref<Image2D> getImage() const;
+        Image2D* getImage() const;
         VkDescriptorSet getDescriptorSets() { return m_DescriptorSet; }
         VkDescriptorSet getImGuiDescriptorSets() { return m_ImGuiDescriptorSet; };
     protected:
