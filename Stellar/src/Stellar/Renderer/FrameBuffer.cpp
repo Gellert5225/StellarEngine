@@ -11,20 +11,20 @@
 #include "Stellar/Core/Log.h"
 
 namespace Stellar {
-    FrameBuffer* FrameBuffer::Create(const FrameBufferSpec& spec) {
-        switch (RendererAPI::Current()) {
-            case RendererAPIType::Vulkan:
-                #if defined __linux__ || defined _WIN64
-                    return new VulkanFrameBuffer(spec);
-                #endif
-            case RendererAPIType::Metal:
-                #if defined __APPLE__
-                    return new MetalFrameBuffer(spec);
-                #endif
-            case RendererAPIType::None:
-                break;
-        }
-        STLR_CORE_ASSERT(false, "Unknown RendererAPI");
-        return nullptr;
-    }
+	FrameBuffer* FrameBuffer::Create(const FrameBufferSpec& spec) {
+		switch (RendererAPI::Current()) {
+			case RendererAPIType::Vulkan:
+				#if defined __linux__ || defined _WIN64
+					return new VulkanFrameBuffer(spec);
+				#endif
+			case RendererAPIType::Metal:
+				#if defined __APPLE__
+					return new MetalFrameBuffer(spec);
+				#endif
+			case RendererAPIType::None:
+				break;
+		}
+		STLR_CORE_ASSERT(false, "Unknown RendererAPI");
+		return nullptr;
+	}
 }

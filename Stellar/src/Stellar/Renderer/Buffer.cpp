@@ -12,38 +12,38 @@
 
 namespace Stellar {
 
-    Buffer* Buffer::Create(BufferType type, uint64_t size, const void *data) {
-        switch (RendererAPI::Current()) {
-            case RendererAPIType::Vulkan:
-            #if defined(__linux__) || defined(_WIN64)
-                switch (type) {
-                    case BufferType::Vertex:
-                        return new VulkanBuffer(size,
-                                                VK_BUFFER_USAGE_TRANSFER_DST_BIT |
-                                                VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
-                                                VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-                                                data);
-                    case BufferType::Index:
-                        return new VulkanBuffer(size,
-                                                VK_BUFFER_USAGE_TRANSFER_DST_BIT |
-                                                VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
-                                                VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-                                                data);
-                    case BufferType::Uniform:
-                        return new VulkanBuffer(size,
-                                                VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-                                                VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
-                                                VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-                }
-            #endif
-            case RendererAPIType::Metal:
-            #if defined(__APPLE__)
-                return new MetalBuffer(size, data);
-            #endif
-            case RendererAPIType::None:
-                break;
-        }
-        STLR_CORE_ASSERT(false, "Unknown RendererAPI");
-        return nullptr;
-    }
+	Buffer* Buffer::Create(BufferType type, uint64_t size, const void *data) {
+		switch (RendererAPI::Current()) {
+			case RendererAPIType::Vulkan:
+			#if defined(__linux__) || defined(_WIN64)
+				switch (type) {
+					case BufferType::Vertex:
+						return new VulkanBuffer(size,
+												VK_BUFFER_USAGE_TRANSFER_DST_BIT |
+												VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+												VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+												data);
+					case BufferType::Index:
+						return new VulkanBuffer(size,
+												VK_BUFFER_USAGE_TRANSFER_DST_BIT |
+												VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
+												VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+												data);
+					case BufferType::Uniform:
+						return new VulkanBuffer(size,
+												VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+												VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
+												VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+				}
+			#endif
+			case RendererAPIType::Metal:
+			#if defined(__APPLE__)
+				return new MetalBuffer(size, data);
+			#endif
+			case RendererAPIType::None:
+				break;
+		}
+		STLR_CORE_ASSERT(false, "Unknown RendererAPI");
+		return nullptr;
+	}
 }

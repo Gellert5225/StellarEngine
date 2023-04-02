@@ -15,20 +15,20 @@
 
 namespace Stellar {
 
-    SwapChain *SwapChain::Create() {
-        switch (RendererAPI::Current()) {
-            case RendererAPIType::Vulkan:
-                #if defined __linux__ || defined _WIN64
-                    return new VulkanSwapChain();
-                #endif
-            case RendererAPIType::Metal:
-                #if defined __APPLE__
-                    return new MetalSwapChain();
-                #endif
-            case RendererAPIType::None:
-                break;
-        }
-        STLR_CORE_ASSERT(false, "Unknown RendererAPI");
-        return nullptr;
-    }
+	SwapChain *SwapChain::Create() {
+		switch (RendererAPI::Current()) {
+			case RendererAPIType::Vulkan:
+				#if defined __linux__ || defined _WIN64
+					return new VulkanSwapChain();
+				#endif
+			case RendererAPIType::Metal:
+				#if defined __APPLE__
+					return new MetalSwapChain();
+				#endif
+			case RendererAPIType::None:
+				break;
+		}
+		STLR_CORE_ASSERT(false, "Unknown RendererAPI");
+		return nullptr;
+	}
 }

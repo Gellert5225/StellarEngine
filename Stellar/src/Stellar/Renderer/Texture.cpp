@@ -12,20 +12,20 @@
 #include "Stellar/Renderer/RendererAPI.h"
 
 namespace Stellar {
-    Ref<Texture2D> Texture2D::Create(const std::string& filePath) {
-        switch (RendererAPI::Current()) {
-            case RendererAPIType::Vulkan:
-            #if defined(__linux__) || defined(_WIN64)
-                return CreateRef<VulkanTexture>(filePath);
-            #endif
-            case RendererAPIType::Metal:
-            #if defined(__APPLE__)
-                return new MetalTexture(filePath);
-            #endif
-            case RendererAPIType::None:
-                break;
-        }
-        STLR_CORE_ASSERT(false, "Unknown RendererAPI");
-        return nullptr;
-    }
+	Ref<Texture2D> Texture2D::Create(const std::string& filePath) {
+		switch (RendererAPI::Current()) {
+			case RendererAPIType::Vulkan:
+			#if defined(__linux__) || defined(_WIN64)
+				return CreateRef<VulkanTexture>(filePath);
+			#endif
+			case RendererAPIType::Metal:
+			#if defined(__APPLE__)
+				return new MetalTexture(filePath);
+			#endif
+			case RendererAPIType::None:
+				break;
+		}
+		STLR_CORE_ASSERT(false, "Unknown RendererAPI");
+		return nullptr;
+	}
 }

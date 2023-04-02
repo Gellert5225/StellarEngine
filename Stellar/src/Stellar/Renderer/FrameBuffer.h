@@ -5,26 +5,26 @@
 #include <vector>
 
 namespace Stellar {
-    struct FrameBufferSpec {
-        uint32_t width, height;
-        bool swapChainTarget = false;
-        std::vector<ImageFormat> attachments;
-    };
+	struct FrameBufferSpec {
+		uint32_t width, height;
+		bool swapChainTarget = false;
+		std::vector<ImageFormat> attachments;
+	};
 
-    class STLR_API FrameBuffer {
-    public:
-        virtual ~FrameBuffer() = default;
+	class STLR_API FrameBuffer {
+	public:
+		virtual ~FrameBuffer() = default;
 
-        static FrameBuffer* Create(const FrameBufferSpec& spec);
+		static FrameBuffer* Create(const FrameBufferSpec& spec);
 
-        virtual void resize(uint32_t width, uint32_t height) = 0;
-        virtual const FrameBufferSpec& getSpecification() const = 0;
-        virtual Image2D* getAttachmentImage() = 0;
-        virtual Image2D* getDepthAttachmentImage() = 0;
-    protected:
-        FrameBufferSpec m_Spec;
-        Image2D* m_AttachmentImage;
-        Image2D* m_DepthAttachmentImage;
-        uint32_t m_Width, m_Height;
-    };
+		virtual void resize(uint32_t width, uint32_t height) = 0;
+		virtual const FrameBufferSpec& getSpecification() const = 0;
+		virtual Image2D* getAttachmentImage() = 0;
+		virtual Image2D* getDepthAttachmentImage() = 0;
+	protected:
+		FrameBufferSpec m_Spec;
+		Image2D* m_AttachmentImage;
+		Image2D* m_DepthAttachmentImage;
+		uint32_t m_Width, m_Height;
+	};
 } 
