@@ -19,12 +19,12 @@ namespace Stellar {
 
         virtual void resize(uint32_t width, uint32_t height) = 0;
         virtual const FrameBufferSpec& getSpecification() const = 0;
-        virtual Image2D* getAttachmentImage() = 0;
-        virtual Image2D* getDepthAttachmentImage() = 0;
+        virtual Ref<Image2D> getAttachmentImage() = 0;
+        virtual Ref<Image2D> getDepthAttachmentImage() = 0;
     protected:
         FrameBufferSpec m_Spec;
-        Image2D* m_AttachmentImage;
-        Image2D* m_DepthAttachmentImage;
+        Ref<Image2D> m_AttachmentImage;
+        Ref<Image2D> m_DepthAttachmentImage;
         uint32_t m_Width, m_Height;
     };
 } 
