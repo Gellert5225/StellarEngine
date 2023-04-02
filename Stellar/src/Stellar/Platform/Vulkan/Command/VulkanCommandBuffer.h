@@ -12,23 +12,23 @@
 #include <vulkan/vulkan.h>
 
 namespace Stellar {
-    class STLR_API VulkanCommandBuffer : public CommandBuffer {
-    public:
-        explicit VulkanCommandBuffer(uint32_t size);
-        VulkanCommandBuffer(uint32_t size, VkCommandBufferLevel level);
-        ~VulkanCommandBuffer() override;
+	class STLR_API VulkanCommandBuffer : public CommandBuffer {
+	public:
+		explicit VulkanCommandBuffer(uint32_t size);
+		VulkanCommandBuffer(uint32_t size, VkCommandBufferLevel level);
+		~VulkanCommandBuffer() override;
 
-        void begin() override;
-        void end() override;
-        void submit() override;
+		void begin() override;
+		void end() override;
+		void submit() override;
 
-        void* getActiveCommandBuffer() override;
+		void* getActiveCommandBuffer() override;
 
-        [[nodiscard]] VkCommandBuffer getCurrentCommandBuffer(uint32_t currentFrameIndex) const;
+		[[nodiscard]] VkCommandBuffer getCurrentCommandBuffer(uint32_t currentFrameIndex) const;
 
-        [[nodiscard]] const std::vector<VkCommandBuffer>* getCommandBuffers() const;
-    private:
-        std::vector<VkCommandBuffer> m_CommandBuffers;
-        std::vector<VkFence> m_WaitFences;
-    };
+		[[nodiscard]] const std::vector<VkCommandBuffer>* getCommandBuffers() const;
+	private:
+		std::vector<VkCommandBuffer> m_CommandBuffers;
+		std::vector<VkFence> m_WaitFences;
+	};
 }

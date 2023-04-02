@@ -5,19 +5,19 @@
 #include <vulkan/vulkan.h>
 
 namespace Stellar {
-    class STLR_API CommandPool {
-    public:
-        static CommandPool* GetInstance();
+	class STLR_API CommandPool {
+	public:
+		static CommandPool* GetInstance();
 
-        ~CommandPool();
+		~CommandPool();
 
-        void init(Queue::QueueFamilyIndices indices);
-        void reset();
-        VkCommandPool* getVkCommandPool();
-    private:
-        static CommandPool* s_Instance;
-        VkCommandPool commandPool;
+		void init(Queue::QueueFamilyIndices indices);
+		void reset();
+		VkCommandPool* getVkCommandPool();
+	private:
+		static CommandPool* s_Instance;
+		VkCommandPool commandPool;
 
-        CommandPool() = default;
-    };
+		CommandPool() = default;
+	};
 }

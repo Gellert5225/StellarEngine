@@ -9,53 +9,53 @@
 
 namespace Stellar {
 
-    VulkanShader::VulkanShader(const std::string& filePath) : Shader(filePath) {
-        auto source = ReadFile(filePath);
-        STLR_CORE_INFO("Preproecssing Shader: {0}", m_Name);
-        auto result = VulkanShaderCompiler::PreProcess(source);
-        std::unordered_map<ShaderType, std::vector<uint32_t>> spv;
+	VulkanShader::VulkanShader(const std::string& filePath) : Shader(filePath) {
+		auto source = ReadFile(filePath);
+		STLR_CORE_INFO("Preproecssing Shader: {0}", m_Name);
+		auto result = VulkanShaderCompiler::PreProcess(source);
+		std::unordered_map<ShaderType, std::vector<uint32_t>> spv;
 
-        STLR_CORE_INFO("Compiling Shader: {0}", m_Name);
-        VulkanShaderCompiler::Compile(result, spv);
+		STLR_CORE_INFO("Compiling Shader: {0}", m_Name);
+		VulkanShaderCompiler::Compile(result, spv);
 
-        for (auto& kv : spv) {
-            auto shaderModule = CreateShaderModule(kv.second);
-            m_ShaderModules.push_back(shaderModule);
+		for (auto& kv : spv) {
+			auto shaderModule = CreateShaderModule(kv.second);
+			m_ShaderModules.push_back(shaderModule);
 
-            VkPipelineShaderStageCreateInfo shaderStageInfo{};
-            shaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-            shaderStageInfo.stage = VulkanShaderCompilerUtil::VulkanShaderTypeFromType(kv.first);
-            shaderStageInfo.module = shaderModule;
-            shaderStageInfo.pName = "main";
-            m_StageInfos.push_back(shaderStageInfo);
-        }
-    }
+			VkPipelineShaderStageCreateInfo shaderStageInfo{};
+			shaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+			shaderStageInfo.stage = VulkanShaderCompilerUtil::VulkanShaderTypeFromType(kv.first);
+			shaderStageInfo.module = shaderModule;
+			shaderStageInfo.pName = "main";
+			m_StageInfos.push_back(shaderStageInfo);
+		}
+	}
 
-    const std::string VulkanShader::extractType(const std::string& filePath) const {
-        auto fileName = filePath.substr(filePath.find_last_of("/") + 1);
-        return fileName.substr(fileName.find_first_of(".") + 1, 4);
-    }
+	const std::string VulkanShader::extractType(const std::string& filePath) const {
+		auto fileName = filePath.substr(filePath.find_last_of("/") + 1);
+		return fileName.substr(fileName.find_first_of(".") + 1, 4);
+	}
 
-    VkShaderModule VulkanShader::CreateShaderModule(const std::vector<uint32_t>& code) {
-        VkShaderModuleCreateInfo createInfo{};
-        createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-        createInfo.codeSize = code.size() * sizeof(uint32_t);
-        createInfo.pCode = code.data();
+	VkShaderModule VulkanShader::CreateShaderModule(const std::vector<uint32_t>& code) {
+		VkShaderModuleCreateInfo createInfo{};
+		createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+		createInfo.codeSize = code.size() * sizeof(uint32_t);
+		createInfo.pCode = code.data();
 
-        VkShaderModule shaderModule;
-        auto device = VulkanDevice::GetInstance()->logicalDevice();
+		VkShaderModule shaderModule;
+		auto device = VulkanDevice::GetInstance()->logicalDevice();
 
-        VK_CHECK_RESULT(vkCreateShaderModule(device, &createInfo, nullptr, &shaderModule));
-        return shaderModule;
-    }
+		VK_CHECK_RESULT(vkCreateShaderModule(device, &createInfo, nullptr, &shaderModule));
+		return shaderModule;
+	}
 
-    VulkanShader::~VulkanShader() {
-        for (auto shader : m_ShaderModules) 
-            vkDestroyShaderModule(VulkanDevice::GetInstance()->logicalDevice(),
-                shader, nullptr);
-    }
+	VulkanShader::~VulkanShader() {
+		for (auto shader : m_ShaderModules) 
+			vkDestroyShaderModule(VulkanDevice::GetInstance()->logicalDevice(),
+				shader, nullptr);
+	}
 
-    const std::vector<VkPipelineShaderStageCreateInfo>& VulkanShader::getStageInfos() const {
-        return m_StageInfos;
-    }
+	const std::vector<VkPipelineShaderStageCreateInfo>& VulkanShader::getStageInfos() const {
+		return m_StageInfos;
+	}
 }

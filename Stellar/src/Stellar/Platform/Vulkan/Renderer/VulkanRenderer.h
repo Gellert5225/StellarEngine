@@ -12,46 +12,46 @@
 #include <vulkan/vulkan.h>
 
 namespace Stellar {
-    class STLR_API VulkanRenderer : public RendererAPI {
-    public:
-        void init() override;
-        void shutDown() override;
+	class STLR_API VulkanRenderer : public RendererAPI {
+	public:
+		void init() override;
+		void shutDown() override;
 
-        void beginRenderPass() override;
-        void endRenderPass() override;
+		void beginRenderPass() override;
+		void endRenderPass() override;
 
-        void setClearColor(const glm::vec4& color) override;
-        void renderGeometry(Buffer* vertexBuffer,
-                            Buffer* indexBuffer,
-                            Ref<Texture2D> texture,
-                            const glm::vec4& color,
-                            uint32_t indexCount,
-                            const glm::mat4& transform) override;
-        void renderGrid(Buffer* vertexBuffer,
-                        Buffer* indexBuffer,
-                        uint32_t indexCount = 0) override;
+		void setClearColor(const glm::vec4& color) override;
+		void renderGeometry(Buffer* vertexBuffer,
+							Buffer* indexBuffer,
+							Ref<Texture2D> texture,
+							const glm::vec4& color,
+							uint32_t indexCount,
+							const glm::mat4& transform) override;
+		void renderGrid(Buffer* vertexBuffer,
+						Buffer* indexBuffer,
+						uint32_t indexCount = 0) override;
 
-        FrameBuffer* getFrameBuffer() override;
-        void resizeFrameBuffer(uint32_t width, uint32_t height) override;
-        
-        void bindUbo(const GlobalUniforms& ubo) override;
+		FrameBuffer* getFrameBuffer() override;
+		void resizeFrameBuffer(uint32_t width, uint32_t height) override;
+		
+		void bindUbo(const GlobalUniforms& ubo) override;
 
-        // vulkan
-        static GraphicsPipeline* GetPipeline();
-        static VkDescriptorSet AllocateDesriptorSet(VkDescriptorSetAllocateInfo& allocInfo);
-    private:
-        GraphicsPipeline* m_GraphicsPipeline = nullptr;
-        GraphicsPipeline* m_GridPipeline = nullptr;
-        VkClearColorValue m_ClearColor = {{0.66f, 0.9f, 0.96f, 1.0f}};
+		// vulkan
+		static GraphicsPipeline* GetPipeline();
+		static VkDescriptorSet AllocateDesriptorSet(VkDescriptorSetAllocateInfo& allocInfo);
+	private:
+		GraphicsPipeline* m_GraphicsPipeline = nullptr;
+		GraphicsPipeline* m_GridPipeline = nullptr;
+		VkClearColorValue m_ClearColor = {{0.66f, 0.9f, 0.96f, 1.0f}};
 
-        Buffer* m_UniformBuffer{};
-        FrameBuffer* m_FrameBuffer;
+		Buffer* m_UniformBuffer{};
+		FrameBuffer* m_FrameBuffer;
 
-        VkDescriptorSet m_UboDescriptorSet;
+		VkDescriptorSet m_UboDescriptorSet;
 
-        bool m_NeedResize = false;
-        uint32_t m_ViewPortWidth, m_ViewPortHeight;
+		bool m_NeedResize = false;
+		uint32_t m_ViewPortWidth, m_ViewPortHeight;
 
-        void createUboDescriptorSet();
-    };
+		void createUboDescriptorSet();
+	};
 }

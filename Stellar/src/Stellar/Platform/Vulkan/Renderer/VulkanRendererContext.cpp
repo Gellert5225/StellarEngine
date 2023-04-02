@@ -9,23 +9,23 @@
 
 namespace Stellar {
 
-    VulkanRendererContext::VulkanRendererContext() {
-        VulkanInstance::GetInstance()->init("Stellar Engine Sandbox", 1, "Stellar", 1);
-        VulkanSurface::GetInstance()->init(Application::Get().getWindow().getGLFWWindow());
-        VulkanDevice::GetInstance()->init(VulkanSurface::GetInstance()->getSurface());
-    }
+	VulkanRendererContext::VulkanRendererContext() {
+		VulkanInstance::GetInstance()->init("Stellar Engine Sandbox", 1, "Stellar", 1);
+		VulkanSurface::GetInstance()->init(Application::Get().getWindow().getGLFWWindow());
+		VulkanDevice::GetInstance()->init(VulkanSurface::GetInstance()->getSurface());
+	}
 
-    VulkanRendererContext::~VulkanRendererContext() {
-        delete VulkanDevice::GetInstance();
-        delete VulkanSurface::GetInstance();
-        delete VulkanInstance::GetInstance();
-    }
+	VulkanRendererContext::~VulkanRendererContext() {
+		delete VulkanDevice::GetInstance();
+		delete VulkanSurface::GetInstance();
+		delete VulkanInstance::GetInstance();
+	}
 
-    std::string VulkanRendererContext::getGPUInfo() const {
-        return VulkanDevice::GetInstance()->getDeviceProperties().deviceName;
-    };
+	std::string VulkanRendererContext::getGPUInfo() const {
+		return VulkanDevice::GetInstance()->getDeviceProperties().deviceName;
+	};
 
-    std::string VulkanRendererContext::getGraphicsAPI() const {
-        return VulkanInstance::GetInstance()->getInstanceVersion();
-    };
+	std::string VulkanRendererContext::getGraphicsAPI() const {
+		return VulkanInstance::GetInstance()->getInstanceVersion();
+	};
 }

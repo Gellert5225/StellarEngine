@@ -9,24 +9,24 @@
 #include <vector>
 
 namespace Stellar {
-    class STLR_API VulkanFrameBuffer : public FrameBuffer {
-    public:
-        VulkanFrameBuffer(const FrameBufferSpec& spec);
-        ~VulkanFrameBuffer();
+	class STLR_API VulkanFrameBuffer : public FrameBuffer {
+	public:
+		VulkanFrameBuffer(const FrameBufferSpec& spec);
+		~VulkanFrameBuffer();
 
-        void resize(uint32_t width, uint32_t height) override;
+		void resize(uint32_t width, uint32_t height) override;
 
-        void invalidate();
-        void release();
-        Image2D* getAttachmentImage() override { return m_AttachmentImage; }
-        Image2D* getDepthAttachmentImage() override { return m_DepthAttachmentImage; }
-        const FrameBufferSpec& getSpecification() const override { return m_Spec; };
+		void invalidate();
+		void release();
+		Image2D* getAttachmentImage() override { return m_AttachmentImage; }
+		Image2D* getDepthAttachmentImage() override { return m_DepthAttachmentImage; }
+		const FrameBufferSpec& getSpecification() const override { return m_Spec; };
 
-        [[nodiscard]] VkFramebuffer getFramebuffer() const;
-        [[nodiscard]] VkRenderPass getRenderPass() const;
-        [[nodiscard]] size_t getFramebufferSize() const;
-    private:
-        VkFramebuffer m_Framebuffer;
-        StandardRenderPass* m_RenderPass;
-    };
+		[[nodiscard]] VkFramebuffer getFramebuffer() const;
+		[[nodiscard]] VkRenderPass getRenderPass() const;
+		[[nodiscard]] size_t getFramebufferSize() const;
+	private:
+		VkFramebuffer m_Framebuffer;
+		StandardRenderPass* m_RenderPass;
+	};
 }

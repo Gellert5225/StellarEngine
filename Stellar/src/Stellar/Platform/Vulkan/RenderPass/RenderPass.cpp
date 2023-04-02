@@ -4,11 +4,11 @@
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 
 namespace Stellar {
-    RenderPass::~RenderPass() {
-        vkDestroyRenderPass(VulkanDevice::GetInstance()->logicalDevice(), renderPass, nullptr);
-    }
+	RenderPass::~RenderPass() {
+		vkDestroyRenderPass(VulkanDevice::GetInstance()->logicalDevice(), renderPass, nullptr);
+	}
 
-    VkRenderPass RenderPass::getVkRenderPass() const {
-        return renderPass;
-    }
+	VkRenderPass RenderPass::getVkRenderPass() const {
+		return renderPass;
+	}
 }

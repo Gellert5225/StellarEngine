@@ -13,15 +13,15 @@
 #include <memory>
 
 namespace Stellar {
-    class STLR_API VulkanRendererContext : public RendererContext {
-    public:
-        VulkanRendererContext();
-        ~VulkanRendererContext() override;
+	class STLR_API VulkanRendererContext : public RendererContext {
+	public:
+		VulkanRendererContext();
+		~VulkanRendererContext() override;
 
-        [[nodiscard]] std::string getGPUInfo() const override;
-        [[nodiscard]] std::string getGraphicsAPI() const override;
+		[[nodiscard]] std::string getGPUInfo() const override;
+		[[nodiscard]] std::string getGraphicsAPI() const override;
 
-    private:
+	private:
 
-    };
+	};
 }
