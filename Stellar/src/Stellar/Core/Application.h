@@ -12,40 +12,40 @@
 #include "Stellar/Renderer/Camera.h"
 
 namespace Stellar {
-    class STLR_API Application {
-        struct AppInfo {
-            std::string appName;
-            std::string graphicsInfo;
-            std::string vulkanVersion;
-        };
+	class STLR_API Application {
+		struct AppInfo {
+			std::string appName;
+			std::string graphicsInfo;
+			std::string vulkanVersion;
+		};
 
-    public:
-        Application();
-        virtual ~Application();
+	public:
+		Application();
+		virtual ~Application();
 
-        void run();
-        void onEvent(Event&);
+		void run();
+		void onEvent(Event&);
 
-        void pushLayer(Layer*);
-        void pushOverlay(Layer*);
+		void pushLayer(Layer*);
+		void pushOverlay(Layer*);
 
-        [[nodiscard]] AppInfo getAppInfo() const;
+		[[nodiscard]] AppInfo getAppInfo() const;
 
-        inline static Application& Get() { return *s_Instance; }
-        inline Window& getWindow() { return *m_Window; }
+		inline static Application& Get() { return *s_Instance; }
+		inline Window& getWindow() { return *m_Window; }
     private:
-        static Application* s_Instance;
+		static Application* s_Instance;
 
-        bool m_Running = true;
+		Scope<Window> m_Window;
+		ImGuiLayer *m_ImGuiLayer;
+		LayerStack m_LayerStack;
+		float m_LastFrameTime = 0.0f;
+		bool m_Running = true;
 
-        Scope<Window> m_Window;
-        ImGuiLayer *m_ImGuiLayer;
-        LayerStack m_LayerStack;
-        float m_LastFrameTime = 0.0f;
+	private:
+		bool onWindowClose(WindowCloseEvent&);
+		bool onWindowResize(WindowResizeEvent&);
+	};
 
-        bool onWindowClose(WindowCloseEvent&);
-        bool onWindowResize(WindowResizeEvent&);
-    };
-
-    Application* CreateApplication();
+Application* CreateApplication();
 }
