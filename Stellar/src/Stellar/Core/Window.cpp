@@ -13,8 +13,8 @@ namespace Stellar {
         STLR_CORE_ERROR("GLFW ERROR: Code {0}, {1}", error, description);
     }
 
-    Window* Window::Create(const WindowProperty& property) {
-        return new Window(property);
+    Scope<Window> Window::Create(const WindowProperty& property) {
+        return CreateScope<Window>(property);
     }
 
     Window::Window(WindowProperty property) : m_Property(std::move(property)) {

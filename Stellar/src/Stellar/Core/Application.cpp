@@ -10,7 +10,7 @@ namespace Stellar {
     Application::Application() {
         STLR_CORE_ASSERT(!s_Instance, "Application already exists")
         s_Instance = this;
-        m_Window = std::unique_ptr<Window>(Window::Create());
+        m_Window = Window::Create();
         m_Window->init();
         m_Window->setEventCallback(BIND_EVENT_FN(Application::onEvent));
 

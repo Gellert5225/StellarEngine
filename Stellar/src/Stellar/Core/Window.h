@@ -46,7 +46,7 @@ namespace Stellar {
         [[nodiscard]] SwapChain* getSwapChain() const;
         [[nodiscard]] RendererContext* getRendererContext() const;
 
-        static Window* Create(const WindowProperty& property = WindowProperty());
+        static Scope<Window> Create(const WindowProperty& property = WindowProperty());
     private:
         GLFWwindow* m_Window{};
 
