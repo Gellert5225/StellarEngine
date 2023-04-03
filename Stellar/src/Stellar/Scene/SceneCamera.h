@@ -5,6 +5,41 @@
 
 namespace Stellar {
 	class SceneCamera : public Camera {
+	public:
+		enum class ProjectionType { Perspective = 0, Orthographic = 1 };
+	public:
+		void setPerspective(float fov, float near, float far);
+		void setOrthographic(float size, float near, float far);
+		void setViewPortSize(uint32_t width, uint32_t height);
 
+		void setProjectionType(ProjectionType type) { m_ProjectionType = type; }
+		ProjectionType getProjectionType() const { return m_ProjectionType; }
+
+		void setFov(const float fov) { m_Fov = fov; }
+		float getFov() const { return m_Fov; };
+
+		void setPerspectiveNear(const float near) { m_PerspectiveNear = near; }
+		float getPerspectiveNear() const { return m_PerspectiveNear; }
+
+		void setPerspectiveFar(const float far) { m_PerspectiveFar = far; }
+		float getPerspectiveFar() const { return m_PerspectiveFar; }
+
+		void setOrthoGraphicSize(const float size) { m_OrthoSize = size; }
+		float getOrthoGraphicSize() const { return m_OrthoSize; };
+
+		void setOrthographicNear(const float near) { m_OrthoNear = near; }
+		float getOrthographicNear() const { return m_OrthoNear; }
+
+		void setOrthographicFar(const float far) { m_OrthoFar = far; }
+		float setOrthographicFear() const { return m_OrthoFar; }
+
+	private:
+		ProjectionType m_ProjectionType = ProjectionType::Perspective;
+
+		float m_Fov = 60.0f;
+		float m_PerspectiveNear = 0.1f, m_PerspectiveFar = 1000.0f;
+
+		float m_OrthoSize = 10.0f;
+		float m_OrthoNear = 0.1f, m_OrthoFar = 1.0f;
 	};
 }

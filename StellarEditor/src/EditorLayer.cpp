@@ -17,7 +17,7 @@ namespace Stellar {
 		// m_CameraEntity.addComponent<EditorCameraComponent>(m_Camera);
 
 		auto perspective = (float)m_ViewPortSize.x / (float)m_ViewPortSize.y;
-		m_EditorCamera = EditorCamera(glm::radians(60.0f), perspective, 0.1f, 100.0f);
+		m_EditorCamera = EditorCamera(60.0f, perspective, 0.1f, 100.0f);
 	}
 
 	void EditorLayer::onDetach() {
