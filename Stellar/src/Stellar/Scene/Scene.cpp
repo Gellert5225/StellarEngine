@@ -60,7 +60,7 @@ namespace Stellar {
 		for (auto entity : view) {
 			auto camera = view.get<CameraComponent>(entity);
 			if (!camera.fixedAspectRatio) {
-				
+				camera.camera.setViewPortSize(width, height);
 			}
 		}
 	}

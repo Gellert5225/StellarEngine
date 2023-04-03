@@ -2,7 +2,7 @@
 #include <imgui_internal.h>
 
 namespace Stellar {
-	EditorLayer::EditorLayer() : Layer("Sandbox2D"), m_EditorCamera(glm::radians(60.0f), 1.0f, 0.1f, 1000.0f) {
+	EditorLayer::EditorLayer() : Layer("Sandbox2D"), m_EditorCamera(60.0f, 1.0f, 0.1f, 1000.0f) {
 		m_Texture = Texture2D::Create("../Resources/Textures/Hermanos.png");
 		m_Texture2 = Texture2D::Create("../Resources/Textures/Example_texture.jpg");
 	}

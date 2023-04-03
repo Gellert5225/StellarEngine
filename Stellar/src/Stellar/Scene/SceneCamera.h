@@ -8,29 +8,29 @@ namespace Stellar {
 	public:
 		enum class ProjectionType { Perspective = 0, Orthographic = 1 };
 	public:
-		void setPerspective(float fov, float near, float far);
-		void setOrthographic(float size, float near, float far);
+		void setPerspective(float fov, float nearClip, float farClip);
+		void setOrthographic(float size, float nearClip, float farClip);
 		void setViewPortSize(uint32_t width, uint32_t height);
 
 		void setProjectionType(ProjectionType type) { m_ProjectionType = type; }
 		ProjectionType getProjectionType() const { return m_ProjectionType; }
 
 		void setFov(const float fov) { m_Fov = fov; }
-		float getFov() const { return m_Fov; };
+		float getFov() const { return m_Fov; }
 
-		void setPerspectiveNear(const float near) { m_PerspectiveNear = near; }
+		void setPerspectiveNear(const float nearClip) { m_PerspectiveNear = nearClip; }
 		float getPerspectiveNear() const { return m_PerspectiveNear; }
 
-		void setPerspectiveFar(const float far) { m_PerspectiveFar = far; }
+		void setPerspectiveFar(const float farClip) { m_PerspectiveFar = farClip; }
 		float getPerspectiveFar() const { return m_PerspectiveFar; }
 
 		void setOrthoGraphicSize(const float size) { m_OrthoSize = size; }
 		float getOrthoGraphicSize() const { return m_OrthoSize; };
 
-		void setOrthographicNear(const float near) { m_OrthoNear = near; }
+		void setOrthographicNear(const float nearClip) { m_OrthoNear = nearClip; }
 		float getOrthographicNear() const { return m_OrthoNear; }
 
-		void setOrthographicFar(const float far) { m_OrthoFar = far; }
+		void setOrthographicFar(const float farClip) { m_OrthoFar = farClip; }
 		float setOrthographicFear() const { return m_OrthoFar; }
 
 	private:

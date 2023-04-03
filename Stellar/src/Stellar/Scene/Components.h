@@ -3,6 +3,7 @@
 #include "Stellar/Core/Core.h"
 #include "Stellar/Renderer/Texture.h"
 #include "Stellar/Renderer/Camera.h"
+#include "Stellar/Scene/SceneCamera.h"
 #include "Stellar/Editor/EditorCamera.h"
 
 #include <glm/glm.hpp>
@@ -42,7 +43,7 @@ namespace Stellar {
 	};
 
 	struct STLR_API CameraComponent {
-		Camera camera;
+		SceneCamera camera;
 		bool primary = true;
 		bool fixedAspectRatio = false;
 
