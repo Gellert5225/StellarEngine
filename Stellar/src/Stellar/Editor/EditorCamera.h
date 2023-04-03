@@ -8,7 +8,7 @@
 namespace Stellar {
 	class STLR_API EditorCamera : public Camera {
 	public:
-		EditorCamera(const float fovy, const float aspect, const float near, const float far);
+		EditorCamera(const float fov, const float aspect, const float near, const float far);
 
 		void onUpdate(const Timestep ts);
 		void onEvent(Event& e);

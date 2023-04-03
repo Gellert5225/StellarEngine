@@ -3,13 +3,13 @@
 #include "RendererAPI.h"
 
 namespace Stellar {
-	Camera::Camera(const float fovy, const float aspect, const float near, const float far) {
-		m_ProjectionMatrix = glm::perspective(glm::radians(fovy), aspect, near, far);
+	Camera::Camera(const float fov, const float aspect, const float near, const float far) {
+		m_ProjectionMatrix = glm::perspective(glm::radians(fov), aspect, near, far);
 	}
 
 
-	void Camera::setPerspectiveProjection(float fovy, float aspect, float near, float far) {
-		m_ProjectionMatrix = glm::perspective(glm::radians(fovy), aspect, near, far);
+	void Camera::setPerspectiveProjection(float fov, float aspect, float near, float far) {
+		m_ProjectionMatrix = glm::perspective(glm::radians(fov), aspect, near, far);
 		m_ProjectionMatrix[1][1] *= -1;
 		m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
 	}

@@ -6,8 +6,8 @@
 #include "Stellar/Core/KeyCodes.h"
 
 namespace Stellar {
-	EditorCamera::EditorCamera(const float fovy, const float aspect, const float near, const float far)
-		: Camera(fovy, aspect, near, far), m_VerticalFOV(fovy), m_AspectRatio(aspect), m_NearClip(near), m_FarClip(far) {
+	EditorCamera::EditorCamera(const float fov, const float aspect, const float near, const float far)
+		: Camera(fov, aspect, near, far), m_VerticalFOV(fov), m_AspectRatio(aspect), m_NearClip(near), m_FarClip(far) {
 		recalculateViewMatrix();
 	}
 
