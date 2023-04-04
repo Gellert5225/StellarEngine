@@ -35,6 +35,12 @@ namespace Stellar {
 			STLR_CORE_ASSERT(hasComponent<T>(), "Entity does not have component");
 			m_Scene->m_Registry.remove<T>(m_Entity);
 		}
+
+		operator bool() const { return m_Entity != entt::null; }
+		operator uint32_t() const { return (uint32_t)m_Entity; }
+
+		bool operator==(const Entity& other) const { return m_Entity == other.m_Entity && m_Scene == other.m_Scene; }
+		bool operator!=(const Entity& other) const { return !operator==(other); }
 	private:
 		entt::entity m_Entity{ entt::null };
 		Scene* m_Scene = nullptr;

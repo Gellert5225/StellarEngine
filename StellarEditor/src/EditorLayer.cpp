@@ -50,8 +50,8 @@ namespace Stellar {
 		auto& squareColor = m_LogoEntity.getComponent<SpriteRendererComponent>().color;
 		squareTransform = transform;
 		squareColor = m_LogoColor;
-		m_ActiveScene->onUpdate(ts);
-		//m_ActiveScene->onEditorUpdate(ts, m_EditorCamera);
+		//m_ActiveScene->onUpdate(ts);
+		m_ActiveScene->onEditorUpdate(ts, m_EditorCamera);
 	}
 
 	void EditorLayer::onEvent(Event& event) {
@@ -111,11 +111,13 @@ namespace Stellar {
 			ImGui::DockBuilderAddNode(dockspaceID, dockspace_flags | ImGuiDockNodeFlags_DockSpace);
 			ImGui::DockBuilderSetNodeSize(dockspaceID, viewport->Size);
 
+			auto dock_id_right = ImGui::DockBuilderSplitNode(dockspaceID, ImGuiDir_Right, 0.2f, nullptr, &dockspaceID);
 			auto dock_id_left = ImGui::DockBuilderSplitNode(dockspaceID, ImGuiDir_Left, 0.2f, nullptr, &dockspaceID);
-			auto colorSetting1 = ImGui::DockBuilderSplitNode(dock_id_left, ImGuiDir_Down, 0.75f, nullptr, &dock_id_left);
-			ImGui::DockBuilderDockWindow("Info", dock_id_left);
+			auto colorSetting1 = ImGui::DockBuilderSplitNode(dock_id_right, ImGuiDir_Down, 0.75f, nullptr, &dock_id_right);
+			ImGui::DockBuilderDockWindow("Info", dock_id_right);
 			ImGui::DockBuilderDockWindow("Color Setting", colorSetting1);
 			ImGui::DockBuilderDockWindow("Color Setting 2", colorSetting1);
+			ImGui::DockBuilderDockWindow("Scene Hierarchy", dock_id_left);
 			ImGui::DockBuilderDockWindow("View Port", dockspaceID);
 			ImGui::DockBuilderFinish(dockspaceID);
 		}
