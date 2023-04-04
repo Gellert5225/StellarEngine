@@ -1,6 +1,12 @@
 #pragma once
 
-#include <Stellar.h>
+#include <Stellar/Core/Application.h>
+#include <Stellar/Core/Log.h>
+#include <Stellar/Scene/Scene.h>
+#include <Stellar/Scene/Entity.h>
+#include <Stellar/Scene/Components.h>
+
+#include "Panels/SceneHierarchyPanel.h"
 
 #include "imgui.h"
 #include "glm/gtc/type_ptr.hpp"
@@ -16,6 +22,7 @@ namespace Stellar {
 		void onImGuiRender() override;
 	private:
 		EditorCamera m_EditorCamera;
+		SceneCamera m_SceneCamera;
 		// glm::vec3 m_CameraPosition{0.0f, -1.0f, -2.0f};
 		// float m_CameraSpeed = 1.0f;
 		
@@ -30,5 +37,7 @@ namespace Stellar {
 		Entity m_CameraEntity;
 
 		ImVec2 m_ViewPortSize{ 1.0f, 1.0f };
+
+		SceneHierarchyPanel m_SceneHierarchyPanel;
 	};
 }

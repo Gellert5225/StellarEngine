@@ -1,4 +1,3 @@
-#include <Stellar.h>
 #include <Stellar/Core/EntryPoint.h>
 
 #include "EditorLayer.h"

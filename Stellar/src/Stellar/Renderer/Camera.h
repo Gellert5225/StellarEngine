@@ -20,7 +20,7 @@ namespace Stellar {
 
 		[[nodiscard]] const glm::mat4& getViewmatrix() const { return m_ViewMatrix; }
 		[[nodiscard]] const glm::mat4& getProjectionMatrix() const { return m_ProjectionMatrix; }
-		[[nodiscard]] const glm::mat4& getViewProjectionMatrix() const { return m_ViewProjectionMatrix; }
+		[[nodiscard]] const glm::mat4 getViewProjectionMatrix() const { return m_ProjectionMatrix * m_ViewMatrix; }
 
 		// [[nodiscard]] const glm::vec3& getPosition() const { return m_Position; }
 		// [[nodiscard]] const glm::vec3& getRight() const { return m_Right; }
@@ -29,7 +29,6 @@ namespace Stellar {
 	protected:
 		glm::mat4 m_ProjectionMatrix{};
 		glm::mat4 m_ViewMatrix{};
-		glm::mat4 m_ViewProjectionMatrix{};
 		glm::vec3 m_Position{0.0f, -1.0f, -2.0f};
 	};
 }

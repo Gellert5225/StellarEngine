@@ -22,7 +22,7 @@ namespace Stellar {
 		m_Up    = glm::normalize(glm::cross(m_Right, m_Front));
 
 		m_ViewMatrix = glm::lookAt(m_Position, m_Position + m_Front, m_Up);
-		m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
+		//m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
 	}
 
 	void EditorCamera::onUpdate(const Timestep ts) {

@@ -5,6 +5,7 @@ namespace Stellar {
 	EditorLayer::EditorLayer() : Layer("Sandbox2D"), m_EditorCamera(60.0f, 1.0f, 0.1f, 1000.0f) {
 		m_Texture = Texture2D::Create("../Resources/Textures/Hermanos.png");
 		m_Texture2 = Texture2D::Create("../Resources/Textures/Example_texture.jpg");
+		m_SceneCamera.setPerspective(60.0f, 0.1f, 1000.0f);
 	}
 
 	void EditorLayer::onAttach() {
@@ -13,11 +14,13 @@ namespace Stellar {
 		m_ActiveScene = CreateRef<Scene>();
 		m_LogoEntity = m_ActiveScene->createEntity("Logo Square");
 		m_LogoEntity.addComponent<SpriteRendererComponent>(m_LogoColor, m_Texture);
-		// m_CameraEntity = m_ActiveScene->createEntity("Camera");
-		// m_CameraEntity.addComponent<EditorCameraComponent>(m_Camera);
+		m_CameraEntity = m_ActiveScene->createEntity("Scene Camera");
+		m_CameraEntity.addComponent<CameraComponent>(m_SceneCamera);
 
 		auto perspective = (float)m_ViewPortSize.x / (float)m_ViewPortSize.y;
 		m_EditorCamera = EditorCamera(60.0f, perspective, 0.1f, 100.0f);
+
+		m_SceneHierarchyPanel.setContext(m_ActiveScene);
 	}
 
 	void EditorLayer::onDetach() {
@@ -34,14 +37,21 @@ namespace Stellar {
 							glm::rotate(glm::mat4(1.0f), angle, glm::vec3(1.0f, 0.0f, 0.0f)) *
 							glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
 		
-		//auto& camera = m_CameraEntity.getComponent<EditorCameraComponent>().camera;
+		auto& cameraTransform = m_CameraEntity.getComponent<TransformComponent>().transform;
+		cameraTransform = glm::translate(glm::mat4(1.f), glm::vec3(0.0f, -1.0f, -2.0f)) * 
+							glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f, 1.0f, 0.0f)) *
+							glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
+
+		auto& sceneCamera = m_CameraEntity.getComponent<CameraComponent>().camera;
+
+		sceneCamera.setViewPortSize(m_ViewPortSize.x, m_ViewPortSize.y);
+
 		auto& squareTransform = m_LogoEntity.getComponent<TransformComponent>().transform;
 		auto& squareColor = m_LogoEntity.getComponent<SpriteRendererComponent>().color;
 		squareTransform = transform;
 		squareColor = m_LogoColor;
-		//camera = *m_Camera;
-		//m_ActiveScene->onUpdate(ts);
-		m_ActiveScene->onEditorUpdate(ts, m_EditorCamera);
+		m_ActiveScene->onUpdate(ts);
+		//m_ActiveScene->onEditorUpdate(ts, m_EditorCamera);
 	}
 
 	void EditorLayer::onEvent(Event& event) {
@@ -112,6 +122,7 @@ namespace Stellar {
 
 		ImGui::End();
 
+		m_SceneHierarchyPanel.onImGuiRender();
 		//ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
 		ImGui::Begin("Info");
 		ImGui::Text("GPU: %s", appInfo.graphicsInfo.c_str());

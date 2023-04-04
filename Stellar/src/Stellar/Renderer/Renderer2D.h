@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include "Texture.h"
 #include "Stellar/Core/Core.h"
+#include "Stellar/Editor/EditorCamera.h"
 
 namespace Stellar {
 	class STLR_API Renderer2D {
@@ -10,7 +11,8 @@ namespace Stellar {
 		static void Init();
 		static void ShutDown();
 		
-		static void BeginScene(const Camera camera);
+		static void BeginScene(const Camera& camera, const glm::mat4& transform);
+		static void BeginScene(const EditorCamera& camera);
 		static void EndScene();
 
 		static void DrawQuad(const glm::vec3& position, 

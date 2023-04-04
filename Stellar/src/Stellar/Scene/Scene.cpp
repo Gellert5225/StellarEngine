@@ -28,17 +28,20 @@ namespace Stellar {
 
 	void Scene::onUpdate(Timestep ts) {
 		Camera* mainCamera = nullptr;
+		glm::mat4 cameraTransform;
 		auto view = m_Registry.view<CameraComponent, TransformComponent>();
 		for (auto entity : view) {
 			auto [camera, transform] = view.get<CameraComponent, TransformComponent>(entity);
 			if (camera.primary) {
 				mainCamera = &camera.camera;
+				cameraTransform = transform.transform;
+				STLR_CORE_INFO("Camera transform: {0}", cameraTransform[0][0]);
 				break;
 			}
 		}
 
 		if (mainCamera) {
-			Renderer2D::BeginScene(*mainCamera);
+			Renderer2D::BeginScene(*mainCamera, cameraTransform);
 			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto entity : group) {
 				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);

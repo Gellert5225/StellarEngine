@@ -47,8 +47,18 @@ namespace Stellar {
 		delete s_Data->quadIndexBuffer;
 		delete s_Data;
 	}
+
+	void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& transform) {
+		GlobalUniforms ubo{};
+		ubo.viewProjection = camera.getProjectionMatrix() * glm::inverse(transform);
+
+		Renderer::BindUbo(ubo);
+		Renderer::BeginRenderPass();
+
+		Renderer::RenderGrid(s_Data->quadVertexBuffer, s_Data->quadIndexBuffer, s_Data->indexCount);
+	}
 	
-	void Renderer2D::BeginScene(const Camera camera) {
+	void Renderer2D::BeginScene(const EditorCamera& camera) {
 		GlobalUniforms ubo{};
 		ubo.viewProjection = camera.getViewProjectionMatrix();
 
