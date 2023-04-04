@@ -11,8 +11,8 @@ namespace Stellar {
 		VulkanPipeline() = default;
 		virtual ~VulkanPipeline() = 0;
 
-		VkPipeline* getPipeline();
-		VkPipelineLayout* getPipelineLayout();
+		VkPipeline getPipeline();
+		VkPipelineLayout getPipelineLayout();
 		std::vector<VkDescriptorSetLayout> getDescriptorSetLayout() { return m_DescriptorSetLayouts; }
 		VkDescriptorSetLayout getUboSetLayout() { return m_UboSetLayout; }
 		VkDescriptorSetLayout getTextureSetLayout() { return m_TextureSetLayout; }

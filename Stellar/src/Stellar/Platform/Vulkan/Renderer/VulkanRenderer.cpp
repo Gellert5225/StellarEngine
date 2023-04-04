@@ -123,7 +123,7 @@ namespace Stellar {
 		vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
 		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
-								*m_GraphicsPipeline->getPipelineLayout(),
+								m_GraphicsPipeline->getPipelineLayout(),
 								1, 1, &m_UboDescriptorSet, 0, nullptr);
 	}
 
@@ -147,11 +147,11 @@ namespace Stellar {
 		auto textureDescriptorSet = ((VulkanTexture*)texture.get())->getDescriptorSets();
 		auto commandBuffer = (VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer();
 
-		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, *m_GraphicsPipeline->getPipeline());
+		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GraphicsPipeline->getPipeline());
 		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
-								*m_GraphicsPipeline->getPipelineLayout(),
+								m_GraphicsPipeline->getPipelineLayout(),
 								0, 1, &textureDescriptorSet, 0, nullptr);
-		vkCmdPushConstants(commandBuffer, *m_GraphicsPipeline->getPipelineLayout(),
+		vkCmdPushConstants(commandBuffer, m_GraphicsPipeline->getPipelineLayout(),
 						VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
 						0, sizeof(Push), &push);
 
@@ -166,7 +166,7 @@ namespace Stellar {
 	void VulkanRenderer::renderGrid(Buffer* vertexBuffer, Buffer* indexBuffer, uint32_t indexCount) {
 		auto commandBuffer = (VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer();
 
-		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, *m_GridPipeline->getPipeline());
+		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GridPipeline->getPipeline());
 
 		VkDeviceSize offsets[] = {0};
 		auto buffers = (VkBuffer)vertexBuffer->getBuffer();

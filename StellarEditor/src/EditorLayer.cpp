@@ -14,6 +14,8 @@ namespace Stellar {
 		m_ActiveScene = CreateRef<Scene>();
 		m_LogoEntity = m_ActiveScene->createEntity("Logo Square");
 		m_LogoEntity.addComponent<SpriteRendererComponent>(m_LogoColor, m_Texture);
+		m_ExampleEntity = m_ActiveScene->createEntity("Example Square");
+		m_ExampleEntity.addComponent<SpriteRendererComponent>(m_Color, m_Texture2);
 		m_CameraEntity = m_ActiveScene->createEntity("Scene Camera");
 		m_CameraEntity.addComponent<CameraComponent>(m_SceneCamera);
 
@@ -36,6 +38,10 @@ namespace Stellar {
 		glm::mat4 transform = glm::translate(glm::mat4(1.f), glm::vec3(0.0f, -1.0f, 1.0f)) * 
 							glm::rotate(glm::mat4(1.0f), angle, glm::vec3(1.0f, 0.0f, 0.0f)) *
 							glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
+
+		glm::mat4 transform2 = glm::translate(glm::mat4(1.f), glm::vec3(2.0f, -1.0f, 1.0f)) * 
+							glm::rotate(glm::mat4(1.0f), angle, glm::vec3(1.0f, 0.0f, 0.0f)) *
+							glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
 		
 		auto& cameraTransform = m_CameraEntity.getComponent<TransformComponent>().transform;
 		cameraTransform = glm::translate(glm::mat4(1.f), glm::vec3(0.0f, -1.0f, -2.0f)) * 
@@ -50,6 +56,11 @@ namespace Stellar {
 		auto& squareColor = m_LogoEntity.getComponent<SpriteRendererComponent>().color;
 		squareTransform = transform;
 		squareColor = m_LogoColor;
+
+		auto& exmapleTransform = m_ExampleEntity.getComponent<TransformComponent>().transform;
+		auto& exmapleColor = m_ExampleEntity.getComponent<SpriteRendererComponent>().color;
+		exmapleTransform = transform2;
+		exmapleColor = m_Color;
 		//m_ActiveScene->onUpdate(ts);
 		m_ActiveScene->onEditorUpdate(ts, m_EditorCamera);
 	}
