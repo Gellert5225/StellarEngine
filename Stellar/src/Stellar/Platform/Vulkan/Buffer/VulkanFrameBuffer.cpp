@@ -47,13 +47,10 @@ namespace Stellar {
 		}
 
 		// create render pass
-		m_RenderPass = new StandardRenderPass(imageFormat, depthFormat);
+		m_RenderPass = CreateRef<StandardRenderPass>(imageFormat, depthFormat);
 
-		VulkanImage2D* image = (VulkanImage2D*)m_AttachmentImage;
-		VulkanImageInfo* info = (VulkanImageInfo*)image->getImageInfo();
-
-		VulkanImage2D* depthImage = (VulkanImage2D*)m_DepthAttachmentImage;
-		VulkanImageInfo* depthInfo = (VulkanImageInfo*)depthImage->getImageInfo();
+		VulkanImageInfo* info =  (VulkanImageInfo*)((VulkanImage2D*)m_AttachmentImage.get())->getImageInfo();
+		VulkanImageInfo* depthInfo = (VulkanImageInfo*)(VulkanImage2D*)m_DepthAttachmentImage.get()->getImageInfo();
 
 		std::array<VkImageView, 2> attachments = {
 			info->imageView,
@@ -88,15 +85,11 @@ namespace Stellar {
 			vkDestroyFramebuffer(device, m_Framebuffer, nullptr);
 			m_AttachmentImage->release();
 			m_DepthAttachmentImage->release();
-			delete m_RenderPass;
 		}
 	}
 
 	VulkanFrameBuffer::~VulkanFrameBuffer() {
-		vkDestroyFramebuffer(VulkanDevice::GetInstance()->logicalDevice(), m_Framebuffer, nullptr);
-		delete m_AttachmentImage;
-		delete m_DepthAttachmentImage;
-		delete m_RenderPass;
+		release();
 	}
 
 	VkFramebuffer VulkanFrameBuffer::getFramebuffer() const {

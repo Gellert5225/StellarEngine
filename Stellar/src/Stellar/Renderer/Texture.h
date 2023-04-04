@@ -18,6 +18,6 @@ namespace Stellar {
 
 		virtual bool loadImage(const std::string& filePath) = 0;
 		std::string m_Path;
-		Image2D* m_Image{};
+		Ref<Image2D> m_Image{};
 	};
 }

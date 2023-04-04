@@ -17,8 +17,7 @@ namespace Stellar {
 		vkDestroyImageView(device, m_Info.imageView, nullptr);
 		vkDestroySampler(device, m_Info.sampler, nullptr);
 		vkDestroyImage(device, m_Info.image, nullptr);
-		if (m_Info.imageMemory != VK_NULL_HANDLE)
-			vkFreeMemory(device, m_Info.imageMemory, nullptr);
+		vkFreeMemory(device, m_Info.imageMemory, nullptr);
 	}
 
 	void VulkanImage2D::invalidate() {
@@ -119,7 +118,7 @@ namespace Stellar {
 		vkDestroyImageView(device, m_Info.imageView, nullptr);
 		vkDestroySampler(device, m_Info.sampler, nullptr);
 		vkDestroyImage(device, m_Info.image, nullptr);
-		vkFreeMemory(device, m_Info.imageMemory, nullptr);
+		//vkFreeMemory(device, m_Info.imageMemory, nullptr);
 		m_Info.image = nullptr;
 		m_Info.imageView = nullptr;
 		m_Info.sampler = nullptr;

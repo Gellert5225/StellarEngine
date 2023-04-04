@@ -11,11 +11,11 @@
 #include "Stellar/Core/Log.h"
 
 namespace Stellar {
-	FrameBuffer* FrameBuffer::Create(const FrameBufferSpec& spec) {
+	Ref<FrameBuffer> FrameBuffer::Create(const FrameBufferSpec& spec) {
 		switch (RendererAPI::Current()) {
 			case RendererAPIType::Vulkan:
 				#if defined __linux__ || defined _WIN64
-					return new VulkanFrameBuffer(spec);
+					return CreateRef<VulkanFrameBuffer>(spec);
 				#endif
 			case RendererAPIType::Metal:
 				#if defined __APPLE__
