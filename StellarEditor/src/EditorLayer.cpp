@@ -13,9 +13,9 @@ namespace Stellar {
 
 		m_ActiveScene = CreateRef<Scene>();
 		m_LogoEntity = m_ActiveScene->createEntity("Logo Square");
-		m_LogoEntity.addComponent<SpriteRendererComponent>(m_LogoColor, m_Texture);
+		m_LogoEntity.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, m_Texture);
 		m_ExampleEntity = m_ActiveScene->createEntity("Example Square");
-		m_ExampleEntity.addComponent<SpriteRendererComponent>(m_Color, m_Texture2);
+		m_ExampleEntity.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, m_Texture2);
 		m_CameraEntity = m_ActiveScene->createEntity("Scene Camera");
 		m_CameraEntity.addComponent<CameraComponent>(m_SceneCamera);
 
@@ -53,14 +53,10 @@ namespace Stellar {
 		sceneCamera.setViewPortSize(m_ViewPortSize.x, m_ViewPortSize.y);
 
 		auto& squareTransform = m_LogoEntity.getComponent<TransformComponent>().transform;
-		auto& squareColor = m_LogoEntity.getComponent<SpriteRendererComponent>().color;
 		squareTransform = transform;
-		squareColor = m_LogoColor;
 
 		auto& exmapleTransform = m_ExampleEntity.getComponent<TransformComponent>().transform;
-		auto& exmapleColor = m_ExampleEntity.getComponent<SpriteRendererComponent>().color;
 		exmapleTransform = transform2;
-		exmapleColor = m_Color;
 		//m_ActiveScene->onUpdate(ts);
 		m_ActiveScene->onEditorUpdate(ts, m_EditorCamera);
 	}
@@ -148,15 +144,15 @@ namespace Stellar {
 
 		//ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
 		ImGui::Begin("Color Setting");
-		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_Color));
+		ImGui::Text("%s", m_ExampleEntity.getComponent<TagComponent>().tag.c_str());
+		ImGui::ColorEdit4("Square Color", glm::value_ptr(m_ExampleEntity.getComponent<SpriteRendererComponent>().color));
 		UI::Image(m_Texture2.get(), { 200, 200 });
 		ImGui::End();
 
 		//ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
 		ImGui::Begin("Color Setting 2");
-		auto& tag = m_LogoEntity.getComponent<TagComponent>().tag;
-		ImGui::Text("%s", tag.c_str());
-		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_LogoColor));
+		ImGui::Text("%s", m_LogoEntity.getComponent<TagComponent>().tag.c_str());
+		ImGui::ColorEdit4("Square Color", glm::value_ptr(m_LogoEntity.getComponent<SpriteRendererComponent>().color));
 		UI::Image(m_Texture.get(), { 200, 200 });
 		ImGui::End();
 
