@@ -36,7 +36,7 @@ namespace Stellar {
 
 		static void BindUbo(const GlobalUniforms& ubo);
 
-		static FrameBuffer* GetFrameBuffer();
+		static Ref<FrameBuffer> GetFrameBuffer();
 
 		static void ResizeFrameBuffer(uint32_t width, uint32_t height);
 

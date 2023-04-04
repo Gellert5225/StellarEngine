@@ -55,6 +55,7 @@ namespace Stellar {
 		delete Renderer::GetShaderLibrary();
 		s_RendererAPI->shutDown();
 		Renderer2D::ShutDown();
+		delete s_RendererAPI;
 	}
 
 	void Renderer::BeginRenderPass() {
@@ -94,7 +95,7 @@ namespace Stellar {
 		return s_Data->m_ShaderLibrary;
 	}
 
-	FrameBuffer* Renderer::GetFrameBuffer() {
+	Ref<FrameBuffer> Renderer::GetFrameBuffer() {
 		return s_RendererAPI->getFrameBuffer();
 	}
 

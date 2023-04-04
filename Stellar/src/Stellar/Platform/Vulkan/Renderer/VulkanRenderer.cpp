@@ -31,8 +31,8 @@ namespace Stellar {
 
 		auto quadShader = Renderer::GetShaderLibrary()->get("shader");
 		auto gridShader = Renderer::GetShaderLibrary()->get("grid");
-		m_GraphicsPipeline = new GraphicsPipeline(quadShader, ((VulkanFrameBuffer*)m_FrameBuffer)->getRenderPass());
-		m_GridPipeline = new GraphicsPipeline(gridShader, ((VulkanFrameBuffer*)m_FrameBuffer)->getRenderPass());
+		m_GraphicsPipeline = new GraphicsPipeline(quadShader, ((VulkanFrameBuffer*)m_FrameBuffer.get())->getRenderPass());
+		m_GridPipeline = new GraphicsPipeline(gridShader, ((VulkanFrameBuffer*)m_FrameBuffer.get())->getRenderPass());
 		s_Data = new VulkanRendererData();
 		s_Data->pipeline = m_GraphicsPipeline;
 
@@ -74,7 +74,6 @@ namespace Stellar {
 		delete m_GridPipeline;
 		delete m_UniformBuffer;
 		delete m_CommandBuffer;
-		delete m_FrameBuffer;
 	}
 
 	void VulkanRenderer::beginRenderPass() {
@@ -97,8 +96,8 @@ namespace Stellar {
 
 		VkRenderPassBeginInfo renderPassInfo{};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassInfo.renderPass = ((VulkanFrameBuffer*)m_FrameBuffer)->getRenderPass();
-		renderPassInfo.framebuffer = ((VulkanFrameBuffer*)m_FrameBuffer)->getFramebuffer();
+		renderPassInfo.renderPass = ((VulkanFrameBuffer*)m_FrameBuffer.get())->getRenderPass();
+		renderPassInfo.framebuffer = ((VulkanFrameBuffer*)m_FrameBuffer.get())->getFramebuffer();
 		renderPassInfo.renderArea.offset = {0, 0};
 		renderPassInfo.renderArea.extent.width = m_FrameBuffer->getSpecification().width;
 		renderPassInfo.renderArea.extent.height = m_FrameBuffer->getSpecification().height;
@@ -221,7 +220,7 @@ namespace Stellar {
 		return s_Data->pipeline;
 	}
 
-	FrameBuffer* VulkanRenderer::getFrameBuffer() {
+	Ref<FrameBuffer> VulkanRenderer::getFrameBuffer() {
 		return m_FrameBuffer;
 	}
 

@@ -31,7 +31,7 @@ namespace Stellar {
 						Buffer* indexBuffer,
 						uint32_t indexCount = 0) override;
 
-		FrameBuffer* getFrameBuffer() override;
+		Ref<FrameBuffer> getFrameBuffer() override;
 		void resizeFrameBuffer(uint32_t width, uint32_t height) override;
 		
 		void bindUbo(const GlobalUniforms& ubo) override;
@@ -45,7 +45,7 @@ namespace Stellar {
 		VkClearColorValue m_ClearColor = {{0.66f, 0.9f, 0.96f, 1.0f}};
 
 		Buffer* m_UniformBuffer{};
-		FrameBuffer* m_FrameBuffer;
+		Ref<FrameBuffer> m_FrameBuffer;
 
 		VkDescriptorSet m_UboDescriptorSet;
 
