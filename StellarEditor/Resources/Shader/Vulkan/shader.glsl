@@ -11,10 +11,10 @@ layout(set = 1, binding = 0) uniform GlobalUniforms {
 
 layout(push_constant) uniform Push {
     mat4 model;
-    vec3 color;
+    vec4 color;
 } push;
 
-layout(location = 0) out vec3 fragColor;
+layout(location = 0) out vec4 fragColor;
 layout(location = 1) out vec2 fragTexCoord;
 layout(location = 2) out float fragTilingFactor;
 
@@ -30,7 +30,7 @@ void main() {
 
 precision mediump float;
 
-layout(location = 0) in vec3 fragColor;
+layout(location = 0) in vec4 fragColor;
 layout(location = 1) in vec2 fragTexCoord;
 layout(location = 2) in float fragTilingFactor;
 
@@ -39,5 +39,5 @@ layout(set = 0, binding = 0) uniform sampler2D texSampler;
 layout(location = 0) out vec4 outColor;
 
 void main() {
-    outColor = vec4(fragColor, 1.0) * texture(texSampler, fragTexCoord * fragTilingFactor);
+    outColor = fragColor * texture(texSampler, fragTexCoord * fragTilingFactor);
 }

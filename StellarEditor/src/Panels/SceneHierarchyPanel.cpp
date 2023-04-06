@@ -1,5 +1,7 @@
 #include "SceneHierarchyPanel.h"
 
+#include "Stellar/ImGui/ImGuiLayer.h"
+
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -62,6 +64,17 @@ namespace Stellar {
 			if (ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Transform")) {
 				auto& transform = entity.getComponent<TransformComponent>().translation;
 				ImGui::DragFloat3("Position", glm::value_ptr(transform), 0.1f); 
+				ImGui::TreePop();
+			}
+		}
+
+		if (entity.hasComponent<SpriteRendererComponent>()) {
+			if (ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Sprite")) {
+				auto& sprite = entity.getComponent<SpriteRendererComponent>();
+				ImGui::ColorEdit4("Color", glm::value_ptr(sprite.color));
+				auto windowWidth = ImGui::GetContentRegionAvail();
+				UI::Image(sprite.texture.get(), { windowWidth.x, windowWidth.x });
+
 				ImGui::TreePop();
 			}
 		}

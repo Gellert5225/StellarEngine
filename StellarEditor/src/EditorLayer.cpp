@@ -10,11 +10,12 @@ namespace Stellar {
 		Renderer::SetClearColor({ 0.66f, 0.9f, 0.96f, 1.0f });
 
 		m_ActiveScene = CreateRef<Scene>();
-		m_LogoEntity = m_ActiveScene->createEntity("Logo Square");
-		m_LogoEntity.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, Texture2D::Create("../Resources/Textures/Hermanos.png"));
-
+		
 		m_ExampleEntity = m_ActiveScene->createEntity("Example Square");
 		m_ExampleEntity.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, Texture2D::Create("../Resources/Textures/Example_texture.jpg"));
+
+		m_LogoEntity = m_ActiveScene->createEntity("Logo Square");
+		m_LogoEntity.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, Texture2D::Create("../Resources/Textures/Hermanos.png"));
 			
 		m_CameraEntity = m_ActiveScene->createEntity("Scene Camera");
 		m_CameraEntity.addComponent<CameraComponent>(m_SceneCamera);
@@ -102,11 +103,8 @@ namespace Stellar {
 
 			auto dock_id_right = ImGui::DockBuilderSplitNode(dockspaceID, ImGuiDir_Right, 0.2f, nullptr, &dockspaceID);
 			auto dock_id_left = ImGui::DockBuilderSplitNode(dockspaceID, ImGuiDir_Left, 0.2f, nullptr, &dockspaceID);
-			auto colorSetting1 = ImGui::DockBuilderSplitNode(dock_id_right, ImGuiDir_Down, 0.75f, nullptr, &dock_id_right);
 			auto properties = ImGui::DockBuilderSplitNode(dock_id_left, ImGuiDir_Down, 0.75f, nullptr, &dock_id_left);
 			ImGui::DockBuilderDockWindow("Info", dock_id_right);
-			ImGui::DockBuilderDockWindow("Color Setting", colorSetting1);
-			ImGui::DockBuilderDockWindow("Color Setting 2", colorSetting1);
 			ImGui::DockBuilderDockWindow("Scene Hierarchy", dock_id_left);
 			ImGui::DockBuilderDockWindow("Properties", properties);
 			ImGui::DockBuilderDockWindow("View Port", dockspaceID);
@@ -124,21 +122,6 @@ namespace Stellar {
 				"Frame time: %.3f ms, FPS: %.1f FPS",
 				1000.0f / ImGui::GetIO().Framerate,
 				ImGui::GetIO().Framerate);
-		ImGui::End();
-
-		//ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
-		ImGui::Begin("Color Setting");
-		ImGui::Text("%s", m_ExampleEntity.getComponent<TagComponent>().tag.c_str());
-		ImGui::ColorEdit4("Square Color", glm::value_ptr(m_ExampleEntity.getComponent<SpriteRendererComponent>().color));
-		auto windowWidth = ImGui::GetContentRegionAvail();
-		UI::Image(m_ExampleEntity.getComponent<SpriteRendererComponent>().texture.get(), { windowWidth.x, windowWidth.x });
-		ImGui::End();
-
-		//ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
-		ImGui::Begin("Color Setting 2");
-		ImGui::Text("%s", m_LogoEntity.getComponent<TagComponent>().tag.c_str());
-		ImGui::ColorEdit4("Square Color", glm::value_ptr(m_LogoEntity.getComponent<SpriteRendererComponent>().color));
-		UI::Image(m_LogoEntity.getComponent<SpriteRendererComponent>().texture.get(), { 200, 200 });
 		ImGui::End();
 
 		// view port
