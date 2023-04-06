@@ -3,8 +3,6 @@
 
 namespace Stellar {
 	EditorLayer::EditorLayer() : Layer("Sandbox2D"), m_EditorCamera(60.0f, 1.0f, 0.1f, 1000.0f) {
-		m_Texture = Texture2D::Create("../Resources/Textures/Hermanos.png");
-		m_Texture2 = Texture2D::Create("../Resources/Textures/Example_texture.jpg");
 		m_SceneCamera.setPerspective(60.0f, 0.1f, 1000.0f);
 	}
 
@@ -13,9 +11,11 @@ namespace Stellar {
 
 		m_ActiveScene = CreateRef<Scene>();
 		m_LogoEntity = m_ActiveScene->createEntity("Logo Square");
-		m_LogoEntity.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, m_Texture);
+		m_LogoEntity.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, Texture2D::Create("../Resources/Textures/Hermanos.png"));
+
 		m_ExampleEntity = m_ActiveScene->createEntity("Example Square");
-		m_ExampleEntity.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, m_Texture2);
+		m_ExampleEntity.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, Texture2D::Create("../Resources/Textures/Example_texture.jpg"));
+			
 		m_CameraEntity = m_ActiveScene->createEntity("Scene Camera");
 		m_CameraEntity.addComponent<CameraComponent>(m_SceneCamera);
 
@@ -131,14 +131,14 @@ namespace Stellar {
 		ImGui::Text("%s", m_ExampleEntity.getComponent<TagComponent>().tag.c_str());
 		ImGui::ColorEdit4("Square Color", glm::value_ptr(m_ExampleEntity.getComponent<SpriteRendererComponent>().color));
 		auto windowWidth = ImGui::GetContentRegionAvail();
-		UI::Image(m_Texture2.get(), { windowWidth.x, windowWidth.x });
+		UI::Image(m_ExampleEntity.getComponent<SpriteRendererComponent>().texture.get(), { windowWidth.x, windowWidth.x });
 		ImGui::End();
 
 		//ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
 		ImGui::Begin("Color Setting 2");
 		ImGui::Text("%s", m_LogoEntity.getComponent<TagComponent>().tag.c_str());
 		ImGui::ColorEdit4("Square Color", glm::value_ptr(m_LogoEntity.getComponent<SpriteRendererComponent>().color));
-		UI::Image(m_Texture.get(), { 200, 200 });
+		UI::Image(m_LogoEntity.getComponent<SpriteRendererComponent>().texture.get(), { 200, 200 });
 		ImGui::End();
 
 		// view port

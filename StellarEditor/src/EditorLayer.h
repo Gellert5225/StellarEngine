@@ -23,9 +23,6 @@ namespace Stellar {
 	private:
 		EditorCamera m_EditorCamera;
 		SceneCamera m_SceneCamera;
-		
-		Ref<Texture2D> m_Texture{};
-		Ref<Texture2D> m_Texture2{};
 
 		Ref<Scene> m_ActiveScene;
 		Entity m_LogoEntity;
