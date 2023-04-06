@@ -15,6 +15,7 @@ namespace Stellar {
 		void onImGuiRender();
 	private:
 		void drawEntityNode(Entity entity);
+		void drawComponent(Entity entity);
 	private:
 		Ref<Scene> m_Context;
 		Entity m_SelectionContext;

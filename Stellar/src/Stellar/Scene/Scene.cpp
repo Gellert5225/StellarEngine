@@ -34,7 +34,7 @@ namespace Stellar {
 			auto [camera, transform] = view.get<CameraComponent, TransformComponent>(entity);
 			if (camera.primary) {
 				mainCamera = &camera.camera;
-				cameraTransform = transform.transform;
+				cameraTransform = transform.getTransform();
 				STLR_CORE_INFO("Camera transform: {0}", cameraTransform[0][0]);
 				break;
 			}
@@ -45,7 +45,7 @@ namespace Stellar {
 			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto entity : group) {
 				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-				Renderer2D::DrawQuad(transform.transform, sprite.color, sprite.texture);
+				Renderer2D::DrawQuad(transform.getTransform(), sprite.color, sprite.texture);
 			}
 			Renderer2D::EndScene();
 		}
@@ -73,7 +73,7 @@ namespace Stellar {
 		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 		for (auto entity : group) {
 			auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-			Renderer2D::DrawQuad(transform.transform, sprite.color, sprite.texture);
+			Renderer2D::DrawQuad(transform.getTransform(), sprite.color, sprite.texture);
 		}
 		Renderer2D::EndScene();
 	}

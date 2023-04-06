@@ -25,38 +25,20 @@ namespace Stellar {
 		m_SceneHierarchyPanel.setContext(m_ActiveScene);
 	}
 
-	void EditorLayer::onDetach() {
-		// delete m_Texture;
-		// delete m_Texture2;
-	}
+	void EditorLayer::onDetach() {}
 
 	void EditorLayer::onUpdate(Timestep ts) {
 		m_EditorCamera.SetViewportSize(m_ViewPortSize.x, m_ViewPortSize.y);
 		m_EditorCamera.onUpdate(ts);
 
 		float angle = Timestep::GetTime()* glm::radians(90.0f);
-		glm::mat4 transform = glm::translate(glm::mat4(1.f), glm::vec3(0.0f, -1.0f, 1.0f)) * 
-							glm::rotate(glm::mat4(1.0f), angle, glm::vec3(1.0f, 0.0f, 0.0f)) *
-							glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
-
-		glm::mat4 transform2 = glm::translate(glm::mat4(1.f), glm::vec3(2.0f, -1.0f, 1.0f)) * 
-							glm::rotate(glm::mat4(1.0f), angle, glm::vec3(1.0f, 0.0f, 0.0f)) *
-							glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
-		
-		auto& cameraTransform = m_CameraEntity.getComponent<TransformComponent>().transform;
-		cameraTransform = glm::translate(glm::mat4(1.f), glm::vec3(0.0f, -1.0f, -2.0f)) * 
-							glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f, 1.0f, 0.0f)) *
-							glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
 
 		auto& sceneCamera = m_CameraEntity.getComponent<CameraComponent>().camera;
 
 		sceneCamera.setViewPortSize(m_ViewPortSize.x, m_ViewPortSize.y);
 
-		auto& squareTransform = m_LogoEntity.getComponent<TransformComponent>().transform;
-		squareTransform = transform;
-
-		auto& exmapleTransform = m_ExampleEntity.getComponent<TransformComponent>().transform;
-		exmapleTransform = transform2;
+		m_LogoEntity.getComponent<TransformComponent>().rotation = glm::vec3(angle, 0.0f, 0.0f);
+		m_ExampleEntity.getComponent<TransformComponent>().rotation = glm::vec3(angle, 0.0f, 0.0f);
 		//m_ActiveScene->onUpdate(ts);
 		m_ActiveScene->onEditorUpdate(ts, m_EditorCamera);
 	}
@@ -121,10 +103,12 @@ namespace Stellar {
 			auto dock_id_right = ImGui::DockBuilderSplitNode(dockspaceID, ImGuiDir_Right, 0.2f, nullptr, &dockspaceID);
 			auto dock_id_left = ImGui::DockBuilderSplitNode(dockspaceID, ImGuiDir_Left, 0.2f, nullptr, &dockspaceID);
 			auto colorSetting1 = ImGui::DockBuilderSplitNode(dock_id_right, ImGuiDir_Down, 0.75f, nullptr, &dock_id_right);
+			auto properties = ImGui::DockBuilderSplitNode(dock_id_left, ImGuiDir_Down, 0.75f, nullptr, &dock_id_left);
 			ImGui::DockBuilderDockWindow("Info", dock_id_right);
 			ImGui::DockBuilderDockWindow("Color Setting", colorSetting1);
 			ImGui::DockBuilderDockWindow("Color Setting 2", colorSetting1);
 			ImGui::DockBuilderDockWindow("Scene Hierarchy", dock_id_left);
+			ImGui::DockBuilderDockWindow("Properties", properties);
 			ImGui::DockBuilderDockWindow("View Port", dockspaceID);
 			ImGui::DockBuilderFinish(dockspaceID);
 		}
@@ -146,7 +130,8 @@ namespace Stellar {
 		ImGui::Begin("Color Setting");
 		ImGui::Text("%s", m_ExampleEntity.getComponent<TagComponent>().tag.c_str());
 		ImGui::ColorEdit4("Square Color", glm::value_ptr(m_ExampleEntity.getComponent<SpriteRendererComponent>().color));
-		UI::Image(m_Texture2.get(), { 200, 200 });
+		auto windowWidth = ImGui::GetContentRegionAvail();
+		UI::Image(m_Texture2.get(), { windowWidth.x, windowWidth.x });
 		ImGui::End();
 
 		//ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);

@@ -1,6 +1,7 @@
 #include "SceneHierarchyPanel.h"
 
 #include <imgui.h>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace Stellar {
 	SceneHierarchyPanel::SceneHierarchyPanel(const Ref<Scene>& scene) {
@@ -20,6 +21,14 @@ namespace Stellar {
 		});
 
 		ImGui::End();
+
+		ImGui::Begin("Properties");
+
+		if (m_SelectionContext) {
+			drawComponent(m_SelectionContext);
+		}
+
+		ImGui::End();
 	}
 
 	void SceneHierarchyPanel::drawEntityNode(Entity entity) {
@@ -34,6 +43,27 @@ namespace Stellar {
 
 		if (opened) {
 			ImGui::TreePop();
+		}
+	}
+
+	void SceneHierarchyPanel::drawComponent(Entity entity) {
+		if (entity.hasComponent<TagComponent>()) {
+			auto& tag = entity.getComponent<TagComponent>().tag;
+			char buffer[256];
+			memset(buffer, 0, sizeof(buffer));
+			strcpy_s(buffer, sizeof(buffer), tag.c_str());
+
+			if (ImGui::InputText("Tag", buffer, sizeof(buffer))){
+				tag = std::string(buffer);
+			}
+		}
+
+		if (entity.hasComponent<TransformComponent>()) {
+			if (ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Transform")) {
+				auto& transform = entity.getComponent<TransformComponent>().translation;
+				ImGui::DragFloat3("Position", glm::value_ptr(transform), 0.1f); 
+				ImGui::TreePop();
+			}
 		}
 	}
 }
