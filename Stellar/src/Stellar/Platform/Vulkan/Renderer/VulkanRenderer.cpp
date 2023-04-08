@@ -144,6 +144,11 @@ namespace Stellar {
 		push.model = transform;
 		push.color = color;
 
+		if (!texture) {
+			uint32_t whiteTextureData = 0xffffffff;
+			texture = Texture2D::Create(ImageFormat::RGBA, 1, 1, &whiteTextureData);
+		}
+
 		auto textureDescriptorSet = ((VulkanTexture*)texture.get())->getDescriptorSets();
 		auto commandBuffer = (VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer();
 

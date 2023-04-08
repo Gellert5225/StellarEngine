@@ -27,6 +27,7 @@ namespace Stellar {
 		Ref<Scene> m_ActiveScene;
 		Entity m_LogoEntity;
 		Entity m_ExampleEntity;
+		Entity m_QuadEntity;
 		Entity m_CameraEntity;
 
 		ImVec2 m_ViewPortSize{ 1.0f, 1.0f };

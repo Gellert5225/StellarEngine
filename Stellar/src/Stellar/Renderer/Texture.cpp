@@ -28,4 +28,21 @@ namespace Stellar {
 		STLR_CORE_ASSERT(false, "Unknown RendererAPI");
 		return nullptr;
 	}
+
+	Ref<Texture2D> Texture2D::Create(ImageFormat format, uint32_t width, uint32_t height, const void* data) {
+		switch (RendererAPI::Current()) {
+			case RendererAPIType::Vulkan:
+			#if defined(__linux__) || defined(_WIN64)
+				return CreateRef<VulkanTexture>(format, width, height, data);
+			#endif
+			case RendererAPIType::Metal:
+			#if defined(__APPLE__)
+				return new MetalTexture(filePath);
+			#endif
+			case RendererAPIType::None:
+				break;
+		}
+		STLR_CORE_ASSERT(false, "Unknown RendererAPI");
+		return nullptr;
+	}
 }

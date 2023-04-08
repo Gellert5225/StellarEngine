@@ -15,8 +15,11 @@ namespace Stellar {
 		m_ExampleEntity.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, Texture2D::Create("../Resources/Textures/Example_texture.jpg"));
 
 		m_LogoEntity = m_ActiveScene->createEntity("Logo Square");
-		m_LogoEntity.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, Texture2D::Create("../Resources/Textures/Hermanos.png"));
-			
+		m_LogoEntity.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, Texture2D::Create("../Resources/Textures/StellarEngine.png"));
+		
+		m_QuadEntity = m_ActiveScene->createEntity("Quad Square");
+		m_QuadEntity.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, Texture2D::Create(ImageFormat::RGBA));
+
 		m_CameraEntity = m_ActiveScene->createEntity("Scene Camera");
 		m_CameraEntity.addComponent<CameraComponent>(m_SceneCamera);
 

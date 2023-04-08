@@ -57,6 +57,47 @@ namespace Stellar {
 		// m_ImGuiDescriptorSet = ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 	}
 
+	VulkanTexture::VulkanTexture(ImageFormat format, uint32_t width, uint32_t height, const void* data) : m_Width(width), m_Height(height) {
+		void* imageData = new uint8_t[width * height * 4];
+		memcpy(imageData, &data, width * height * 4);
+		m_Pixels = (unsigned char*)imageData;
+		m_ImageSize = width * height * 4;
+
+		ImageSpecification imageSpec;
+		imageSpec.format = ImageFormat::RGBA;
+		imageSpec.usage = ImageUsage::Texture;
+		imageSpec.width = m_Width;
+		imageSpec.height = m_Height;
+		imageSpec.mips = 1;
+		m_Image = Image2D::Create(imageSpec);
+
+		invalidate();
+
+		// binding
+		auto device = VulkanDevice::GetInstance()->logicalDevice();
+		auto pipeline = VulkanRenderer::GetPipeline();
+		auto textureLayout = pipeline->getTextureSetLayout();
+
+		VkDescriptorSetAllocateInfo allocInfo{};
+		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+		allocInfo.descriptorPool = pipeline->getDescriptorPool();
+		allocInfo.descriptorSetCount = 1;
+		allocInfo.pSetLayouts = &textureLayout;
+
+		VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocInfo, &m_DescriptorSet));
+
+		VkWriteDescriptorSet descriptorWrite{};
+		descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descriptorWrite.dstSet = m_DescriptorSet;
+		descriptorWrite.dstBinding = 0;
+		descriptorWrite.dstArrayElement = 0;
+		descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		descriptorWrite.descriptorCount = 1;
+		descriptorWrite.pImageInfo = &((VulkanImage2D*)m_Image.get())->getDescriptorInfo();
+
+		vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
+	}
+
 	VulkanTexture::~VulkanTexture() {
 		if (m_Image)
 			m_Image->release();
