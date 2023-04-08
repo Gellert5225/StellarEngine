@@ -20,6 +20,6 @@ namespace Stellar {
 }
 
 namespace Stellar::UI {
-	void Image(Texture2D* texture, const ImVec2& size);
+	void* Image(Texture2D* texture, const ImVec2& size);
 	void ImageFromFB(Ref<FrameBuffer> frameBuffer, const ImVec2& size);
 }

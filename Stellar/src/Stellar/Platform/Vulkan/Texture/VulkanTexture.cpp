@@ -10,6 +10,8 @@
 #include "Stellar/Platform/Vulkan/ImGui/imgui_impl_vulkan.h"
 #include "Stellar/Platform/Vulkan/VulkanCommon.h"
 
+#include "Stellar/Platform/Vulkan/ImGui/imgui_impl_vulkan.h"
+
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
@@ -101,6 +103,8 @@ namespace Stellar {
 	VulkanTexture::~VulkanTexture() {
 		if (m_Image)
 			m_Image->release();
+
+		//ImGui_ImplVulkan_RemoveTexture(m_DescriptorSet);
 	}
 
 	bool VulkanTexture::loadImage(const std::string& filePath) {

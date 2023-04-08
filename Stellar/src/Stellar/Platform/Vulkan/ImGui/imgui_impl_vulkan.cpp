@@ -50,6 +50,7 @@
 #include <stdio.h>
 
 #include "Stellar/Platform/Vulkan/Renderer/VulkanRenderer.h"
+#include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 
 // Reusable buffers used for rendering 1 current in-flight frame, for ImGui_ImplVulkan_RenderDrawData()
 // [Please zero-clear before use!]
@@ -1252,6 +1253,13 @@ struct VkDetails
 
 static std::unordered_map<void*, VkDetails> s_VulkanCache;
 
+void ImGui_ImplVulkan_RemoveTexture(VkDescriptorSet descriptor_set)
+{
+    ImGui_ImplVulkan_InitInfo* v = &g_VulkanInitInfo;
+	auto pipeline = Stellar::VulkanRenderer::GetPipeline();
+    vkFreeDescriptorSets(Stellar::VulkanDevice::GetInstance()->logicalDevice(), pipeline->getDescriptorPool(), 1, &descriptor_set);
+}
+
 ImTextureID ImGui_ImplVulkan_AddTexture(VkSampler sampler, VkImageView image_view, VkImageLayout image_layout)
 {
     VkDescriptorSetAllocateInfo alloc_info = {};
@@ -1262,6 +1270,11 @@ ImTextureID ImGui_ImplVulkan_AddTexture(VkSampler sampler, VkImageView image_vie
     VkDescriptorSet descriptor_set = Stellar::VulkanRenderer::AllocateDesriptorSet(alloc_info);
     ImGui_ImplVulkan_UpdateTextureInfo(descriptor_set, sampler, image_view, image_layout);
     return (ImTextureID)descriptor_set;
+}
+
+ImTextureID ImGui_ImplVulkan_AddTexture_Custom(VkSampler sampler, VkImageView image_view, VkImageLayout image_layout, VkDescriptorSet descriptorSet) {
+	ImGui_ImplVulkan_UpdateTextureInfo(descriptorSet, sampler, image_view, image_layout);
+	return descriptorSet;
 }
 
 ImTextureID ImGui_ImplVulkan_AddTexture_Internal(VkSampler sampler, VkImageView image_view, VkImageLayout image_layout)

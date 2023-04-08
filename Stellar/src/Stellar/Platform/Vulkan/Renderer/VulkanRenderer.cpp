@@ -245,4 +245,8 @@ namespace Stellar {
 		VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocInfo, &result));
 		return result;
 	}
+
+	VkDescriptorPool VulkanRenderer::GetDescriptorPool() {
+		return s_Data->DescriptorPools[Renderer::GetCurrentFrameIndex()];
+	}
 }

@@ -38,6 +38,7 @@ namespace Stellar {
 
 		// vulkan
 		static GraphicsPipeline* GetPipeline();
+		static VkDescriptorPool GetDescriptorPool();
 		static VkDescriptorSet AllocateDesriptorSet(VkDescriptorSetAllocateInfo& allocInfo);
 	private:
 		GraphicsPipeline* m_GraphicsPipeline = nullptr;

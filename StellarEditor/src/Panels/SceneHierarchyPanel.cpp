@@ -2,6 +2,9 @@
 
 #include "Stellar/ImGui/ImGuiLayer.h"
 
+#include "Stellar/Platform/Vulkan/ImGui/imgui_impl_vulkan.h"
+#include "Stellar/Platform/Vulkan/Texture/VulkanTexture.h"
+
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <glm/gtc/type_ptr.hpp>
@@ -185,17 +188,25 @@ namespace Stellar {
 				ImGui::EndPopup();
 			}
 			
+			//void* textureID = nullptr;
 			if (open) {
 				auto& sprite = entity.getComponent<SpriteRendererComponent>();
 				ImGui::ColorEdit4("Color", glm::value_ptr(sprite.color));
 				// auto windowWidth = ImGui::GetContentRegionAvail();
-				// UI::Image(sprite.texture.get(), { windowWidth.x, windowWidth.x });
+				// textureID = UI::Image(sprite.texture.get(), { windowWidth.x, windowWidth.x });
 
 				ImGui::TreePop();
 			}
 
-			if (removeComponent)
+			if (removeComponent) {
+				// auto texture = (VulkanTexture*)entity.getComponent<SpriteRendererComponent>().texture.get();
+				// if (textureID) {
+				// 	STLR_INFO("Remove texture id");
+				// 	ImGui_ImplVulkan_RemoveTexture(texture->getDescriptorSets());
+				// }
 				entity.removeComponent<SpriteRendererComponent>();
+				
+			}
 		}
 	}
 }
