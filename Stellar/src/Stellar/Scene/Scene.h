@@ -15,6 +15,7 @@ namespace Stellar {
 		~Scene();
 
 		Entity createEntity(const std::string& name = "");
+		void destroyEntity(Entity entity);
 
 		void onUpdate(Timestep ts);
 		void onEditorUpdate(Timestep ts, EditorCamera& camera);

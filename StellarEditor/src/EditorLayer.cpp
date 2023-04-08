@@ -34,12 +34,12 @@ namespace Stellar {
 	void EditorLayer::onUpdate(Timestep ts) {
 		m_EditorCamera.SetViewportSize(m_ViewPortSize.x, m_ViewPortSize.y);
 		m_EditorCamera.onUpdate(ts);
-
+		
 		//float angle = Timestep::GetTime()* glm::radians(90.0f);
 
-		auto& sceneCamera = m_CameraEntity.getComponent<CameraComponent>().camera;
+		// auto& sceneCamera = m_CameraEntity.getComponent<CameraComponent>().camera;
 
-		sceneCamera.setViewPortSize(m_ViewPortSize.x, m_ViewPortSize.y);
+		// sceneCamera.setViewPortSize(m_ViewPortSize.x, m_ViewPortSize.y);
 
 		// m_LogoEntity.getComponent<TransformComponent>().rotation = glm::vec3(angle, 0.0f, 0.0f);
 		// m_ExampleEntity.getComponent<TransformComponent>().rotation = glm::vec3(angle, 0.0f, 0.0f);

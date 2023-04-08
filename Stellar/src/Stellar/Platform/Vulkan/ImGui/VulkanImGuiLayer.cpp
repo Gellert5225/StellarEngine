@@ -89,7 +89,7 @@ namespace Stellar {
 			VkCommandBufferAllocateInfo cmdBufAllocateInfo = {};
 			cmdBufAllocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 			cmdBufAllocateInfo.commandPool = VulkanDevice::GetInstance()->getCommandPool();
-			cmdBufAllocateInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+			cmdBufAllocateInfo.level = VK_COMMAND_BUFFER_LEVEL_SECONDARY;
 			cmdBufAllocateInfo.commandBufferCount = 1;
 
 			VK_CHECK_RESULT(vkAllocateCommandBuffers(device, &cmdBufAllocateInfo, &cmdBuffer));
@@ -133,6 +133,9 @@ namespace Stellar {
 		VkCommandBufferBeginInfo drawCmdBufInfo = {};
 		drawCmdBufInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 		drawCmdBufInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+		drawCmdBufInfo.pNext = nullptr;
+
+		uint32_t commandBufferIndex = swapChain->getCurrentFrameIndex();
 
 		VK_CHECK_RESULT(vkBeginCommandBuffer(swapChain->getCurrentCommandBuffer(), &drawCmdBufInfo));
 
@@ -148,7 +151,19 @@ namespace Stellar {
 		renderPassBeginInfo.pClearValues = clearValues;
 		renderPassBeginInfo.framebuffer = swapChain->getCurrentFrameBuffer();
 
-		vkCmdBeginRenderPass(swapChain->getCurrentCommandBuffer(), &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+		vkCmdBeginRenderPass(swapChain->getCurrentCommandBuffer(), &renderPassBeginInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
+
+		VkCommandBufferInheritanceInfo inheritanceInfo = {};
+		inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
+		inheritanceInfo.renderPass = swapChain->getImGuiRenderPass();
+		inheritanceInfo.framebuffer = swapChain->getCurrentFrameBuffer();
+
+		VkCommandBufferBeginInfo cmdBufInfo = {};
+		cmdBufInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+		cmdBufInfo.flags = VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT;
+		cmdBufInfo.pInheritanceInfo = &inheritanceInfo;
+
+		VK_CHECK_RESULT(vkBeginCommandBuffer(s_ImGuiCommandBuffers[commandBufferIndex], &cmdBufInfo));
 
 		VkViewport viewport = {};
 		viewport.x = 0;
@@ -157,18 +172,27 @@ namespace Stellar {
 		viewport.width = swapChain->getSwapChainExtent().height;
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
-		vkCmdSetViewport(swapChain->getCurrentCommandBuffer(), 0, 1, &viewport);
+		vkCmdSetViewport(s_ImGuiCommandBuffers[commandBufferIndex], 0, 1, &viewport);
 
 		VkRect2D scissor = {};
 		scissor.extent.width = swapChain->getSwapChainExtent().width;
 		scissor.extent.height = swapChain->getSwapChainExtent().height;
 		scissor.offset.x = 0;
 		scissor.offset.y = 0;
-		vkCmdSetScissor(swapChain->getCurrentCommandBuffer(), 0, 1, &scissor);
+		vkCmdSetScissor(s_ImGuiCommandBuffers[commandBufferIndex], 0, 1, &scissor);
 
 		ImDrawData* main_draw_data = ImGui::GetDrawData();
 		
-		ImGui_ImplVulkan_RenderDrawData(main_draw_data, swapChain->getCurrentCommandBuffer());
+		vkDeviceWaitIdle(VulkanDevice::GetInstance()->logicalDevice());
+
+		ImGui_ImplVulkan_RenderDrawData(main_draw_data, s_ImGuiCommandBuffers[commandBufferIndex]);
+
+		VK_CHECK_RESULT(vkEndCommandBuffer(s_ImGuiCommandBuffers[commandBufferIndex]));
+
+		std::vector<VkCommandBuffer> commandBuffers;
+		commandBuffers.push_back(s_ImGuiCommandBuffers[commandBufferIndex]);
+
+		vkCmdExecuteCommands(swapChain->getCurrentCommandBuffer(), uint32_t(commandBuffers.size()), commandBuffers.data());
 
 		vkCmdEndRenderPass(swapChain->getCurrentCommandBuffer());
 

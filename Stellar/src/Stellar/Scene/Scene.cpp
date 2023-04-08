@@ -26,6 +26,10 @@ namespace Stellar {
 		return entity;
 	}
 
+	void Scene::destroyEntity(Entity entity) {
+		m_Registry.destroy(entity);
+	}
+
 	void Scene::onUpdate(Timestep ts) {
 		Camera* mainCamera = nullptr;
 		glm::mat4 cameraTransform;

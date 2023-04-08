@@ -23,12 +23,37 @@ namespace Stellar {
 			drawEntityNode(entity);
 		});
 
+		if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
+			m_SelectionContext = {};
+
+		if (ImGui::BeginPopupContextWindow(0, 1 | ImGuiPopupFlags_NoOpenOverItems)) {
+			if (ImGui::MenuItem("Create Empty Entity")) {
+				m_Context->createEntity("Empty Entity");
+			}
+
+			ImGui::EndPopup();
+		}
+
 		ImGui::End();
 
 		ImGui::Begin("Properties");
 
 		if (m_SelectionContext) {
 			drawComponent(m_SelectionContext);
+
+			if (ImGui::Button("Add Component"))
+				ImGui::OpenPopup("AddComponent");
+			if (ImGui::BeginPopup("AddComponent")) {
+				if (ImGui::MenuItem("Camera")) {
+					m_SelectionContext.addComponent<CameraComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+				if (ImGui::MenuItem("Sprite Renderer")) {
+					m_SelectionContext.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, Texture2D::Create(ImageFormat::RGBA));
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::EndPopup();
+			}
 		}
 
 		ImGui::End();
@@ -44,8 +69,22 @@ namespace Stellar {
 			m_SelectionContext = entity;
 		}
 
+		bool entityDeleted = false;
+		if (ImGui::BeginPopupContextItem()) {
+			if (ImGui::MenuItem("Delete Entity"))
+				entityDeleted = true;
+
+			ImGui::EndPopup();
+		}
+
 		if (opened) {
 			ImGui::TreePop();
+		}
+
+		if (entityDeleted) {
+			m_Context->destroyEntity(entity);
+			if (m_SelectionContext == entity)
+				m_SelectionContext = {};
 		}
 	}
 
@@ -95,7 +134,6 @@ namespace Stellar {
 		ImGui::SameLine();
 		ImGui::DragFloat("##Z", &value.z, 0.1f, 0.0f, 0.0f, "%.2f");
 		ImGui::PopItemWidth();
-		ImGui::SameLine();
 
 		ImGui::PopStyleVar();
 		
@@ -115,8 +153,12 @@ namespace Stellar {
 			}
 		}
 
+		const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
+
 		if (entity.hasComponent<TransformComponent>()) {
-			if (ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Transform")) {
+			bool open = ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), treeNodeFlags, "Transform");
+			
+			if (open) {
 				auto& transform = entity.getComponent<TransformComponent>();
 
 				DrawVec3Control("Translation", transform.translation);
@@ -130,14 +172,30 @@ namespace Stellar {
 		}
 
 		if (entity.hasComponent<SpriteRendererComponent>()) {
-			if (ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Sprite")) {
+			bool open = ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(), treeNodeFlags, "Sprite");
+			ImGui::SameLine(ImGui::GetWindowWidth() - 25.0f);
+			if (ImGui::Button("+", ImVec2{20.0f, 20.0f})) {
+				ImGui::OpenPopup("ComponentSettings");
+			}
+			bool removeComponent = false;
+			if (ImGui::BeginPopup("ComponentSettings")) {
+				if (ImGui::MenuItem("Remove Component")) {
+					removeComponent = true;
+				}
+				ImGui::EndPopup();
+			}
+			
+			if (open) {
 				auto& sprite = entity.getComponent<SpriteRendererComponent>();
 				ImGui::ColorEdit4("Color", glm::value_ptr(sprite.color));
-				auto windowWidth = ImGui::GetContentRegionAvail();
-				UI::Image(sprite.texture.get(), { windowWidth.x, windowWidth.x });
+				// auto windowWidth = ImGui::GetContentRegionAvail();
+				// UI::Image(sprite.texture.get(), { windowWidth.x, windowWidth.x });
 
 				ImGui::TreePop();
 			}
+
+			if (removeComponent)
+				entity.removeComponent<SpriteRendererComponent>();
 		}
 	}
 }
