@@ -177,7 +177,6 @@ namespace Stellar {
 
 			if (removeComponent) {
 				entity.removeComponent<T>();
-				
 			}
 		}
 	}
@@ -224,7 +223,8 @@ namespace Stellar {
 		DrawComponent<SpriteRendererComponent>("Sprite", entity, [](auto& component) {
 			ImGui::ColorEdit4("Color", glm::value_ptr(component.color));
 			// auto windowWidth = ImGui::GetContentRegionAvail();
-			// textureID = UI::Image(component.texture.get(), { windowWidth.x, windowWidth.x });
+			// UI::Image(component.texture.get(), { windowWidth.x, windowWidth.x });
+			// auto* drawList = ImGui::GetWindowDrawList();
 		});
 	}
 }

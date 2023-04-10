@@ -45,7 +45,7 @@ namespace Stellar::UI {
 		auto image = tex->getImage();
 		auto imageInfo = (VulkanImageInfo*)image->getImageInfo();
 		const auto textureID = ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-		ImGui::Image(tex->getDescriptorSets(), size);
+		ImGui::Image(textureID, size);
 		#elif defined __APPLE__
 		ImGui::Image(((MetalTexture*)texture)->getTexture(), size);
 		#endif

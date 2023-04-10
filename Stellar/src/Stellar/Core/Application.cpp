@@ -16,6 +16,7 @@ namespace Stellar {
 
 		Renderer::Init();
 		m_ImGuiLayer = ImGuiLayer::Create();
+		pushLayer(m_ImGuiLayer);
 	}
 
 	Application::~Application() {
@@ -39,6 +40,10 @@ namespace Stellar {
 			if (e.handled)
 				break;
 		}
+	}
+
+	void Application::close() {
+		m_Running = false;
 	}
 
 	void Application::pushLayer(Layer* layer) {

@@ -1,6 +1,8 @@
 #include "EditorLayer.h"
 #include <imgui_internal.h>
 
+#include "Stellar/Scene/SceneSerializer.h"
+
 namespace Stellar {
 	EditorLayer::EditorLayer() : Layer("Sandbox2D"), m_EditorCamera(60.0f, 1.0f, 0.1f, 1000.0f) {
 		m_SceneCamera.setPerspective(60.0f, 0.1f, 1000.0f);
@@ -10,7 +12,6 @@ namespace Stellar {
 		Renderer::SetClearColor({ 0.66f, 0.9f, 0.96f, 1.0f });
 
 		m_ActiveScene = CreateRef<Scene>();
-		
 		m_ExampleEntity = m_ActiveScene->createEntity("Example Square");
 		m_ExampleEntity.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, Texture2D::Create("Resources/Textures/Example_texture.jpg"));
 
@@ -85,8 +86,16 @@ namespace Stellar {
 
 		if (ImGui::BeginMenuBar()) {
 			if (ImGui::BeginMenu("File")) {
+				if (ImGui::MenuItem("Serialize")) {
+					SceneSerializer serializer(m_ActiveScene);
+					serializer.serialize("Resources/Scenes/Example.stlr");
+				}
+				if (ImGui::MenuItem("Deserialize")) {
+					SceneSerializer serializer(m_ActiveScene);
+					serializer.deserialize("Resources/Scenes/Example.stlr");
+				}
 				if (ImGui::MenuItem("Exit")) {
-					
+					Application::Get().close();
 				}
 				ImGui::EndMenu();
 			}

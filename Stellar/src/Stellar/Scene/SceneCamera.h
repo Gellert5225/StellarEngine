@@ -31,7 +31,7 @@ namespace Stellar {
 		float getOrthographicNear() const { return m_OrthoNear; }
 
 		void setOrthographicFar(const float farClip) { m_OrthoFar = farClip; }
-		float setOrthographicFear() const { return m_OrthoFar; }
+		float getOrthographicFar() const { return m_OrthoFar; }
 
 	private:
 		ProjectionType m_ProjectionType = ProjectionType::Perspective;

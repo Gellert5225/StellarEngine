@@ -26,6 +26,8 @@ namespace Stellar {
 		void run();
 		void onEvent(Event&);
 
+		void close();
+
 		void pushLayer(Layer*);
 		void pushOverlay(Layer*);
 

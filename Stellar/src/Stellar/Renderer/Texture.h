@@ -12,6 +12,8 @@ namespace Stellar {
 	public:
 		virtual ~Texture2D() = default;
 
+		std::string getPath() const { return m_Path; }
+
 		static Ref<Texture2D> Create(const std::string& filePath);
 		static Ref<Texture2D> Create(ImageFormat format, uint32_t width = 1, uint32_t height = 1, const void* data = (const char*)0xffffffff);
 	protected:
