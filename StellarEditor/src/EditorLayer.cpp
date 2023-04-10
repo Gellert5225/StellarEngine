@@ -93,8 +93,14 @@ namespace Stellar {
 			ImGui::EndMenuBar();
 		}
 		
+		ImGuiStyle& style = ImGui::GetStyle();
+		float minWinSize = style.WindowMinSize.x;
+		style.WindowMinSize.x = 370.0f;
+
 		ImGuiID dockspaceID = ImGui::GetID("HUB_DockSpace");
 		ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), dockspace_flags, nullptr);
+
+		style.WindowMinSize.x = minWinSize;
 
 		static auto first_time = true;
 		if (first_time) {
@@ -104,8 +110,8 @@ namespace Stellar {
 			ImGui::DockBuilderAddNode(dockspaceID, dockspace_flags | ImGuiDockNodeFlags_DockSpace);
 			ImGui::DockBuilderSetNodeSize(dockspaceID, viewport->Size);
 
-			auto dock_id_right = ImGui::DockBuilderSplitNode(dockspaceID, ImGuiDir_Right, 0.2f, nullptr, &dockspaceID);
-			auto dock_id_left = ImGui::DockBuilderSplitNode(dockspaceID, ImGuiDir_Left, 0.2f, nullptr, &dockspaceID);
+			auto dock_id_right = ImGui::DockBuilderSplitNode(dockspaceID, ImGuiDir_Right, 0.3f, nullptr, &dockspaceID);
+			auto dock_id_left = ImGui::DockBuilderSplitNode(dockspaceID, ImGuiDir_Left, 0.3f, nullptr, &dockspaceID);
 			auto properties = ImGui::DockBuilderSplitNode(dock_id_left, ImGuiDir_Down, 0.75f, nullptr, &dock_id_left);
 			ImGui::DockBuilderDockWindow("Info", dock_id_right);
 			ImGui::DockBuilderDockWindow("Scene Hierarchy", dock_id_left);

@@ -43,20 +43,6 @@ namespace Stellar {
 
 		if (m_SelectionContext) {
 			drawComponent(m_SelectionContext);
-
-			if (ImGui::Button("Add Component"))
-				ImGui::OpenPopup("AddComponent");
-			if (ImGui::BeginPopup("AddComponent")) {
-				if (ImGui::MenuItem("Camera")) {
-					m_SelectionContext.addComponent<CameraComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-				if (ImGui::MenuItem("Sprite Renderer")) {
-					m_SelectionContext.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, Texture2D::Create(ImageFormat::RGBA));
-					ImGui::CloseCurrentPopup();
-				}
-				ImGui::EndPopup();
-			}
 		}
 
 		ImGui::End();
@@ -66,6 +52,7 @@ namespace Stellar {
 		auto& tag = entity.getComponent<TagComponent>().tag;
 
 		ImGuiTreeNodeFlags flags = ((m_SelectionContext == entity) ? ImGuiTreeNodeFlags_Selected  : 0 )| ImGuiTreeNodeFlags_OpenOnArrow;
+		flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
 
 		bool opened = ImGui::TreeNodeEx((void*)(uint32_t)entity, flags, tag.c_str());
 		if (ImGui::IsItemClicked()) {
@@ -92,6 +79,8 @@ namespace Stellar {
 	}
 
 	static void DrawVec3Control(const std::string& label, glm::vec3& value, float resetVal = 0.0f, float columnWidth = 100.0f) {
+		ImGuiIO& io = ImGui::GetIO();
+		auto boldFont = io.Fonts->Fonts[0];
 		ImGui::PushID(label.c_str());
 
 		ImGui::Columns(2);
@@ -108,8 +97,10 @@ namespace Stellar {
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{0.8f, 0.1f, 0.15f, 1.0f});
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{0.9f, 0.2f, 0.2f, 1.0f});
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{0.8f, 0.1f, 0.15f, 1.0f});
+		ImGui::PushFont(boldFont);
 		if (ImGui::Button("X", buttonSize))
 			value.x = resetVal;
+		ImGui::PopFont();
 		ImGui::PopStyleColor(3);
 
 		ImGui::SameLine();
@@ -120,8 +111,10 @@ namespace Stellar {
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{0.2f, 0.7f, 0.2f, 1.0f});
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{0.3f, 0.2f, 0.2f, 1.0f});
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{0.2f, 0.7f, 0.3f, 1.0f});
+		ImGui::PushFont(boldFont);
 		if (ImGui::Button("Y", buttonSize))
 			value.y = resetVal;
+		ImGui::PopFont();
 		ImGui::PopStyleColor(3);
 		ImGui::SameLine();
 		ImGui::DragFloat("##Y", &value.y, 0.1f, 0.0f, 0.0f, "%.2f");
@@ -131,8 +124,10 @@ namespace Stellar {
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{0.1f, 0.25f, 0.8f, 1.0f});
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{0.2f, 0.35f, 0.9f, 1.0f});
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{0.1f, 0.25f, 0.8f, 1.0f});
+		ImGui::PushFont(boldFont);
 		if (ImGui::Button("Z", buttonSize))
 			value.z = resetVal;
+		ImGui::PopFont();
 		ImGui::PopStyleColor(3);
 		ImGui::SameLine();
 		ImGui::DragFloat("##Z", &value.z, 0.1f, 0.0f, 0.0f, "%.2f");
@@ -144,42 +139,29 @@ namespace Stellar {
 		ImGui::PopID();
 	}
 
-	void SceneHierarchyPanel::drawComponent(Entity entity) {
-		if (entity.hasComponent<TagComponent>()) {
-			auto& tag = entity.getComponent<TagComponent>().tag;
-			char buffer[256];
-			memset(buffer, 0, sizeof(buffer));
-			strcpy_s(buffer, sizeof(buffer), tag.c_str());
-
-			if (ImGui::InputText("Tag", buffer, sizeof(buffer))){
-				tag = std::string(buffer);
-			}
-		}
-
-		const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
-
-		if (entity.hasComponent<TransformComponent>()) {
-			bool open = ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), treeNodeFlags, "Transform");
+	template<typename T, typename UIFunction>
+	static void DrawComponent(const std::string& name, Entity entity, UIFunction uiFunction) {
+		const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen |
+												 ImGuiTreeNodeFlags_AllowItemOverlap |
+												 ImGuiTreeNodeFlags_Framed |
+												 ImGuiTreeNodeFlags_FramePadding |
+												 ImGuiTreeNodeFlags_SpanAvailWidth;
+		if (entity.hasComponent<T>()) {
+			auto& component = entity.getComponent<T>();
 			
-			if (open) {
-				auto& transform = entity.getComponent<TransformComponent>();
+			auto contentRegionAvail = ImGui::GetContentRegionAvail();
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{4, 4});
+			float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+			ImGui::Separator();
 
-				DrawVec3Control("Translation", transform.translation);
-				glm::vec3 rotation = glm::degrees(transform.rotation);
-				DrawVec3Control("Rotation", rotation);
-				transform.rotation = glm::radians(rotation);
-				DrawVec3Control("Scale", transform.scale, 1.0f);
+			bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), treeNodeFlags, name.c_str());
+			ImGui::PopStyleVar();
 
-				ImGui::TreePop();
-			}
-		}
-
-		if (entity.hasComponent<SpriteRendererComponent>()) {
-			bool open = ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(), treeNodeFlags, "Sprite");
-			ImGui::SameLine(ImGui::GetWindowWidth() - 25.0f);
-			if (ImGui::Button("+", ImVec2{20.0f, 20.0f})) {
+			ImGui::SameLine(contentRegionAvail.x - lineHeight * 0.5);
+			if (ImGui::Button("...", ImVec2{lineHeight, lineHeight})) {
 				ImGui::OpenPopup("ComponentSettings");
 			}
+
 			bool removeComponent = false;
 			if (ImGui::BeginPopup("ComponentSettings")) {
 				if (ImGui::MenuItem("Remove Component")) {
@@ -188,25 +170,61 @@ namespace Stellar {
 				ImGui::EndPopup();
 			}
 			
-			//void* textureID = nullptr;
 			if (open) {
-				auto& sprite = entity.getComponent<SpriteRendererComponent>();
-				ImGui::ColorEdit4("Color", glm::value_ptr(sprite.color));
-				// auto windowWidth = ImGui::GetContentRegionAvail();
-				// textureID = UI::Image(sprite.texture.get(), { windowWidth.x, windowWidth.x });
-
+				uiFunction(component);
 				ImGui::TreePop();
 			}
 
 			if (removeComponent) {
-				// auto texture = (VulkanTexture*)entity.getComponent<SpriteRendererComponent>().texture.get();
-				// if (textureID) {
-				// 	STLR_INFO("Remove texture id");
-				// 	ImGui_ImplVulkan_RemoveTexture(texture->getDescriptorSets());
-				// }
-				entity.removeComponent<SpriteRendererComponent>();
+				entity.removeComponent<T>();
 				
 			}
 		}
+	}
+
+	void SceneHierarchyPanel::drawComponent(Entity entity) {
+		if (entity.hasComponent<TagComponent>()) {
+			auto& tag = entity.getComponent<TagComponent>().tag;
+			char buffer[256];
+			memset(buffer, 0, sizeof(buffer));
+			strcpy_s(buffer, sizeof(buffer), tag.c_str());
+
+			if (ImGui::InputText("##Tag", buffer, sizeof(buffer))){
+				tag = std::string(buffer);
+			}
+		}
+
+		ImGui::SameLine();
+		ImGui::PushItemWidth(-1);
+
+		if (ImGui::Button("Add Component"))
+			ImGui::OpenPopup("AddComponent");
+		if (ImGui::BeginPopup("AddComponent")) {
+			if (ImGui::MenuItem("Camera")) {
+				m_SelectionContext.addComponent<CameraComponent>();
+				ImGui::CloseCurrentPopup();
+			}
+			if (ImGui::MenuItem("Sprite Renderer")) {
+				m_SelectionContext.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, Texture2D::Create(ImageFormat::RGBA));
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
+		
+		ImGui::PopItemWidth();
+
+		DrawComponent<TransformComponent>("Transform", entity, [](auto& component) {
+			DrawVec3Control("Translation", component.translation);
+			glm::vec3 rotation = glm::degrees(component.rotation);
+			DrawVec3Control("Rotation", rotation);
+			component.rotation = glm::radians(rotation);
+			DrawVec3Control("Scale", component.scale, 1.0f);
+		});
+
+		DrawComponent<SpriteRendererComponent>("Sprite", entity, [](auto& component) {
+			ImGui::ColorEdit4("Color", glm::value_ptr(component.color));
+			// auto windowWidth = ImGui::GetContentRegionAvail();
+			// textureID = UI::Image(component.texture.get(), { windowWidth.x, windowWidth.x });
+		});
 	}
 }

@@ -25,6 +25,8 @@ namespace Stellar {
 		void onImGuiRender() override;
 	//static std::vector<VkCommandBuffer> s_ImGuiCommandBuffers;
 	private:
+		void setDarkThemeColor();
+	private:
 		VkDescriptorPool m_DescriptorPool;
 	};
 }

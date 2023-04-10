@@ -18,8 +18,8 @@ namespace Stellar {
 		unsigned int height;
 
 		explicit WindowProperty(std::string title = "Stellar Engine",
-								unsigned int width = 1280,
-								unsigned int height = 720)
+								unsigned int width = 1600,
+								unsigned int height = 900)
 			: title(std::move(title)), width(width), height(height) {}
 	};
 
