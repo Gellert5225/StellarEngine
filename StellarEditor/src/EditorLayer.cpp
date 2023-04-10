@@ -12,10 +12,10 @@ namespace Stellar {
 		m_ActiveScene = CreateRef<Scene>();
 		
 		m_ExampleEntity = m_ActiveScene->createEntity("Example Square");
-		m_ExampleEntity.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, Texture2D::Create("../Resources/Textures/Example_texture.jpg"));
+		m_ExampleEntity.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, Texture2D::Create("Resources/Textures/Example_texture.jpg"));
 
-		m_LogoEntity = m_ActiveScene->createEntity("Logo Square");
-		m_LogoEntity.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, Texture2D::Create("../Resources/Textures/StellarEngine.png"));
+		m_LogoEntity = m_ActiveScene->createEntity("Logo Square"); 
+		m_LogoEntity.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, Texture2D::Create("Resources/Textures/StellarEngine.png"));
 		
 		m_QuadEntity = m_ActiveScene->createEntity("Quad Square");
 		m_QuadEntity.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, Texture2D::Create(ImageFormat::RGBA));

@@ -33,6 +33,8 @@ namespace Stellar {
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/OpenSans-VariableFont_wdth,wght.ttf", 18.0f);
+
 		auto swapChain = (VulkanSwapChain*)Application::Get().getWindow().getSwapChain();
 		VkDescriptorPoolSize pool_sizes[] = {
 				{VK_DESCRIPTOR_TYPE_SAMPLER, 1000},

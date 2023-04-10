@@ -77,7 +77,7 @@ namespace Stellar {
 		// get filepath based on platform
 		std::string filePath;
 		#if defined(_WIN64) || defined(__linux__)
-		filePath = "../../Resources/Shader/Vulkan/" + fileName + ".glsl";
+		filePath = "Resources/Shader/Vulkan/" + fileName + ".glsl";
 		#elif defined(__APPLE__)
 		filePath = "../Resources/Shader/Metal/" + fileName + ".metal";
 		#endif

@@ -79,7 +79,7 @@ FRAG_SRCS := $(call rwildcard,$(SHADER_DIR)/,*.frag)
 VERT_SPIRV = $(VERT_SRCS:%.vert=$(SHADER_DIR)/%.spv)
 FRAG_SPIRV = $(FRAG_SRCS:%.frag=$(SHADER_DIR)/%.spv)
 
-CP_RESOURCES = $(shell cp -r ./Resources ./$(OUT_DIR)/)
+CP_RESOURCES = $(shell cp -r ./Resources ./$(BIN_DIR)/)
 ifeq ($(OS),linux)
 	LIBS += -lglfw -lvulkan
 endif
