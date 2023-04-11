@@ -2,7 +2,6 @@
 *.log
 .DS_Store
 # build files
-bin/
 build/
 lib/
 release/
