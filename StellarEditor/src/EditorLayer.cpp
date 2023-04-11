@@ -38,33 +38,40 @@ namespace Stellar {
 	void EditorLayer::onDetach() {}
 
 	void EditorLayer::onUpdate(Timestep ts) {
-		m_EditorCamera.SetViewportSize(m_ViewPortSize.x, m_ViewPortSize.y);
+		m_EditorCamera.setActive(m_AllowViewportCameraEvents);
 		m_EditorCamera.onUpdate(ts);
 		
-		//float angle = Timestep::GetTime()* glm::radians(90.0f);
+		if (Input::IsMouseButtonPressed(STLR_MOUSE_RIGHT) && !m_StartedRightClickInViewport && m_ViewportPanelFocused && m_ViewportPanelMouseOver)
+			m_StartedRightClickInViewport = true;
 
-		// auto& sceneCamera = m_CameraEntity.getComponent<CameraComponent>().camera;
+		if (!Input::IsMouseButtonPressed(STLR_MOUSE_RIGHT))
+			m_StartedRightClickInViewport = false;
 
-		// sceneCamera.setViewPortSize(m_ViewPortSize.x, m_ViewPortSize.y);
-
-		// m_LogoEntity.getComponent<TransformComponent>().rotation = glm::vec3(angle, 0.0f, 0.0f);
-		// m_ExampleEntity.getComponent<TransformComponent>().rotation = glm::vec3(angle, 0.0f, 0.0f);
-		//m_ActiveScene->onUpdate(ts);
 		m_ActiveScene->onEditorUpdate(ts, m_EditorCamera);
 	}
 
 	void EditorLayer::onEvent(Event& event) {
+		// if (m_AllowViewportCameraEvents)
+		// 	m_EditorCamera.onEvent(event);
 		EventDispatcher dispatcher(event);
 		dispatcher.dispatch<KeyPressedEvent>(BIND_EVENT_FN(EditorLayer::onKeyPressed));
+		dispatcher.dispatch<MouseButtonPressedEvent>(BIND_EVENT_FN(EditorLayer::onMouseButtonPressed));
 	}
 
 	void EditorLayer::onImGuiRender() {
 		auto appInfo = Application::Get().getAppInfo();
 
+		if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) || 
+			(ImGui::IsMouseClicked(ImGuiMouseButton_Right) && !m_StartedRightClickInViewport)) {
+			ImGui::FocusWindow(GImGui->HoveredWindow);
+			Input::SetCursorMode(CursorMode::Normal);
+		}
+
 		ImGuiViewport* viewport = ImGui::GetMainViewport();
 		ImGui::SetNextWindowPos(viewport->Pos);
 		ImGui::SetNextWindowSize(viewport->Size);
 		ImGui::SetNextWindowViewport(viewport->ID);
+		ImGui::SetKeyOwner(ImGuiMod_Alt, viewport->ID);
 
 		ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
 		ImGuiWindowFlags host_window_flags = 0;
@@ -134,19 +141,20 @@ namespace Stellar {
 		ImGuiIO& io = ImGui::GetIO();
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(255,255,255,0));
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-		ImGui::Begin("View Port" , nullptr, ImGuiWindowFlags_NoBringToFrontOnFocus);
-
-		m_ViewportFocused = ImGui::IsWindowFocused();
-		m_ViewportHovered = ImGui::IsWindowHovered();
-
-		Application::Get().getImGuiLayer()->blockEvents(!m_ViewportHovered);
+		ImGui::Begin("View Port");
 
 		ImGui::PopStyleVar();
 		ImGui::PopStyleColor();
 		io.ConfigWindowsMoveFromTitleBarOnly = true;
 		m_ViewPortSize = ImGui::GetContentRegionAvail();
+		m_EditorCamera.setViewportSize(m_ViewPortSize.x, m_ViewPortSize.y);
 		Renderer::ResizeFrameBuffer(m_ViewPortSize.x, m_ViewPortSize.y);
 		UI::ImageFromFB(Renderer::GetFrameBuffer(), m_ViewPortSize);
+
+		m_ViewportPanelMouseOver = ImGui::IsWindowHovered();
+		m_ViewportPanelFocused = ImGui::IsWindowFocused();
+		
+		m_AllowViewportCameraEvents = m_ViewportPanelFocused || m_StartedRightClickInViewport;
 
 		// gizmo
 		Entity selected = m_SceneHierarchyPanel.getSelectedEntity();
@@ -231,6 +239,17 @@ namespace Stellar {
 					m_GizmoType = ImGuizmo::OPERATION::SCALE;
 				break;
 		}
+		return false;
+	}
+
+	bool EditorLayer::onMouseButtonPressed(MouseButtonPressedEvent& e) {
+		if (e.getMouseButton() != STLR_MOUSE_LEFT)
+			return false;
+		if (!m_ViewportPanelMouseOver)
+			return false;
+		if (Input::IsKeyPressed(STLR_KEY_LEFT_ALT) || Input::IsMouseButtonPressed(STLR_MOUSE_RIGHT))
+			return false;
+
 		return false;
 	}
 

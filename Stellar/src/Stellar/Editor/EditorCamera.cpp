@@ -4,6 +4,7 @@
 
 #include "Stellar/Core/Input.h"
 #include "Stellar/Core/KeyCodes.h"
+#include "Stellar/Core/Log.h"
 #include "Stellar/ImGui/ImGuiLayer.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
@@ -20,8 +21,8 @@ namespace Stellar {
 		UI::SetInputEnabled(true);
 	}
 
-	EditorCamera::EditorCamera(const float fov, const float width, const float height, const float near, const float far)
-		: Camera(fov, width, height, near, far), m_FocalPoint(0.0f), m_VerticalFOV(fov), m_NearClip(near), m_FarClip(far) {
+	EditorCamera::EditorCamera(const float fov, const float width, const float height, const float nearClip, const float farClip)
+		: Camera(fov, width, height, nearClip, farClip), m_FocalPoint(0.0f), m_VerticalFOV(fov), m_NearClip(nearClip), m_FarClip(farClip) {
 		constexpr glm::vec3 position = { -5, 5, 5 };
 		m_Distance = glm::distance(position, m_FocalPoint);
 
@@ -57,6 +58,14 @@ namespace Stellar {
 	void EditorCamera::onUpdate(const Timestep ts) {
 		const glm::vec2& mouse{ Input::GetMouseX(), Input::GetMouseY() };
 		const glm::vec2 delta = (mouse - m_InitialMousePosition) * 0.002f;
+
+		if (!m_IsActive) {
+			if (!UI::IsInputEnabled())
+				UI::SetInputEnabled(true);
+
+			return;
+		}
+		
 
 		if (Input::IsMouseButtonPressed(STLR_MOUSE_RIGHT) && !Input::IsKeyPressed(STLR_KEY_LEFT_ALT)) {
 			m_CameraMode = CameraMode::FLYCAM;
@@ -105,7 +114,7 @@ namespace Stellar {
 			} else {
 				EnableMouse();
 			}
-		}else {
+		} else {
 			EnableMouse();
 		}
 
@@ -120,7 +129,7 @@ namespace Stellar {
 		recalculateViewMatrix();
 	}
 
-	void EditorCamera::SetViewportSize(uint32_t width, uint32_t height) {
+	void EditorCamera::setViewportSize(uint32_t width, uint32_t height) {
 		if (m_ViewportWidth == width && m_ViewportHeight == height)
 			return;
 		setPerspectiveProjection(m_VerticalFOV, (float)width, (float)height, m_NearClip, m_FarClip);

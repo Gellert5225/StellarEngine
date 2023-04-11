@@ -19,10 +19,13 @@ namespace Stellar {
 
 		void setPosition(const glm::vec3 position) { m_Position = position; }
 
-		void SetViewportSize(uint32_t width, uint32_t height);
+		void setViewportSize(uint32_t width, uint32_t height);
 
 		[[nodiscard]] const glm::vec3& getPosition() const { return m_Position; }
 		[[nodiscard]] float getCameraSpeed() const;
+
+		bool isActive() const { return m_IsActive; }
+		void setActive(bool active) { m_IsActive = active; }
 		
 		glm::vec3 getUpDirection() const;
 		glm::vec3 getRightDirection() const;
@@ -58,10 +61,11 @@ namespace Stellar {
 		float m_AspectRatio = 1.0f;
 		float m_NearClip = 0.01f;
 		float m_FarClip = 100.0f;
+		constexpr static float MIN_SPEED{ 0.0005f }, MAX_SPEED{ 2.0f };
 
 		uint32_t m_ViewportWidth{ 1280 }, m_ViewportHeight{ 720 };
 
-		constexpr static float MIN_SPEED{ 0.0005f }, MAX_SPEED{ 2.0f };
+		bool m_IsActive = false;
 
 		CameraMode m_CameraMode{ CameraMode::ARCBALL };
 	};

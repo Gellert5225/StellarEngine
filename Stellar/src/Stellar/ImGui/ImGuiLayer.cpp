@@ -72,4 +72,9 @@ namespace Stellar::UI {
 			io.ConfigFlags |= ImGuiConfigFlags_NavNoCaptureKeyboard;
 		}
 	}
+
+	bool STLR_API IsInputEnabled() {
+		const auto& io = ImGui::GetIO();
+		return (io.ConfigFlags & ImGuiConfigFlags_NoMouse) == 0 && (io.ConfigFlags & ImGuiConfigFlags_NavNoCaptureKeyboard) == 0;
+	}
 }

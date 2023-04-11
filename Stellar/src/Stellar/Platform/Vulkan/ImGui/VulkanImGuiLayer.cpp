@@ -31,8 +31,6 @@ namespace Stellar {
 		setDarkThemeColor();
 
 		ImGuiIO& io = ImGui::GetIO();
-		io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
-		io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
@@ -113,11 +111,10 @@ namespace Stellar {
 	}
 
    void VulkanImGuiLayer::onEvent(Event& e) {
-		if (m_BlockEvents) {
-			ImGuiIO& io = ImGui::GetIO();
-			e.handled |= e.isInCategory(EventCategory::Mouse) & io.WantCaptureMouse;
-			e.handled |= e.isInCategory(EventCategory::Keyboard) & io.WantCaptureKeyboard;
-		}
+		// if (m_BlockEvents) {
+		// 	ImGuiIO& io = ImGui::GetIO();
+		// 	io.WantCaptureMouse = false;
+		// }
    }
 
 	void VulkanImGuiLayer::begin() {

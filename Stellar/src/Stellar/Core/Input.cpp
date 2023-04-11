@@ -5,6 +5,8 @@
 #include "Application.h"
 #include "Log.h"
 
+#include <imgui_internal.h>
+
 namespace Stellar {
 	class Input* Input::s_Instance = new Input();
 
@@ -15,9 +17,23 @@ namespace Stellar {
 	}
 
 	bool Input::isMouseButtonPressedImpl(int button) {
-		auto window = Application::Get().getWindow().getGLFWWindow();
-		auto state = glfwGetMouseButton(window, button);
-		return state == GLFW_PRESS;
+		ImGuiContext* context = ImGui::GetCurrentContext();
+		bool pressed = false;
+		for (ImGuiViewport* viewport : context->Viewports) {
+			if (!viewport->PlatformUserData)
+				continue;
+
+			GLFWwindow* windowHandle = *(GLFWwindow**)viewport->PlatformUserData; // First member is GLFWwindow
+			if (!windowHandle)
+				continue;
+
+			auto state = glfwGetMouseButton(static_cast<GLFWwindow*>(windowHandle), static_cast<int32_t>(button));
+			if (state == GLFW_PRESS || state == GLFW_REPEAT) {
+				pressed = true;
+				break;
+			}
+		}
+		return pressed;
 	}
 
 	float Input::getMouseXImpl() {
