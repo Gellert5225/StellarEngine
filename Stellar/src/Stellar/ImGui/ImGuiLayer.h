@@ -11,11 +11,14 @@ namespace Stellar {
 	public:
 		virtual void begin() = 0;
 		virtual void end() = 0;
+		virtual void onEvent(Event& e) = 0;
+
+		virtual void blockEvents(bool block) { m_BlockEvents = block; }
 
 		static ImGuiLayer* Create();
 	protected:
 		float m_Time = 0.0f;
-
+		bool m_BlockEvents = true;
 	};
 }
 

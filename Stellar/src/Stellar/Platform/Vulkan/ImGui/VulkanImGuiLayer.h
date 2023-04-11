@@ -23,6 +23,8 @@ namespace Stellar {
 		void onAttach() override;
 		void onDetach() override;
 		void onImGuiRender() override;
+
+		void onEvent(Event& e) override;
 	//static std::vector<VkCommandBuffer> s_ImGuiCommandBuffers;
 	private:
 		void setDarkThemeColor();

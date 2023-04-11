@@ -13,6 +13,8 @@ namespace Stellar {
 		void setContext(const Ref<Scene>& scene);
 
 		void onImGuiRender();
+
+		Entity getSelectedEntity() const { return m_SelectionContext; }
 	private:
 		void drawEntityNode(Entity entity);
 		void drawComponent(Entity entity);

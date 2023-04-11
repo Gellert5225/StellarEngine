@@ -4,7 +4,7 @@ ASAN_FLAGS=-fsanitize=address
 
 # Compiler and linker
 CXX      = 
-INCLUDES = -I./vendor/glfw/include -I./vendor/spdlog/include -I./vendor/imgui -I./src -I./vendor/glm -I./vendor/stb -I./vendor/entt -I./vendor/yaml-cpp/include -I./vendor/nfd/include
+INCLUDES = -I./vendor/glfw/include -I./vendor/spdlog/include -I./vendor/imgui -I./src -I./vendor/glm -I./vendor/stb -I./vendor/entt -I./vendor/yaml-cpp/include -I./vendor/nfd/include -I./vendor/imguizmo
 CXXFLAGS = -std=c++17 -DSTLR_BUILD_DLL -fPIC -Wall -MD -DGLM_FORCE_DEPTH_ZERO_TO_ONE
 LDFLAGS  = 
 LDLIBS   =
@@ -75,9 +75,12 @@ rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 
 OBJC_FILES := $(call rwildcard,src/Stellar/Platform/Metal/,*.mm)
 IMGUI_DIR = vendor/imgui
+IMGUIZMO_DIR = vendor/imguizmo
 IMGUI_SRC_FILES := $(wildcard $(IMGUI_DIR)/*.cpp)
+IMGUIZMO_SRC_FILES := $(wildcard $(IMGUIZMO_DIR)/*.cpp)
 SRC_FILES := $(call rwildcard,src/,*.cpp) \
-	$(IMGUI_SRC_FILES)
+	$(IMGUI_SRC_FILES) \
+	$(IMGUIZMO_SRC_FILES)
 
 OBJS = 
 

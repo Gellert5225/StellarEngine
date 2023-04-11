@@ -1,11 +1,13 @@
 #include "EditorLayer.h"
 #include <imgui_internal.h>
+#include <ImGuizmo.h>
 
 #include <Stellar/Scene/SceneSerializer.h>
 #include <Stellar/Utils/FileUtil.h>
 #include <Stellar/Events/Event.h>
 #include <Stellar/Core/KeyCodes.h>
 #include <Stellar/Core/Input.h>
+#include <Stellar/Maths/Math.h>
 
 namespace Stellar {
 	EditorLayer::EditorLayer() : Layer("Sandbox2D"), m_EditorCamera(60.0f, 1.0f, 1.0f, 0.1f, 1000.0f) {
@@ -117,8 +119,6 @@ namespace Stellar {
 			ImGui::DockBuilderFinish(dockspaceID);
 		}
 
-		ImGui::End();
-
 		m_SceneHierarchyPanel.onImGuiRender();
 		//ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
 		ImGui::Begin("Info");
@@ -135,12 +135,63 @@ namespace Stellar {
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(255,255,255,0));
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		ImGui::Begin("View Port" , nullptr, ImGuiWindowFlags_NoBringToFrontOnFocus);
+
+		m_ViewportFocused = ImGui::IsWindowFocused();
+		m_ViewportHovered = ImGui::IsWindowHovered();
+
+		Application::Get().getImGuiLayer()->blockEvents(!m_ViewportHovered);
+
 		ImGui::PopStyleVar();
 		ImGui::PopStyleColor();
 		io.ConfigWindowsMoveFromTitleBarOnly = true;
 		m_ViewPortSize = ImGui::GetContentRegionAvail();
 		Renderer::ResizeFrameBuffer(m_ViewPortSize.x, m_ViewPortSize.y);
 		UI::ImageFromFB(Renderer::GetFrameBuffer(), m_ViewPortSize);
+
+		// gizmo
+		Entity selected = m_SceneHierarchyPanel.getSelectedEntity();
+		if (selected && m_GizmoType != -1) {
+			ImGuizmo::SetOrthographic(false);
+			ImGuizmo::SetDrawlist();
+			ImGuizmo::SetGizmoSizeClipSpace(0.2f);
+
+			float windowWidth = (float)ImGui::GetWindowWidth();
+			float windowHeight = (float)ImGui::GetWindowHeight();
+			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+			// Editor camera
+			const glm::mat4& cameraProjection = m_EditorCamera.getProjectionMatrix();
+			glm::mat4 cameraView = m_EditorCamera.getViewmatrix();
+
+			// Entity transform
+			auto& tc = selected.getComponent<TransformComponent>();
+			glm::mat4 transform = tc.getTransform();
+
+			// Snapping
+			bool snap = Input::IsKeyPressed(STLR_KEY_LEFT_CONTROL);
+			float snapValue = 0.5f; // Snap to 0.5m for translation/scale
+			// Snap to 45 degrees for rotation
+			if (m_GizmoType == ImGuizmo::OPERATION::ROTATE)
+				snapValue = 45.0f;
+
+			float snapValues[3] = { snapValue, snapValue, snapValue };
+
+			ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
+				(ImGuizmo::OPERATION)m_GizmoType, ImGuizmo::LOCAL, glm::value_ptr(transform),
+				nullptr, snap ? snapValues : nullptr);
+
+			if (ImGuizmo::IsUsing()) {
+				glm::vec3 translation, rotation, scale;
+				Math::DecomposeTransform(transform, translation, rotation, scale);
+
+				glm::vec3 deltaRotation = rotation - tc.rotation;
+				tc.translation = translation;
+				tc.rotation += deltaRotation;
+				tc.scale = scale;
+			}
+		}
+
+		ImGui::End();
 
 		ImGui::End();
 	}
@@ -162,6 +213,22 @@ namespace Stellar {
 			case STLR_KEY_S:
 				if (control && shift)
 					saveSceneAs();
+				break;
+			case STLR_KEY_Q:
+				if (!ImGuizmo::IsUsing())
+					m_GizmoType = -1;
+				break;
+			case STLR_KEY_W:
+				if (!ImGuizmo::IsUsing())
+					m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
+				break;
+			case STLR_KEY_E:
+				if (!ImGuizmo::IsUsing())
+					m_GizmoType = ImGuizmo::OPERATION::ROTATE;
+				break;
+			case STLR_KEY_R:
+				if (!ImGuizmo::IsUsing())
+					m_GizmoType = ImGuizmo::OPERATION::SCALE;
 				break;
 		}
 		return false;

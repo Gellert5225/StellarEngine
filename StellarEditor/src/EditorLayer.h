@@ -42,5 +42,8 @@ namespace Stellar {
 		ImVec2 m_ViewPortSize{ 1.0f, 1.0f };
 
 		SceneHierarchyPanel m_SceneHierarchyPanel;
+
+		int m_GizmoType = -1;
+		bool m_ViewportFocused = false, m_ViewportHovered = false;
 	};
 }

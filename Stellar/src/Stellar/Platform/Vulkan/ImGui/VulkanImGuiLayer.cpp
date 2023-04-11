@@ -3,6 +3,8 @@
 
 #include <GLFW/glfw3.h>
 #include <imgui.h>
+#include <ImGuizmo.h>
+
 #include "Stellar/ImGui/imgui_impl_glfw.h"
 #include "Stellar/Platform/Vulkan/ImGui/imgui_impl_vulkan.h"
 
@@ -110,16 +112,19 @@ namespace Stellar {
 		ImGui::DestroyContext();
 	}
 
-//    void ImGuiLayer::onEvent(Event& e) {
-//        ImGuiIO& io = ImGui::GetIO();
-//        e.handled |= e.isInCategory(EventCategory::Mouse) & io.WantCaptureMouse;
-//        e.handled |= e.isInCategory(EventCategory::Keyboard) & io.WantCaptureKeyboard;
-//    }
+   void VulkanImGuiLayer::onEvent(Event& e) {
+		if (m_BlockEvents) {
+			ImGuiIO& io = ImGui::GetIO();
+			e.handled |= e.isInCategory(EventCategory::Mouse) & io.WantCaptureMouse;
+			e.handled |= e.isInCategory(EventCategory::Keyboard) & io.WantCaptureKeyboard;
+		}
+   }
 
 	void VulkanImGuiLayer::begin() {
 		ImGui_ImplVulkan_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+		ImGuizmo::BeginFrame();
 	}
 
 	void VulkanImGuiLayer::end() {

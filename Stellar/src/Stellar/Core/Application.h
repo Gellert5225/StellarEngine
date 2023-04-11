@@ -30,7 +30,7 @@ namespace Stellar {
 
 		void pushLayer(Layer*);
 		void pushOverlay(Layer*);
-
+		ImGuiLayer* getImGuiLayer() { return m_ImGuiLayer; }
 		[[nodiscard]] AppInfo getAppInfo() const;
 
 		inline static Application& Get() { return *s_Instance; }

@@ -26,3 +26,5 @@
 #include "Stellar/Scene/SceneSerializer.h"
 
 #include "Stellar/Utils/FileUtil.h"
+
+#include "Stellar/Maths/Math.h"
