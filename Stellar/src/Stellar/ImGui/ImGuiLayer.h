@@ -20,6 +20,8 @@ namespace Stellar {
 }
 
 namespace Stellar::UI {
+	void SetInputEnabled(bool enable);
+
 	void* Image(Texture2D* texture, const ImVec2& size);
 	void ImageFromFB(Ref<FrameBuffer> frameBuffer, const ImVec2& size);
 }

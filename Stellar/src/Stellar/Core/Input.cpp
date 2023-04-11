@@ -35,4 +35,16 @@ namespace Stellar {
 
 		return float(y);
 	}
+
+	void Input::SetCursorMode(CursorMode mode) {
+		auto& window = Application::Get().getWindow();
+		glfwSetInputMode(static_cast<GLFWwindow*>(window.getGLFWWindow()), GLFW_CURSOR, GLFW_CURSOR_NORMAL + (int)mode);
+
+		UI::SetInputEnabled(mode == CursorMode::Normal);
+	}
+
+	CursorMode Input::GetCursorMode() {
+		auto& window = Application::Get().getWindow();
+		return (CursorMode)(glfwGetInputMode(static_cast<GLFWwindow*>(window.getGLFWWindow()), GLFW_CURSOR) - GLFW_CURSOR_NORMAL);
+	}
 }

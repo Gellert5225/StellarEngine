@@ -61,4 +61,15 @@ namespace Stellar::UI {
 		ImGui::Image(((MetalFrameBuffer*)frameBuffer)->getAttachmentTexture(), size);
 		#endif
 	}
+
+	void STLR_API SetInputEnabled(bool enable) {
+		auto& io = ImGui::GetIO();
+		if (enable) {
+			io.ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
+			io.ConfigFlags &= ~ImGuiConfigFlags_NavNoCaptureKeyboard;
+		} else {
+			io.ConfigFlags |= ImGuiConfigFlags_NoMouse;
+			io.ConfigFlags |= ImGuiConfigFlags_NavNoCaptureKeyboard;
+		}
+	}
 }

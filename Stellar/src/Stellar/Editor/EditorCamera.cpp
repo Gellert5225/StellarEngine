@@ -26,26 +26,28 @@ namespace Stellar {
 	}
 
 	void EditorCamera::onUpdate(const Timestep ts) {
-		if (Input::IsKeyPressed(STLR_KEY_W))
-			m_Position += m_Front * m_Speed * float(ts);
-		else if (Input::IsKeyPressed(STLR_KEY_S))
-			m_Position -=m_Front * m_Speed * float(ts);
-		if (Input::IsKeyPressed(STLR_KEY_A))
-			m_Position -= m_Right * m_Speed * float(ts);
-		else if (Input::IsKeyPressed(STLR_KEY_D))
-			m_Position += m_Right * m_Speed * float(ts);
-		if (Input::IsKeyPressed(STLR_KEY_SPACE))
-			m_Position.y -= m_Speed * ts;
-		else if (Input::IsKeyPressed(STLR_KEY_LEFT_CONTROL))
-			m_Position.y += m_Speed * ts;
-		if (Input::IsKeyPressed(STLR_KEY_LEFT))
-			setYaw(-m_Speed * ts * 40);
-		else if (Input::IsKeyPressed(STLR_KEY_RIGHT))
-			setYaw(m_Speed * ts * 40);
-		if (Input::IsKeyPressed(STLR_KEY_UP))
-			setPitch(-m_Speed * ts * 40);
-		else if (Input::IsKeyPressed(STLR_KEY_DOWN))
-			setPitch(m_Speed * ts * 40);
+		if (Input::IsMouseButtonPressed(STLR_MOUSE_RIGHT) && !Input::IsKeyPressed(STLR_KEY_LEFT_ALT)) {
+			if (Input::IsKeyPressed(STLR_KEY_W))
+				m_Position += m_Front * m_Speed * float(ts);
+			else if (Input::IsKeyPressed(STLR_KEY_S))
+				m_Position -=m_Front * m_Speed * float(ts);
+			if (Input::IsKeyPressed(STLR_KEY_A))
+				m_Position -= m_Right * m_Speed * float(ts);
+			else if (Input::IsKeyPressed(STLR_KEY_D))
+				m_Position += m_Right * m_Speed * float(ts);
+			if (Input::IsKeyPressed(STLR_KEY_SPACE))
+				m_Position.y -= m_Speed * ts;
+			else if (Input::IsKeyPressed(STLR_KEY_LEFT_CONTROL))
+				m_Position.y += m_Speed * ts;
+			if (Input::IsKeyPressed(STLR_KEY_LEFT))
+				setYaw(-m_Speed * ts * 40);
+			else if (Input::IsKeyPressed(STLR_KEY_RIGHT))
+				setYaw(m_Speed * ts * 40);
+			if (Input::IsKeyPressed(STLR_KEY_UP))
+				setPitch(-m_Speed * ts * 40);
+			else if (Input::IsKeyPressed(STLR_KEY_DOWN))
+				setPitch(m_Speed * ts * 40);
+		}
 
 		recalculateViewMatrix();
 	}

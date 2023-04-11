@@ -124,3 +124,19 @@
 #define STLR_KEY_MENU               348
 
 #define STLR_KEY_LAST               STLR_KEY_MENU
+
+#define STLR_MOUSE_0				0
+#define STLR_MOUSE_1				1
+#define STLR_MOUSE_2				2
+#define STLR_MOUSE_3				3
+#define STLR_MOUSE_4				4
+#define STLR_MOUSE_5				5
+#define STLR_MOUSE_LEFT				STLR_MOUSE_0
+#define STLR_MOUSE_RIGHT			STLR_MOUSE_1
+#define STLR_MOUSE_MIDDLE			STLR_MOUSE_2
+
+enum class CursorMode {
+	Normal = 0,
+	Hidden = 1,
+	Locked = 2
+};
