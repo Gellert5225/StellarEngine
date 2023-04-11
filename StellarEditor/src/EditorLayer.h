@@ -5,6 +5,7 @@
 #include <Stellar/Scene/Scene.h>
 #include <Stellar/Scene/Entity.h>
 #include <Stellar/Scene/Components.h>
+#include <Stellar/Events/KeyEvent.h>
 
 #include "Panels/SceneHierarchyPanel.h"
 
@@ -20,6 +21,14 @@ namespace Stellar {
 		void onUpdate(Timestep ts) override;
 		void onEvent(Event& event) override;
 		void onImGuiRender() override;
+	private:
+		bool onKeyPressed(KeyPressedEvent& e);
+
+		void newScene();
+		void openScene();
+		void saveSceneAs();
+
+		void menuBar();
 	private:
 		EditorCamera m_EditorCamera;
 		SceneCamera m_SceneCamera;

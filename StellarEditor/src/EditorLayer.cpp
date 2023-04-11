@@ -1,8 +1,11 @@
 #include "EditorLayer.h"
 #include <imgui_internal.h>
 
-#include "Stellar/Scene/SceneSerializer.h"
-#include "Stellar/Utils/FileUtil.h"
+#include <Stellar/Scene/SceneSerializer.h>
+#include <Stellar/Utils/FileUtil.h>
+#include <Stellar/Events/Event.h>
+#include <Stellar/Core/KeyCodes.h>
+#include <Stellar/Core/Input.h>
 
 namespace Stellar {
 	EditorLayer::EditorLayer() : Layer("Sandbox2D"), m_EditorCamera(60.0f, 1.0f, 0.1f, 1000.0f) {
@@ -50,7 +53,8 @@ namespace Stellar {
 	}
 
 	void EditorLayer::onEvent(Event& event) {
-
+		EventDispatcher dispatcher(event);
+		dispatcher.dispatch<KeyPressedEvent>(BIND_EVENT_FN(EditorLayer::onKeyPressed));
 	}
 
 	void EditorLayer::onImGuiRender() {
@@ -85,37 +89,8 @@ namespace Stellar {
 		ImGui::PopStyleVar(4);
 		ImGui::PopStyleColor(3);
 
-		if (ImGui::BeginMenuBar()) {
-			if (ImGui::BeginMenu("File")) {
-				if (ImGui::MenuItem("New", "Ctrl+N")) {
-					m_ActiveScene = CreateRef<Scene>();
-					m_SceneHierarchyPanel.setContext(m_ActiveScene);
-				}
-				if (ImGui::MenuItem("Open", "Ctrl+O")) {
-					std::string filePath = FileDialogs::OpenFile("stlr");
-					if (!filePath.empty()) {
-						m_ActiveScene = CreateRef<Scene>();
-						m_SceneHierarchyPanel.setContext(m_ActiveScene);
+		menuBar();
 
-						SceneSerializer serializer(m_ActiveScene);
-						serializer.deserialize(filePath);
-					}
-				}
-				if (ImGui::MenuItem("Save As", "Ctrl+Shift+S")) {
-					std::string filePath = FileDialogs::SaveFile("stlr");
-					if (!filePath.empty()) {
-						SceneSerializer serializer(m_ActiveScene);
-						serializer.serialize(filePath);
-					}
-				}
-				if (ImGui::MenuItem("Exit")) {
-					Application::Get().close();
-				}
-				ImGui::EndMenu();
-			}
-			ImGui::EndMenuBar();
-		}
-		
 		ImGuiStyle& style = ImGui::GetStyle();
 		float minWinSize = style.WindowMinSize.x;
 		style.WindowMinSize.x = 370.0f;
@@ -169,5 +144,64 @@ namespace Stellar {
 		UI::ImageFromFB(Renderer::GetFrameBuffer(), m_ViewPortSize);
 
 		ImGui::End();
+	}
+
+	bool EditorLayer::onKeyPressed(KeyPressedEvent& e) {
+		if (e.getRepeatCount() > 0) return false;
+
+		bool control = Input::IsKeyPressed(STLR_KEY_LEFT_CONTROL) || Input::IsKeyPressed(STLR_KEY_RIGHT_CONTROL);
+		bool shift = Input::IsKeyPressed(STLR_KEY_LEFT_SHIFT) || Input::IsKeyPressed(STLR_KEY_RIGHT_SHIFT);
+		switch (e.getKeyCode()) {
+			case STLR_KEY_N:
+				if (control)
+					newScene();
+				break;
+			case STLR_KEY_O:
+				if (control)
+					openScene();
+				break;
+			case STLR_KEY_S:
+				if (control && shift)
+					saveSceneAs();
+				break;
+		}
+		return false;
+	}
+
+	void EditorLayer::newScene() {
+		m_ActiveScene = CreateRef<Scene>();
+		m_SceneHierarchyPanel.setContext(m_ActiveScene);
+	}
+
+	void EditorLayer::openScene() {
+		std::string filePath = FileDialogs::OpenFile("stlr");
+		if (!filePath.empty()) {
+			m_ActiveScene = CreateRef<Scene>();
+			m_SceneHierarchyPanel.setContext(m_ActiveScene);
+
+			SceneSerializer serializer(m_ActiveScene);
+			serializer.deserialize(filePath);
+		}
+	}
+
+	void EditorLayer::saveSceneAs() {
+		std::string filePath = FileDialogs::SaveFile("stlr");
+		if (!filePath.empty()) {
+			SceneSerializer serializer(m_ActiveScene);
+			serializer.serialize(filePath);
+		}
+	}
+
+	void EditorLayer::menuBar() {
+		if (ImGui::BeginMenuBar()) {
+			if (ImGui::BeginMenu("File")) {
+				if (ImGui::MenuItem("New", "Ctrl+N")) newScene();
+				if (ImGui::MenuItem("Open", "Ctrl+O")) openScene();
+				if (ImGui::MenuItem("Save As", "Ctrl+Shift+S")) saveSceneAs();
+				if (ImGui::MenuItem("Exit")) Application::Get().close();
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenuBar();
+		}
 	}
 }
