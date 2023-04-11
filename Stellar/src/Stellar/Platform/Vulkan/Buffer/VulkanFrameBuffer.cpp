@@ -17,14 +17,18 @@ namespace Stellar {
 	void VulkanFrameBuffer::invalidate() {
 		auto device = VulkanDevice::GetInstance()->logicalDevice();
 
-		VkFormat imageFormat;
-		VkFormat depthFormat;
+		m_AttachmentImages.clear();
 
-		for (auto attachment : m_Spec.attachments) {
-			if (Utils::IsDepthFormat(attachment)) { // depth attachment
-				depthFormat = Utils::VulkanImageFormat(attachment);
+		bool createImages = m_AttachmentImages.empty();
+		std::vector<VkAttachmentDescription> attachmentDescriptions;
+		std::vector<VkAttachmentReference> colorAttachmentReferences;
+		VkAttachmentReference depthAttachmentReference;
+
+		uint32_t attachmentIndex = 0;
+		for (auto attachment : m_Spec.attachments.attachments) {
+			if (Utils::IsDepthFormat(attachment.format)) { // depth attachment
 				ImageSpecification imageSpec;
-				imageSpec.format = attachment;
+				imageSpec.format = attachment.format;
 				imageSpec.usage = ImageUsage::Attachment;
 				imageSpec.width = m_Width;
 				imageSpec.height = m_Height;
@@ -32,36 +36,86 @@ namespace Stellar {
 				m_DepthAttachmentImage = Image2D::Create(imageSpec);
 
 				m_DepthAttachmentImage->invalidate();
-			} else {
-				imageFormat = Utils::VulkanImageFormat(attachment);
-				ImageSpecification imageSpec;
-				imageSpec.format = attachment;
-				imageSpec.usage = ImageUsage::Attachment;
-				imageSpec.width = m_Width;
-				imageSpec.height = m_Height;
-				imageSpec.mips = 1;
-				m_AttachmentImage = Image2D::Create(imageSpec);
 
-				m_AttachmentImage->invalidate();
+				VkAttachmentDescription& attachmentDescription = attachmentDescriptions.emplace_back();
+				attachmentDescription.flags = 0;
+				attachmentDescription.format = Utils::VulkanImageFormat(attachment.format);
+				attachmentDescription.samples = VK_SAMPLE_COUNT_1_BIT;
+				attachmentDescription.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+				attachmentDescription.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+				attachmentDescription.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+				attachmentDescription.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+				attachmentDescription.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+				if (attachment.format == ImageFormat::DEPTH24STENCIL8 || true) {
+					attachmentDescription.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL; // TODO: if not sampling
+					attachmentDescription.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL; // TODO: if sampling
+					depthAttachmentReference = { attachmentIndex, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL };
+				} else {
+					attachmentDescription.finalLayout = VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL; // TODO: if not sampling
+					attachmentDescription.finalLayout = VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL; // TODO: if sampling
+					depthAttachmentReference = { attachmentIndex, VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL };
+				}
+			} else {
+				Ref<Image2D> colorAttachment;
+				if (createImages) {
+					ImageSpecification imageSpec;
+					imageSpec.format = attachment.format;
+					imageSpec.usage = ImageUsage::Attachment;
+					imageSpec.width = m_Width;
+					imageSpec.height = m_Height;
+					imageSpec.mips = 1;
+					colorAttachment = m_AttachmentImages.emplace_back(Image2D::Create(imageSpec));
+					colorAttachment->invalidate();
+				} else {
+					Ref<Image2D> image = m_AttachmentImages[attachmentIndex];
+					ImageSpecification& spec = image->GetSpecification();
+					spec.width = m_Width;
+					spec.height = m_Height;
+					colorAttachment = image;
+					colorAttachment->invalidate();
+				}
+
+				VkAttachmentDescription& attachmentDescription = attachmentDescriptions.emplace_back();
+				attachmentDescription.flags = 0;
+				attachmentDescription.format = Utils::VulkanImageFormat(attachment.format);
+				attachmentDescription.samples = VK_SAMPLE_COUNT_1_BIT;
+				attachmentDescription.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+				attachmentDescription.storeOp = VK_ATTACHMENT_STORE_OP_STORE; // TODO: if sampling, needs to be store (otherwise DONT_CARE is fine)
+				attachmentDescription.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+				attachmentDescription.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+				attachmentDescription.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+				attachmentDescription.finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+				colorAttachmentReferences.emplace_back(VkAttachmentReference { attachmentIndex, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL });
 			}
+			attachmentIndex++;
 		}
 
 		// create render pass
-		m_RenderPass = CreateRef<StandardRenderPass>(imageFormat, depthFormat);
+		m_RenderPass = CreateRef<StandardRenderPass>(attachmentDescriptions, colorAttachmentReferences, depthAttachmentReference);
 
-		VulkanImageInfo* info =  (VulkanImageInfo*)((VulkanImage2D*)m_AttachmentImage.get())->getImageInfo();
-		VulkanImageInfo* depthInfo = (VulkanImageInfo*)(VulkanImage2D*)m_DepthAttachmentImage.get()->getImageInfo();
+		std::vector<VkImageView> attachments(m_AttachmentImages.size());
 
-		std::array<VkImageView, 2> attachments = {
-			info->imageView,
-			depthInfo->imageView
-		};
+		for (uint32_t i = 0; i < m_AttachmentImages.size(); i++) {
+			VulkanImageInfo* info = (VulkanImageInfo*)((VulkanImage2D*)m_AttachmentImages[i].get())->getImageInfo();
+			attachments[i] = info->imageView;
+		}
+
+		if (m_DepthAttachmentImage) {
+			VulkanImageInfo* depthInfo = (VulkanImageInfo*)(VulkanImage2D*)m_DepthAttachmentImage.get()->getImageInfo();
+			attachments.emplace_back(depthInfo->imageView);
+		}
+
+		// std::array<VkImageView, 2> attachments = {
+		// 	info->imageView,
+		// 	depthInfo->imageView
+		// };
 		
 		// create framebuffer
 		VkFramebufferCreateInfo framebufferInfo{};
 		framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
 		framebufferInfo.renderPass = m_RenderPass->getVkRenderPass();
-		framebufferInfo.attachmentCount = 2;
+		framebufferInfo.attachmentCount = attachments.size();
 		framebufferInfo.width = m_Width;
 		framebufferInfo.height = m_Height;
 		framebufferInfo.pAttachments = attachments.data();
@@ -83,7 +137,10 @@ namespace Stellar {
 		if (m_Framebuffer) {
 			auto device = VulkanDevice::GetInstance()->logicalDevice();
 			vkDestroyFramebuffer(device, m_Framebuffer, nullptr);
-			m_AttachmentImage->release();
+
+			for (Ref<Image2D> image : m_AttachmentImages) {
+				image->release();
+			}
 			m_DepthAttachmentImage->release();
 		}
 	}

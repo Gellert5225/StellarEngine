@@ -18,7 +18,7 @@ namespace Stellar {
 
 		void invalidate();
 		void release();
-		Ref<Image2D> getAttachmentImage() override { return m_AttachmentImage; }
+		Ref<Image2D> getAttachmentImage() override { return m_AttachmentImages[0]; }
 		Ref<Image2D> getDepthAttachmentImage() override { return m_DepthAttachmentImage; }
 		const FrameBufferSpec& getSpecification() const override { return m_Spec; };
 

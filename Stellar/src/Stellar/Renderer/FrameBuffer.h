@@ -5,10 +5,36 @@
 #include <vector>
 
 namespace Stellar {
+	enum class FramebufferBlendMode {
+		None = 0,
+		OneZero,
+		SrcAlphaOneMinusSrcAlpha,
+		Additive,
+		Zero_SrcColor
+	};
+
+	struct FramebufferTextureSpecification {
+		FramebufferTextureSpecification() = default;
+		FramebufferTextureSpecification(ImageFormat format) : format(format) {}
+
+		ImageFormat format;
+		bool blend = true;
+		FramebufferBlendMode blendMode = FramebufferBlendMode::SrcAlphaOneMinusSrcAlpha;
+		// TODO: filtering/wrap
+	};
+
+	struct FramebufferAttachmentSpecification {
+		FramebufferAttachmentSpecification() = default;
+		FramebufferAttachmentSpecification(const std::initializer_list<FramebufferTextureSpecification>& attachments)
+			: attachments(attachments) {}
+
+		std::vector<FramebufferTextureSpecification> attachments;
+	};
+
 	struct FrameBufferSpec {
 		uint32_t width, height;
 		bool swapChainTarget = false;
-		std::vector<ImageFormat> attachments;
+		FramebufferAttachmentSpecification attachments;
 	};
 
 	class STLR_API FrameBuffer {
@@ -23,7 +49,7 @@ namespace Stellar {
 		virtual Ref<Image2D> getDepthAttachmentImage() = 0;
 	protected:
 		FrameBufferSpec m_Spec;
-		Ref<Image2D> m_AttachmentImage;
+		std::vector<Ref<Image2D>> m_AttachmentImages;
 		Ref<Image2D> m_DepthAttachmentImage;
 		uint32_t m_Width, m_Height;
 	};

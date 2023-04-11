@@ -1255,7 +1255,6 @@ static std::unordered_map<void*, VkDetails> s_VulkanCache;
 
 void ImGui_ImplVulkan_RemoveTexture(VkDescriptorSet descriptor_set)
 {
-    ImGui_ImplVulkan_InitInfo* v = &g_VulkanInitInfo;
 	auto pipeline = Stellar::VulkanRenderer::GetPipeline();
     vkFreeDescriptorSets(Stellar::VulkanDevice::GetInstance()->logicalDevice(), pipeline->getDescriptorPool(), 1, &descriptor_set);
 }
