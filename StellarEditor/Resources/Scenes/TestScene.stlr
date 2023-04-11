@@ -2,29 +2,16 @@ Scene: Untitled
 Entities:
   - Entity: 1234
     TagComponent:
-      Tag: Example Square
+      Tag: Scene Camera
     TransformComponent:
-      Translation: [1, -1, 2]
-      Rotation: [0, -1.57079637, 0]
+      Translation: [0, -1, 1]
+      Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-    SpriteRendererComponent:
-      Color: [1, 1, 1, 1]
-      Texture: Resources/Textures/Example_texture.jpg
-  - Entity: 1234
-    TagComponent:
-      Tag: Logo Square
-    TransformComponent:
-      Translation: [0, -2, 2]
-      Rotation: [-1.57079637, 0, 0]
-      Scale: [1, 1, 1]
-    SpriteRendererComponent:
-      Color: [1, 1, 1, 1]
-      Texture: Resources/Textures/StellarEngine.png
   - Entity: 1234
     TagComponent:
       Tag: Quad Square
     TransformComponent:
-      Translation: [0, -1, 1]
+      Translation: [0, -1, 3]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     SpriteRendererComponent:
@@ -32,8 +19,21 @@ Entities:
       Texture: ""
   - Entity: 1234
     TagComponent:
-      Tag: Scene Camera
+      Tag: Logo Square
     TransformComponent:
-      Translation: [0, -1, 1]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
+      Translation: [0, -2, 2]
+      Rotation: [1.57105565, 0.000487992918, -0.00060487329]
+      Scale: [1.0000509, 0.999717057, 1.00032675]
+    SpriteRendererComponent:
+      Color: [1, 1, 1, 1]
+      Texture: Resources/Textures/StellarEngine.png
+  - Entity: 1234
+    TagComponent:
+      Tag: Example Square
+    TransformComponent:
+      Translation: [1, -1, 2]
+      Rotation: [0, 1.57079637, 0]
+      Scale: [0.999890625, 1, 0.999890625]
+    SpriteRendererComponent:
+      Color: [1, 1, 1, 1]
+      Texture: Resources/Textures/Example_texture.jpg

@@ -15,6 +15,8 @@ namespace Stellar {
 
 		virtual void blockEvents(bool block) { m_BlockEvents = block; }
 
+		void setDarkThemeColors();
+
 		static ImGuiLayer* Create();
 	protected:
 		float m_Time = 0.0f;

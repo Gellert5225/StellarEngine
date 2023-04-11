@@ -101,7 +101,7 @@ namespace Stellar {
 
 		ImGuiStyle& style = ImGui::GetStyle();
 		float minWinSize = style.WindowMinSize.x;
-		style.WindowMinSize.x = 370.0f;
+		style.WindowMinSize.x = 320.0f;
 
 		ImGuiID dockspaceID = ImGui::GetID("HUB_DockSpace");
 		ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), dockspace_flags, nullptr);
