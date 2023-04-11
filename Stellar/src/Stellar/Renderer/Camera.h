@@ -9,10 +9,10 @@ namespace Stellar {
 	class STLR_API Camera {
 	public:
 		Camera() = default;
-		Camera(const float fov, const float aspect, const float near, const float far);
+		Camera(const float fov, const float width, const float height, const float near, const float far);
 
 		void setOrthographicProjection(float width, float height, float nearP, float farP);
-		void setPerspectiveProjection(float fov, float aspect, float near, float far);
+		void setPerspectiveProjection(float fov, float width, float height, float near, float far);
 
 		void setProjectionMatrix(const glm::mat4& projection) {
 			m_ProjectionMatrix = projection;
@@ -29,6 +29,6 @@ namespace Stellar {
 	protected:
 		glm::mat4 m_ProjectionMatrix{};
 		glm::mat4 m_ViewMatrix{};
-		glm::vec3 m_Position{0.0f, -1.0f, -2.0f};
+		glm::vec3 m_Position{0.0f, 0.0f, -2.0f};
 	};
 }

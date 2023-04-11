@@ -172,10 +172,10 @@ namespace Stellar {
 		VK_CHECK_RESULT(vkBeginCommandBuffer(s_ImGuiCommandBuffers[commandBufferIndex], &cmdBufInfo));
 
 		VkViewport viewport = {};
-		viewport.x = 0;
-		viewport.y = 1;
-		viewport.height = swapChain->getSwapChainExtent().width;
-		viewport.width = swapChain->getSwapChainExtent().height;
+		viewport.x = 0.0f;
+		viewport.y = (float)swapChain->getSwapChainExtent().height;
+		viewport.height = -(float)swapChain->getSwapChainExtent().height;
+		viewport.width = (float)swapChain->getSwapChainExtent().width;
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
 		vkCmdSetViewport(s_ImGuiCommandBuffers[commandBufferIndex], 0, 1, &viewport);

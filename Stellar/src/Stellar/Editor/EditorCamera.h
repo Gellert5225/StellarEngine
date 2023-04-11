@@ -6,46 +6,63 @@
 #include "Stellar/Events/Event.h"
 
 namespace Stellar {
+	enum class CameraMode {
+		NONE, FLYCAM, ARCBALL
+	};
+
 	class STLR_API EditorCamera : public Camera {
 	public:
-		EditorCamera(const float fov, const float aspect, const float near, const float far);
+		EditorCamera(const float fov, const float width, const float height, const float near, const float far);
 
 		void onUpdate(const Timestep ts);
 		void onEvent(Event& e);
 
 		void setPosition(const glm::vec3 position) { m_Position = position; }
-		void setRotation(float rotation) { m_Rotation = rotation; }
-		void setYaw(float yaw) { m_Yaw += yaw; }
-		void setPitch(float pitch) { 
-			m_Pitch += pitch; 
-			if (m_Pitch > 89.0f)
-				m_Pitch = 89.0f;
-			if (m_Pitch < -89.0f)
-				m_Pitch = -89.0f;
-		}
 
 		void SetViewportSize(uint32_t width, uint32_t height);
 
 		[[nodiscard]] const glm::vec3& getPosition() const { return m_Position; }
-		[[nodiscard]] const glm::vec3& getRight() const { return m_Right; }
-		[[nodiscard]] const glm::vec3& getFront() const { return m_Front; }
-		[[nodiscard]] float getRotation() const { return m_Rotation; }
+		[[nodiscard]] float getCameraSpeed() const;
+		
+		glm::vec3 getUpDirection() const;
+		glm::vec3 getRightDirection() const;
+		glm::vec3 getForwardDirection() const;
+		glm::quat getOrientation() const;
+
 	private:
 		void recalculateViewMatrix();
+
+		void mousePan(const glm::vec2& delta);
+		void mouseRotate(const glm::vec2& delta);
+		void mouseZoom(float delta);
+
+		glm::vec3 calculatePosition() const;
+
+		std::pair<float, float> panSpeed() const;
+		float rotationSpeed() const;
+		float zoomSpeed() const;
 	private:
-		glm::vec3 m_Front;
-		glm::vec3 m_Up{ 0.0f, 1.0f, 0.0f };
-		glm::vec3 m_Right{};
+		glm::vec3 m_Direction, m_FocalPoint;
+		glm::vec3 m_InitialFocalPoint, m_InitialRotation;
+		glm::vec3 m_PositionDelta{};
+		glm::vec3 m_RightDirection{};
+		glm::vec2 m_InitialMousePosition{};
+
+		float m_Distance = 10.0f;
+		float m_NormalSpeed{ 0.002f };
+		float m_PitchDelta{}, m_YawDelta{};
 
 		float m_Yaw = 90.0f; // camera pointing to positive Z
 		float m_Pitch = 0.0f;
-		float m_Rotation = 0.0f;
-		float m_Speed = 1.0f;
 		float m_VerticalFOV = glm::radians(60.0f);
 		float m_AspectRatio = 1.0f;
 		float m_NearClip = 0.01f;
 		float m_FarClip = 100.0f;
 
 		uint32_t m_ViewportWidth{ 1280 }, m_ViewportHeight{ 720 };
+
+		constexpr static float MIN_SPEED{ 0.0005f }, MAX_SPEED{ 2.0f };
+
+		CameraMode m_CameraMode{ CameraMode::ARCBALL };
 	};
 }

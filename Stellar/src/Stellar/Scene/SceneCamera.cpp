@@ -20,7 +20,7 @@ namespace Stellar {
 	void SceneCamera::setViewPortSize(uint32_t width, uint32_t height) {
 		switch (m_ProjectionType) {
 		case ProjectionType::Perspective:
-			setPerspectiveProjection(m_Fov, float(width) / float(height), m_PerspectiveNear, m_PerspectiveFar);
+			setPerspectiveProjection(m_Fov, float(width), float(height), m_PerspectiveNear, m_PerspectiveFar);
 			break;
 		case ProjectionType::Orthographic:
 			float aspect = float(width) / float(height);

@@ -5,7 +5,7 @@ ASAN_FLAGS=-fsanitize=address
 # Compiler and linker
 CXX      = 
 INCLUDES = -I./vendor/glfw/include -I./vendor/spdlog/include -I./vendor/imgui -I./src -I./vendor/glm -I./vendor/stb -I./vendor/entt -I./vendor/yaml-cpp/include -I./vendor/nfd/include
-CXXFLAGS = -std=c++17 -DSTLR_BUILD_DLL -fPIC -Wall -MD -DGLM_FORCE_SIMD_AVX2 -DGLM_FORCE_DEFAULT_ALIGNED_GENTYPES -DGLM_FORCE_DEPTH_ZERO_TO_ONE
+CXXFLAGS = -std=c++17 -DSTLR_BUILD_DLL -fPIC -Wall -MD -DGLM_FORCE_DEPTH_ZERO_TO_ONE
 LDFLAGS  = 
 LDLIBS   =
 

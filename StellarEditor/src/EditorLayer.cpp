@@ -8,7 +8,7 @@
 #include <Stellar/Core/Input.h>
 
 namespace Stellar {
-	EditorLayer::EditorLayer() : Layer("Sandbox2D"), m_EditorCamera(60.0f, 1.0f, 0.1f, 1000.0f) {
+	EditorLayer::EditorLayer() : Layer("Sandbox2D"), m_EditorCamera(60.0f, 1.0f, 1.0f, 0.1f, 1000.0f) {
 		m_SceneCamera.setPerspective(60.0f, 0.1f, 1000.0f);
 	}
 
@@ -28,8 +28,7 @@ namespace Stellar {
 		m_CameraEntity = m_ActiveScene->createEntity("Scene Camera");
 		m_CameraEntity.addComponent<CameraComponent>(m_SceneCamera);
 
-		auto perspective = (float)m_ViewPortSize.x / (float)m_ViewPortSize.y;
-		m_EditorCamera = EditorCamera(60.0f, perspective, 0.1f, 100.0f);
+		m_EditorCamera = EditorCamera(60.0f, (float)m_ViewPortSize.x, (float)m_ViewPortSize.y, 0.1f, 100.0f);
 
 		m_SceneHierarchyPanel.setContext(m_ActiveScene);
 	}
