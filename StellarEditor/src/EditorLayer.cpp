@@ -2,6 +2,7 @@
 #include <imgui_internal.h>
 
 #include "Stellar/Scene/SceneSerializer.h"
+#include "Stellar/Utils/FileUtil.h"
 
 namespace Stellar {
 	EditorLayer::EditorLayer() : Layer("Sandbox2D"), m_EditorCamera(60.0f, 1.0f, 0.1f, 1000.0f) {
@@ -86,13 +87,26 @@ namespace Stellar {
 
 		if (ImGui::BeginMenuBar()) {
 			if (ImGui::BeginMenu("File")) {
-				if (ImGui::MenuItem("Serialize")) {
-					SceneSerializer serializer(m_ActiveScene);
-					serializer.serialize("Resources/Scenes/Example.stlr");
+				if (ImGui::MenuItem("New", "Ctrl+N")) {
+					m_ActiveScene = CreateRef<Scene>();
+					m_SceneHierarchyPanel.setContext(m_ActiveScene);
 				}
-				if (ImGui::MenuItem("Deserialize")) {
-					SceneSerializer serializer(m_ActiveScene);
-					serializer.deserialize("Resources/Scenes/Example.stlr");
+				if (ImGui::MenuItem("Open", "Ctrl+O")) {
+					std::string filePath = FileDialogs::OpenFile("stlr");
+					if (!filePath.empty()) {
+						m_ActiveScene = CreateRef<Scene>();
+						m_SceneHierarchyPanel.setContext(m_ActiveScene);
+
+						SceneSerializer serializer(m_ActiveScene);
+						serializer.deserialize(filePath);
+					}
+				}
+				if (ImGui::MenuItem("Save As", "Ctrl+Shift+S")) {
+					std::string filePath = FileDialogs::SaveFile("stlr");
+					if (!filePath.empty()) {
+						SceneSerializer serializer(m_ActiveScene);
+						serializer.serialize(filePath);
+					}
 				}
 				if (ImGui::MenuItem("Exit")) {
 					Application::Get().close();

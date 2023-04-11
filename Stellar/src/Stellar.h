@@ -24,3 +24,5 @@
 #include "Stellar/Scene/Components.h"
 #include "Stellar/Scene/Entity.h"
 #include "Stellar/Scene/SceneSerializer.h"
+
+#include "Stellar/Utils/FileUtil.h"

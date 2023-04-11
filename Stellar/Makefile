@@ -4,7 +4,7 @@ ASAN_FLAGS=-fsanitize=address
 
 # Compiler and linker
 CXX      = 
-INCLUDES = -I./vendor/glfw/include -I./vendor/spdlog/include -I./vendor/imgui -I./src -I./vendor/glm -I./vendor/stb -I./vendor/entt -I./vendor/yaml-cpp/include
+INCLUDES = -I./vendor/glfw/include -I./vendor/spdlog/include -I./vendor/imgui -I./src -I./vendor/glm -I./vendor/stb -I./vendor/entt -I./vendor/yaml-cpp/include -I./vendor/nfd/include
 CXXFLAGS = -std=c++17 -DSTLR_BUILD_DLL -fPIC -Wall -MD -DGLM_FORCE_SIMD_AVX2 -DGLM_FORCE_DEFAULT_ALIGNED_GENTYPES -DGLM_FORCE_DEPTH_ZERO_TO_ONE
 LDFLAGS  = 
 LDLIBS   =
@@ -34,11 +34,12 @@ ifeq ($(OS),Windows_NT) # OS is a preexisting environment variable on Windows
 	LIB_EXT = .dll
 	GLFW_LIB = glfw3.dll
 	YAML_BIN = libyaml-cpp.dll
+	NFD_BIN = libnfd.dll
 
 	CXX = g++
-	LDFLAGS += -L./vendor/glfw/libs -L./vendor/vulkan/win -L./vendor/yaml-cpp/bin
+	LDFLAGS += -L./vendor/glfw/libs -L./vendor/vulkan/win -L./vendor/yaml-cpp/bin -L./vendor/nfd/bin
 	INCLUDES += -I ./vendor/vulkan/win/Include
-	LDLIBS += -Bdynamic -lglfw3 -lopengl32 -lgdi32 -lvulkan-1 -lshaderc_shared -lyaml-cpp
+	LDLIBS += -lglfw3 -lopengl32 -lgdi32 -lvulkan-1 -lshaderc_shared -lyaml-cpp -lnfd -lole32 -luuid -lshell32
 else
 	UNAME := $(shell uname -s)
 	ifeq ($(UNAME),Darwin)
@@ -100,6 +101,7 @@ all: $(OUT_DIR)/lib/lib$(LIB_NAME)$(LIB_EXT)
 	@cp $(OUT_DIR)/lib/lib$(LIB_NAME)$(LIB_EXT) ../StellarEditor/$(OUT_DIR)/bin
 	@cp ./vendor/glfw/libs/$(GLFW_LIB) ../StellarEditor/$(OUT_DIR)/bin
 	@cp ./vendor/yaml-cpp/bin/$(YAML_BIN) ../StellarEditor/$(OUT_DIR)/bin
+	@cp ./vendor/nfd/bin/$(NFD_BIN) ../StellarEditor/$(OUT_DIR)/bin
 
 
 # Compiles PCH
