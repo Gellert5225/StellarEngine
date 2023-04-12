@@ -9,5 +9,8 @@ namespace Stellar {
 
 		virtual Ref<Shader> getShader() override { return m_Shader; };
 		virtual const std::string& getName() const override { return m_Name; };
+	
+	private:
+		void init();
 	};
 }

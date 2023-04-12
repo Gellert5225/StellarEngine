@@ -17,14 +17,15 @@ namespace Stellar {
 		static Shader* Create(const std::string& filePath);
 		static const std::string ReadFile(const std::string& fileName);
 
-		Shader(const std::string& filePath);
 		virtual ~Shader() {};
 
 		virtual const std::string& getName() const { return m_Name; }
 	protected:
-		std::string m_Name;
-
+		Shader(const std::string& filePath);
 		const std::string extractName(const std::string& filePath) const;
+	protected:
+		std::string m_Name;
+		std::string m_FilePath;
 	};
 
 	class STLR_API ShaderLibrary {

@@ -15,10 +15,13 @@ namespace Stellar {
 		VkShaderModule getShaderModule(const std::string& filePath);
 		const std::vector<VkPipelineShaderStageCreateInfo>& getStageInfos() const;
 	private:
+		const std::string extractType(const std::string& filePath) const;
+		void reflectAllStages(const std::unordered_map<Stellar::ShaderType, std::vector<uint32_t>>& spvShader);
+		void reflect(VkShaderStageFlagBits shaderStage, const std::vector<uint32_t>& data);
+
+		static VkShaderModule CreateShaderModule(const std::vector<uint32_t>& code);
+	private:
 		std::vector<VkPipelineShaderStageCreateInfo> m_StageInfos;
 		std::vector<VkShaderModule> m_ShaderModules;
-		
-		const std::string extractType(const std::string& filePath) const;
-		static VkShaderModule CreateShaderModule(const std::vector<uint32_t>& code);
 	};
 }

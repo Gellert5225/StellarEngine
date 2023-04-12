@@ -7,6 +7,9 @@
 
 #include "Stellar/Core/Log.h"
 
+#include <shaderc/shaderc.hpp>
+#include <spirv_cross/spirv_glsl.hpp>
+
 namespace Stellar {
 
 	VulkanShader::VulkanShader(const std::string& filePath) : Shader(filePath) {
@@ -28,6 +31,65 @@ namespace Stellar {
 			shaderStageInfo.module = shaderModule;
 			shaderStageInfo.pName = "main";
 			m_StageInfos.push_back(shaderStageInfo);
+		}
+		reflectAllStages(spv);
+	}
+	void VulkanShader::reflectAllStages(const std::unordered_map<Stellar::ShaderType, std::vector<uint32_t>>& spvShader) {
+		for (auto [stage, data] : spvShader)
+			reflect(VulkanShaderCompilerUtil::VulkanShaderTypeFromType(stage), data);
+	}
+
+	void VulkanShader::reflect(VkShaderStageFlagBits shaderStage, const std::vector<uint32_t>& data) {
+		VkDevice device = VulkanDevice::GetInstance()->logicalDevice(); 
+
+		STLR_CORE_TRACE("===========================");
+		STLR_CORE_TRACE(" Vulkan Shader Reflection");
+		STLR_CORE_TRACE(" {0}", m_FilePath);
+		STLR_CORE_TRACE("===========================");
+
+		spirv_cross::Compiler compiler(data);
+		auto resources = compiler.get_shader_resources();
+
+		STLR_CORE_TRACE("Uniform Buffers:");
+		for (const auto& resource : resources.uniform_buffers) {
+			const auto& name = resource.name;
+			auto& bufferType = compiler.get_type(resource.base_type_id);
+			int memberCount = bufferType.member_types.size();
+			uint32_t binding = compiler.get_decoration(resource.id, spv::DecorationBinding);
+			uint32_t descriptorSet = compiler.get_decoration(resource.id, spv::DecorationDescriptorSet);
+			uint32_t size = compiler.get_declared_struct_size(bufferType);
+
+			ShaderDescriptorSet& shaderDescriptorSet = m_ShaderDescriptorSets[descriptorSet];
+			//HZ_CORE_ASSERT(shaderDescriptorSet.UniformBuffers.find(binding) == shaderDescriptorSet.UniformBuffers.end());
+			if (s_UniformBuffers[descriptorSet].find(binding) == s_UniformBuffers[descriptorSet].end())
+			{
+				UniformBuffer* uniformBuffer = new UniformBuffer();
+				uniformBuffer->BindingPoint = binding;
+				uniformBuffer->Size = size;
+				uniformBuffer->Name = name;
+				uniformBuffer->ShaderStage = shaderStage;
+				s_UniformBuffers.at(descriptorSet)[binding] = uniformBuffer;
+
+				AllocateUniformBuffer(*uniformBuffer);
+			}
+			else
+			{
+				UniformBuffer* uniformBuffer = s_UniformBuffers.at(descriptorSet).at(binding);
+				if (size > uniformBuffer->Size)
+				{
+					STLR_CORE_TRACE("Resizing uniform buffer (binding = {0}, set = {1}) to {2} bytes", binding, descriptorSet, size);
+					uniformBuffer->Size = size;
+					AllocateUniformBuffer(*uniformBuffer);
+				}
+				
+			}
+
+			shaderDescriptorSet.UniformBuffers[binding] = s_UniformBuffers.at(descriptorSet).at(binding);
+
+			STLR_CORE_TRACE("  {0} ({1}, {2})", name, descriptorSet, binding);
+			STLR_CORE_TRACE("  Member Count: {0}", memberCount);
+			STLR_CORE_TRACE("  Size: {0}", size);
+			STLR_CORE_TRACE("-------------------");
 		}
 	}
 

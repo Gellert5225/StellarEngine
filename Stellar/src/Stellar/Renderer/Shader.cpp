@@ -45,7 +45,7 @@ namespace Stellar {
 		return std::string(buffer.begin(), buffer.end());
 	}
 
-	Shader::Shader(const std::string& filePath) {
+	Shader::Shader(const std::string& filePath) : m_FilePath(filePath) {
 		m_Name = extractName(filePath);
 	}
 
