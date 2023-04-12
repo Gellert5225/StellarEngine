@@ -20,7 +20,7 @@ namespace Stellar {
 	static VulkanRendererData* s_Data = nullptr;
 
 	void VulkanRenderer::init() {
-		m_CommandBuffer = CommandBuffer::Create(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
+		m_CommandBuffer = CommandBuffer::Create(Renderer::MAX_FRAMES_IN_FLIGHT);
 		m_UniformBuffer = Buffer::Create(BufferType::Uniform, sizeof(GlobalUniforms));
 
 		FrameBufferSpec framebufferSpec;
@@ -37,7 +37,7 @@ namespace Stellar {
 		s_Data->pipeline = m_GraphicsPipeline;
 
 		// descriptor pool
-		s_Data->DescriptorPools.resize(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
+		s_Data->DescriptorPools.resize(Renderer::MAX_FRAMES_IN_FLIGHT);
 		VkDescriptorPoolSize pool_sizes[] = {
 			{ VK_DESCRIPTOR_TYPE_SAMPLER, 1000 },
 			{ VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000 },
@@ -58,7 +58,7 @@ namespace Stellar {
 		pool_info.poolSizeCount = (uint32_t)IM_ARRAYSIZE(pool_sizes);
 		pool_info.pPoolSizes = pool_sizes;
 		auto device = VulkanDevice::GetInstance()->logicalDevice();
-		for (uint32_t i = 0; i < VulkanSwapChain::MAX_FRAMES_IN_FLIGHT; i++) {
+		for (uint32_t i = 0; i < Renderer::MAX_FRAMES_IN_FLIGHT; i++) {
 			VK_CHECK_RESULT(vkCreateDescriptorPool(device, &pool_info, nullptr, &s_Data->DescriptorPools[i]));
 		}
 
@@ -67,7 +67,7 @@ namespace Stellar {
 
 	void VulkanRenderer::shutDown() {
 		auto device = VulkanDevice::GetInstance()->logicalDevice();
-		for (uint32_t i = 0; i < VulkanSwapChain::MAX_FRAMES_IN_FLIGHT; i++) {
+		for (uint32_t i = 0; i < Renderer::MAX_FRAMES_IN_FLIGHT; i++) {
 			vkDestroyDescriptorPool(device, s_Data->DescriptorPools[i], nullptr);
 		}
 		delete s_Data->pipeline;

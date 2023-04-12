@@ -40,8 +40,6 @@ namespace Stellar {
 		[[nodiscard]] VkCommandBuffer getCurrentCommandBuffer() const;
 		[[nodiscard]] VkCommandBuffer getCommandBuffer(uint32_t index) const;
 
-		static constexpr int MAX_FRAMES_IN_FLIGHT = 3;
-
 	private:
 		VkSwapchainKHR m_VulkanSwapChain = VK_NULL_HANDLE;
 

@@ -43,5 +43,7 @@ namespace Stellar {
 		static ShaderLibrary* GetShaderLibrary();
 		
 		static uint32_t GetCurrentFrameIndex();
+
+		static constexpr int MAX_FRAMES_IN_FLIGHT = 3;
 	};
 }

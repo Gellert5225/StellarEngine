@@ -87,7 +87,7 @@ namespace Stellar {
 		VK_CHECK_RESULT(vkDeviceWaitIdle(device));
 		ImGui_ImplVulkan_DestroyFontUploadObjects();
 
-		uint32_t framesInFlight = VulkanSwapChain::MAX_FRAMES_IN_FLIGHT;
+		uint32_t framesInFlight = Renderer::MAX_FRAMES_IN_FLIGHT;
 		s_ImGuiCommandBuffers.resize(framesInFlight);
 		for (uint32_t i = 0; i < framesInFlight; i++) {
 			VkCommandBuffer cmdBuffer;
