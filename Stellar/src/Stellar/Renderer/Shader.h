@@ -6,6 +6,48 @@
 #include <unordered_map>
 
 namespace Stellar {
+
+	enum class ShaderUniformType
+	{
+		None = 0, Bool, Int, UInt, Float, Vec2, Vec3, Vec4, Mat3, Mat4
+	};
+
+	class ShaderUniform
+	{
+	public:
+		ShaderUniform() = default;
+		ShaderUniform(const std::string& name, ShaderUniformType type, uint32_t size, uint32_t offset);
+
+		const std::string& GetName() const { return m_Name; }
+		ShaderUniformType GetType() const { return m_Type; }
+		uint32_t GetSize() const { return m_Size; }
+		uint32_t GetOffset() const { return m_Offset; }
+
+		static const std::string& UniformTypeToString(ShaderUniformType type);
+	private:
+		std::string m_Name;
+		ShaderUniformType m_Type = ShaderUniformType::None;
+		uint32_t m_Size = 0;
+		uint32_t m_Offset = 0;
+	};
+
+	struct ShaderUniformBuffer
+	{
+		std::string Name;
+		uint32_t Index;
+		uint32_t BindingPoint;
+		uint32_t Size;
+		uint32_t RendererID;
+		std::vector<ShaderUniform> Uniforms;
+	};
+
+	struct ShaderBuffer
+	{
+		std::string Name;
+		uint32_t Size = 0;
+		std::unordered_map<std::string, ShaderUniform> Uniforms;
+	};
+	
 	enum class ShaderType {
 		None = 0,
 		Vertex = 1,

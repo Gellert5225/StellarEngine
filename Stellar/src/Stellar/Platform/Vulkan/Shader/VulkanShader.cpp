@@ -12,6 +12,8 @@
 
 namespace Stellar {
 
+	static std::unordered_map<uint32_t, std::unordered_map<uint32_t, VulkanShader::UniformBuffer*>> s_UniformBuffers;
+
 	VulkanShader::VulkanShader(const std::string& filePath) : Shader(filePath) {
 		auto source = ReadFile(filePath);
 		STLR_CORE_INFO("Preproecssing Shader: {0}", m_Name);
@@ -47,8 +49,46 @@ namespace Stellar {
 		STLR_CORE_TRACE(" {0}", m_FilePath);
 		STLR_CORE_TRACE("===========================");
 
-		spirv_cross::Compiler compiler(data);
+		spirv_cross::CompilerGLSL compiler(std::move(data));
 		auto resources = compiler.get_shader_resources();
+
+		STLR_CORE_TRACE("Push Constant Buffers:");
+		for (const auto& resource : resources.push_constant_buffers) {
+			const auto& bufferName = resource.name;
+			auto& bufferType = compiler.get_type(resource.base_type_id);
+			auto bufferSize = compiler.get_declared_struct_size(bufferType);
+			int memberCount = bufferType.member_types.size();
+			uint32_t bufferOffset = 0;
+			if (m_PushConstantRanges.size())
+				bufferOffset = m_PushConstantRanges.back().Offset + m_PushConstantRanges.back().Size;
+
+			auto& pushConstantRange = m_PushConstantRanges.emplace_back();
+			pushConstantRange.ShaderStage = shaderStage;
+			pushConstantRange.Size = bufferSize;
+			pushConstantRange.Offset = bufferOffset;
+
+			// Skip empty push constant buffers - these are for the renderer only
+			if (bufferName.empty() || bufferName == "u_Renderer")
+				continue;
+
+			ShaderBuffer& buffer = m_Buffers[bufferName];
+			buffer.Name = bufferName;
+			buffer.Size = bufferSize - bufferOffset;
+
+			STLR_CORE_TRACE("  Name: {0}", bufferName);
+			STLR_CORE_TRACE("  Member Count: {0}", memberCount);
+			STLR_CORE_TRACE("  Size: {0}", bufferSize);
+
+			for (int i = 0; i < memberCount; i++) {
+				auto type = compiler.get_type(bufferType.member_types[i]);
+				const auto& memberName = compiler.get_member_name(bufferType.self, i);
+				auto size = compiler.get_declared_struct_member_size(bufferType, i);
+				auto offset = compiler.type_struct_member_offset(bufferType, i) - bufferOffset;
+
+				std::string uniformName = bufferName + "." + memberName;
+				buffer.Uniforms[uniformName] = ShaderUniform(uniformName, VulkanShaderCompilerUtil::SPIRTypeToShaderUniformType(type), size, offset);
+			}
+		}
 
 		STLR_CORE_TRACE("Uniform Buffers:");
 		for (const auto& resource : resources.uniform_buffers) {
@@ -61,36 +101,42 @@ namespace Stellar {
 
 			ShaderDescriptorSet& shaderDescriptorSet = m_ShaderDescriptorSets[descriptorSet];
 			//HZ_CORE_ASSERT(shaderDescriptorSet.UniformBuffers.find(binding) == shaderDescriptorSet.UniformBuffers.end());
-			if (s_UniformBuffers[descriptorSet].find(binding) == s_UniformBuffers[descriptorSet].end())
-			{
+			if (s_UniformBuffers[descriptorSet].find(binding) == s_UniformBuffers[descriptorSet].end()) {
 				UniformBuffer* uniformBuffer = new UniformBuffer();
-				uniformBuffer->BindingPoint = binding;
-				uniformBuffer->Size = size;
-				uniformBuffer->Name = name;
-				uniformBuffer->ShaderStage = shaderStage;
+				uniformBuffer->bindingPoint = binding;
+				uniformBuffer->size = size;
+				uniformBuffer->name = name;
+				uniformBuffer->shaderStage = shaderStage;
 				s_UniformBuffers.at(descriptorSet)[binding] = uniformBuffer;
 
-				AllocateUniformBuffer(*uniformBuffer);
-			}
-			else
-			{
+				allocateUniformBuffer(*uniformBuffer);
+			} else {
 				UniformBuffer* uniformBuffer = s_UniformBuffers.at(descriptorSet).at(binding);
-				if (size > uniformBuffer->Size)
-				{
+				if (size > uniformBuffer->size) {
 					STLR_CORE_TRACE("Resizing uniform buffer (binding = {0}, set = {1}) to {2} bytes", binding, descriptorSet, size);
-					uniformBuffer->Size = size;
-					AllocateUniformBuffer(*uniformBuffer);
+					uniformBuffer->size = size;
+					allocateUniformBuffer(*uniformBuffer);
 				}
 				
 			}
 
-			shaderDescriptorSet.UniformBuffers[binding] = s_UniformBuffers.at(descriptorSet).at(binding);
+			shaderDescriptorSet.uniformBuffers[binding] = s_UniformBuffers.at(descriptorSet).at(binding);
 
 			STLR_CORE_TRACE("  {0} ({1}, {2})", name, descriptorSet, binding);
 			STLR_CORE_TRACE("  Member Count: {0}", memberCount);
 			STLR_CORE_TRACE("  Size: {0}", size);
 			STLR_CORE_TRACE("-------------------");
 		}
+	}
+
+	void VulkanShader::allocateUniformBuffer(UniformBuffer& dst) {
+		UniformBuffer& uniformBuffer = dst;
+
+		auto ub = Buffer::Create(BufferType::Uniform, uniformBuffer.size);
+
+		uniformBuffer.descriptor.buffer = (VkBuffer)ub->getBuffer();
+		uniformBuffer.descriptor.offset = 0;
+		uniformBuffer.descriptor.range = uniformBuffer.size;
 	}
 
 	const std::string VulkanShader::extractType(const std::string& filePath) const {

@@ -9,6 +9,37 @@
 namespace Stellar {
 	class STLR_API VulkanShader : public Shader {
 	public:
+		struct UniformBuffer {
+			VkDeviceMemory memory = nullptr;
+			VkBuffer buffer;
+			VkDescriptorBufferInfo descriptor;
+			uint32_t size = 0;
+			uint32_t bindingPoint = 0;
+			std::string name;
+			VkShaderStageFlagBits shaderStage = VK_SHADER_STAGE_FLAG_BITS_MAX_ENUM;
+		};
+
+		struct ImageSampler {
+			uint32_t bindingPoint = 0;
+			uint32_t descriptorSet = 0;
+			std::string name;
+			VkShaderStageFlagBits shaderStage = VK_SHADER_STAGE_FLAG_BITS_MAX_ENUM;
+		};
+
+		struct PushConstantRange {
+			VkShaderStageFlagBits ShaderStage = VK_SHADER_STAGE_FLAG_BITS_MAX_ENUM;
+			uint32_t Offset = 0;
+			uint32_t Size = 0;
+		};
+
+		struct ShaderDescriptorSet {
+			std::unordered_map<uint32_t, UniformBuffer*> uniformBuffers;
+			std::unordered_map<uint32_t, ImageSampler> imageSamplers;
+			std::unordered_map<uint32_t, ImageSampler> storageImages;
+
+			std::unordered_map<std::string, VkWriteDescriptorSet> writeDescriptorSets;
+		};
+	public:
 		explicit VulkanShader(const std::string& filePath);
 		~VulkanShader();
 
@@ -18,10 +49,14 @@ namespace Stellar {
 		const std::string extractType(const std::string& filePath) const;
 		void reflectAllStages(const std::unordered_map<Stellar::ShaderType, std::vector<uint32_t>>& spvShader);
 		void reflect(VkShaderStageFlagBits shaderStage, const std::vector<uint32_t>& data);
+		void allocateUniformBuffer(UniformBuffer& dst);
 
 		static VkShaderModule CreateShaderModule(const std::vector<uint32_t>& code);
 	private:
 		std::vector<VkPipelineShaderStageCreateInfo> m_StageInfos;
 		std::vector<VkShaderModule> m_ShaderModules;
+		std::unordered_map<uint32_t, ShaderDescriptorSet> m_ShaderDescriptorSets;
+		std::vector<PushConstantRange> m_PushConstantRanges;
+		std::unordered_map<std::string, ShaderBuffer> m_Buffers;
 	};
 }
