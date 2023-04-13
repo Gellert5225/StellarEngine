@@ -3,6 +3,7 @@
 #include "Stellar/Core/Core.h"
 
 #include <string>
+#include <vector>
 #include <unordered_map>
 
 namespace Stellar {

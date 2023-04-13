@@ -236,7 +236,7 @@ namespace Stellar {
 					src.color = spriteRendererComponent["Color"].as<glm::vec4>();
 
 					std::string texturePath = spriteRendererComponent["Texture"].as<std::string>();
-					src.texture = texturePath == "" ? Texture2D::Create(ImageFormat::RGBA, 1, 1) : Texture2D::Create(texturePath);
+					src.texture = texturePath == "" ? Texture2D::Create(ImageFormat::RGBA) : Texture2D::Create(texturePath);
 				}
 			}
 		}

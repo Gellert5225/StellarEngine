@@ -4,7 +4,7 @@
 #include "Stellar/Core/Log.h"
 #include "Stellar/Scene/Scene.h"
 
-#include <entt.h>
+#include <entt/entt.hpp>
 
 namespace Stellar {
 	class STLR_API Entity {

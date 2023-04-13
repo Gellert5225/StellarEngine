@@ -39,7 +39,7 @@ ifeq ($(OS),Windows_NT) # OS is a preexisting environment variable on Windows
 	CXX = g++
 	LDFLAGS += -L./vendor/glfw/libs -L./vendor/vulkan/win -L./vendor/yaml-cpp/bin -L./vendor/nfd/bin
 	INCLUDES += -I ./vendor/vulkan/win/Include
-	LDLIBS += -Wl,-Bstatic -lspirv-cross-cpp -lspirv-cross-core -lspirv-cross-glsl -lspirv-cross-hlsl -lspirv-cross-msl -lspirv-cross-reflect -lspirv-cross-util -lole32 -luuid -lshell32 -Wl,-Bdynamic -lglfw3 -lopengl32 -lgdi32 -lvulkan-1 -lshaderc_shared -lyaml-cpp -lnfd
+	LDLIBS += -Wl,-Bstatic -lspirv-cross-core -lspirv-cross-glsl -lole32 -luuid -lshell32 -Wl,-Bdynamic -lglfw3 -lopengl32 -lgdi32 -lvulkan-1 -lshaderc_shared -lyaml-cpp -lnfd
 else
 	UNAME := $(shell uname -s)
 	ifeq ($(UNAME),Darwin)

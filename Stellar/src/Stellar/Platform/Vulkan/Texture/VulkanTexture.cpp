@@ -61,7 +61,7 @@ namespace Stellar {
 
 	VulkanTexture::VulkanTexture(ImageFormat format, uint32_t width, uint32_t height, const void* data) : m_Width(width), m_Height(height) {
 		void* imageData = new uint8_t[width * height * 4];
-		memcpy(imageData, &data, width * height * 4);
+		memcpy(imageData, data, width * height * 4);
 		m_Pixels = (unsigned char*)imageData;
 		m_ImageSize = width * height * 4;
 

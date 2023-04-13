@@ -6,8 +6,8 @@
 
 #if defined(_WIN64)
 	#define GLFW_INCLUDE_VULKAN
-	#define EXPORT __declspec(dllexport)
-	#define IMPORT __declspec(dllimport)
+	#define EXPORT
+	#define IMPORT
 	#define DEBUG_BREAK __debugbreak()
 #elif defined(__linux__)
 	#define GLFW_INCLUDE_VULKAN

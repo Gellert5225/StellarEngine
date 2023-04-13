@@ -39,7 +39,7 @@ namespace Stellar {
 
 	struct STLR_API SpriteRendererComponent {
 		glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
-		Ref<Texture2D> texture = Texture2D::Create(ImageFormat::RGBA, 1, 1);
+		Ref<Texture2D> texture = Texture2D::Create(ImageFormat::RGBA);
 
 		SpriteRendererComponent() = default;
 		SpriteRendererComponent(const SpriteRendererComponent&) = default;

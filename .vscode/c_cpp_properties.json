@@ -4,17 +4,15 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/Stellar/vendor/imgui/"
+                "${workspaceFolder}/Stellar/vendor/imgui/",
+				"C:/VulkanSDK/1.3.224.1/Include"
             ],
             "defines": [
-                "STLR_BUILD_DLL",
                 "__STRICT_ANSI__"
             ],
-            "compilerPath": "C:\\msys64\\mingw64\\bin\\g++.exe",
-            "cStandard": "gnu17",
-            "cppStandard": "gnu++17",
-            "intelliSenseMode": "linux-gcc-x64",
-            "configurationProvider": "ms-vscode.makefile-tools"
+            "compilerPath": "F:/Visual Studio/VC/Tools/MSVC/14.35.32215/bin/Hostx64/x64/cl.exe",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "${default}"
         },
         {
             "name": "Linux",
@@ -28,7 +26,7 @@
             "cStandard": "gnu17",
             "cppStandard": "c++17",
             "intelliSenseMode": "linux-gcc-x64",
-            "configurationProvider": "ms-vscode.makefile-tools"
+            "configurationProvider": "ms-vscode.cmake-tools"
         },
         {
             "name": "Mac",

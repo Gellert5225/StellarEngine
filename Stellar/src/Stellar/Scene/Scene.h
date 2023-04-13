@@ -4,7 +4,7 @@
 #include "Stellar/Core/Timestep.h"
 #include "Stellar/Editor/EditorCamera.h"
 
-#include <entt.h>
+#include <entt/entt.hpp>
 
 namespace Stellar {
 	class Entity;
