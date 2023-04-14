@@ -3,13 +3,13 @@ cmake_minimum_required (VERSION 3.24.0 FATAL_ERROR)
 project(Stellar CXX)
 
 if (WIN32)
-	set(Shaderc_ROOT F:/Dev/shaderc/build/install)
+	set(Shaderc_ROOT F:/Dev/shaderc/build/install/lib/shaderc_shared.lib)
 	set(ENV{VULKAN_SDK} "C:/VulkanSDK/1.3.224.1")
 	set(unofficial-shaderc_FOUND true)
 endif()
 
 if(UNIX AND NOT APPLE)
-	
+	set(Shaderc_ROOT /home/gellert/Documents/shaderc/install/lib/libshaderc_combined.a)
 endif()
 
 
@@ -64,7 +64,6 @@ else()
 endif()
 
 find_package(spdlog CONFIG REQUIRED)
-find_package(OpenGL REQUIRED)
 find_package(spirv_cross_core CONFIG REQUIRED)
 find_package(spirv_cross_glsl CONFIG REQUIRED)
 
@@ -106,10 +105,9 @@ target_link_libraries(Stellar PUBLIC Vulkan::Vulkan)
 # target_link_libraries(Stellar PUBLIC unofficial::shaderc_util::shaderc_util)
 target_link_libraries(Stellar PUBLIC spirv-cross-core)
 target_link_libraries(Stellar PUBLIC spirv-cross-glsl)
-target_link_libraries(Stellar PUBLIC F:/Dev/shaderc/build/install/lib/shaderc_shared.lib)
+target_link_libraries(Stellar PUBLIC ${Shaderc_ROOT})
 target_link_libraries(Stellar PUBLIC glm::glm)
 target_link_libraries(Stellar PUBLIC EnTT::EnTT)
 target_link_libraries(Stellar PUBLIC spdlog::spdlog spdlog::spdlog_header_only)
-target_link_libraries(Stellar PUBLIC opengl32)
 target_link_libraries(Stellar PUBLIC yaml-cpp)
 target_link_libraries(Stellar PUBLIC nfd)
