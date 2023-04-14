@@ -33,10 +33,6 @@ namespace Stellar {
 		switch (RendererAPI::Current()) {
 			case RendererAPIType::Vulkan:
 			#if defined(__linux__) || defined(_WIN64)
-				if (data == nullptr) {
-					uint32_t whiteTex = 0xffffffff;
-					data = &whiteTex;
-				}
 				return CreateRef<VulkanTexture>(format, width, height, data);
 			#endif
 			case RendererAPIType::Metal:
