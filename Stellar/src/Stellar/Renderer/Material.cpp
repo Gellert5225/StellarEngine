@@ -13,11 +13,11 @@
 #include "Stellar/Core/Log.h"
 
 namespace Stellar {
-	Ref<Material> Material::Create(const Ref<Shader>& shader, const std::string& name) {
+	STLR_Ptr<Material> Material::Create(const STLR_Ptr<Shader>& shader, const std::string& name) {
 		switch (RendererAPI::Current()) {
 			case RendererAPIType::Vulkan:
 			#if defined(__linux__) || defined(_WIN64)
-				return CreateRef<VulkanMaterial>(shader, name);
+				return STLR_Ptr<VulkanMaterial>::Create(shader, name);
 			#endif
 			case RendererAPIType::Metal:
 			#if defined(__APPLE__)

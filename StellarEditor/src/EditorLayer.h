@@ -35,7 +35,7 @@ namespace Stellar {
 		EditorCamera m_EditorCamera;
 		SceneCamera m_SceneCamera;
 
-		Ref<Scene> m_ActiveScene;
+		STLR_Ptr<Scene> m_ActiveScene;
 		Entity m_LogoEntity;
 		Entity m_ExampleEntity;
 		Entity m_QuadEntity;

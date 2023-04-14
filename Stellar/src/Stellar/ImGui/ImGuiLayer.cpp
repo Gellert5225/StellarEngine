@@ -133,7 +133,7 @@ namespace Stellar::UI {
 		return textureID;
 	}
 
-	void STLR_API ImageFromFB(Ref<FrameBuffer> frameBuffer, const ImVec2& size) {
+	void STLR_API ImageFromFB(STLR_Ptr<FrameBuffer> frameBuffer, const ImVec2& size) {
 		#if defined __linux__ || defined _WIN64
 		auto imageInfo = (VulkanImageInfo*)frameBuffer->getAttachmentImage()->getImageInfo();
 		const auto textureID = ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);

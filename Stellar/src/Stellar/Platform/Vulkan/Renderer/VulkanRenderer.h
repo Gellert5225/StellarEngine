@@ -12,7 +12,7 @@
 #include <vulkan/vulkan.h>
 
 namespace Stellar {
-	class STLR_API VulkanRenderer : public RendererAPI {
+	class VulkanRenderer : public RendererAPI {
 	public:
 		void init() override;
 		void shutDown() override;
@@ -23,7 +23,7 @@ namespace Stellar {
 		void setClearColor(const glm::vec4& color) override;
 		void renderGeometry(Buffer* vertexBuffer,
 							Buffer* indexBuffer,
-							Ref<Texture2D> texture,
+							STLR_Ptr<Texture2D> texture,
 							const glm::vec4& color,
 							uint32_t indexCount,
 							const glm::mat4& transform) override;
@@ -31,7 +31,7 @@ namespace Stellar {
 						Buffer* indexBuffer,
 						uint32_t indexCount = 0) override;
 
-		Ref<FrameBuffer> getFrameBuffer() override;
+		STLR_Ptr<FrameBuffer> getFrameBuffer() override;
 		void resizeFrameBuffer(uint32_t width, uint32_t height) override;
 		
 		void bindUbo(const GlobalUniforms& ubo) override;
@@ -46,7 +46,7 @@ namespace Stellar {
 		VkClearColorValue m_ClearColor = {{0.66f, 0.9f, 0.96f, 1.0f}};
 
 		Buffer* m_UniformBuffer{};
-		Ref<FrameBuffer> m_FrameBuffer;
+		STLR_Ptr<FrameBuffer> m_FrameBuffer;
 
 		VkDescriptorSet m_UboDescriptorSet;
 

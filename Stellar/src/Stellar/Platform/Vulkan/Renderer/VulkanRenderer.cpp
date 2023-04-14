@@ -31,8 +31,8 @@ namespace Stellar {
 
 		auto quadShader = Renderer::GetShaderLibrary()->get("shader");
 		auto gridShader = Renderer::GetShaderLibrary()->get("grid");
-		m_GraphicsPipeline = new VulkanPipeline(quadShader, ((VulkanFrameBuffer*)m_FrameBuffer.get())->getRenderPass());
-		m_GridPipeline = new VulkanPipeline(gridShader, ((VulkanFrameBuffer*)m_FrameBuffer.get())->getRenderPass());
+		m_GraphicsPipeline = new VulkanPipeline(quadShader, ((VulkanFrameBuffer*)m_FrameBuffer.raw())->getRenderPass());
+		m_GridPipeline = new VulkanPipeline(gridShader, ((VulkanFrameBuffer*)m_FrameBuffer.raw())->getRenderPass());
 		s_Data = new VulkanRendererData();
 		s_Data->pipeline = m_GraphicsPipeline;
 
@@ -96,8 +96,8 @@ namespace Stellar {
 
 		VkRenderPassBeginInfo renderPassInfo{};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassInfo.renderPass = ((VulkanFrameBuffer*)m_FrameBuffer.get())->getRenderPass();
-		renderPassInfo.framebuffer = ((VulkanFrameBuffer*)m_FrameBuffer.get())->getFramebuffer();
+		renderPassInfo.renderPass = ((VulkanFrameBuffer*)m_FrameBuffer.raw())->getRenderPass();
+		renderPassInfo.framebuffer = ((VulkanFrameBuffer*)m_FrameBuffer.raw())->getFramebuffer();
 		renderPassInfo.renderArea.offset = {0, 0};
 		renderPassInfo.renderArea.extent.width = m_FrameBuffer->getSpecification().width;
 		renderPassInfo.renderArea.extent.height = m_FrameBuffer->getSpecification().height;
@@ -136,7 +136,7 @@ namespace Stellar {
 
 	void VulkanRenderer::renderGeometry(Buffer* vertexBuffer,
 										Buffer* indexBuffer,
-										Ref<Texture2D> texture,
+										STLR_Ptr<Texture2D> texture,
 										const glm::vec4& color,
 										uint32_t indexCount,
 										const glm::mat4& transform) {
@@ -144,7 +144,7 @@ namespace Stellar {
 		push.model = transform;
 		push.color = color;
 
-		auto textureDescriptorSet = ((VulkanTexture*)texture.get())->getDescriptorSets();
+		auto textureDescriptorSet = ((VulkanTexture*)texture.raw())->getDescriptorSets();
 		auto commandBuffer = (VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer();
 
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GraphicsPipeline->getPipeline());
@@ -220,7 +220,7 @@ namespace Stellar {
 		return s_Data->pipeline;
 	}
 
-	Ref<FrameBuffer> VulkanRenderer::getFrameBuffer() {
+	STLR_Ptr<FrameBuffer> VulkanRenderer::getFrameBuffer() {
 		return m_FrameBuffer;
 	}
 

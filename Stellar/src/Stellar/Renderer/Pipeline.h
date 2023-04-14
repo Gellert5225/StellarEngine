@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Stellar/Core/Core.h"
+#include "Stellar/Core/STLRBase.h"
 
 #include "Shader.h"
 #include "RenderPass.h"
@@ -18,8 +19,8 @@ namespace Stellar {
 	};
 
 	struct PipelineSpecification {
-		Ref<Shader> shader;
-		Ref<RenderPass> renderPass;
+		STLR_Ptr<Shader> shader;
+		STLR_Ptr<RenderPass> renderPass;
 		PrimitiveTopology topology = PrimitiveTopology::Triangles;
 		bool backfaceCulling = true;
 		bool depthTest = true;
@@ -30,7 +31,7 @@ namespace Stellar {
 		std::string debugName;
 	};
 
-	class STLR_API Pipeline {
+	class Pipeline : public STLR_Base {
 	public:
 		virtual ~Pipeline() = default;
 
@@ -38,11 +39,11 @@ namespace Stellar {
 		virtual const PipelineSpecification& getSpecification() const = 0;
 
 		virtual void invalidate() = 0;
-		virtual void setUniformBuffer(Ref<Buffer> uniformBuffer, uint32_t binding, uint32_t set = 0) = 0;
+		virtual void setUniformBuffer(STLR_Ptr<Buffer> uniformBuffer, uint32_t binding, uint32_t set = 0) = 0;
 
 		// TEMP: remove this when render command buffers are a thing
 		virtual void bind() = 0;
 
-		static Ref<Pipeline> Create(const PipelineSpecification& spec);
+		static STLR_Ptr<Pipeline> Create(const PipelineSpecification& spec);
 	};
 }

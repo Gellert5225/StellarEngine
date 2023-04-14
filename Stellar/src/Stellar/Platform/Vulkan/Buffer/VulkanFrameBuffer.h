@@ -9,7 +9,7 @@
 #include <vector>
 
 namespace Stellar {
-	class STLR_API VulkanFrameBuffer : public FrameBuffer {
+	class VulkanFrameBuffer : public FrameBuffer {
 	public:
 		VulkanFrameBuffer(const FrameBufferSpec& spec);
 		~VulkanFrameBuffer();
@@ -18,8 +18,8 @@ namespace Stellar {
 
 		void invalidate();
 		void release();
-		Ref<Image2D> getAttachmentImage() override { return m_AttachmentImages[0]; }
-		Ref<Image2D> getDepthAttachmentImage() override { return m_DepthAttachmentImage; }
+		STLR_Ptr<Image2D> getAttachmentImage() override { return m_AttachmentImages[0]; }
+		STLR_Ptr<Image2D> getDepthAttachmentImage() override { return m_DepthAttachmentImage; }
 		const FrameBufferSpec& getSpecification() const override { return m_Spec; };
 
 		[[nodiscard]] VkFramebuffer getFramebuffer() const;
@@ -27,6 +27,6 @@ namespace Stellar {
 		[[nodiscard]] size_t getFramebufferSize() const;
 	private:
 		VkFramebuffer m_Framebuffer;
-		Ref<VulkanRenderPass> m_RenderPass;
+		STLR_Ptr<VulkanRenderPass> m_RenderPass;
 	};
 }

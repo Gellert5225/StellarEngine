@@ -12,11 +12,11 @@
 #include "Stellar/Renderer/RendererAPI.h"
 
 namespace Stellar {
-	Ref<Texture2D> Texture2D::Create(const std::string& filePath) {
+	STLR_Ptr<Texture2D> Texture2D::Create(const std::string& filePath) {
 		switch (RendererAPI::Current()) {
 			case RendererAPIType::Vulkan:
 			#if defined(__linux__) || defined(_WIN64)
-				return CreateRef<VulkanTexture>(filePath);
+				return STLR_Ptr<VulkanTexture>::Create(filePath);
 			#endif
 			case RendererAPIType::Metal:
 			#if defined(__APPLE__)
@@ -29,11 +29,11 @@ namespace Stellar {
 		return nullptr;
 	}
 
-	Ref<Texture2D> Texture2D::Create(ImageFormat format, uint32_t width, uint32_t height, const void* data) {
+	STLR_Ptr<Texture2D> Texture2D::Create(ImageFormat format, uint32_t width, uint32_t height, const void* data) {
 		switch (RendererAPI::Current()) {
 			case RendererAPIType::Vulkan:
 			#if defined(__linux__) || defined(_WIN64)
-				return CreateRef<VulkanTexture>(format, width, height, data);
+				return STLR_Ptr<VulkanTexture>::Create(format, width, height, data);
 			#endif
 			case RendererAPIType::Metal:
 			#if defined(__APPLE__)

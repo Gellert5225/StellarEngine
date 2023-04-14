@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Stellar/Core/Core.h"
+#include "Stellar/Core/STLRBase.h"
 #include <cstdint>
 
 namespace Stellar {
@@ -46,7 +47,7 @@ namespace Stellar {
 		uint32_t layers = 1;
 	};
 
-    class STLR_API Image {
+    class Image : public STLR_Base {
     public:
         virtual ~Image() = default;
         virtual void invalidate() = 0;
@@ -55,9 +56,9 @@ namespace Stellar {
         virtual void* getImageInfo() = 0;
     };
 
-    class STLR_API Image2D : public Image {
+    class Image2D : public Image {
     public:
-        static Ref<Image2D> Create(ImageSpecification specification);
+        static STLR_Ptr<Image2D> Create(ImageSpecification specification);
     };
 
 	namespace Utils {

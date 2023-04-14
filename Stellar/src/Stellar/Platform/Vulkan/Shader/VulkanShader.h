@@ -7,7 +7,7 @@
 #include <vector>
 
 namespace Stellar {
-	class STLR_API VulkanShader : public Shader {
+	class VulkanShader : public Shader {
 	public:
 		struct UniformBuffer {
 			VkDescriptorBufferInfo descriptor;

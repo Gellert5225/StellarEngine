@@ -68,7 +68,7 @@ namespace Stellar {
 
 	void Renderer::RenderGeometry(Buffer* vertexBuffer,
 								Buffer* indexBuffer,
-								Ref<Texture2D> texture,
+								STLR_Ptr<Texture2D> texture,
 								const glm::vec4& color,
 								uint32_t indexCount,
 								const glm::mat4& transform) {
@@ -95,7 +95,7 @@ namespace Stellar {
 		return s_Data->m_ShaderLibrary;
 	}
 
-	Ref<FrameBuffer> Renderer::GetFrameBuffer() {
+	STLR_Ptr<FrameBuffer> Renderer::GetFrameBuffer() {
 		return s_RendererAPI->getFrameBuffer();
 	}
 

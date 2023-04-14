@@ -8,9 +8,9 @@ namespace Stellar {
 	class SceneHierarchyPanel {
 	public:
 		SceneHierarchyPanel() = default;
-		SceneHierarchyPanel(const Ref<Scene>& scene);
+		SceneHierarchyPanel(const STLR_Ptr<Scene>& scene);
 		
-		void setContext(const Ref<Scene>& scene);
+		void setContext(const STLR_Ptr<Scene>& scene);
 
 		void onImGuiRender();
 
@@ -19,7 +19,7 @@ namespace Stellar {
 		void drawEntityNode(Entity entity);
 		void drawComponent(Entity entity);
 	private:
-		Ref<Scene> m_Context;
+		STLR_Ptr<Scene> m_Context;
 		Entity m_SelectionContext;
 	};
 }

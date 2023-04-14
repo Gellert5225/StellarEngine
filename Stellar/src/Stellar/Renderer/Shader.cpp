@@ -14,11 +14,11 @@
 #include "Stellar/Core/Log.h"
 
 namespace Stellar {
-	Shader* Shader::Create(const std::string& filePath) {
+	STLR_Ptr<Shader> Shader::Create(const std::string& filePath) {
 		switch (RendererAPI::Current()) {
 			case RendererAPIType::Vulkan:
 			#if defined(__linux__) || defined(_WIN64)
-				return new VulkanShader(filePath);
+				return STLR_Ptr<VulkanShader>::Create(filePath);
 			#endif
 			case RendererAPIType::Metal:
 			#if defined(__APPLE__)
@@ -45,10 +45,6 @@ namespace Stellar {
 		return std::string(buffer.begin(), buffer.end());
 	}
 
-	Shader::Shader(const std::string& filePath) : m_FilePath(filePath) {
-		m_Name = extractName(filePath);
-	}
-
 	const std::string Shader::extractName(const std::string& filePath) const {
 		// xx/xx/shader.glsl
 		auto lastDotPos = filePath.find_last_of(".");
@@ -57,18 +53,15 @@ namespace Stellar {
 	}
 
 	ShaderLibrary::~ShaderLibrary() {
-		for (auto kv : m_Shaders) {
-			delete kv.second;
-		}
 		m_Shaders.clear();
 	}
 
-	void ShaderLibrary::add(const std::string& name, Shader* shader) {
+	void ShaderLibrary::add(const std::string& name, STLR_Ptr<Shader> shader) {
 		STLR_CORE_ASSERT(m_Shaders.find(name) == m_Shaders.end(), "Shader " + name + " already exists!");
 		m_Shaders[name] = shader;
 	}
 
-	void ShaderLibrary::add(Shader* shader) {
+	void ShaderLibrary::add(STLR_Ptr<Shader> shader) {
 		auto& name = shader->getName();
 		add(name, shader);
 	}
@@ -97,7 +90,7 @@ namespace Stellar {
 		add(name, shader);
 	}
 
-	Shader* ShaderLibrary::get(const std::string& name) {
+	STLR_Ptr<Shader> ShaderLibrary::get(const std::string& name) {
 		STLR_CORE_ASSERT(m_Shaders.find(name) != m_Shaders.end(), "Shader " + name + " not found");
 		return m_Shaders[name];
 	}

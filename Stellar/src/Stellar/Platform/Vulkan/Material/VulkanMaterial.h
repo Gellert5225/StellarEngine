@@ -5,9 +5,9 @@
 namespace Stellar {
 	class STLR_API VulkanMaterial : public Material {
 	public:
-		VulkanMaterial(const Ref<Shader>& shader, const std::string& name = "");
+		VulkanMaterial(const STLR_Ptr<Shader>& shader, const std::string& name = "");
 
-		virtual Ref<Shader> getShader() override { return m_Shader; };
+		virtual STLR_Ptr<Shader> getShader() override { return m_Shader; };
 		virtual const std::string& getName() const override { return m_Name; };
 	
 	private:

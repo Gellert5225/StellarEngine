@@ -89,7 +89,7 @@ namespace Stellar {
 		return out;
 	}
 
-	SceneSerializer::SceneSerializer(const Ref<Scene>& scene) : m_Scene(scene) {
+	SceneSerializer::SceneSerializer(const STLR_Ptr<Scene>& scene) : m_Scene(scene) {
 
 	}
 
@@ -162,7 +162,7 @@ namespace Stellar {
 		out << YAML::Value << YAML::BeginSeq;
 
 		m_Scene->m_Registry.each([&](auto entityID) {
-			Entity entity = { entityID, m_Scene.get() };
+			Entity entity = { entityID, m_Scene.raw() };
 			if (!entity) return;
 
 			SerializeEntity(out, entity);

@@ -10,11 +10,11 @@
 #include <glm/gtc/type_ptr.hpp>
 
 namespace Stellar {
-	SceneHierarchyPanel::SceneHierarchyPanel(const Ref<Scene>& scene) {
+	SceneHierarchyPanel::SceneHierarchyPanel(const STLR_Ptr<Scene>& scene) {
 		setContext(scene);
 	}
 	
-	void SceneHierarchyPanel::setContext(const Ref<Scene>& scene) {
+	void SceneHierarchyPanel::setContext(const STLR_Ptr<Scene>& scene) {
 		m_Context = scene;
 		m_SelectionContext = {};
 	}
@@ -23,7 +23,7 @@ namespace Stellar {
 		ImGui::Begin("Scene Hierarchy");
 		
 		m_Context->m_Registry.each([&](auto entityID) {
-			Entity entity{ entityID, m_Context.get() };
+			Entity entity{ entityID, m_Context.raw() };
 			drawEntityNode(entity);
 		});
 

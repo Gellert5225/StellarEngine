@@ -6,14 +6,14 @@
 #include <vulkan/vulkan.h>
 
 namespace Stellar {
-	class STLR_API VulkanTexture : public Texture2D {
+	class VulkanTexture : public Texture2D {
 	public:
 		VulkanTexture(const std::string& filePath);
 		VulkanTexture(ImageFormat format, uint32_t width, uint32_t height, const void* data);
 		~VulkanTexture() override;
 		// Vulkan
 		void invalidate();
-		Ref<Image2D> getImage() const;
+		STLR_Ptr<Image2D> getImage() const;
 		VkDescriptorSet getDescriptorSets() { return m_DescriptorSet; }
 		VkDescriptorSet getImGuiDescriptorSets() { return m_ImGuiDescriptorSet; };
 	protected:

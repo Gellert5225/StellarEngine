@@ -13,9 +13,9 @@
 #endif
 
 namespace Stellar {
-	Ref<RenderPass> RenderPass::Create(const RenderPassSpecification& spec) {
+	STLR_Ptr<RenderPass> RenderPass::Create(const RenderPassSpecification& spec) {
 		switch (RendererAPI::Current()) {
-			case RendererAPIType::Vulkan: return CreateRef<VulkanRenderPass>(spec);
+			case RendererAPIType::Vulkan: return STLR_Ptr<VulkanRenderPass>::Create(spec);
 		}
 		return nullptr;
 	}

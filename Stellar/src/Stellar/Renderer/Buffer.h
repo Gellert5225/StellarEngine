@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Stellar/Core/Core.h"
+#include "Stellar/Core/STLRBase.h"
 #include <glm/glm.hpp>
 
 namespace Stellar {
@@ -10,13 +11,13 @@ namespace Stellar {
 		Uniform
 	};
 
-	struct STLR_API Vertex {
+	struct Vertex {
 		glm::vec2 position;
 		glm::vec2 texCoord;
 		float tilingFactor;
 	};
 
-	class STLR_API Buffer {
+	class Buffer : public STLR_Base {
 	public:
 		virtual ~Buffer() = default;
 

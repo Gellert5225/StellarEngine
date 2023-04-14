@@ -16,7 +16,7 @@
 
 namespace Stellar {
 
-	class STLR_API Renderer {
+	class Renderer {
 	public:
 		static void Init();
 		static void Shutdown();
@@ -27,7 +27,7 @@ namespace Stellar {
 		static void SetClearColor(const glm::vec4& color);
 		static void RenderGeometry(Buffer* vertexBuffer,
 								Buffer* indexBuffer,
-								Ref<Texture2D>,
+								STLR_Ptr<Texture2D>,
 								const glm::vec4& color,
 								uint32_t indexCount = 0,
 								const glm::mat4& transform = {});
@@ -45,7 +45,7 @@ namespace Stellar {
 
 		static void BindUbo(const GlobalUniforms& ubo);
 
-		static Ref<FrameBuffer> GetFrameBuffer();
+		static STLR_Ptr<FrameBuffer> GetFrameBuffer();
 
 		static void ResizeFrameBuffer(uint32_t width, uint32_t height);
 

@@ -26,7 +26,7 @@ namespace Stellar {
 		virtual void setClearColor(const glm::vec4& color) = 0;
 		virtual void renderGeometry(Buffer* vertexBuffers,
 									Buffer* indexBuffer,
-									Ref<Texture2D> texture,
+									STLR_Ptr<Texture2D> texture,
 									const glm::vec4& color,
 									uint32_t indexCount = 0,
 									const glm::mat4& transform = {}) = 0;
@@ -35,7 +35,7 @@ namespace Stellar {
 								uint32_t indexCount = 0) = 0;
 		
 		virtual void bindUbo(const GlobalUniforms& ubo) = 0;
-		virtual Ref<FrameBuffer> getFrameBuffer() = 0;
+		virtual STLR_Ptr<FrameBuffer> getFrameBuffer() = 0;
 		virtual void resizeFrameBuffer(uint32_t width, uint32_t height) = 0;
 
 		static RendererAPIType Current() { return s_CurrentRendererAPI; }

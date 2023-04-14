@@ -7,7 +7,7 @@
 #include <vulkan/vulkan.h>
 
 namespace Stellar {
-	class STLR_API VulkanRenderPass : public RenderPass {
+	class VulkanRenderPass : public RenderPass {
 	public:
 		explicit VulkanRenderPass(const VkFormat& swapChainImageFormat);
 		explicit VulkanRenderPass(const RenderPassSpecification& spec);

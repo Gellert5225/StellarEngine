@@ -9,12 +9,18 @@
 #include "Stellar/Core/Application.h"
 
 namespace Stellar {
+	VulkanPipeline::VulkanPipeline(const PipelineSpecification& spec) : m_Specification(spec) {
+		STLR_CORE_ASSERT(spec.shader);
+		STLR_CORE_ASSERT(spec.renderPass);
 
-	VulkanPipeline::VulkanPipeline(Shader* shader, VkRenderPass renderPass) {
+		invalidate();
+	}
+
+	VulkanPipeline::VulkanPipeline(STLR_Ptr<Shader> shader, VkRenderPass renderPass) {
 		createDescriptorPool();
 		createDescriptorSetLayout();
 		
-		auto infos = ((VulkanShader*)shader)->getStageInfos();
+		auto infos = ((VulkanShader*)shader.raw())->getStageInfos();
 
 		VkPipelineShaderStageCreateInfo shaderStages[2];
 		std::copy(infos.begin(), infos.end(), shaderStages);
@@ -140,6 +146,22 @@ namespace Stellar {
 		pipelineInfo.basePipelineHandle = VK_NULL_HANDLE; // Optional
 
 		VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_Pipeline));
+	}
+
+	void VulkanPipeline::invalidate() {
+		STLR_CORE_TRACE("[VulkanPipeline] Creating pipeline {0}", m_Specification.debugName);
+
+		auto device = VulkanDevice::GetInstance()->logicalDevice();
+
+
+	}
+	
+	void VulkanPipeline::setUniformBuffer(STLR_Ptr<Buffer> uniformBuffer, uint32_t binding, uint32_t set) {
+
+	}
+
+	void VulkanPipeline::bind() {
+
 	}
 
 	void VulkanPipeline::createDescriptorSetLayout() {

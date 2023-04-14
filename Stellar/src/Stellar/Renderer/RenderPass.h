@@ -1,6 +1,7 @@
 #pragma once 
 
 #include "Stellar/Core/Core.h"
+#include "Stellar/Core/STLRBase.h"
 
 #include "Stellar/Renderer/FrameBuffer.h"
 
@@ -8,18 +9,18 @@
 
 namespace Stellar {
 	struct RenderPassSpecification {
-		Ref<FrameBuffer> targetFramebuffer;
+		STLR_Ptr<FrameBuffer> targetFramebuffer;
 		std::string debugName;
 	};
 
-	class RenderPass {
+	class RenderPass : public STLR_Base {
 	public:
 		~RenderPass() = default;
 
 		RenderPassSpecification& getSpecification() { return m_Specification; };
 		const RenderPassSpecification& getSpecification() const { return m_Specification; };
 	
-		static Ref<RenderPass> Create(const RenderPassSpecification& spec);
+		static STLR_Ptr<RenderPass> Create(const RenderPassSpecification& spec);
 	protected:
 		RenderPassSpecification m_Specification;
 	};

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Stellar/Core/Core.h"
+#include "Stellar/Core/STLRBase.h"
 
 #include <string>
 #include <vector>
@@ -55,33 +56,35 @@ namespace Stellar {
 		Fragment = 2
 	};
 
-	class STLR_API Shader {
+	class Shader : public STLR_Base {
 	public:
-		static Shader* Create(const std::string& filePath);
+		static STLR_Ptr<Shader> Create(const std::string& filePath);
 		static const std::string ReadFile(const std::string& fileName);
 
 		virtual ~Shader() {};
 
 		virtual const std::string& getName() const { return m_Name; }
 	protected:
-		Shader(const std::string& filePath);
+		Shader(const std::string& filePath) : m_FilePath(std::move(filePath)) {
+			m_Name = extractName(filePath);
+		}
 		const std::string extractName(const std::string& filePath) const;
 	protected:
 		std::string m_Name;
 		std::string m_FilePath;
 	};
 
-	class STLR_API ShaderLibrary {
+	class ShaderLibrary : public STLR_Base {
 	public:
 		ShaderLibrary() {};
 		~ShaderLibrary();
 
-		void add(Shader* shader);
-		void add(const std::string& name, Shader* shader);
+		void add(STLR_Ptr<Shader> shader);
+		void add(const std::string& name, STLR_Ptr<Shader> shader);
 		void load(const std::string& fileName);
 		void load(const std::string& name, const std::string& fileName);
-		Shader* get(const std::string& name);
+		STLR_Ptr<Shader> get(const std::string& name);
 	private:
-		std::unordered_map<std::string, Shader*> m_Shaders;
+		std::unordered_map<std::string, STLR_Ptr<Shader>> m_Shaders;
 	};
 }

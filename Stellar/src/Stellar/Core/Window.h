@@ -3,6 +3,7 @@
 #include "stlrpch.h"
 
 #include "Stellar/Core/Core.h"
+#include "Stellar/Core/STLRBase.h"
 #include "Stellar/Events/Event.h"
 #include "Stellar/Renderer/RendererContext.h"
 #include "Stellar/Renderer/SwapChain.h"
@@ -23,7 +24,7 @@ namespace Stellar {
 			: title(std::move(title)), width(width), height(height) {}
 	};
 
-	class STLR_API Window {
+	class Window : public STLR_Base {
 	public:
 		using EventCallbackFn = std::function<void(Event&)>;
 
@@ -44,13 +45,13 @@ namespace Stellar {
 		[[nodiscard]] virtual GLFWwindow* getGLFWWindow() const;
 
 		[[nodiscard]] SwapChain* getSwapChain() const;
-		[[nodiscard]] Ref<RendererContext> getRendererContext() const;
+		[[nodiscard]] STLR_Ptr<RendererContext> getRendererContext() const;
 
 		static Scope<Window> Create(const WindowProperty& property = WindowProperty());
 	private:
 		GLFWwindow* m_Window{};
 
-		Ref<RendererContext> m_Context = nullptr;
+		STLR_Ptr<RendererContext> m_Context = nullptr;
 		// TODO: Abstract this into different platforms
 		SwapChain* m_SwapChain = nullptr;
 
