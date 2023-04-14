@@ -1,3 +1,3 @@
-[submodule "./Stellar/vendor/nfd"]
-	path = ./Stellar/vendor/nfd
+[submodule "Stellar/vendor/nfd"]
+	path = Stellar/vendor/nfd
 	url = https://github.com/btzy/nativefiledialog-extended.git
