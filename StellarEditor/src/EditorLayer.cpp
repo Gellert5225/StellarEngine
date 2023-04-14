@@ -89,13 +89,9 @@ namespace Stellar {
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0.0f);
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(255,255,255,0));
-		ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(255,255,255,0));
-		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(255,255,255,0));
 
 		ImGui::Begin("DockSpace Window", nullptr, host_window_flags);
 		ImGui::PopStyleVar(4);
-		ImGui::PopStyleColor(3);
 
 		menuBar();
 

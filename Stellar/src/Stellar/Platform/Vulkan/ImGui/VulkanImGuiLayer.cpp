@@ -37,7 +37,7 @@ namespace Stellar {
 
 		io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/static/OpenSans/OpenSans-Bold.ttf", 18.0f);
 
-		io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/OpenSans-VariableFont_wdth,wght.ttf", 15.0f);
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/OpenSans-VariableFont_wdth,wght.ttf", 16.0f);
 
 		auto swapChain = (VulkanSwapChain*)Application::Get().getWindow().getSwapChain();
 		VkDescriptorPoolSize pool_sizes[] = {

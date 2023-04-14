@@ -110,7 +110,7 @@ namespace Stellar {
 		ImGui::SameLine();
 
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{0.2f, 0.7f, 0.2f, 1.0f});
-		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{0.3f, 0.2f, 0.2f, 1.0f});
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{0.3f, 0.8f, 0.3f, 1.0f});
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{0.2f, 0.7f, 0.3f, 1.0f});
 		ImGui::PushFont(boldFont);
 		if (ImGui::Button("Y", buttonSize))

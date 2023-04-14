@@ -48,8 +48,8 @@ namespace Stellar {
 		colors[ImGuiCol_HeaderActive]		= ImGui::ColorConvertU32ToFloat4(Colors::Theme::groupHeader);
 
 		// Buttons
-		colors[ImGuiCol_Button]				= ImColor(56, 56, 56, 200);
-		colors[ImGuiCol_ButtonHovered]		= ImColor(70, 70, 70, 255);
+		colors[ImGuiCol_Button]				= ImGui::ColorConvertU32ToFloat4(Colors::Theme::button);
+		colors[ImGuiCol_ButtonHovered]		= ImGui::ColorConvertU32ToFloat4(Colors::Theme::buttonHovered);
 		colors[ImGuiCol_ButtonActive]		= ImColor(56, 56, 56, 150);
 
 		// Frame BG
@@ -59,10 +59,10 @@ namespace Stellar {
 
 		// Tabs
 		colors[ImGuiCol_Tab]				= ImGui::ColorConvertU32ToFloat4(Colors::Theme::titlebar);
-		colors[ImGuiCol_TabHovered]			= ImColor(255, 225, 135, 30);
-		colors[ImGuiCol_TabActive]			= ImColor(255, 225, 135, 60);
+		colors[ImGuiCol_TabHovered]			= ImGui::ColorConvertU32ToFloat4(Colors::Theme::tabHovered);
+		colors[ImGuiCol_TabActive]			= ImGui::ColorConvertU32ToFloat4(Colors::Theme::tabActive);
 		colors[ImGuiCol_TabUnfocused]		= ImGui::ColorConvertU32ToFloat4(Colors::Theme::titlebar);
-		colors[ImGuiCol_TabUnfocusedActive] = colors[ImGuiCol_TabHovered];
+		colors[ImGuiCol_TabUnfocusedActive] = colors[ImGuiCol_TabActive];
 
 		// Title
 		colors[ImGuiCol_TitleBg]			= ImGui::ColorConvertU32ToFloat4(Colors::Theme::titlebar);
@@ -96,7 +96,7 @@ namespace Stellar {
 		// Separator
 		colors[ImGuiCol_Separator]			= ImGui::ColorConvertU32ToFloat4(Colors::Theme::backgroundDark);
 		colors[ImGuiCol_SeparatorActive]	= ImGui::ColorConvertU32ToFloat4(Colors::Theme::highlight);
-		colors[ImGuiCol_SeparatorHovered]	= ImColor(39, 185, 242, 150);
+		colors[ImGuiCol_SeparatorHovered]	= ImGui::ColorConvertU32ToFloat4(Colors::Theme::separaterHovered);
 
 		// Window Background
 		colors[ImGuiCol_WindowBg]			= ImGui::ColorConvertU32ToFloat4(Colors::Theme::titlebar);
@@ -109,7 +109,7 @@ namespace Stellar {
 		colors[ImGuiCol_TableBorderLight]	= ImGui::ColorConvertU32ToFloat4(Colors::Theme::backgroundDark);
 
 		// Menubar
-		colors[ImGuiCol_MenuBarBg]			= ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f };
+		colors[ImGuiCol_MenuBarBg]			= ImGui::ColorConvertU32ToFloat4(Colors::Theme::menuBar);
 
 		//========================================================
 		/// Style
