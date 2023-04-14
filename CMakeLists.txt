@@ -1,7 +1,13 @@
 cmake_minimum_required (VERSION 3.24.0 FATAL_ERROR)
 
-# Change this to your own vcpkg installation folder
-set(ENV{VCPKG_ROOT} "F:/Dev/vcpkg")
+if (WIN32)
+	# Change this to your own vcpkg installation folder
+	set(ENV{VCPKG_ROOT} "F:/Dev/vcpkg")
+endif()
+
+if(UNIX AND NOT APPLE)
+	set(ENV{VCPKG_ROOT} "/home/gellert/Documents/vcpkg")
+endif()
 
 set(vcpkg "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
 if(NOT CMAKE_TOOLCHAIN_FILE AND EXISTS "${vcpkg}")

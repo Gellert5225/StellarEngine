@@ -2,9 +2,16 @@ cmake_minimum_required (VERSION 3.24.0 FATAL_ERROR)
 
 project(Stellar CXX)
 
-set(Shaderc_ROOT F:/Dev/shaderc/build/install)
-set(ENV{VULKAN_SDK} "C:/VulkanSDK/1.3.224.1")
-set(unofficial-shaderc_FOUND true)
+if (WIN32)
+	set(Shaderc_ROOT F:/Dev/shaderc/build/install)
+	set(ENV{VULKAN_SDK} "C:/VulkanSDK/1.3.224.1")
+	set(unofficial-shaderc_FOUND true)
+endif()
+
+if(UNIX AND NOT APPLE)
+	
+endif()
+
 
 find_package(glfw3 CONFIG REQUIRED)
 find_package(EnTT CONFIG REQUIRED)
