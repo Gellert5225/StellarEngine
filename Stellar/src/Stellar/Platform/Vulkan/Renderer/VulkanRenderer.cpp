@@ -13,7 +13,7 @@
 namespace Stellar {
 
 	struct VulkanRendererData {
-		GraphicsPipeline* pipeline;
+		VulkanPipeline* pipeline;
 		std::vector<VkDescriptorPool> DescriptorPools;
 	};
 
@@ -31,8 +31,8 @@ namespace Stellar {
 
 		auto quadShader = Renderer::GetShaderLibrary()->get("shader");
 		auto gridShader = Renderer::GetShaderLibrary()->get("grid");
-		m_GraphicsPipeline = new GraphicsPipeline(quadShader, ((VulkanFrameBuffer*)m_FrameBuffer.get())->getRenderPass());
-		m_GridPipeline = new GraphicsPipeline(gridShader, ((VulkanFrameBuffer*)m_FrameBuffer.get())->getRenderPass());
+		m_GraphicsPipeline = new VulkanPipeline(quadShader, ((VulkanFrameBuffer*)m_FrameBuffer.get())->getRenderPass());
+		m_GridPipeline = new VulkanPipeline(gridShader, ((VulkanFrameBuffer*)m_FrameBuffer.get())->getRenderPass());
 		s_Data = new VulkanRendererData();
 		s_Data->pipeline = m_GraphicsPipeline;
 
@@ -216,7 +216,7 @@ namespace Stellar {
 		vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
 	}
 
-	GraphicsPipeline* VulkanRenderer::GetPipeline() {
+	VulkanPipeline* VulkanRenderer::GetPipeline() {
 		return s_Data->pipeline;
 	}
 

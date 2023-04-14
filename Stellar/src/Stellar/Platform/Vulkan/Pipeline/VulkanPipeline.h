@@ -2,23 +2,24 @@
 
 #include "Stellar/Core/Core.h"
 
+#include "Stellar/Platform/Vulkan/Shader/VulkanShader.h"
+
 #include <vulkan/vulkan.h>
 #include <vector>
 
 namespace Stellar {
-	class STLR_API VulkanPipeline {
+	class VulkanPipeline {
 	public:
-		VulkanPipeline() = default;
-		virtual ~VulkanPipeline() = 0;
-
+		VulkanPipeline(Shader* shader, VkRenderPass renderPass);
+		virtual ~VulkanPipeline();
+		
 		VkPipeline getPipeline();
 		VkPipelineLayout getPipelineLayout();
 		std::vector<VkDescriptorSetLayout> getDescriptorSetLayout() { return m_DescriptorSetLayouts; }
 		VkDescriptorSetLayout getUboSetLayout() { return m_UboSetLayout; }
 		VkDescriptorSetLayout getTextureSetLayout() { return m_TextureSetLayout; }
 		VkDescriptorPool getDescriptorPool() { return m_DescriptorPool; }
-
-	protected:
+	private:
 		VkPipelineLayout m_PipelineLayout = VK_NULL_HANDLE;
 		VkPipeline m_Pipeline = VK_NULL_HANDLE;
 
@@ -27,8 +28,8 @@ namespace Stellar {
 
 		VkDescriptorSetLayout m_UboSetLayout = VK_NULL_HANDLE;
 		VkDescriptorSetLayout m_TextureSetLayout = VK_NULL_HANDLE;
-
-		virtual void createDescriptorSetLayout() = 0;
-		virtual void createDescriptorPool() = 0;
+	private:
+		void createDescriptorSetLayout();
+		void createDescriptorPool();
 	};
 }
