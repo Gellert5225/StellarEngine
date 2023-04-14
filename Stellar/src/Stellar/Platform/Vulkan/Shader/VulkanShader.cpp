@@ -100,7 +100,6 @@ namespace Stellar {
 			uint32_t size = compiler.get_declared_struct_size(bufferType);
 
 			ShaderDescriptorSet& shaderDescriptorSet = m_ShaderDescriptorSets[descriptorSet];
-			//HZ_CORE_ASSERT(shaderDescriptorSet.UniformBuffers.find(binding) == shaderDescriptorSet.UniformBuffers.end());
 			if (s_UniformBuffers[descriptorSet].find(binding) == s_UniformBuffers[descriptorSet].end()) {
 				UniformBuffer* uniformBuffer = new UniformBuffer();
 				uniformBuffer->bindingPoint = binding;
@@ -108,16 +107,10 @@ namespace Stellar {
 				uniformBuffer->name = name;
 				uniformBuffer->shaderStage = shaderStage;
 				s_UniformBuffers.at(descriptorSet)[binding] = uniformBuffer;
-
-				allocateUniformBuffer(*uniformBuffer);
 			} else {
 				UniformBuffer* uniformBuffer = s_UniformBuffers.at(descriptorSet).at(binding);
-				if (size > uniformBuffer->size) {
-					STLR_CORE_TRACE("Resizing uniform buffer (binding = {0}, set = {1}) to {2} bytes", binding, descriptorSet, size);
+				if (size > uniformBuffer->size)
 					uniformBuffer->size = size;
-					allocateUniformBuffer(*uniformBuffer);
-				}
-				
 			}
 
 			shaderDescriptorSet.uniformBuffers[binding] = s_UniformBuffers.at(descriptorSet).at(binding);
@@ -127,16 +120,6 @@ namespace Stellar {
 			STLR_CORE_TRACE("  Size: {0}", size);
 			STLR_CORE_TRACE("-------------------");
 		}
-	}
-
-	void VulkanShader::allocateUniformBuffer(UniformBuffer& dst) {
-		UniformBuffer& uniformBuffer = dst;
-
-		auto ub = Buffer::Create(BufferType::Uniform, uniformBuffer.size);
-
-		uniformBuffer.descriptor.buffer = (VkBuffer)ub->getBuffer();
-		uniformBuffer.descriptor.offset = 0;
-		uniformBuffer.descriptor.range = uniformBuffer.size;
 	}
 
 	const std::string VulkanShader::extractType(const std::string& filePath) const {

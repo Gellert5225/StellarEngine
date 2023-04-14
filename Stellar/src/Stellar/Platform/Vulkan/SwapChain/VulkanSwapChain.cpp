@@ -76,7 +76,7 @@ namespace Stellar {
 
 		for (auto& framebuffer : m_Framebuffers)
 			vkDestroyFramebuffer(device, framebuffer, nullptr);
-		delete m_ImGuiRenderPass;
+		delete m_RenderPass;
 
 		for (size_t i = 0; i < Renderer::MAX_FRAMES_IN_FLIGHT; i++) {
 			vkDestroyFence(device, m_InFlightFences[i], nullptr);
@@ -121,8 +121,8 @@ namespace Stellar {
 		return m_SwapChainImages.size();
 	}
 
-	VkRenderPass VulkanSwapChain::getImGuiRenderPass() const {
-		return m_ImGuiRenderPass->getVkRenderPass();
+	VkRenderPass VulkanSwapChain::getVulkanRenderPass() const {
+		return m_RenderPass->getVkRenderPass();
 	}
 
 	void VulkanSwapChain::createCommandBuffers() {
@@ -278,7 +278,7 @@ namespace Stellar {
 
 		VkFramebufferCreateInfo info = {};
 		info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-		info.renderPass = m_ImGuiRenderPass->getVkRenderPass();
+		info.renderPass = m_RenderPass->getVkRenderPass();
 		info.attachmentCount = 1;
 		info.width = m_SwapChainExtent.width;
 		info.height = m_SwapChainExtent.height;
@@ -293,8 +293,8 @@ namespace Stellar {
 	}
 
 	void VulkanSwapChain::createRenderPass() {
-		delete m_ImGuiRenderPass;
-		m_ImGuiRenderPass = new ImGuiRenderPass(m_SwapChainImageFormat);
+		delete m_RenderPass;
+		m_RenderPass = new VulkanRenderPass(m_SwapChainImageFormat);
 	}
 
 	void VulkanSwapChain::beginFrame() {

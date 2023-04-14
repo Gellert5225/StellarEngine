@@ -4,8 +4,7 @@
 #include "Stellar/Renderer/SwapChain.h"
 #include "Stellar/Platform/Vulkan/Buffer/VulkanFrameBuffer.h"
 #include "Stellar/Platform/Vulkan/Command/VulkanCommandBuffer.h"
-#include "Stellar/Platform/Vulkan/RenderPass/StandardRenderPass.h"
-#include "Stellar/Platform/Vulkan/RenderPass/ImGuiRenderPass.h"
+#include "Stellar/Platform/Vulkan/RenderPass/VulkanRenderPass.h"
 
 #include <vulkan/vulkan.h>
 
@@ -33,7 +32,7 @@ namespace Stellar {
 		[[nodiscard]] VkFormat getSwapChainImageFormat() const;
 		[[nodiscard]] SwapChainExtent2D getSwapChainExtent() const override;
 		[[nodiscard]] VkSwapchainKHR& getSwapChain();
-		[[nodiscard]] VkRenderPass getImGuiRenderPass() const;
+		[[nodiscard]] VkRenderPass getVulkanRenderPass() const;
 		[[nodiscard]] uint32_t getImageCount() const;
 		[[nodiscard]] uint32_t getCurrentFrameIndex() const override;
 		[[nodiscard]] VkFramebuffer getCurrentFrameBuffer() const;
@@ -46,7 +45,7 @@ namespace Stellar {
 		VkFormat m_SwapChainImageFormat{};
 		SwapChainExtent2D m_SwapChainExtent{};
 
-		ImGuiRenderPass* m_ImGuiRenderPass = nullptr;
+		VulkanRenderPass* m_RenderPass = nullptr;
 		std::vector<VkFramebuffer> m_Framebuffers;
 
 		struct SwapchainCommandBuffer {

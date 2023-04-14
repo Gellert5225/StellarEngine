@@ -10,8 +10,6 @@ namespace Stellar {
 	class STLR_API VulkanShader : public Shader {
 	public:
 		struct UniformBuffer {
-			VkDeviceMemory memory = nullptr;
-			VkBuffer buffer;
 			VkDescriptorBufferInfo descriptor;
 			uint32_t size = 0;
 			uint32_t bindingPoint = 0;
@@ -49,7 +47,6 @@ namespace Stellar {
 		const std::string extractType(const std::string& filePath) const;
 		void reflectAllStages(const std::unordered_map<Stellar::ShaderType, std::vector<uint32_t>>& spvShader);
 		void reflect(VkShaderStageFlagBits shaderStage, const std::vector<uint32_t>& data);
-		void allocateUniformBuffer(UniformBuffer& dst);
 
 		static VkShaderModule CreateShaderModule(const std::vector<uint32_t>& code);
 	private:

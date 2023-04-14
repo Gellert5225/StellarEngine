@@ -10,7 +10,7 @@
 
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 #include "Stellar/Platform/Vulkan/VulkanCommon.h"
-#include "Stellar/Platform/Vulkan/RenderPass/ImGuiRenderPass.h"
+#include "Stellar/Platform/Vulkan/RenderPass/VulkanRenderPass.h"
 
 #include "Stellar/Core/Application.h"
 
@@ -78,7 +78,7 @@ namespace Stellar {
 		init_info.MinImageCount = 2;
 		init_info.ImageCount = swapChain->getImageCount();
 		init_info.CheckVkResultFn = vulkanCheckResult;
-		ImGui_ImplVulkan_Init(&init_info, swapChain->getImGuiRenderPass());
+		ImGui_ImplVulkan_Init(&init_info, swapChain->getVulkanRenderPass());
 
 		VkCommandBuffer commandBuffer = VulkanDevice::GetInstance()->beginSingleTimeCommands();
 		ImGui_ImplVulkan_CreateFontsTexture(commandBuffer);
@@ -150,7 +150,7 @@ namespace Stellar {
 		VkRenderPassBeginInfo renderPassBeginInfo = {};
 		renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 		renderPassBeginInfo.pNext = nullptr;
-		renderPassBeginInfo.renderPass = swapChain->getImGuiRenderPass();
+		renderPassBeginInfo.renderPass = swapChain->getVulkanRenderPass();
 		renderPassBeginInfo.renderArea.offset.x = 0;
 		renderPassBeginInfo.renderArea.offset.y = 0;
 		renderPassBeginInfo.renderArea.extent.width = swapChain->getSwapChainExtent().width;
@@ -163,7 +163,7 @@ namespace Stellar {
 
 		VkCommandBufferInheritanceInfo inheritanceInfo = {};
 		inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
-		inheritanceInfo.renderPass = swapChain->getImGuiRenderPass();
+		inheritanceInfo.renderPass = swapChain->getVulkanRenderPass();
 		inheritanceInfo.framebuffer = swapChain->getCurrentFrameBuffer();
 
 		VkCommandBufferBeginInfo cmdBufInfo = {};

@@ -92,7 +92,7 @@ namespace Stellar {
 		}
 
 		// create render pass
-		m_RenderPass = CreateRef<StandardRenderPass>(attachmentDescriptions, colorAttachmentReferences, depthAttachmentReference);
+		m_RenderPass = CreateRef<VulkanRenderPass>(attachmentDescriptions, colorAttachmentReferences, depthAttachmentReference);
 
 		std::vector<VkImageView> attachments(m_AttachmentImages.size());
 

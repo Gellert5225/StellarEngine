@@ -8,6 +8,7 @@
 #include "Uniforms.h"
 #include "Texture.h"
 #include "FrameBuffer.h"
+#include "Pipeline.h"
 
 #include "Stellar/Core/Core.h"
 
@@ -30,6 +31,14 @@ namespace Stellar {
 								const glm::vec4& color,
 								uint32_t indexCount = 0,
 								const glm::mat4& transform = {});
+		// static void RenderGeometry(Ref<CommandBuffer> commandBuffer, 
+		// 							Ref<Pipeline> pipeline, 
+		// 							Ref<UniformBufferSet> uniformBufferSet, 
+		// 							Ref<Material> material, 
+		// 							Ref<VertexBuffer> vertexBuffer, 
+		// 							Ref<IndexBuffer> indexBuffer, 
+		// 							const glm::mat4& transform, 
+		// 							uint32_t indexCount = 0);
 		static void RenderGrid(Buffer* vertexBuffer,
 							Buffer* indexBuffer,
 							uint32_t indexCount = 0);

@@ -4,7 +4,6 @@
 
 #include "Stellar/Core/Core.h"
 #include "Stellar/Renderer/CommandBuffer.h"
-#include "Stellar/Platform/Vulkan/RenderPass/StandardRenderPass.h"
 #include "Stellar/Platform/Vulkan/Pipeline/GraphicsPipeline.h"
 #include "Stellar/Platform/Vulkan/Buffer/VulkanBuffer.h"
 #include "Stellar/Platform/Vulkan/Buffer/VulkanFrameBuffer.h"

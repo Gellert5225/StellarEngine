@@ -107,20 +107,14 @@ namespace Stellar {
 	{
 	}
 
-	const std::string& ShaderUniform::UniformTypeToString(ShaderUniformType type)
+	const std::string ShaderUniform::UniformTypeToString(ShaderUniformType type)
 	{
 		if (type == ShaderUniformType::Bool)
-		{
 			return "Boolean";
-		}
 		else if (type == ShaderUniformType::Int)
-		{
 			return "Int";
-		}
 		else if (type == ShaderUniformType::Float)
-		{
 			return "Float";
-		}
 
 		return "None";
 	}
