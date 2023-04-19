@@ -44,7 +44,8 @@ namespace Stellar {
 							std::unordered_map<ShaderType, std::vector<uint32_t>>& spvOutput) {
 			shaderc::Compiler compiler;
 			shaderc::CompileOptions options;
-			options.SetOptimizationLevel(shaderc_optimization_level_size);
+			options.SetGenerateDebugInfo();
+			options.SetOptimizationLevel(shaderc_optimization_level_performance);
 
 			for (auto& shader : shaderSources) {
 				shaderc::SpvCompilationResult module =

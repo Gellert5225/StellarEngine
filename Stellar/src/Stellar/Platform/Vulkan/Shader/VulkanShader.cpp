@@ -35,7 +35,10 @@ namespace Stellar {
 			m_StageInfos.push_back(shaderStageInfo);
 		}
 		reflectAllStages(spv);
+
+		createDescriptors();
 	}
+
 	void VulkanShader::reflectAllStages(const std::unordered_map<Stellar::ShaderType, std::vector<uint32_t>>& spvShader) {
 		for (auto [stage, data] : spvShader)
 			reflect(VulkanShaderCompilerUtil::VulkanShaderTypeFromType(stage), data);
@@ -45,14 +48,15 @@ namespace Stellar {
 		VkDevice device = VulkanDevice::GetInstance()->logicalDevice(); 
 
 		STLR_CORE_TRACE("===========================");
-		STLR_CORE_TRACE(" Vulkan Shader Reflection");
-		STLR_CORE_TRACE(" {0}", m_FilePath);
+		STLR_CORE_TRACE("Vulkan Shader Reflection");
+		STLR_CORE_TRACE("Shader: {0}", m_FilePath);
+		STLR_CORE_TRACE("Stage: {0}", VulkanShaderCompilerUtil::GetVulkanShaderTypeString(shaderStage));
 		STLR_CORE_TRACE("===========================");
 
-		spirv_cross::CompilerGLSL compiler(std::move(data));
+		spirv_cross::Compiler compiler(std::move(data));
 		auto resources = compiler.get_shader_resources();
 
-		STLR_CORE_TRACE("Push Constant Buffers:");
+		STLR_CORE_TRACE(" Push Constant Buffers:");
 		for (const auto& resource : resources.push_constant_buffers) {
 			const auto& bufferName = resource.name;
 			auto& bufferType = compiler.get_type(resource.base_type_id);
@@ -75,9 +79,10 @@ namespace Stellar {
 			buffer.Name = bufferName;
 			buffer.Size = bufferSize - bufferOffset;
 
-			STLR_CORE_TRACE("  Name: {0}", bufferName);
-			STLR_CORE_TRACE("  Member Count: {0}", memberCount);
-			STLR_CORE_TRACE("  Size: {0}", bufferSize);
+			STLR_CORE_TRACE("    Name: {0}", bufferName);
+			STLR_CORE_TRACE("    Member Count: {0}", memberCount);
+			STLR_CORE_TRACE("    Size: {0}", bufferSize);
+			STLR_CORE_TRACE("-------------------");
 
 			for (int i = 0; i < memberCount; i++) {
 				auto type = compiler.get_type(bufferType.member_types[i]);
@@ -90,7 +95,7 @@ namespace Stellar {
 			}
 		}
 
-		STLR_CORE_TRACE("Uniform Buffers:");
+		STLR_CORE_TRACE(" Uniform Buffers:");
 		for (const auto& resource : resources.uniform_buffers) {
 			const auto& name = resource.name;
 			auto& bufferType = compiler.get_type(resource.base_type_id);
@@ -98,6 +103,9 @@ namespace Stellar {
 			uint32_t binding = compiler.get_decoration(resource.id, spv::DecorationBinding);
 			uint32_t descriptorSet = compiler.get_decoration(resource.id, spv::DecorationDescriptorSet);
 			uint32_t size = compiler.get_declared_struct_size(bufferType);
+
+			if (descriptorSet >= m_ShaderDescriptorSets.size())
+				m_ShaderDescriptorSets.resize(descriptorSet + 1);
 
 			ShaderDescriptorSet& shaderDescriptorSet = m_ShaderDescriptorSets[descriptorSet];
 			if (s_UniformBuffers[descriptorSet].find(binding) == s_UniformBuffers[descriptorSet].end()) {
@@ -115,11 +123,70 @@ namespace Stellar {
 
 			shaderDescriptorSet.uniformBuffers[binding] = s_UniformBuffers.at(descriptorSet).at(binding);
 
-			STLR_CORE_TRACE("  {0} ({1}, {2})", name, descriptorSet, binding);
-			STLR_CORE_TRACE("  Member Count: {0}", memberCount);
-			STLR_CORE_TRACE("  Size: {0}", size);
+			STLR_CORE_TRACE("    Name: {0}", name);
+			STLR_CORE_TRACE("    Descriptor Set: {0}, Binding: {1}",  descriptorSet, binding);
+			STLR_CORE_TRACE("    Member Count: {0}", memberCount);
+			STLR_CORE_TRACE("    Size: {0}", size);
 			STLR_CORE_TRACE("-------------------");
 		}
+
+		STLR_CORE_TRACE(" Sampled Images:");
+		for (const auto& resource : resources.sampled_images) {
+			const auto& name = resource.name;
+			auto& type = compiler.get_type(resource.base_type_id);
+			uint32_t binding = compiler.get_decoration(resource.id, spv::DecorationBinding);
+			uint32_t descriptorSet = compiler.get_decoration(resource.id, spv::DecorationDescriptorSet);
+			uint32_t dimension = type.image.dim;
+
+			if (descriptorSet >= m_ShaderDescriptorSets.size())
+				m_ShaderDescriptorSets.resize(descriptorSet + 1);
+
+			ShaderDescriptorSet& shaderDescriptorSet = m_ShaderDescriptorSets[descriptorSet];
+			auto& imageSampler = shaderDescriptorSet.imageSamplers[binding];
+			imageSampler.bindingPoint = binding;
+			imageSampler.descriptorSet = descriptorSet;
+			imageSampler.name = name;
+			imageSampler.shaderStage = shaderStage;
+
+			//m_Resources[name] = ShaderResourceDeclaration(name, binding, 1);
+
+			STLR_CORE_TRACE("    Name: {0}", name);
+			STLR_CORE_TRACE("    Descriptor Set: {0}, Binding: {1}",  descriptorSet, binding);
+			STLR_CORE_TRACE("-------------------");
+		}
+
+		STLR_CORE_TRACE(" Storage Images:");
+		for (const auto& resource : resources.storage_images) {
+			const auto& name = resource.name;
+			auto& type = compiler.get_type(resource.base_type_id);
+			uint32_t binding = compiler.get_decoration(resource.id, spv::DecorationBinding);
+			uint32_t descriptorSet = compiler.get_decoration(resource.id, spv::DecorationDescriptorSet);
+			uint32_t dimension = type.image.dim;
+
+			if (descriptorSet >= m_ShaderDescriptorSets.size())
+				m_ShaderDescriptorSets.resize(descriptorSet + 1);
+
+			ShaderDescriptorSet& shaderDescriptorSet = m_ShaderDescriptorSets[descriptorSet];
+			auto& imageSampler = shaderDescriptorSet.storageImages[binding];
+			imageSampler.bindingPoint = binding;
+			imageSampler.descriptorSet = descriptorSet;
+			imageSampler.name = name;
+			imageSampler.shaderStage = shaderStage;
+
+			//m_Resources[name] = ShaderResourceDeclaration(name, binding, 1);
+
+			STLR_CORE_TRACE("    Name: {0}", name);
+			STLR_CORE_TRACE("    Descriptor Set: {0}, Binding: {1}",  descriptorSet, binding);
+		}
+
+		STLR_CORE_TRACE("===========================");
+	}
+
+	void VulkanShader::createDescriptors() {
+		VkDevice device = VulkanDevice::GetInstance()->logicalDevice();
+		STLR_CORE_INFO("m_ShaderDescriptorSets size: {0}", m_ShaderDescriptorSets.size());
+		// descriptor pool
+
 	}
 
 	const std::string VulkanShader::extractType(const std::string& filePath) const {

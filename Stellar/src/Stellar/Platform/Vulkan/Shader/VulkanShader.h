@@ -36,6 +36,8 @@ namespace Stellar {
 			std::unordered_map<uint32_t, ImageSampler> storageImages;
 
 			std::unordered_map<std::string, VkWriteDescriptorSet> writeDescriptorSets;
+
+			operator bool() const { return !(uniformBuffers.empty() && imageSamplers.empty() && storageImages.empty()); }
 		};
 	public:
 		explicit VulkanShader(const std::string& filePath);
@@ -47,13 +49,15 @@ namespace Stellar {
 		const std::string extractType(const std::string& filePath) const;
 		void reflectAllStages(const std::unordered_map<Stellar::ShaderType, std::vector<uint32_t>>& spvShader);
 		void reflect(VkShaderStageFlagBits shaderStage, const std::vector<uint32_t>& data);
+		void createDescriptors();
 
 		static VkShaderModule CreateShaderModule(const std::vector<uint32_t>& code);
 	private:
 		std::vector<VkPipelineShaderStageCreateInfo> m_StageInfos;
 		std::vector<VkShaderModule> m_ShaderModules;
-		std::unordered_map<uint32_t, ShaderDescriptorSet> m_ShaderDescriptorSets;
+		std::vector<ShaderDescriptorSet> m_ShaderDescriptorSets;
 		std::vector<PushConstantRange> m_PushConstantRanges;
 		std::unordered_map<std::string, ShaderBuffer> m_Buffers;
+		//std::unordered_map<std::string, ShaderResourceDeclaration> m_Resources;
 	};
 }

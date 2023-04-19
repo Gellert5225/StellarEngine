@@ -14,6 +14,7 @@
 
 #include <shaderc/shaderc.hpp>
 #include <spirv_cross/spirv_glsl.hpp>
+#include <spirv-tools/libspirv.h>
 
 namespace Stellar {
 	namespace VulkanShaderCompilerUtil {
@@ -33,6 +34,15 @@ namespace Stellar {
 			if (type == ShaderType::Vertex) return VK_SHADER_STAGE_VERTEX_BIT;
 			if (type == ShaderType::Fragment) return VK_SHADER_STAGE_FRAGMENT_BIT;
 			return VK_SHADER_STAGE_ALL;
+		}
+
+		static std::string GetVulkanShaderTypeString(VkShaderStageFlagBits type) {
+			switch (type) {
+				case VK_SHADER_STAGE_VERTEX_BIT: return "Vertex";
+				case VK_SHADER_STAGE_FRAGMENT_BIT: return "Fragment";
+			}
+
+			return "Unknown";
 		}
 
 		static ShaderUniformType SPIRTypeToShaderUniformType(spirv_cross::SPIRType type) {

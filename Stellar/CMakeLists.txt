@@ -4,7 +4,6 @@ project(Stellar CXX)
 
 if (WIN32)
 	set(Shaderc_ROOT F:/Dev/shaderc/build/install/lib/shaderc_shared.lib)
-	set(ENV{VULKAN_SDK} "C:/VulkanSDK/1.3.224.1")
 	set(unofficial-shaderc_FOUND true)
 endif()
 
