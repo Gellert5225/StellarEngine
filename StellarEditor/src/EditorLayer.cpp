@@ -125,6 +125,13 @@ namespace Stellar {
 		m_SceneHierarchyPanel.onImGuiRender();
 		//ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
 		ImGui::Begin("Info");
+		std::string debug;
+#ifdef NDEBUG
+		debug = "Release";
+#else
+		debug = "Debug";
+#endif
+		ImGui::Text("Version: %s", debug.c_str());
 		ImGui::Text("GPU: %s", appInfo.graphicsInfo.c_str());
 		ImGui::Text("%s", appInfo.vulkanVersion.c_str());
 		ImGui::Text(
