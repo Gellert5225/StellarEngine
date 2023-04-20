@@ -7,16 +7,28 @@
 #include "Stellar/Core/Log.h"
 
 namespace Stellar {
+	namespace Utils {
+		static VkPrimitiveTopology GetVulkanTopology(PrimitiveTopology topology) {
+			switch (topology) {
+				case PrimitiveTopology::Points:			return VK_PRIMITIVE_TOPOLOGY_POINT_LIST;
+				case PrimitiveTopology::Lines:			return VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
+				case PrimitiveTopology::Triangles:		return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+				case PrimitiveTopology::LineStrip:		return VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
+				case PrimitiveTopology::TriangleStrip:	return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
+				case PrimitiveTopology::TriangleFan:	return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN;
+			}
+
+			STLR_CORE_ASSERT(false, "Unknown toplogy");
+			return VK_PRIMITIVE_TOPOLOGY_MAX_ENUM;
+		}
+	}
+
 	const std::vector<const char*> validationLayers = {
 			"VK_LAYER_KHRONOS_validation"
 	};
 
 	const std::vector<const char*> deviceExtensions = {
 			VK_KHR_SWAPCHAIN_EXTENSION_NAME
-#ifdef __APPLE__
-			,
-			VK_KHR_PORTABILITY_SUBSET_EXTENSION_NAME
-#endif
 	};
 
 	inline const char* VKResultToString(VkResult result) {

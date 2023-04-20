@@ -25,6 +25,7 @@ namespace Stellar {
 		[[nodiscard]] VkFramebuffer getFramebuffer() const;
 		[[nodiscard]] VkRenderPass getRenderPass() const;
 		[[nodiscard]] size_t getFramebufferSize() const;
+		[[nodiscard]] size_t getColorAttachmentCount() const { return m_AttachmentImages.size(); }
 	private:
 		VkFramebuffer m_Framebuffer;
 		STLR_Ptr<VulkanRenderPass> m_RenderPass;

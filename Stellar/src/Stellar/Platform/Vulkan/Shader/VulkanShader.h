@@ -45,6 +45,9 @@ namespace Stellar {
 
 		VkShaderModule getShaderModule(const std::string& filePath);
 		const std::vector<VkPipelineShaderStageCreateInfo>& getStageInfos() const;
+		std::vector<VkDescriptorSetLayout> getAllDescriptorSetLayouts();
+		const std::vector<PushConstantRange>& getPushConstantRanges() const { return m_PushConstantRanges; }
+
 	private:
 		const std::string extractType(const std::string& filePath) const;
 		void reflectAllStages(const std::unordered_map<Stellar::ShaderType, std::vector<uint32_t>>& spvShader);
@@ -55,9 +58,13 @@ namespace Stellar {
 	private:
 		std::vector<VkPipelineShaderStageCreateInfo> m_StageInfos;
 		std::vector<VkShaderModule> m_ShaderModules;
+
 		std::vector<ShaderDescriptorSet> m_ShaderDescriptorSets;
+		std::vector<VkDescriptorSetLayout> m_DescriptorSetLayouts;
+
 		std::vector<PushConstantRange> m_PushConstantRanges;
 		std::unordered_map<std::string, ShaderBuffer> m_Buffers;
 		//std::unordered_map<std::string, ShaderResourceDeclaration> m_Resources;
+		std::unordered_map<uint32_t, std::vector<VkDescriptorPoolSize>> m_TypeCounts;
 	};
 }

@@ -184,9 +184,111 @@ namespace Stellar {
 
 	void VulkanShader::createDescriptors() {
 		VkDevice device = VulkanDevice::GetInstance()->logicalDevice();
-		STLR_CORE_INFO("m_ShaderDescriptorSets size: {0}", m_ShaderDescriptorSets.size());
-		// descriptor pool
+		
+		m_TypeCounts.clear();
+		for (uint32_t set = 0; set < m_ShaderDescriptorSets.size(); set++) {
+			auto& shaderDescriptorSet = m_ShaderDescriptorSets[set];
 
+			if (shaderDescriptorSet.uniformBuffers.size()) {
+				VkDescriptorPoolSize& typeCount = m_TypeCounts[set].emplace_back();
+				typeCount.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+				typeCount.descriptorCount = shaderDescriptorSet.uniformBuffers.size();
+			}
+			if (shaderDescriptorSet.imageSamplers.size()) {
+				VkDescriptorPoolSize& typeCount = m_TypeCounts[set].emplace_back();
+				typeCount.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+				typeCount.descriptorCount = shaderDescriptorSet.imageSamplers.size();
+			}
+			if (shaderDescriptorSet.storageImages.size()) {
+				VkDescriptorPoolSize& typeCount = m_TypeCounts[set].emplace_back();
+				typeCount.type = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
+				typeCount.descriptorCount = shaderDescriptorSet.storageImages.size();
+			}
+
+			// descriptor set layout
+			std::vector<VkDescriptorSetLayoutBinding> layoutBindings;
+
+			for (auto& [binding, uniformBuffer] : shaderDescriptorSet.uniformBuffers) {
+				VkDescriptorSetLayoutBinding& layoutBinding = layoutBindings.emplace_back();
+				layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+				layoutBinding.descriptorCount = 1;
+				layoutBinding.stageFlags = uniformBuffer->shaderStage;
+				layoutBinding.pImmutableSamplers = nullptr;
+				layoutBinding.binding = binding;
+
+				VkWriteDescriptorSet& set = shaderDescriptorSet.writeDescriptorSets[uniformBuffer->name];
+				set = {};
+				set.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				set.descriptorType = layoutBinding.descriptorType;
+				set.descriptorCount = 1;
+				set.dstBinding = layoutBinding.binding;
+			}
+
+			for (auto& [binding, imageSampler] : shaderDescriptorSet.imageSamplers) {
+				auto& layoutBinding = layoutBindings.emplace_back();
+				layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+				layoutBinding.descriptorCount = 1;
+				layoutBinding.stageFlags = imageSampler.shaderStage;
+				layoutBinding.pImmutableSamplers = nullptr;
+				layoutBinding.binding = binding;
+
+				STLR_CORE_ASSERT(shaderDescriptorSet.uniformBuffers.find(binding) == shaderDescriptorSet.uniformBuffers.end(), "Binding is already present!");
+
+				VkWriteDescriptorSet& set = shaderDescriptorSet.writeDescriptorSets[imageSampler.name];
+				set = {};
+				set.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				set.descriptorType = layoutBinding.descriptorType;
+				set.descriptorCount = 1;
+				set.dstBinding = layoutBinding.binding;
+			}
+
+			for (auto& [bindingAndSet, imageSampler] : shaderDescriptorSet.storageImages) {
+				auto& layoutBinding = layoutBindings.emplace_back();
+				layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
+				layoutBinding.descriptorCount = 1;
+				layoutBinding.stageFlags = imageSampler.shaderStage;
+				layoutBinding.pImmutableSamplers = nullptr;
+
+				uint32_t binding = bindingAndSet & 0xffffffff;
+				uint32_t descriptorSet = (bindingAndSet >> 32);
+				layoutBinding.binding = binding;
+
+				STLR_CORE_ASSERT(shaderDescriptorSet.uniformBuffers.find(binding) == shaderDescriptorSet.uniformBuffers.end(), "Binding is already present!");
+				STLR_CORE_ASSERT(shaderDescriptorSet.imageSamplers.find(binding) == shaderDescriptorSet.imageSamplers.end(), "Binding is already present!");
+
+				VkWriteDescriptorSet& set = shaderDescriptorSet.writeDescriptorSets[imageSampler.name];
+				set = {};
+				set.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				set.descriptorType = layoutBinding.descriptorType;
+				set.descriptorCount = 1;
+				set.dstBinding = layoutBinding.binding;
+			}
+
+			VkDescriptorSetLayoutCreateInfo descriptorLayout = {};
+			descriptorLayout.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+			descriptorLayout.pNext = nullptr;
+			descriptorLayout.bindingCount = layoutBindings.size();
+			descriptorLayout.pBindings = layoutBindings.data();
+
+			STLR_CORE_INFO("Creating descriptor set {0} with {1} ubos, {2} samplers and {3} storage images", 
+							set,
+							shaderDescriptorSet.uniformBuffers.size(),
+							shaderDescriptorSet.imageSamplers.size(),
+							shaderDescriptorSet.storageImages.size());
+			
+			if (set >= m_DescriptorSetLayouts.size())
+				m_DescriptorSetLayouts.resize(set + 1);
+			VK_CHECK_RESULT(vkCreateDescriptorSetLayout(device, &descriptorLayout, nullptr, &m_DescriptorSetLayouts[set]));
+		}
+	}
+
+	std::vector<VkDescriptorSetLayout> VulkanShader::getAllDescriptorSetLayouts() {
+		std::vector<VkDescriptorSetLayout> result;
+		result.reserve(m_DescriptorSetLayouts.size());
+		for (auto& layout : m_DescriptorSetLayouts)
+			result.emplace_back(layout);
+
+		return result;
 	}
 
 	const std::string VulkanShader::extractType(const std::string& filePath) const {
