@@ -16,6 +16,8 @@ if(NOT CMAKE_TOOLCHAIN_FILE AND EXISTS "${vcpkg}")
   message(STATUS "vcpkg toolchain found: ${CMAKE_TOOLCHAIN_FILE}")
 endif()
 
+set(VCPKG_TARGET_TRIPLET x64-windows-static)
+
 project(StellarEngine)
 
 set(CMAKE_CXX_STANDARD 17

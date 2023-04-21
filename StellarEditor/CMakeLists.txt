@@ -2,6 +2,8 @@ cmake_minimum_required (VERSION 3.24.0 FATAL_ERROR)
 
 project(StellarEditor CXX)
 
+option(STATIC_WINDOWS_RUNTIME "Use static (MT/MTd) Windows runtime" ON)
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 file(GLOB_RECURSE StellarEditor_SRC
 	src/*.h

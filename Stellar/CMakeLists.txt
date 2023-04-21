@@ -2,6 +2,9 @@ cmake_minimum_required (VERSION 3.24.0 FATAL_ERROR)
 
 project(Stellar CXX)
 
+option(STATIC_WINDOWS_RUNTIME "Use static (MT/MTd) Windows runtime" ON)
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
 if (WIN32)
 	set(Shaderc_ROOT F:/Dev/shaderc/build/install/lib/shaderc_shared.lib)
 	set(unofficial-shaderc_FOUND true)
