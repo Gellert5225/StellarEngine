@@ -24,14 +24,14 @@ namespace Stellar {
 		virtual void endRenderPass() = 0;
 
 		virtual void setClearColor(const glm::vec4& color) = 0;
-		virtual void renderGeometry(Buffer* vertexBuffers,
-									Buffer* indexBuffer,
+		virtual void renderGeometry(STLR_Ptr<Buffer> vertexBuffers,
+									STLR_Ptr<Buffer> indexBuffer,
 									STLR_Ptr<Texture2D> texture,
 									const glm::vec4& color,
 									uint32_t indexCount = 0,
 									const glm::mat4& transform = {}) = 0;
-		virtual void renderGrid(Buffer* vertexBuffer,
-								Buffer* indexBuffer,
+		virtual void renderGrid(STLR_Ptr<Buffer> vertexBuffer,
+								STLR_Ptr<Buffer> indexBuffer,
 								uint32_t indexCount = 0) = 0;
 		
 		virtual void bindUbo(const GlobalUniforms& ubo) = 0;

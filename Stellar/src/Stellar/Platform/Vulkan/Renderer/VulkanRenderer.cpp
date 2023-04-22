@@ -72,7 +72,6 @@ namespace Stellar {
 		}
 		delete s_Data->pipeline;
 		delete m_GridPipeline;
-		delete m_UniformBuffer;
 		delete m_CommandBuffer;
 	}
 
@@ -134,8 +133,8 @@ namespace Stellar {
 		m_CommandBuffer->submit();
 	}
 
-	void VulkanRenderer::renderGeometry(Buffer* vertexBuffer,
-										Buffer* indexBuffer,
+	void VulkanRenderer::renderGeometry(STLR_Ptr<Buffer> vertexBuffer,
+										STLR_Ptr<Buffer> indexBuffer,
 										STLR_Ptr<Texture2D> texture,
 										const glm::vec4& color,
 										uint32_t indexCount,
@@ -163,7 +162,7 @@ namespace Stellar {
 		vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
 	}
 
-	void VulkanRenderer::renderGrid(Buffer* vertexBuffer, Buffer* indexBuffer, uint32_t indexCount) {
+	void VulkanRenderer::renderGrid(STLR_Ptr<Buffer> vertexBuffer, STLR_Ptr<Buffer> indexBuffer, uint32_t indexCount) {
 		auto commandBuffer = (VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer();
 
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GridPipeline->getPipeline());

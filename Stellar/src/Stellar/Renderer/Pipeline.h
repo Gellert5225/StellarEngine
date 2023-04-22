@@ -21,6 +21,7 @@ namespace Stellar {
 	struct PipelineSpecification {
 		STLR_Ptr<Shader> shader;
 		STLR_Ptr<RenderPass> renderPass;
+		VertexBufferLayout layout;
 		PrimitiveTopology topology = PrimitiveTopology::Triangles;
 		bool backfaceCulling = true;
 		bool depthTest = true;

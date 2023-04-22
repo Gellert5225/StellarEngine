@@ -21,14 +21,14 @@ namespace Stellar {
 		void endRenderPass() override;
 
 		void setClearColor(const glm::vec4& color) override;
-		void renderGeometry(Buffer* vertexBuffer,
-							Buffer* indexBuffer,
+		void renderGeometry(STLR_Ptr<Buffer> vertexBuffer,
+							STLR_Ptr<Buffer>indexBuffer,
 							STLR_Ptr<Texture2D> texture,
 							const glm::vec4& color,
 							uint32_t indexCount,
 							const glm::mat4& transform) override;
-		void renderGrid(Buffer* vertexBuffer,
-						Buffer* indexBuffer,
+		void renderGrid(STLR_Ptr<Buffer> vertexBuffer,
+						STLR_Ptr<Buffer> indexBuffer,
 						uint32_t indexCount = 0) override;
 
 		STLR_Ptr<FrameBuffer> getFrameBuffer() override;
@@ -45,7 +45,7 @@ namespace Stellar {
 		VulkanPipeline* m_GridPipeline = nullptr;
 		VkClearColorValue m_ClearColor = {{0.66f, 0.9f, 0.96f, 1.0f}};
 
-		Buffer* m_UniformBuffer{};
+		STLR_Ptr<Buffer> m_UniformBuffer{};
 		STLR_Ptr<FrameBuffer> m_FrameBuffer;
 
 		VkDescriptorSet m_UboDescriptorSet;

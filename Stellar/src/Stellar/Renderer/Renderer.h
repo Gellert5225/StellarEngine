@@ -9,6 +9,7 @@
 #include "Texture.h"
 #include "FrameBuffer.h"
 #include "Pipeline.h"
+#include "Material.h"
 
 #include "Stellar/Core/Core.h"
 
@@ -25,22 +26,22 @@ namespace Stellar {
 		static void EndRenderPass();
 
 		static void SetClearColor(const glm::vec4& color);
-		static void RenderGeometry(Buffer* vertexBuffer,
-								Buffer* indexBuffer,
+		static void RenderGeometry(STLR_Ptr<Buffer> vertexBuffer,
+								STLR_Ptr<Buffer> indexBuffer,
 								STLR_Ptr<Texture2D>,
 								const glm::vec4& color,
 								uint32_t indexCount = 0,
 								const glm::mat4& transform = {});
-		// static void RenderGeometry(Ref<CommandBuffer> commandBuffer, 
-		// 							Ref<Pipeline> pipeline, 
-		// 							Ref<UniformBufferSet> uniformBufferSet, 
-		// 							Ref<Material> material, 
-		// 							Ref<VertexBuffer> vertexBuffer, 
-		// 							Ref<IndexBuffer> indexBuffer, 
-		// 							const glm::mat4& transform, 
-		// 							uint32_t indexCount = 0);
-		static void RenderGrid(Buffer* vertexBuffer,
-							Buffer* indexBuffer,
+		// static void RenderGeometry(STLR_Ptr<CommandBuffer> commandBuffer, 
+		// 							STLR_Ptr<Pipeline> pipeline, 
+		// 							STLR_Ptr<UniformBufferSet> uniformBufferSet, 
+		// 							STLR_Ptr<Material> material, 
+		// 							STLR_Ptr<Buffer> vertexBuffer, 
+		// 							STLR_Ptr<Buffer> indexBuffer, 
+		// 							uint32_t indexCount = 0, 
+		// 							const glm::mat4& transform);
+		static void RenderGrid(STLR_Ptr<Buffer> vertexBuffer,
+							STLR_Ptr<Buffer> indexBuffer,
 							uint32_t indexCount = 0);
 
 		static void BindUbo(const GlobalUniforms& ubo);

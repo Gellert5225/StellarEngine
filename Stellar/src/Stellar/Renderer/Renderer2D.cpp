@@ -8,8 +8,8 @@
 
 namespace Stellar {
 	struct Renderer2DData {
-		Buffer* quadVertexBuffer;
-		Buffer* quadIndexBuffer;
+		STLR_Ptr<Buffer> quadVertexBuffer;
+		STLR_Ptr<Buffer> quadIndexBuffer;
 		Shader* quadShader;
 
 		uint32_t indexCount;
@@ -43,8 +43,6 @@ namespace Stellar {
 	}
 
 	void Renderer2D::ShutDown() {
-		delete s_Data->quadVertexBuffer;
-		delete s_Data->quadIndexBuffer;
 		delete s_Data;
 	}
 

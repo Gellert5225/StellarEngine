@@ -250,7 +250,7 @@ namespace Stellar {
 				layoutBinding.pImmutableSamplers = nullptr;
 
 				uint32_t binding = bindingAndSet & 0xffffffff;
-				uint32_t descriptorSet = (bindingAndSet >> 32);
+				uint32_t descriptorSet = ((unsigned long long)bindingAndSet >> 32);
 				layoutBinding.binding = binding;
 
 				STLR_CORE_ASSERT(shaderDescriptorSet.uniformBuffers.find(binding) == shaderDescriptorSet.uniformBuffers.end(), "Binding is already present!");
@@ -310,9 +310,12 @@ namespace Stellar {
 	}
 
 	VulkanShader::~VulkanShader() {
+		auto device = VulkanDevice::GetInstance()->logicalDevice();
 		for (auto shader : m_ShaderModules) 
 			vkDestroyShaderModule(VulkanDevice::GetInstance()->logicalDevice(),
 				shader, nullptr);
+		for (auto layout : m_DescriptorSetLayouts)
+			vkDestroyDescriptorSetLayout(device, layout, nullptr);
 	}
 
 	const std::vector<VkPipelineShaderStageCreateInfo>& VulkanShader::getStageInfos() const {

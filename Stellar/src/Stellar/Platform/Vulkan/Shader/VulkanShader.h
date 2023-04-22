@@ -39,6 +39,11 @@ namespace Stellar {
 
 			operator bool() const { return !(uniformBuffers.empty() && imageSamplers.empty() && storageImages.empty()); }
 		};
+
+		struct ShaderMaterialDescriptorSet {
+			VkDescriptorPool Pool = nullptr;
+			std::vector<VkDescriptorSet> DescriptorSets;
+		};
 	public:
 		explicit VulkanShader(const std::string& filePath);
 		~VulkanShader();
