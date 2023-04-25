@@ -15,6 +15,8 @@ namespace Stellar {
 
 		std::string getPath() const { return m_Path; }
 
+		virtual uint64_t getHash() const = 0;
+
 		static STLR_Ptr<Texture2D> Create(const std::string& filePath);
 		static STLR_Ptr<Texture2D> Create(ImageFormat format, uint32_t width = 1, uint32_t height = 1, const void* data = nullptr);
 	protected:

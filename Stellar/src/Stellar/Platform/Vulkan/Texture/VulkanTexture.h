@@ -11,6 +11,8 @@ namespace Stellar {
 		VulkanTexture(const std::string& filePath);
 		VulkanTexture(ImageFormat format, uint32_t width, uint32_t height, const void* data);
 		~VulkanTexture() override;
+
+		uint64_t getHash() const override;
 		// Vulkan
 		void invalidate();
 		STLR_Ptr<Image2D> getImage() const;

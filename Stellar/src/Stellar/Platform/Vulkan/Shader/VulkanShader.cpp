@@ -321,4 +321,14 @@ namespace Stellar {
 	const std::vector<VkPipelineShaderStageCreateInfo>& VulkanShader::getStageInfos() const {
 		return m_StageInfos;
 	}
+
+	const VkWriteDescriptorSet* VulkanShader::getDescriptorSet(const std::string& name, uint32_t set) {
+		STLR_CORE_ASSERT(set < m_ShaderDescriptorSets.size());
+		STLR_CORE_ASSERT(m_ShaderDescriptorSets[set]);
+		if (m_ShaderDescriptorSets.at(set).writeDescriptorSets.find(name) == m_ShaderDescriptorSets.at(set).writeDescriptorSets.end()) {
+			STLR_CORE_WARN("Shader {0} does not contain requested descriptor set {1}", m_Name, name);
+			return nullptr;
+		}
+		return &m_ShaderDescriptorSets.at(set).writeDescriptorSets.at(name);
+	}
 }

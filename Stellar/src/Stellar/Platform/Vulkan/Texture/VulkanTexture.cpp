@@ -224,4 +224,9 @@ namespace Stellar {
 	STLR_Ptr<Image2D> VulkanTexture::getImage() const {
 		return m_Image;
 	}
+
+	uint64_t VulkanTexture::getHash() const {
+		auto info = (VulkanImageInfo*)getImage()->getImageInfo();
+		return (uint64_t)info->image;
+	}
 }
