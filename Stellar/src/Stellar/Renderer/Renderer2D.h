@@ -22,5 +22,12 @@ namespace Stellar {
 		static void DrawQuad(const glm::mat4& transform, 
 							const glm::vec4& color,
 							STLR_Ptr<Texture2D> texture = nullptr);
+
+		static void DrawQuad(const glm::mat4& transform, 
+							const glm::vec4& color,
+							const STLR_Ptr<Texture2D>& texture, 
+							float tilingFactor);
+	private:
+		static void FlushAndReset();
 	};
 }

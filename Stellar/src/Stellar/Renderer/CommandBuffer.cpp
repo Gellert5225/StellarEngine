@@ -11,11 +11,11 @@
 
 namespace Stellar {
 
-	CommandBuffer* CommandBuffer::Create(uint32_t size) {
+	STLR_Ptr<CommandBuffer> CommandBuffer::Create(uint32_t size) {
 		switch (RendererAPI::Current()) {
 			case RendererAPIType::Vulkan: 
 			#if defined __linux__ || defined _WIN64
-				return new VulkanCommandBuffer(size);
+				return STLR_Ptr<VulkanCommandBuffer>::Create(size);
 			#endif
 			case RendererAPIType::Metal:
 			STLR_CORE_ASSERT(false, "Metal is not yet supported");
