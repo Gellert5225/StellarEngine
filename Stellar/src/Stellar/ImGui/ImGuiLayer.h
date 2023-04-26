@@ -7,7 +7,7 @@
 #include <imgui.h>
 
 namespace Stellar {
-	class STLR_API ImGuiLayer: public Layer {
+	class ImGuiLayer: public Layer {
 	public:
 		virtual void begin() = 0;
 		virtual void end() = 0;
@@ -30,5 +30,5 @@ namespace Stellar::UI {
 	bool IsInputEnabled();
 
 	void* Image(Texture2D* texture, const ImVec2& size);
-	void ImageFromFB(Ref<FrameBuffer> frameBuffer, const ImVec2& size);
+	void ImageFromFB(STLR_Ptr<FrameBuffer> frameBuffer, const ImVec2& size);
 }

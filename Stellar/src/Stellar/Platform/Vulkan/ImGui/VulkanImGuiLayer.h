@@ -6,7 +6,6 @@
 #include "Stellar/Events/ApplicationEvent.h"
 
 #include "Stellar/Renderer/CommandBuffer.h"
-#include "Stellar/Platform/Vulkan/RenderPass/ImGuiRenderPass.h"
 
 #include "Stellar/ImGui/ImGuiLayer.h"
 #include <vulkan/vulkan.h>

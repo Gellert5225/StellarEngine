@@ -2,14 +2,15 @@
 
 #include "Stellar/Core/Core.h"
 #include "Stellar/Core/Timestep.h"
+#include "Stellar/Core/STLRBase.h"
 #include "Stellar/Editor/EditorCamera.h"
 
-#include <entt.h>
+#include <entt/entt.hpp>
 
 namespace Stellar {
 	class Entity;
 
-	class STLR_API Scene {
+	class Scene : public STLR_Base {
 	public:
 		Scene();
 		~Scene();

@@ -56,7 +56,7 @@ namespace Stellar {
 					depthAttachmentReference = { attachmentIndex, VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL };
 				}
 			} else {
-				Ref<Image2D> colorAttachment;
+				STLR_Ptr<Image2D> colorAttachment;
 				if (createImages) {
 					ImageSpecification imageSpec;
 					imageSpec.format = attachment.format;
@@ -67,7 +67,7 @@ namespace Stellar {
 					colorAttachment = m_AttachmentImages.emplace_back(Image2D::Create(imageSpec));
 					colorAttachment->invalidate();
 				} else {
-					Ref<Image2D> image = m_AttachmentImages[attachmentIndex];
+					STLR_Ptr<Image2D> image = m_AttachmentImages[attachmentIndex];
 					ImageSpecification& spec = image->GetSpecification();
 					spec.width = m_Width;
 					spec.height = m_Height;
@@ -92,17 +92,17 @@ namespace Stellar {
 		}
 
 		// create render pass
-		m_RenderPass = CreateRef<StandardRenderPass>(attachmentDescriptions, colorAttachmentReferences, depthAttachmentReference);
+		m_RenderPass = STLR_Ptr<VulkanRenderPass>::Create(attachmentDescriptions, colorAttachmentReferences, depthAttachmentReference);
 
 		std::vector<VkImageView> attachments(m_AttachmentImages.size());
 
 		for (uint32_t i = 0; i < m_AttachmentImages.size(); i++) {
-			VulkanImageInfo* info = (VulkanImageInfo*)((VulkanImage2D*)m_AttachmentImages[i].get())->getImageInfo();
+			VulkanImageInfo* info = (VulkanImageInfo*)((VulkanImage2D*)m_AttachmentImages[i].raw())->getImageInfo();
 			attachments[i] = info->imageView;
 		}
 
 		if (m_DepthAttachmentImage) {
-			VulkanImageInfo* depthInfo = (VulkanImageInfo*)(VulkanImage2D*)m_DepthAttachmentImage.get()->getImageInfo();
+			VulkanImageInfo* depthInfo = (VulkanImageInfo*)(VulkanImage2D*)m_DepthAttachmentImage.raw()->getImageInfo();
 			attachments.emplace_back(depthInfo->imageView);
 		}
 
@@ -138,7 +138,7 @@ namespace Stellar {
 			auto device = VulkanDevice::GetInstance()->logicalDevice();
 			vkDestroyFramebuffer(device, m_Framebuffer, nullptr);
 
-			for (Ref<Image2D> image : m_AttachmentImages) {
+			for (STLR_Ptr<Image2D> image : m_AttachmentImages) {
 				image->release();
 			}
 			m_DepthAttachmentImage->release();

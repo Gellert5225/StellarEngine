@@ -52,7 +52,7 @@ namespace Stellar {
 		descriptorWrite.dstArrayElement = 0;
 		descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 		descriptorWrite.descriptorCount = 1;
-		descriptorWrite.pImageInfo = &((VulkanImage2D*)m_Image.get())->getDescriptorInfo();
+		descriptorWrite.pImageInfo = &((VulkanImage2D*)m_Image.raw())->getDescriptorInfo();
 
 		vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
 		// auto imageInfo = (VulkanImageInfo*)m_Image->getImageInfo();
@@ -61,7 +61,11 @@ namespace Stellar {
 
 	VulkanTexture::VulkanTexture(ImageFormat format, uint32_t width, uint32_t height, const void* data) : m_Width(width), m_Height(height) {
 		void* imageData = new uint8_t[width * height * 4];
-		memcpy(imageData, &data, width * height * 4);
+		if (data == nullptr) {
+			uint32_t whiteTex = 0xffffffff;
+			data = &whiteTex;
+		}
+		memcpy(imageData, data, width * height * 4);
 		m_Pixels = (unsigned char*)imageData;
 		m_ImageSize = width * height * 4;
 
@@ -95,7 +99,7 @@ namespace Stellar {
 		descriptorWrite.dstArrayElement = 0;
 		descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 		descriptorWrite.descriptorCount = 1;
-		descriptorWrite.pImageInfo = &((VulkanImage2D*)m_Image.get())->getDescriptorInfo();
+		descriptorWrite.pImageInfo = &((VulkanImage2D*)m_Image.raw())->getDescriptorInfo();
 
 		vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
 	}
@@ -214,10 +218,15 @@ namespace Stellar {
 
 		delete stagingBuffer;
 
-		((VulkanImage2D*)m_Image.get())->updateDescriptor();
+		((VulkanImage2D*)m_Image.raw())->updateDescriptor();
 	}
 
-	Ref<Image2D> VulkanTexture::getImage() const {
+	STLR_Ptr<Image2D> VulkanTexture::getImage() const {
 		return m_Image;
+	}
+
+	uint64_t VulkanTexture::getHash() const {
+		auto info = (VulkanImageInfo*)getImage()->getImageInfo();
+		return (uint64_t)info->image;
 	}
 }

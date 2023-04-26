@@ -66,16 +66,16 @@ namespace Stellar {
 		s_RendererAPI->endRenderPass();
 	}
 
-	void Renderer::RenderGeometry(Buffer* vertexBuffer,
-								Buffer* indexBuffer,
-								Ref<Texture2D> texture,
+	void Renderer::RenderGeometry(STLR_Ptr<Buffer> vertexBuffer,
+								STLR_Ptr<Buffer> indexBuffer,
+								STLR_Ptr<Texture2D> texture,
 								const glm::vec4& color,
 								uint32_t indexCount,
 								const glm::mat4& transform) {
 		s_RendererAPI->renderGeometry(vertexBuffer, indexBuffer, texture, color, indexCount, transform);
 	}
 
-	void Renderer::RenderGrid(Buffer* vertexBuffer, Buffer* indexBuffer, uint32_t indexCount) {
+	void Renderer::RenderGrid(STLR_Ptr<Buffer> vertexBuffer, STLR_Ptr<Buffer> indexBuffer, uint32_t indexCount) {
 		s_RendererAPI->renderGrid(vertexBuffer, indexBuffer, indexCount);
 	}
 
@@ -95,7 +95,7 @@ namespace Stellar {
 		return s_Data->m_ShaderLibrary;
 	}
 
-	Ref<FrameBuffer> Renderer::GetFrameBuffer() {
+	STLR_Ptr<FrameBuffer> Renderer::GetFrameBuffer() {
 		return s_RendererAPI->getFrameBuffer();
 	}
 

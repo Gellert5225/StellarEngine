@@ -13,14 +13,14 @@
 namespace Stellar {
 
 	struct VulkanRendererData {
-		GraphicsPipeline* pipeline;
+		VulkanPipeline* pipeline;
 		std::vector<VkDescriptorPool> DescriptorPools;
 	};
 
 	static VulkanRendererData* s_Data = nullptr;
 
 	void VulkanRenderer::init() {
-		m_CommandBuffer = CommandBuffer::Create(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
+		m_CommandBuffer = CommandBuffer::Create(Renderer::MAX_FRAMES_IN_FLIGHT);
 		m_UniformBuffer = Buffer::Create(BufferType::Uniform, sizeof(GlobalUniforms));
 
 		FrameBufferSpec framebufferSpec;
@@ -31,13 +31,13 @@ namespace Stellar {
 
 		auto quadShader = Renderer::GetShaderLibrary()->get("shader");
 		auto gridShader = Renderer::GetShaderLibrary()->get("grid");
-		m_GraphicsPipeline = new GraphicsPipeline(quadShader, ((VulkanFrameBuffer*)m_FrameBuffer.get())->getRenderPass());
-		m_GridPipeline = new GraphicsPipeline(gridShader, ((VulkanFrameBuffer*)m_FrameBuffer.get())->getRenderPass());
+		m_GraphicsPipeline = new VulkanPipeline(quadShader, ((VulkanFrameBuffer*)m_FrameBuffer.raw())->getRenderPass());
+		m_GridPipeline = new VulkanPipeline(gridShader, ((VulkanFrameBuffer*)m_FrameBuffer.raw())->getRenderPass());
 		s_Data = new VulkanRendererData();
 		s_Data->pipeline = m_GraphicsPipeline;
 
 		// descriptor pool
-		s_Data->DescriptorPools.resize(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
+		s_Data->DescriptorPools.resize(Renderer::MAX_FRAMES_IN_FLIGHT);
 		VkDescriptorPoolSize pool_sizes[] = {
 			{ VK_DESCRIPTOR_TYPE_SAMPLER, 1000 },
 			{ VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000 },
@@ -58,7 +58,7 @@ namespace Stellar {
 		pool_info.poolSizeCount = (uint32_t)IM_ARRAYSIZE(pool_sizes);
 		pool_info.pPoolSizes = pool_sizes;
 		auto device = VulkanDevice::GetInstance()->logicalDevice();
-		for (uint32_t i = 0; i < VulkanSwapChain::MAX_FRAMES_IN_FLIGHT; i++) {
+		for (uint32_t i = 0; i < Renderer::MAX_FRAMES_IN_FLIGHT; i++) {
 			VK_CHECK_RESULT(vkCreateDescriptorPool(device, &pool_info, nullptr, &s_Data->DescriptorPools[i]));
 		}
 
@@ -67,12 +67,11 @@ namespace Stellar {
 
 	void VulkanRenderer::shutDown() {
 		auto device = VulkanDevice::GetInstance()->logicalDevice();
-		for (uint32_t i = 0; i < VulkanSwapChain::MAX_FRAMES_IN_FLIGHT; i++) {
+		for (uint32_t i = 0; i < Renderer::MAX_FRAMES_IN_FLIGHT; i++) {
 			vkDestroyDescriptorPool(device, s_Data->DescriptorPools[i], nullptr);
 		}
 		delete s_Data->pipeline;
 		delete m_GridPipeline;
-		delete m_UniformBuffer;
 		delete m_CommandBuffer;
 	}
 
@@ -96,8 +95,8 @@ namespace Stellar {
 
 		VkRenderPassBeginInfo renderPassInfo{};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassInfo.renderPass = ((VulkanFrameBuffer*)m_FrameBuffer.get())->getRenderPass();
-		renderPassInfo.framebuffer = ((VulkanFrameBuffer*)m_FrameBuffer.get())->getFramebuffer();
+		renderPassInfo.renderPass = ((VulkanFrameBuffer*)m_FrameBuffer.raw())->getRenderPass();
+		renderPassInfo.framebuffer = ((VulkanFrameBuffer*)m_FrameBuffer.raw())->getFramebuffer();
 		renderPassInfo.renderArea.offset = {0, 0};
 		renderPassInfo.renderArea.extent.width = m_FrameBuffer->getSpecification().width;
 		renderPassInfo.renderArea.extent.height = m_FrameBuffer->getSpecification().height;
@@ -134,9 +133,9 @@ namespace Stellar {
 		m_CommandBuffer->submit();
 	}
 
-	void VulkanRenderer::renderGeometry(Buffer* vertexBuffer,
-										Buffer* indexBuffer,
-										Ref<Texture2D> texture,
+	void VulkanRenderer::renderGeometry(STLR_Ptr<Buffer> vertexBuffer,
+										STLR_Ptr<Buffer> indexBuffer,
+										STLR_Ptr<Texture2D> texture,
 										const glm::vec4& color,
 										uint32_t indexCount,
 										const glm::mat4& transform) {
@@ -144,7 +143,7 @@ namespace Stellar {
 		push.model = transform;
 		push.color = color;
 
-		auto textureDescriptorSet = ((VulkanTexture*)texture.get())->getDescriptorSets();
+		auto textureDescriptorSet = ((VulkanTexture*)texture.raw())->getDescriptorSets();
 		auto commandBuffer = (VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer();
 
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GraphicsPipeline->getPipeline());
@@ -163,7 +162,7 @@ namespace Stellar {
 		vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
 	}
 
-	void VulkanRenderer::renderGrid(Buffer* vertexBuffer, Buffer* indexBuffer, uint32_t indexCount) {
+	void VulkanRenderer::renderGrid(STLR_Ptr<Buffer> vertexBuffer, STLR_Ptr<Buffer> indexBuffer, uint32_t indexCount) {
 		auto commandBuffer = (VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer();
 
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GridPipeline->getPipeline());
@@ -216,11 +215,11 @@ namespace Stellar {
 		vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
 	}
 
-	GraphicsPipeline* VulkanRenderer::GetPipeline() {
+	VulkanPipeline* VulkanRenderer::GetPipeline() {
 		return s_Data->pipeline;
 	}
 
-	Ref<FrameBuffer> VulkanRenderer::getFrameBuffer() {
+	STLR_Ptr<FrameBuffer> VulkanRenderer::getFrameBuffer() {
 		return m_FrameBuffer;
 	}
 

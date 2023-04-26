@@ -76,9 +76,9 @@ namespace Stellar {
 
 		for (auto& framebuffer : m_Framebuffers)
 			vkDestroyFramebuffer(device, framebuffer, nullptr);
-		delete m_ImGuiRenderPass;
+		delete m_RenderPass;
 
-		for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+		for (size_t i = 0; i < Renderer::MAX_FRAMES_IN_FLIGHT; i++) {
 			vkDestroyFence(device, m_InFlightFences[i], nullptr);
 			vkDestroySemaphore(device, m_ImageAvailableSemaphores[i], nullptr);
 			vkDestroySemaphore(device, m_RenderFinishedSemaphores[i], nullptr);
@@ -121,8 +121,8 @@ namespace Stellar {
 		return m_SwapChainImages.size();
 	}
 
-	VkRenderPass VulkanSwapChain::getImGuiRenderPass() const {
-		return m_ImGuiRenderPass->getVkRenderPass();
+	VkRenderPass VulkanSwapChain::getVulkanRenderPass() const {
+		return m_RenderPass->getVkRenderPass();
 	}
 
 	void VulkanSwapChain::createCommandBuffers() {
@@ -142,7 +142,7 @@ namespace Stellar {
 		commandBufferAllocateInfo.commandBufferCount = 1;
 		commandBufferAllocateInfo.commandPool = VulkanDevice::GetInstance()->getCommandPool();
 
-		m_CommandBuffers.resize(MAX_FRAMES_IN_FLIGHT);
+		m_CommandBuffers.resize(Renderer::MAX_FRAMES_IN_FLIGHT);
 		for (auto& commandBuffer : m_CommandBuffers) {
 			//VK_CHECK_RESULT(vkCreateCommandPool(device, &cmdPoolInfo, nullptr, &commandBuffer.CommandPool))
 
@@ -244,28 +244,28 @@ namespace Stellar {
 		auto device = VulkanDevice::GetInstance()->logicalDevice();
 
 		m_ImagesInFlight.resize(getImageCount(), VK_NULL_HANDLE);
-		if (m_ImageAvailableSemaphores.size() != MAX_FRAMES_IN_FLIGHT ||
-			m_RenderFinishedSemaphores.size() != MAX_FRAMES_IN_FLIGHT) {
-			m_ImageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
-			m_RenderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
+		if (m_ImageAvailableSemaphores.size() != Renderer::MAX_FRAMES_IN_FLIGHT ||
+			m_RenderFinishedSemaphores.size() != Renderer::MAX_FRAMES_IN_FLIGHT) {
+			m_ImageAvailableSemaphores.resize(Renderer::MAX_FRAMES_IN_FLIGHT);
+			m_RenderFinishedSemaphores.resize(Renderer::MAX_FRAMES_IN_FLIGHT);
 
 			VkSemaphoreCreateInfo semaphoreInfo{};
 			semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
-			for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+			for (size_t i = 0; i < Renderer::MAX_FRAMES_IN_FLIGHT; i++) {
 				vkCreateSemaphore(device, &semaphoreInfo, nullptr, &m_ImageAvailableSemaphores[i]);
 				vkCreateSemaphore(device, &semaphoreInfo, nullptr, &m_RenderFinishedSemaphores[i]);
 			}
 		}
 
-		if (m_InFlightFences.size() != MAX_FRAMES_IN_FLIGHT) {
-			m_InFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
+		if (m_InFlightFences.size() != Renderer::MAX_FRAMES_IN_FLIGHT) {
+			m_InFlightFences.resize(Renderer::MAX_FRAMES_IN_FLIGHT);
 
 			VkFenceCreateInfo fenceInfo{};
 			fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
 			fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
-			for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+			for (size_t i = 0; i < Renderer::MAX_FRAMES_IN_FLIGHT; i++) {
 				VK_CHECK_RESULT(vkCreateFence(device, &fenceInfo,nullptr, &m_InFlightFences[i]));
 			}
 		}
@@ -278,7 +278,7 @@ namespace Stellar {
 
 		VkFramebufferCreateInfo info = {};
 		info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-		info.renderPass = m_ImGuiRenderPass->getVkRenderPass();
+		info.renderPass = m_RenderPass->getVkRenderPass();
 		info.attachmentCount = 1;
 		info.width = m_SwapChainExtent.width;
 		info.height = m_SwapChainExtent.height;
@@ -293,8 +293,8 @@ namespace Stellar {
 	}
 
 	void VulkanSwapChain::createRenderPass() {
-		delete m_ImGuiRenderPass;
-		m_ImGuiRenderPass = new ImGuiRenderPass(m_SwapChainImageFormat);
+		delete m_RenderPass;
+		m_RenderPass = new VulkanRenderPass(m_SwapChainImageFormat);
 	}
 
 	void VulkanSwapChain::beginFrame() {
@@ -363,7 +363,7 @@ namespace Stellar {
 		}
 
 		m_IsFrameStarted = false;
-		m_CurrentFrameIndex = (m_CurrentFrameIndex + 1) % VulkanSwapChain::MAX_FRAMES_IN_FLIGHT;
+		m_CurrentFrameIndex = (m_CurrentFrameIndex + 1) % Renderer::MAX_FRAMES_IN_FLIGHT;
 
 		vkWaitForFences(device, 1, &m_InFlightFences[m_CurrentFrameIndex], VK_TRUE, UINT64_MAX);
 		vkDeviceWaitIdle(device);

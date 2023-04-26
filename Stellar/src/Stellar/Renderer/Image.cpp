@@ -10,11 +10,11 @@
 #include "Stellar/Core/Log.h"
 
 namespace Stellar {
-	Ref<Image2D> Image2D::Create(ImageSpecification specification) {
+	STLR_Ptr<Image2D> Image2D::Create(ImageSpecification specification) {
 		switch (RendererAPI::Current()) {
 			case RendererAPIType::Vulkan:
 			#if defined(__linux__) || defined(_WIN64)
-				return CreateRef<VulkanImage2D>(specification);
+				return STLR_Ptr<VulkanImage2D>::Create(specification);
 			#endif
 			case RendererAPIType::Metal:
 				STLR_CORE_ASSERT(false, "Metal Image is not yet supported");

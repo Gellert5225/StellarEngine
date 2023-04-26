@@ -12,7 +12,7 @@
 #include <vulkan/vulkan.h>
 
 namespace Stellar {
-	class STLR_API VulkanRenderer : public RendererAPI {
+	class VulkanRenderer : public RendererAPI {
 	public:
 		void init() override;
 		void shutDown() override;
@@ -21,32 +21,32 @@ namespace Stellar {
 		void endRenderPass() override;
 
 		void setClearColor(const glm::vec4& color) override;
-		void renderGeometry(Buffer* vertexBuffer,
-							Buffer* indexBuffer,
-							Ref<Texture2D> texture,
+		void renderGeometry(STLR_Ptr<Buffer> vertexBuffer,
+							STLR_Ptr<Buffer>indexBuffer,
+							STLR_Ptr<Texture2D> texture,
 							const glm::vec4& color,
 							uint32_t indexCount,
 							const glm::mat4& transform) override;
-		void renderGrid(Buffer* vertexBuffer,
-						Buffer* indexBuffer,
+		void renderGrid(STLR_Ptr<Buffer> vertexBuffer,
+						STLR_Ptr<Buffer> indexBuffer,
 						uint32_t indexCount = 0) override;
 
-		Ref<FrameBuffer> getFrameBuffer() override;
+		STLR_Ptr<FrameBuffer> getFrameBuffer() override;
 		void resizeFrameBuffer(uint32_t width, uint32_t height) override;
 		
 		void bindUbo(const GlobalUniforms& ubo) override;
 
 		// vulkan
-		static GraphicsPipeline* GetPipeline();
+		static VulkanPipeline* GetPipeline();
 		static VkDescriptorPool GetDescriptorPool();
 		static VkDescriptorSet AllocateDesriptorSet(VkDescriptorSetAllocateInfo& allocInfo);
 	private:
-		GraphicsPipeline* m_GraphicsPipeline = nullptr;
-		GraphicsPipeline* m_GridPipeline = nullptr;
+		VulkanPipeline* m_GraphicsPipeline = nullptr;
+		VulkanPipeline* m_GridPipeline = nullptr;
 		VkClearColorValue m_ClearColor = {{0.66f, 0.9f, 0.96f, 1.0f}};
 
-		Buffer* m_UniformBuffer{};
-		Ref<FrameBuffer> m_FrameBuffer;
+		STLR_Ptr<Buffer> m_UniformBuffer{};
+		STLR_Ptr<FrameBuffer> m_FrameBuffer;
 
 		VkDescriptorSet m_UboDescriptorSet;
 

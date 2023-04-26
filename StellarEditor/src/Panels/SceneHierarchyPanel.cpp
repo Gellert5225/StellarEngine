@@ -10,11 +10,11 @@
 #include <glm/gtc/type_ptr.hpp>
 
 namespace Stellar {
-	SceneHierarchyPanel::SceneHierarchyPanel(const Ref<Scene>& scene) {
+	SceneHierarchyPanel::SceneHierarchyPanel(const STLR_Ptr<Scene>& scene) {
 		setContext(scene);
 	}
 	
-	void SceneHierarchyPanel::setContext(const Ref<Scene>& scene) {
+	void SceneHierarchyPanel::setContext(const STLR_Ptr<Scene>& scene) {
 		m_Context = scene;
 		m_SelectionContext = {};
 	}
@@ -23,7 +23,7 @@ namespace Stellar {
 		ImGui::Begin("Scene Hierarchy");
 		
 		m_Context->m_Registry.each([&](auto entityID) {
-			Entity entity{ entityID, m_Context.get() };
+			Entity entity{ entityID, m_Context.raw() };
 			drawEntityNode(entity);
 		});
 
@@ -55,7 +55,7 @@ namespace Stellar {
 		ImGuiTreeNodeFlags flags = ((m_SelectionContext == entity) ? ImGuiTreeNodeFlags_Selected  : 0 )| ImGuiTreeNodeFlags_OpenOnArrow;
 		flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
 
-		bool opened = ImGui::TreeNodeEx((void*)(uint32_t)entity, flags, tag.c_str());
+		bool opened = ImGui::TreeNodeEx((void*)(size_t)(uint32_t)entity, flags, tag.c_str());
 		if (ImGui::IsItemClicked()) {
 			m_SelectionContext = entity;
 		}
@@ -110,7 +110,7 @@ namespace Stellar {
 		ImGui::SameLine();
 
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{0.2f, 0.7f, 0.2f, 1.0f});
-		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{0.3f, 0.2f, 0.2f, 1.0f});
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{0.3f, 0.8f, 0.3f, 1.0f});
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{0.2f, 0.7f, 0.3f, 1.0f});
 		ImGui::PushFont(boldFont);
 		if (ImGui::Button("Y", buttonSize))
@@ -187,7 +187,7 @@ namespace Stellar {
 			auto& tag = entity.getComponent<TagComponent>().tag;
 			char buffer[256];
 			memset(buffer, 0, sizeof(buffer));
-			strcpy_s(buffer, sizeof(buffer), tag.c_str());
+			strncpy(buffer, tag.c_str(),  sizeof(buffer));
 
 			if (ImGui::InputText("##Tag", buffer, sizeof(buffer))){
 				tag = std::string(buffer);

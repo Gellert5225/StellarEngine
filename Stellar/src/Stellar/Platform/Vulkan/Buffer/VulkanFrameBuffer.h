@@ -3,13 +3,13 @@
 #include "Stellar/Renderer/FrameBuffer.h"
 #include "Stellar/Renderer/Image.h"
 
-#include "Stellar/Platform/Vulkan/RenderPass/StandardRenderPass.h"
+#include "Stellar/Platform/Vulkan/RenderPass/VulkanRenderPass.h"
 
 #include <vulkan/vulkan.h>
 #include <vector>
 
 namespace Stellar {
-	class STLR_API VulkanFrameBuffer : public FrameBuffer {
+	class VulkanFrameBuffer : public FrameBuffer {
 	public:
 		VulkanFrameBuffer(const FrameBufferSpec& spec);
 		~VulkanFrameBuffer();
@@ -18,15 +18,16 @@ namespace Stellar {
 
 		void invalidate();
 		void release();
-		Ref<Image2D> getAttachmentImage() override { return m_AttachmentImages[0]; }
-		Ref<Image2D> getDepthAttachmentImage() override { return m_DepthAttachmentImage; }
+		STLR_Ptr<Image2D> getAttachmentImage() override { return m_AttachmentImages[0]; }
+		STLR_Ptr<Image2D> getDepthAttachmentImage() override { return m_DepthAttachmentImage; }
 		const FrameBufferSpec& getSpecification() const override { return m_Spec; };
 
 		[[nodiscard]] VkFramebuffer getFramebuffer() const;
 		[[nodiscard]] VkRenderPass getRenderPass() const;
 		[[nodiscard]] size_t getFramebufferSize() const;
+		[[nodiscard]] size_t getColorAttachmentCount() const { return m_AttachmentImages.size(); }
 	private:
 		VkFramebuffer m_Framebuffer;
-		Ref<StandardRenderPass> m_RenderPass;
+		STLR_Ptr<VulkanRenderPass> m_RenderPass;
 	};
 }

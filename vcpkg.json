@@ -1,0 +1,14 @@
+{
+	"name": "nebula",
+	"version": "0.1.0",
+	"dependencies": [
+		"glfw3",
+		"spdlog",
+		"entt",
+		"stb",
+		"glm",
+		"shaderc",
+		"spirv-cross",
+		"yaml-cpp"
+	]
+}

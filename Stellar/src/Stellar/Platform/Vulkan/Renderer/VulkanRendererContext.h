@@ -6,7 +6,7 @@
 #include "Stellar/Renderer/RendererContext.h"
 #include "Stellar/Platform/Vulkan/SwapChain/VulkanSwapChain.h"
 #include "Stellar/Platform/Vulkan/Command/VulkanCommandBuffer.h"
-#include "Stellar/Platform/Vulkan/Pipeline/GraphicsPipeline.h"
+#include "Stellar/Platform/Vulkan/Pipeline/VulkanPipeline.h"
 #include "Stellar/Platform/Vulkan/Instance/VulkanInstance.h"
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 

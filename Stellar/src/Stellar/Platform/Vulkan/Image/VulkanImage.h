@@ -18,7 +18,7 @@ namespace Stellar {
 		VkDeviceMemory imageMemory = VK_NULL_HANDLE;
 	};
 
-	class STLR_API VulkanImage2D : public Image2D {
+	class VulkanImage2D : public Image2D {
 	public:
 		explicit VulkanImage2D(const ImageSpecification& spec);
 		virtual ~VulkanImage2D() override;

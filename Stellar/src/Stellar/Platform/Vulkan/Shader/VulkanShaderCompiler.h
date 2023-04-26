@@ -12,6 +12,10 @@
 #include "Stellar/Core/Log.h"
 #include "Stellar/Renderer/Shader.h"
 
+#include <shaderc/shaderc.hpp>
+#include <spirv_cross/spirv_glsl.hpp>
+#include <spirv-tools/libspirv.h>
+
 namespace Stellar {
 	namespace VulkanShaderCompilerUtil {
 		static ShaderType ShaderTypeFromString(const std::string& type) {
@@ -31,66 +35,43 @@ namespace Stellar {
 			if (type == ShaderType::Fragment) return VK_SHADER_STAGE_FRAGMENT_BIT;
 			return VK_SHADER_STAGE_ALL;
 		}
+
+		static std::string GetVulkanShaderTypeString(VkShaderStageFlagBits type) {
+			switch (type) {
+				case VK_SHADER_STAGE_VERTEX_BIT: return "Vertex";
+				case VK_SHADER_STAGE_FRAGMENT_BIT: return "Fragment";
+			}
+
+			return "Unknown";
+		}
+
+		static ShaderUniformType SPIRTypeToShaderUniformType(spirv_cross::SPIRType type) {
+			switch (type.basetype)
+			{
+			case spirv_cross::SPIRType::Boolean:  return ShaderUniformType::Bool;
+			case spirv_cross::SPIRType::Int:      return ShaderUniformType::Int;
+			case spirv_cross::SPIRType::UInt:     return ShaderUniformType::UInt;
+			case spirv_cross::SPIRType::Float:
+				if (type.vecsize == 1)            return ShaderUniformType::Float;
+				if (type.vecsize == 2)            return ShaderUniformType::Vec2;
+				if (type.vecsize == 3)            return ShaderUniformType::Vec3;
+				if (type.vecsize == 4)            return ShaderUniformType::Vec4;
+
+				if (type.columns == 3)            return ShaderUniformType::Mat3;
+				if (type.columns == 4)            return ShaderUniformType::Mat4;
+				break;
+			}
+			STLR_CORE_ASSERT(false, "Unknown type!");
+			return ShaderUniformType::None;
+		}
 	}
 
 	namespace VulkanShaderCompiler {
 		/* Take the source code of the shader, extract vertex and fragment shader, 
 		then return the mapped shaders */
-		static std::unordered_map<ShaderType, std::string> PreProcess(const std::string& source) {
-			std::unordered_map<ShaderType, std::string> shaderSources;
+		std::unordered_map<ShaderType, std::string> PreProcess(const std::string& source);
 
-			std::string shaderSource = "";
-			bool recording = false;
-
-			ShaderType type = ShaderType::None;
-			std::istringstream s(source);
-			std::string line;
-			while (std::getline(s, line)) {
-				std::istringstream iss(line);
-				std::string word;
-				std::string prevWord;
-				while(iss >> word) {
-					if (!recording && word == "#version")
-						recording = true;
-					else if (recording && word == "#version") {
-						shaderSources[type] = shaderSource;
-						shaderSource = "";
-						type = ShaderType::None;
-						break;
-					}
-
-					if (prevWord == "#pragma" && (word == "vert" || word == "frag")) {
-						type = VulkanShaderCompilerUtil::ShaderTypeFromString(word);
-					}
-					
-					prevWord = word;
-				}
-
-				shaderSource += line + "\n";
-			}
-
-			shaderSources[type] = shaderSource;
-
-			return shaderSources;
-		}
-
-		static void Compile(const std::unordered_map<ShaderType, std::string>& shaderSources, 
-							std::unordered_map<ShaderType, std::vector<uint32_t>>& spvOutput) {
-			shaderc::Compiler compiler;
-			shaderc::CompileOptions options;
-			options.SetOptimizationLevel(shaderc_optimization_level_size);
-
-			for (auto& shader : shaderSources) {
-				shaderc::SpvCompilationResult module =
-					compiler.CompileGlslToSpv(shader.second, 
-											VulkanShaderCompilerUtil::ShadercTypeFromType(shader.first),
-											"shader", options);
-
-				if (module.GetCompilationStatus() != shaderc_compilation_status_success) {
-					STLR_CORE_ASSERT(false, "Failed to compile shader " + module.GetErrorMessage());
-				}
-				spvOutput[shader.first] = {module.cbegin(), module.cend()};
-			}
-		}
+		void Compile(const std::unordered_map<ShaderType, std::string>& shaderSources, 
+							std::unordered_map<ShaderType, std::vector<uint32_t>>& spvOutput);
 	}
 }

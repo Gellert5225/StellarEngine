@@ -17,7 +17,7 @@ namespace Stellar {
 	void EditorLayer::onAttach() {
 		Renderer::SetClearColor({ 0.66f, 0.9f, 0.96f, 1.0f });
 
-		m_ActiveScene = CreateRef<Scene>();
+		m_ActiveScene = STLR_Ptr<Scene>::Create();
 		m_ExampleEntity = m_ActiveScene->createEntity("Example Square");
 		m_ExampleEntity.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, Texture2D::Create("Resources/Textures/Example_texture.jpg"));
 
@@ -89,13 +89,9 @@ namespace Stellar {
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0.0f);
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(255,255,255,0));
-		ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(255,255,255,0));
-		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(255,255,255,0));
 
 		ImGui::Begin("DockSpace Window", nullptr, host_window_flags);
 		ImGui::PopStyleVar(4);
-		ImGui::PopStyleColor(3);
 
 		menuBar();
 
@@ -129,6 +125,13 @@ namespace Stellar {
 		m_SceneHierarchyPanel.onImGuiRender();
 		//ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
 		ImGui::Begin("Info");
+		std::string debug;
+#ifdef NDEBUG
+		debug = "Release";
+#else
+		debug = "Debug";
+#endif
+		ImGui::Text("Version: %s", debug.c_str());
 		ImGui::Text("GPU: %s", appInfo.graphicsInfo.c_str());
 		ImGui::Text("%s", appInfo.vulkanVersion.c_str());
 		ImGui::Text(
@@ -254,14 +257,14 @@ namespace Stellar {
 	}
 
 	void EditorLayer::newScene() {
-		m_ActiveScene = CreateRef<Scene>();
+		m_ActiveScene = STLR_Ptr<Scene>::Create();
 		m_SceneHierarchyPanel.setContext(m_ActiveScene);
 	}
 
 	void EditorLayer::openScene() {
 		std::string filePath = FileDialogs::OpenFile("stlr");
 		if (!filePath.empty()) {
-			m_ActiveScene = CreateRef<Scene>();
+			m_ActiveScene = STLR_Ptr<Scene>::Create();
 			m_SceneHierarchyPanel.setContext(m_ActiveScene);
 
 			SceneSerializer serializer(m_ActiveScene);

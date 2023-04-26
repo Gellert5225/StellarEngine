@@ -8,6 +8,8 @@
 #include "Uniforms.h"
 #include "Texture.h"
 #include "FrameBuffer.h"
+#include "Pipeline.h"
+#include "Material.h"
 
 #include "Stellar/Core/Core.h"
 
@@ -15,7 +17,7 @@
 
 namespace Stellar {
 
-	class STLR_API Renderer {
+	class Renderer {
 	public:
 		static void Init();
 		static void Shutdown();
@@ -24,24 +26,34 @@ namespace Stellar {
 		static void EndRenderPass();
 
 		static void SetClearColor(const glm::vec4& color);
-		static void RenderGeometry(Buffer* vertexBuffer,
-								Buffer* indexBuffer,
-								Ref<Texture2D>,
+		static void RenderGeometry(STLR_Ptr<Buffer> vertexBuffer,
+								STLR_Ptr<Buffer> indexBuffer,
+								STLR_Ptr<Texture2D>,
 								const glm::vec4& color,
 								uint32_t indexCount = 0,
 								const glm::mat4& transform = {});
-		static void RenderGrid(Buffer* vertexBuffer,
-							Buffer* indexBuffer,
+		// static void RenderGeometry(STLR_Ptr<CommandBuffer> commandBuffer, 
+		// 							STLR_Ptr<Pipeline> pipeline, 
+		// 							STLR_Ptr<UniformBufferSet> uniformBufferSet, 
+		// 							STLR_Ptr<Material> material, 
+		// 							STLR_Ptr<Buffer> vertexBuffer, 
+		// 							STLR_Ptr<Buffer> indexBuffer, 
+		// 							uint32_t indexCount = 0, 
+		// 							const glm::mat4& transform);
+		static void RenderGrid(STLR_Ptr<Buffer> vertexBuffer,
+							STLR_Ptr<Buffer> indexBuffer,
 							uint32_t indexCount = 0);
 
 		static void BindUbo(const GlobalUniforms& ubo);
 
-		static Ref<FrameBuffer> GetFrameBuffer();
+		static STLR_Ptr<FrameBuffer> GetFrameBuffer();
 
 		static void ResizeFrameBuffer(uint32_t width, uint32_t height);
 
 		static ShaderLibrary* GetShaderLibrary();
 		
 		static uint32_t GetCurrentFrameIndex();
+
+		static constexpr int MAX_FRAMES_IN_FLIGHT = 3;
 	};
 }

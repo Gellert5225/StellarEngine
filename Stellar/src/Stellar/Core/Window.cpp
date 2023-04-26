@@ -179,7 +179,7 @@ namespace Stellar {
 		return m_SwapChain;
 	}
 
-	Ref<RendererContext> Window::getRendererContext() const {
+	STLR_Ptr<RendererContext> Window::getRendererContext() const {
 		return m_Context;
 	}
 

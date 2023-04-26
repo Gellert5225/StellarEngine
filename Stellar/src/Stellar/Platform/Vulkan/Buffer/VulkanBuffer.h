@@ -9,7 +9,7 @@
 #include <array>
 
 namespace Stellar {
-	struct STLR_API VulkanVertex : public Vertex {
+	struct VulkanVertex : public Vertex {
 
 		static VkVertexInputBindingDescription getBindingDescription() {
 			VkVertexInputBindingDescription bindingDescription{};
@@ -41,7 +41,7 @@ namespace Stellar {
 		}
 	};
 
-	class STLR_API VulkanBuffer : public Buffer {
+	class VulkanBuffer : public Buffer {
 	public:
 		explicit VulkanBuffer(VkDeviceSize size,
 							VkCommandBufferUsageFlags usage,
@@ -63,7 +63,7 @@ namespace Stellar {
 		VkDeviceMemory m_BufferMemory = VK_NULL_HANDLE;
 	};
 
-	class STLR_API VulkanUniformBuffer : public Buffer {
-
+	class VulkanUniformBuffer : public Buffer {
+		
 	};
 }

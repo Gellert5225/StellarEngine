@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Stellar/Core/Core.h"
+#include "Stellar/Core/STLRBase.h"
 #include "Stellar/Renderer/Image.h"
 #include <vector>
 
@@ -37,20 +38,20 @@ namespace Stellar {
 		FramebufferAttachmentSpecification attachments;
 	};
 
-	class STLR_API FrameBuffer {
+	class FrameBuffer : public STLR_Base {
 	public:
 		virtual ~FrameBuffer() = default;
 
-		static Ref<FrameBuffer> Create(const FrameBufferSpec& spec);
+		static STLR_Ptr<FrameBuffer> Create(const FrameBufferSpec& spec);
 
 		virtual void resize(uint32_t width, uint32_t height) = 0;
 		virtual const FrameBufferSpec& getSpecification() const = 0;
-		virtual Ref<Image2D> getAttachmentImage() = 0;
-		virtual Ref<Image2D> getDepthAttachmentImage() = 0;
+		virtual STLR_Ptr<Image2D> getAttachmentImage() = 0;
+		virtual STLR_Ptr<Image2D> getDepthAttachmentImage() = 0;
 	protected:
 		FrameBufferSpec m_Spec;
-		std::vector<Ref<Image2D>> m_AttachmentImages;
-		Ref<Image2D> m_DepthAttachmentImage;
+		std::vector<STLR_Ptr<Image2D>> m_AttachmentImages;
+		STLR_Ptr<Image2D> m_DepthAttachmentImage;
 		uint32_t m_Width, m_Height;
 	};
 } 

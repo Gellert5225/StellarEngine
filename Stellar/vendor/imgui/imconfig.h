@@ -27,7 +27,7 @@
 //#define IMGUI_API __declspec( dllimport )
 
 #if defined(_WIN64)
-    #define IMGUI_API __declspec(dllexport)
+    #define IMGUI_API
     #define DEBUG_BREAK __debugbreak()
 #elif defined(__linux__)
     #define IMGUI_API __attribute__((visibility("default")))

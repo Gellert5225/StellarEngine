@@ -13,14 +13,14 @@
 #include <string>
 
 namespace Stellar {
-	struct STLR_API TagComponent {
+	struct TagComponent {
 		std::string tag;
 		TagComponent() = default;
 		TagComponent(const TagComponent&) = default;
 		TagComponent(const std::string& tag) : tag(tag) {}
 	};
 
-	struct STLR_API TransformComponent {
+	struct TransformComponent {
 		glm::vec3 translation = { 0.0f, -1.0f, 1.0f };
 		glm::vec3 rotation = { 0.0f, 0.0f, 0.0f };
 		glm::vec3 scale = { 1.0f, 1.0f, 1.0f };
@@ -37,22 +37,22 @@ namespace Stellar {
 		}
 	};
 
-	struct STLR_API SpriteRendererComponent {
+	struct SpriteRendererComponent {
 		glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
-		Ref<Texture2D> texture = Texture2D::Create(ImageFormat::RGBA, 1, 1);
+		STLR_Ptr<Texture2D> texture = Texture2D::Create(ImageFormat::RGBA);
 
 		SpriteRendererComponent() = default;
 		SpriteRendererComponent(const SpriteRendererComponent&) = default;
-		SpriteRendererComponent(const glm::vec4& color, Ref<Texture2D> texture) 
+		SpriteRendererComponent(const glm::vec4& color, STLR_Ptr<Texture2D> texture) 
 			: color(color), texture(texture) {}
 	};
 
-	struct STLR_API MeshComponent {
+	struct MeshComponent {
 		bool data;
 		MeshComponent() = default;
 	};
 
-	struct STLR_API CameraComponent {
+	struct CameraComponent {
 		SceneCamera camera;
 		bool primary = true;
 		bool fixedAspectRatio = false;
@@ -61,7 +61,7 @@ namespace Stellar {
 		CameraComponent(const CameraComponent&) = default;
 	};
 
-	struct STLR_API EditorCameraComponent {
+	struct EditorCameraComponent {
 		EditorCamera camera;
 		bool primary = true;
 		bool fixedAspectRatio = false;

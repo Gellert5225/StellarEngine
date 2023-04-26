@@ -8,7 +8,7 @@
 namespace Stellar {
 	class STLR_API SceneSerializer {
 	public:
-		SceneSerializer(const Ref<Scene>& scene);
+		SceneSerializer(const STLR_Ptr<Scene>& scene);
 
 		void serialize(const std::string& path);
 		void serializeRT(const std::string& path);
@@ -16,6 +16,6 @@ namespace Stellar {
 		bool deserialize(const std::string& path);
 		void deserializeRT(const std::string& path);
 	private:
-		Ref<Scene> m_Scene;
+		STLR_Ptr<Scene> m_Scene;
 	};
 }

@@ -3,7 +3,7 @@
 #include "FileUtil.h"
 #include "Stellar/Core/Log.h"
 
-#include <nfd/nfd.h>
+#include <nfd.h>
 
 namespace Stellar {
 	std::string FileDialogs::OpenFile(const char* filter) {

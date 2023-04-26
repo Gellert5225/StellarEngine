@@ -6,8 +6,8 @@
 
 #if defined(_WIN64)
 	#define GLFW_INCLUDE_VULKAN
-	#define EXPORT __declspec(dllexport)
-	#define IMPORT __declspec(dllimport)
+	#define EXPORT
+	#define IMPORT
 	#define DEBUG_BREAK __debugbreak()
 #elif defined(__linux__)
 	#define GLFW_INCLUDE_VULKAN
@@ -36,12 +36,5 @@ namespace Stellar {
 	template<typename T, typename ... Args>
 	constexpr Scope<T> CreateScope(Args&& ... args) {
 		return std::make_unique<T>(std::forward<Args>(args)...);
-	}
-
-	template<typename T>
-	using Ref = std::shared_ptr<T>;
-	template<typename T, typename ... Args>
-	constexpr Ref<T> CreateRef(Args&& ... args) {
-		return std::make_shared<T>(std::forward<Args>(args)...);
 	}
 }
