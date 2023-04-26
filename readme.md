@@ -115,9 +115,9 @@ I will try to list as detailed as possible. However I have not tested the build 
 
 * C++17
 * Visual Studio Code (optional)
+* CMake
 * Windows:
-  * MinGW with GCC installed
-  * Follow tutorial here: <https://www.msys2.org/>
+  * Visual Studio 2019
 * Linux:
   * GNU GCC
   * X11
@@ -131,8 +131,11 @@ I will try to list as detailed as possible. However I have not tested the build 
 
 #### From Command Line
 
-* Debug: `make -j BUILD=debug` and `make run BUILD=debug`
-* Release: `make -j` and `make run`
+First create a build folder: `mkdir build && cd build`.
+Then Configure the project: `cmake ..`.
+
+* Debug: `cmake --build . --config Debug --target ALL_BUILD -j`
+* Release: `cmake --build . --config Release --target ALL_BUILD -j`
 
 #### From VS-Code
 
