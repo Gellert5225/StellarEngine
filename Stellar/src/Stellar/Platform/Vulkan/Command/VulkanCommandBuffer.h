@@ -11,7 +11,7 @@
 #include <vulkan/vulkan.h>
 
 namespace Stellar {
-	class STLR_API VulkanCommandBuffer : public CommandBuffer {
+	class VulkanCommandBuffer : public CommandBuffer {
 	public:
 		explicit VulkanCommandBuffer(uint32_t size);
 		VulkanCommandBuffer(uint32_t size, VkCommandBufferLevel level);

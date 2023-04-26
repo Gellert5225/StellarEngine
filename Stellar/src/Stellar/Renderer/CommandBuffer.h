@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Stellar/Core/Core.h"
+#include "Stellar/Core/STLRBase.h"
 
 namespace Stellar {
-	class STLR_API CommandBuffer {
+	class CommandBuffer : public STLR_Base {
 	public:
 		virtual ~CommandBuffer() = default;
 
@@ -12,7 +13,7 @@ namespace Stellar {
 		virtual void submit() = 0;
 		virtual void* getActiveCommandBuffer() = 0;
 
-		static CommandBuffer* Create(uint32_t size);
+		static STLR_Ptr<CommandBuffer> Create(uint32_t size);
 
 	protected:
 		void* m_ActiveCommandBuffer = nullptr;

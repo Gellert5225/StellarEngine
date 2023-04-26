@@ -72,7 +72,6 @@ namespace Stellar {
 		}
 		delete s_Data->pipeline;
 		delete m_GridPipeline;
-		delete m_CommandBuffer;
 	}
 
 	void VulkanRenderer::beginRenderPass() {

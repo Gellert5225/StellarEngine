@@ -40,7 +40,7 @@ namespace Stellar {
 
 		static RendererAPIType Current() { return s_CurrentRendererAPI; }
 	protected:
-		CommandBuffer* m_CommandBuffer{};
+		STLR_Ptr<CommandBuffer> m_CommandBuffer{};
 		Camera m_Camera;
 	private:
 #ifdef __APPLE__
