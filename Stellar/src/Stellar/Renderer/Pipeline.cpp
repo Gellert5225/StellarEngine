@@ -8,7 +8,7 @@
 #endif
 
 namespace Stellar {
-    STLR_Ptr<Pipeline> Create(const PipelineSpecification& spec) {
+    STLR_Ptr<Pipeline> Pipeline::Create(const PipelineSpecification& spec) {
 		switch (RendererAPI::Current()) {
 			case RendererAPIType::Vulkan:
 			#if defined(__linux__) || defined(_WIN64)

@@ -21,8 +21,10 @@ namespace Stellar {
 	
 	private:
 		void init();
-
+		void update(const std::vector<std::vector<VkWriteDescriptorSet>>& uniformBufferWriteDescriptors = std::vector<std::vector<VkWriteDescriptorSet>>());
 		void setVulkanDescriptor(const std::string& name, const STLR_Ptr<Texture2D>& texture);
+		void invalidateDescriptorSets();
+		
 		const ShaderResourceDeclaration* findResourceDeclaration(const std::string& name) const;
 	private:
 		enum class PendingDescriptorType {
@@ -38,5 +40,7 @@ namespace Stellar {
 		};
 		std::unordered_map<uint32_t, std::shared_ptr<PendingDescriptor>> m_ResidentDescriptors;
 		std::vector<std::shared_ptr<PendingDescriptor>> m_PendingDescriptors;
+		std::vector<std::vector<VkWriteDescriptorSet>> m_WriteDescriptors;
+		VulkanShader::ShaderMaterialDescriptorSet m_DescriptorSets[3];
 	};
 }

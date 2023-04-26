@@ -48,11 +48,16 @@ namespace Stellar {
 		explicit VulkanShader(const std::string& filePath);
 		~VulkanShader();
 
+		virtual const std::unordered_map<std::string, ShaderResourceDeclaration>& getResources() const override;
+
 		VkShaderModule getShaderModule(const std::string& filePath);
-		const std::vector<VkPipelineShaderStageCreateInfo>& getStageInfos() const;
 		std::vector<VkDescriptorSetLayout> getAllDescriptorSetLayouts();
+		const std::vector<VkPipelineShaderStageCreateInfo>& getStageInfos() const;
 		const std::vector<PushConstantRange>& getPushConstantRanges() const { return m_PushConstantRanges; }
+		const std::vector<ShaderDescriptorSet>& getShaderDescriptorSets() const { return m_ShaderDescriptorSets; }
 		const VkWriteDescriptorSet* getDescriptorSet(const std::string& name, uint32_t set = 0);
+		ShaderMaterialDescriptorSet allocateDescriptorSet(uint32_t set = 0);
+		bool hasDescriptorSet(uint32_t set) const { return m_TypeCounts.find(set) != m_TypeCounts.end(); }
 	private:
 		const std::string extractType(const std::string& filePath) const;
 		void reflectAllStages(const std::unordered_map<Stellar::ShaderType, std::vector<uint32_t>>& spvShader);
@@ -69,7 +74,7 @@ namespace Stellar {
 
 		std::vector<PushConstantRange> m_PushConstantRanges;
 		std::unordered_map<std::string, ShaderBuffer> m_Buffers;
-		//std::unordered_map<std::string, ShaderResourceDeclaration> m_Resources;
+		std::unordered_map<std::string, ShaderResourceDeclaration> m_Resources;
 		std::unordered_map<uint32_t, std::vector<VkDescriptorPoolSize>> m_TypeCounts;
 	};
 }

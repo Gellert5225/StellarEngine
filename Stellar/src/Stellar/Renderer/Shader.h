@@ -2,6 +2,7 @@
 
 #include "Stellar/Core/Core.h"
 #include "Stellar/Core/STLRBase.h"
+#include "ShaderUniforms.h"
 
 #include <string>
 #include <vector>
@@ -64,6 +65,8 @@ namespace Stellar {
 		virtual ~Shader() {};
 
 		virtual const std::string& getName() const { return m_Name; }
+
+		virtual const std::unordered_map<std::string, ShaderResourceDeclaration>& getResources() const = 0;
 	protected:
 		Shader(const std::string& filePath) : m_FilePath(std::move(filePath)) {
 			m_Name = extractName(filePath);

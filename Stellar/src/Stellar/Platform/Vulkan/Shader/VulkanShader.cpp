@@ -4,6 +4,7 @@
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 #include "Stellar/Platform/Vulkan/Shader/VulkanShaderCompiler.h"
 #include "Stellar/Platform/Vulkan/VulkanCommon.h"
+#include "Stellar/Platform/Vulkan/Renderer/VulkanRenderer.h"
 
 #include "Stellar/Core/Log.h"
 
@@ -148,7 +149,7 @@ namespace Stellar {
 			imageSampler.name = name;
 			imageSampler.shaderStage = shaderStage;
 
-			//m_Resources[name] = ShaderResourceDeclaration(name, binding, 1);
+			m_Resources[name] = ShaderResourceDeclaration(name, binding, 1);
 
 			STLR_CORE_TRACE("    Name: {0}", name);
 			STLR_CORE_TRACE("    Descriptor Set: {0}, Binding: {1}",  descriptorSet, binding);
@@ -173,7 +174,7 @@ namespace Stellar {
 			imageSampler.name = name;
 			imageSampler.shaderStage = shaderStage;
 
-			//m_Resources[name] = ShaderResourceDeclaration(name, binding, 1);
+			m_Resources[name] = ShaderResourceDeclaration(name, binding, 1);
 
 			STLR_CORE_TRACE("    Name: {0}", name);
 			STLR_CORE_TRACE("    Descriptor Set: {0}, Binding: {1}",  descriptorSet, binding);
@@ -291,6 +292,25 @@ namespace Stellar {
 		return result;
 	}
 
+	VulkanShader::ShaderMaterialDescriptorSet VulkanShader::allocateDescriptorSet(uint32_t set) {
+		STLR_CORE_ASSERT(set < m_DescriptorSetLayouts.size());
+		ShaderMaterialDescriptorSet result;
+
+		if (m_ShaderDescriptorSets.empty())
+			return result;
+		
+		result.Pool = nullptr;
+
+		VkDescriptorSetAllocateInfo allocInfo = {};
+		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+		allocInfo.descriptorSetCount = 1;
+		allocInfo.pSetLayouts = &m_DescriptorSetLayouts[set];
+		VkDescriptorSet descriptorSet = VulkanRenderer::AllocateDesriptorSet(allocInfo);
+		STLR_CORE_ASSERT(descriptorSet);
+		result.DescriptorSets.push_back(descriptorSet);
+		return result;
+	}
+
 	const std::string VulkanShader::extractType(const std::string& filePath) const {
 		auto fileName = filePath.substr(filePath.find_last_of("/") + 1);
 		return fileName.substr(fileName.find_first_of(".") + 1, 4);
@@ -330,5 +350,9 @@ namespace Stellar {
 			return nullptr;
 		}
 		return &m_ShaderDescriptorSets.at(set).writeDescriptorSets.at(name);
+	}
+
+	const std::unordered_map<std::string, ShaderResourceDeclaration>& VulkanShader::getResources() const {
+		return m_Resources;
 	}
 }
