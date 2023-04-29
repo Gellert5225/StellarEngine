@@ -51,10 +51,6 @@ namespace Stellar {
 	private:
 		GLFWwindow* m_Window{};
 
-		STLR_Ptr<RendererContext> m_Context = nullptr;
-		// TODO: Abstract this into different platforms
-		SwapChain* m_SwapChain = nullptr;
-
 		struct WindowData {
 			std::string Title;
 			unsigned int Width, Height;
@@ -64,6 +60,10 @@ namespace Stellar {
 		};
 		WindowData m_Data;
 		WindowProperty m_Property;
+
+		STLR_Ptr<RendererContext> m_Context = nullptr;
+		// TODO: Abstract this into different platforms
+		SwapChain* m_SwapChain = nullptr;
 
 	private:
 		virtual void shutDown();

@@ -5,6 +5,8 @@
 #include "Stellar/Core/STLRBase.h"
 #include "Stellar/Editor/EditorCamera.h"
 
+#include "Stellar/Renderer/Renderer2D.h"
+
 #include <entt/entt.hpp>
 
 namespace Stellar {
@@ -26,6 +28,7 @@ namespace Stellar {
 	private:
 		entt::registry m_Registry;
 		uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
+		STLR_Ptr<Renderer2D> m_Renderer2D;
 
 		friend class Entity;
 		friend class SceneSerializer;
