@@ -1,51 +1,12 @@
 #include "stlrpch.h"
 #include "Renderer2D.h"
 
-#include "Stellar/Renderer/Buffer.h"
-#include "Stellar/Renderer/Shader.h"
-#include "Stellar/Renderer/Uniforms.h"
-#include "Stellar/Renderer/Renderer.h"
-#include "Stellar/Renderer/Pipeline.h"
-#include "Stellar/Renderer/Material.h"
-#include "Stellar/Renderer/FrameBuffer.h"
-
 namespace Stellar {
-	struct QuadVertex {
-		glm::vec3 Position;
-		glm::vec4 Color;
-		glm::vec2 TexCoord;
-		float TexIndex;
-		float TilingFactor;
-	};
+	Renderer2D::Renderer2D() {
+		init();
+	}
 
-	struct Renderer2DData {
-		static const uint32_t MaxQuads = 20000;
-		static const uint32_t MaxVertices = MaxQuads * 4;
-		static const uint32_t MaxIndices = MaxQuads * 6;
-		static const uint32_t MaxTextureSlots = 32; // TODO: RenderCaps
-
-		STLR_Ptr<Buffer> quadVertexBuffer;
-		STLR_Ptr<Buffer> quadIndexBuffer;
-		STLR_Ptr<Pipeline> quadPipeline;
-		STLR_Ptr<Material> quadMaterial;
-
-		uint32_t quadIndexCount = 0;
-		QuadVertex* quadVertexBufferBase = nullptr;
-		QuadVertex* quadVertexBufferPtr = nullptr;
-
-		std::array<STLR_Ptr<Texture2D>, MaxTextureSlots> textureSlots;
-		uint32_t textureSlotIndex = 1; // 0 = white texture
-
-		glm::vec4 quadVertexPositions[4];
-
-		STLR_Ptr<Pipeline> gridPipeline;
-	};
-
-	static Renderer2DData* s_Data;
-
-	void Renderer2D::Init() {
-		s_Data = new Renderer2DData();
-
+	void Renderer2D::init() {
 		FrameBufferSpec framebufferSpec;
 		framebufferSpec.width = 1280;
 		framebufferSpec.height = 720;
@@ -68,12 +29,12 @@ namespace Stellar {
 			{ "inTexCoord", ShaderDataType::Float2 },
 			{ "inTilingFactor", ShaderDataType::Float }
 		};
-		s_Data->quadPipeline = Pipeline::Create(pipelineSpecification);
+		m_QuadPipeline = Pipeline::Create(pipelineSpecification);
 
-		s_Data->quadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
-		s_Data->quadVertexPositions[1] = { -0.5f,  0.5f, 0.0f, 1.0f };
-		s_Data->quadVertexPositions[2] = {  0.5f,  0.5f, 0.0f, 1.0f };
-		s_Data->quadVertexPositions[3] = {  0.5f, -0.5f, 0.0f, 1.0f };
+		// s_Data.quadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
+		// s_Data.quadVertexPositions[1] = { -0.5f,  0.5f, 0.0f, 1.0f };
+		// s_Data.quadVertexPositions[2] = {  0.5f,  0.5f, 0.0f, 1.0f };
+		// s_Data.quadVertexPositions[3] = {  0.5f, -0.5f, 0.0f, 1.0f };
 
 		// s_Data.QuadVertexBufferBase = new QuadVertex[s_Data.MaxVertices];
 		// s_Data.quadVertexBuffer = Buffer::Create(BufferType::Vertex, s_Data.MaxVertices * sizeof(QuadVertex), s_Data.QuadVertexBufferBase);
@@ -107,98 +68,95 @@ namespace Stellar {
 			0, 1, 2, 2, 3, 0
 		};
 
-		s_Data->quadIndexCount = indices.size();
+		m_QuadIndexCount = indices.size();
 
 		// vertex buffer
 		auto vertexBufferSize = sizeof(vertices[0]) * vertices.size();
-		s_Data->quadVertexBuffer = Buffer::Create(BufferType::Vertex, vertexBufferSize, vertices.data());
+		m_QuadVertexBuffer = Buffer::Create(BufferType::Vertex, vertexBufferSize, vertices.data());
 
 		// index buffer
 		auto indexBufferSize = sizeof(indices[0]) * indices.size();
-		s_Data->quadIndexBuffer = Buffer::Create(BufferType::Index, indexBufferSize, indices.data());
+		m_QuadIndexBuffer = Buffer::Create(BufferType::Index, indexBufferSize, indices.data());
 	}
 
-	void Renderer2D::ShutDown() {
-		delete s_Data;
+	void Renderer2D::shutDown() {
+		//delete s_Data;
+		//s_Data.~Renderer2DData();
 	}
 
-	void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& transform) {
+	void Renderer2D::beginScene(const Camera& camera, const glm::mat4& transform) {
 		GlobalUniforms ubo{};
 		ubo.viewProjection = camera.getProjectionMatrix() * glm::inverse(transform);
 
 		Renderer::BindUbo(ubo);
 		Renderer::BeginRenderPass();
 
-		Renderer::RenderGrid(s_Data->quadVertexBuffer, s_Data->quadIndexBuffer, s_Data->quadIndexCount);
+		Renderer::RenderGrid(m_QuadVertexBuffer, m_QuadIndexBuffer, m_QuadIndexCount);
 	}
 	
-	void Renderer2D::BeginScene(const EditorCamera& camera) {
+	void Renderer2D::beginScene(const EditorCamera& camera) {
 		GlobalUniforms ubo{};
 		ubo.viewProjection = camera.getViewProjectionMatrix();
 
 		Renderer::BindUbo(ubo);
 		Renderer::BeginRenderPass();
 
-		Renderer::RenderGrid(s_Data->quadVertexBuffer, s_Data->quadIndexBuffer, s_Data->quadIndexCount);
+		Renderer::RenderGrid(m_QuadVertexBuffer, m_QuadIndexBuffer, m_QuadIndexCount);
 	}
 
-	void Renderer2D::EndScene() {
+	void Renderer2D::endScene() {
 		Renderer::EndRenderPass();
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color) {
-		//Renderer::RenderGeometry(s_Data->quadVertexBuffer, s_Data->quadIndexBuffer, color, s_Data->indexCount);
+	void Renderer2D::drawQuad(const glm::mat4& transform, const glm::vec4& color, STLR_Ptr<Texture2D> texture) {
+		Renderer::RenderGeometry(m_QuadVertexBuffer, m_QuadIndexBuffer, texture, color, m_QuadIndexCount, transform);
 	}
 
-	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color, STLR_Ptr<Texture2D> texture) {
-		Renderer::RenderGeometry(s_Data->quadVertexBuffer, s_Data->quadIndexBuffer, texture, color, s_Data->quadIndexCount, transform);
-	}
-
-	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color, const STLR_Ptr<Texture2D>& texture, float tilingFactor) {
+	void Renderer2D::drawQuad(const glm::mat4& transform, const glm::vec4& color, const STLR_Ptr<Texture2D>& texture, float tilingFactor) {
 		constexpr size_t quadVertexCount = 4;
-		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		//constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 
-		if (s_Data->quadIndexCount >= Renderer2DData::MaxIndices)
-			FlushAndReset();
+		if (m_QuadIndexCount >= MaxIndices)
+			flushAndReset();
 
 		float textureIndex = 0.0f;
-		for (uint32_t i = 1; i < s_Data->textureSlotIndex; i++) {
-			if (*s_Data->textureSlots[i].raw() == *texture.raw()) {
+		for (uint32_t i = 1; i < m_TextureSlotIndex; i++) {
+			if (*m_TextureSlots[i].raw() == *texture.raw()) {
 				textureIndex = (float)i;
 				break;
 			}
 		}
 
 		if (textureIndex == 0.0f) {
-			if (s_Data->textureSlotIndex >= Renderer2DData::MaxTextureSlots)
-				FlushAndReset();
+			if (m_TextureSlotIndex >= MaxTextureSlots)
+				flushAndReset();
 
-			textureIndex = (float)s_Data->textureSlotIndex;
-			s_Data->textureSlots[s_Data->textureSlotIndex] = texture;
-			s_Data->textureSlotIndex++;
+			textureIndex = (float)m_TextureSlotIndex;
+			m_TextureSlots[m_TextureSlotIndex] = texture;
+			m_TextureSlotIndex++;
 		}
 
 		for (size_t i = 0; i < quadVertexCount; i++) {
-			s_Data->quadVertexBufferPtr->Position = transform * s_Data->quadVertexPositions[i];
-			s_Data->quadVertexBufferPtr->Color = color;
-			s_Data->quadVertexBufferPtr->TexCoord = textureCoords[i];
-			s_Data->quadVertexBufferPtr->TexIndex = textureIndex;
-			s_Data->quadVertexBufferPtr->TilingFactor = tilingFactor;
-			s_Data->quadVertexBufferPtr++;
+			m_QuadVertexBufferPtr->Position = transform * m_QuadVertexPositions[i];
+			m_QuadVertexBufferPtr->Color = color;
+			m_QuadVertexBufferPtr->TexCoord = textureCoords[i];
+			m_QuadVertexBufferPtr->TexIndex = textureIndex;
+			m_QuadVertexBufferPtr->TilingFactor = tilingFactor;
+			m_QuadVertexBufferPtr++;
 		}
 
-		s_Data->quadIndexCount += 6;
+		m_QuadIndexCount += 6;
 
 		//s_Data.Stats.QuadCount++;
 	}
 
-	void Renderer2D::FlushAndReset() {
-		EndScene();
+	void Renderer2D::flushAndReset() {
+		endScene();
 
-		s_Data->quadIndexCount = 0;
-		s_Data->quadVertexBufferPtr = s_Data->quadVertexBufferBase;
+		// s_Data.quadIndexCount = 0;
+		// s_Data.quadVertexBufferPtr = s_Data.quadVertexBufferBase;
 
-		s_Data->textureSlotIndex = 1;
+		// s_Data.textureSlotIndex = 1;
 	}
 } 

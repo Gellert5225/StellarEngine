@@ -121,7 +121,8 @@ namespace Stellar {
 	}
 
 	VulkanRenderPass::~VulkanRenderPass() {
-		vkDestroyRenderPass(VulkanDevice::GetInstance()->logicalDevice(), m_RenderPass, nullptr);
+		if (m_RenderPass)
+			vkDestroyRenderPass(VulkanDevice::GetInstance()->logicalDevice(), m_RenderPass, nullptr);
 	}
 
 	VkRenderPass VulkanRenderPass::getVkRenderPass() const {
