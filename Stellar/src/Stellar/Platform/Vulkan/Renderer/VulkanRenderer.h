@@ -46,7 +46,7 @@ namespace Stellar {
 		VulkanPipeline* m_GridPipeline = nullptr;
 		VkClearColorValue m_ClearColor = {{0.66f, 0.9f, 0.96f, 1.0f}};
 
-		STLR_Ptr<VulkanUniformBuffer> m_UniformBuffer{};
+		STLR_Ptr<Buffer> m_UniformBuffer{};
 		STLR_Ptr<FrameBuffer> m_FrameBuffer;
 
 		VkDescriptorSet m_UboDescriptorSet;
