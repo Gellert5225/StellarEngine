@@ -133,12 +133,4 @@ namespace Stellar {
 	void VulkanBuffer::write(void *dst, const void *src) {
 		memcpy(dst, src, m_Size);
 	}
-
-	VulkanUniformBuffer::VulkanUniformBuffer(VkDeviceSize size, uint32_t binding) 
-		: m_Binding(binding), VulkanBuffer(size, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT) {
-		
-		m_DescriptorInfo.buffer = m_Buffer;
-		m_DescriptorInfo.offset = 0;
-		m_DescriptorInfo.range = m_Size;
-	}
 }
