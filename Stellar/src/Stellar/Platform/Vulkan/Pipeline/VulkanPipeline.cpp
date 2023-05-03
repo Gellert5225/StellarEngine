@@ -356,11 +356,10 @@ namespace Stellar {
 		// What is this pipeline cache?
 		VkPipelineCacheCreateInfo pipelineCacheCreateInfo = {};
 		pipelineCacheCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
-		VkPipelineCache pipelineCache;
-		VK_CHECK_RESULT(vkCreatePipelineCache(device, &pipelineCacheCreateInfo, nullptr, &pipelineCache));
+		VK_CHECK_RESULT(vkCreatePipelineCache(device, &pipelineCacheCreateInfo, nullptr, &m_PipelineCache));
 
 		// Create rendering pipeline using the specified states
-		VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_Pipeline));
+		VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, m_PipelineCache, 1, &pipelineCreateInfo, nullptr, &m_Pipeline));
 	}
 	
 	void VulkanPipeline::setUniformBuffer(STLR_Ptr<Buffer> uniformBuffer, uint32_t binding, uint32_t set) {
@@ -448,6 +447,7 @@ namespace Stellar {
 	VulkanPipeline::~VulkanPipeline() {
 		auto device = VulkanDevice::GetInstance()->logicalDevice();
 		vkDestroyPipeline(device, m_Pipeline, nullptr);
+		vkDestroyPipelineCache(device, m_PipelineCache, nullptr);
 		vkDestroyPipelineLayout(device, m_PipelineLayout, nullptr);
 
 		vkDestroyDescriptorPool(device, m_DescriptorPool, nullptr);

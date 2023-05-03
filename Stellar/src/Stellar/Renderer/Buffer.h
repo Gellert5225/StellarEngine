@@ -60,6 +60,7 @@ namespace Stellar {
 		[[nodiscard]] virtual void* getBuffer() const = 0;
 
 		static STLR_Ptr<Buffer> Create(BufferType type, uint64_t size, const void* data = nullptr);
+		static STLR_Ptr<Buffer> Create(uint32_t size, uint32_t binding);
 
 		virtual void map(void** data) = 0;
 		virtual void unMap() = 0;
@@ -67,6 +68,7 @@ namespace Stellar {
 	protected:
 		explicit Buffer(uint64_t size) : m_Size(size) {}
 		uint64_t m_Size = 0;
+		BufferType m_Type;
 	};
 
 	class VertexBufferLayout {
