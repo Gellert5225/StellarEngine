@@ -65,6 +65,7 @@ namespace Stellar {
 		virtual ~Shader() {};
 
 		virtual const std::string& getName() const { return m_Name; }
+		virtual size_t getHash() const { return std::hash<std::string>{}(m_FilePath); }
 
 		virtual const std::unordered_map<std::string, ShaderResourceDeclaration>& getResources() const = 0;
 	protected:

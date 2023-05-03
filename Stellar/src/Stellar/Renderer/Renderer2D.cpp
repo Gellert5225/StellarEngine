@@ -31,31 +31,31 @@ namespace Stellar {
 		};
 		m_QuadPipeline = Pipeline::Create(pipelineSpecification);
 
-		// s_Data.quadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
-		// s_Data.quadVertexPositions[1] = { -0.5f,  0.5f, 0.0f, 1.0f };
-		// s_Data.quadVertexPositions[2] = {  0.5f,  0.5f, 0.0f, 1.0f };
-		// s_Data.quadVertexPositions[3] = {  0.5f, -0.5f, 0.0f, 1.0f };
+		m_QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
+		m_QuadVertexPositions[1] = { -0.5f,  0.5f, 0.0f, 1.0f };
+		m_QuadVertexPositions[2] = {  0.5f,  0.5f, 0.0f, 1.0f };
+		m_QuadVertexPositions[3] = {  0.5f, -0.5f, 0.0f, 1.0f };
 
-		// s_Data.QuadVertexBufferBase = new QuadVertex[s_Data.MaxVertices];
-		// s_Data.quadVertexBuffer = Buffer::Create(BufferType::Vertex, s_Data.MaxVertices * sizeof(QuadVertex), s_Data.QuadVertexBufferBase);
+		m_QuadVertexBufferBase = new QuadVertex[MaxVertices];
+		m_QuadVertexBuffer = Buffer::Create(BufferType::Vertex, MaxVertices * sizeof(QuadVertex), m_QuadVertexBufferBase);
 
-		// uint32_t* quadIndices = new uint32_t[s_Data.MaxIndices];
+		uint32_t* quadIndices = new uint32_t[MaxIndices];
 
-		// uint32_t offset = 0;
-		// for (uint32_t i = 0; i < s_Data.MaxIndices; i += 6) {
-		// 	quadIndices[i + 0] = offset + 0;
-		// 	quadIndices[i + 1] = offset + 1;
-		// 	quadIndices[i + 2] = offset + 2;
+		uint32_t offset = 0;
+		for (uint32_t i = 0; i < MaxIndices; i += 6) {
+			quadIndices[i + 0] = offset + 0;
+			quadIndices[i + 1] = offset + 1;
+			quadIndices[i + 2] = offset + 2;
 
-		// 	quadIndices[i + 3] = offset + 2;
-		// 	quadIndices[i + 4] = offset + 3;
-		// 	quadIndices[i + 5] = offset + 0;
+			quadIndices[i + 3] = offset + 2;
+			quadIndices[i + 4] = offset + 3;
+			quadIndices[i + 5] = offset + 0;
 
-		// 	offset += 4;
-		// }
+			offset += 4;
+		}
 
-		// s_Data.quadIndexBuffer = Buffer::Create(BufferType::Index, s_Data.MaxIndices, quadIndices);
-		// delete[] quadIndices;
+		m_QuadIndexBuffer = Buffer::Create(BufferType::Index, MaxIndices, quadIndices);
+		delete[] quadIndices;
 
 		const std::vector<Vertex> vertices = {
 			{{-1.0f, -1.0f, 0.0f}, {1.0f, 0.0f}, 1.0f},
@@ -80,8 +80,6 @@ namespace Stellar {
 	}
 
 	void Renderer2D::shutDown() {
-		//delete s_Data;
-		//s_Data.~Renderer2DData();
 	}
 
 	void Renderer2D::beginScene(const Camera& camera, const glm::mat4& transform) {

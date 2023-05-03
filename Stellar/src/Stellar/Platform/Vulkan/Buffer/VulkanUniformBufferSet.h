@@ -14,5 +14,8 @@ namespace Stellar {
 		
 	private:
 		uint32_t m_Frames;
+
+		// <frame, <set, <binding, buffer>>>
+		std::map<uint32_t, std::map<uint32_t, std::map<uint32_t, STLR_Ptr<UniformBuffer>>>> m_UniformBuffers;
 	};
 }
