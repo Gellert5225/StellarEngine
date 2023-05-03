@@ -58,12 +58,21 @@ namespace Stellar {
 		void write(void* dst, const void* src) override;
 
 		[[nodiscard]] void* getBuffer() const override;
-	private:
+	protected:
 		VkBuffer m_Buffer = VK_NULL_HANDLE;
 		VkDeviceMemory m_BufferMemory = VK_NULL_HANDLE;
 	};
 
-	class VulkanUniformBuffer : public Buffer {
+	class VulkanUniformBuffer : public VulkanBuffer {
+	public:
+		VulkanUniformBuffer(VkDeviceSize size, uint32_t binding);
+		virtual ~VulkanUniformBuffer() {};
+
+		uint32_t getBinding() const { return m_Binding; }
+		const VkDescriptorBufferInfo& getDescriptorBufferInfo() const { return m_DescriptorInfo; }
+	private:
+		VkDescriptorBufferInfo m_DescriptorInfo{};
+		uint32_t m_Binding = 0;
 		
 	};
 }

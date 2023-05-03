@@ -12,6 +12,7 @@
 
 namespace Stellar {
 
+	// Vertex and Index Buffer
 	STLR_Ptr<Buffer> Buffer::Create(BufferType type, uint64_t size, const void *data) {
 		switch (RendererAPI::Current()) {
 			case RendererAPIType::Vulkan:
@@ -46,4 +47,7 @@ namespace Stellar {
 		STLR_CORE_ASSERT(false, "Unknown RendererAPI");
 		return nullptr;
 	}
+
+	// Uniform Buffer
+	//STLR_Ptr<Buffer> Create(uint32_t size, uint32_t binding)
 }

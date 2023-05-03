@@ -38,6 +38,7 @@ namespace Stellar {
 
 		VkPipelineLayout m_PipelineLayout = VK_NULL_HANDLE;
 		VkPipeline m_Pipeline = VK_NULL_HANDLE;
+		VkPipelineCache m_PipelineCache = VK_NULL_HANDLE;
 
 		VulkanShader::ShaderMaterialDescriptorSet m_DescriptorSets;
 

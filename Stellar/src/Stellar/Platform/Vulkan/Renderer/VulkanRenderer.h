@@ -7,6 +7,7 @@
 
 #include "Stellar/Platform/Vulkan/SwapChain/VulkanSwapChain.h"
 #include "Stellar/Platform/Vulkan/Buffer/VulkanFrameBuffer.h"
+#include "Stellar/Platform/Vulkan/Buffer/VulkanBuffer.h"
 #include "Stellar/Core/Application.h"
 
 #include <vulkan/vulkan.h>
@@ -45,7 +46,7 @@ namespace Stellar {
 		VulkanPipeline* m_GridPipeline = nullptr;
 		VkClearColorValue m_ClearColor = {{0.66f, 0.9f, 0.96f, 1.0f}};
 
-		STLR_Ptr<Buffer> m_UniformBuffer{};
+		STLR_Ptr<VulkanUniformBuffer> m_UniformBuffer{};
 		STLR_Ptr<FrameBuffer> m_FrameBuffer;
 
 		VkDescriptorSet m_UboDescriptorSet;
