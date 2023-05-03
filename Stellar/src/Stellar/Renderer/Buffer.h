@@ -60,8 +60,7 @@ namespace Stellar {
 		[[nodiscard]] virtual void* getBuffer() const = 0;
 
 		static STLR_Ptr<Buffer> Create(BufferType type, uint64_t size, const void* data = nullptr);
-		static STLR_Ptr<Buffer> Create(uint32_t size, uint32_t binding);
-
+		
 		virtual void map(void** data) = 0;
 		virtual void unMap() = 0;
 		virtual void write(void* dst, const void* src) = 0;

@@ -43,22 +43,4 @@ namespace Stellar {
 		STLR_CORE_ASSERT(false, "Unknown RendererAPI");
 		return nullptr;
 	}
-
-	// Uniform Buffer
-	STLR_Ptr<Buffer> Buffer::Create(uint32_t size, uint32_t binding) {
-		switch (RendererAPI::Current()) {
-			case RendererAPIType::Vulkan:
-			#if defined(__linux__) || defined(_WIN64)
-				return STLR_Ptr<VulkanUniformBuffer>::Create(size, binding);
-			#endif
-			case RendererAPIType::Metal:
-			#if defined(__APPLE__)
-				// return new MetalBuffer(size, data);
-			#endif
-			case RendererAPIType::None:
-				break;
-		}
-		STLR_CORE_ASSERT(false, "Unknown RendererAPI");
-		return nullptr;
-	}
 }

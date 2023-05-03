@@ -9,6 +9,7 @@
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
 #include "Stellar/Platform/Vulkan/VulkanCommon.h"
 #include "Stellar/Platform/Vulkan/Texture/VulkanTexture.h"
+#include "Stellar/Platform/Vulkan/Buffer/VulkanUniformBuffer.h"
 
 namespace Stellar {
 
@@ -21,7 +22,7 @@ namespace Stellar {
 
 	void VulkanRenderer::init() {
 		m_CommandBuffer = CommandBuffer::Create(Renderer::MAX_FRAMES_IN_FLIGHT);
-		m_UniformBuffer = Buffer::Create(sizeof(GlobalUniforms), 0);
+		m_UniformBuffer = UniformBuffer::Create(sizeof(GlobalUniforms), 0);
 
 		FrameBufferSpec framebufferSpec;
 		framebufferSpec.width = 1280;
@@ -179,10 +180,7 @@ namespace Stellar {
 	}
 
 	void VulkanRenderer::bindUbo(const GlobalUniforms& ubo) {
-		void* data;
-		m_UniformBuffer->map(&data);
-		m_UniformBuffer->write(data, &ubo);
-		m_UniformBuffer->unMap();
+		m_UniformBuffer->setData(&ubo, sizeof(GlobalUniforms));
 	}
 
 	void VulkanRenderer::createUboDescriptorSet() {
