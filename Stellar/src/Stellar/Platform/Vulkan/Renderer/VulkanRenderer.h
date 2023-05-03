@@ -29,6 +29,14 @@ namespace Stellar {
 							const glm::vec4& color,
 							uint32_t indexCount,
 							const glm::mat4& transform) override;
+		void renderGeometry(STLR_Ptr<CommandBuffer> renderCommandBuffer, 
+							STLR_Ptr<Pipeline> pipeline,
+							STLR_Ptr<UniformBufferSet> uniformBufferSet, 
+							STLR_Ptr<Material> material, 
+							STLR_Ptr<Buffer> vertexBuffer, 
+							STLR_Ptr<Buffer> indexBuffer, 
+							const glm::mat4& transform, 
+							uint32_t indexCount = 0) override;
 		void renderGrid(STLR_Ptr<Buffer> vertexBuffer,
 						STLR_Ptr<Buffer> indexBuffer,
 						uint32_t indexCount = 0) override;

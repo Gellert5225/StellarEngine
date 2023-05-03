@@ -73,6 +73,17 @@ namespace Stellar {
 		s_RendererAPI->renderGeometry(vertexBuffer, indexBuffer, texture, color, indexCount, transform);
 	}
 
+	void Renderer::RenderGeometry(STLR_Ptr<CommandBuffer> commandBuffer, 
+									STLR_Ptr<Pipeline> pipeline, 
+									STLR_Ptr<UniformBufferSet> uniformBufferSet, 
+									STLR_Ptr<Material> material, 
+									STLR_Ptr<Buffer> vertexBuffer, 
+									STLR_Ptr<Buffer> indexBuffer, 
+									const glm::mat4& transform, 
+									uint32_t indexCount) {
+		s_RendererAPI->renderGeometry(commandBuffer, pipeline, uniformBufferSet, material, vertexBuffer, indexBuffer, transform, indexCount);
+	}
+
 	void Renderer::RenderGrid(STLR_Ptr<Buffer> vertexBuffer, STLR_Ptr<Buffer> indexBuffer, uint32_t indexCount) {
 		s_RendererAPI->renderGrid(vertexBuffer, indexBuffer, indexCount);
 	}

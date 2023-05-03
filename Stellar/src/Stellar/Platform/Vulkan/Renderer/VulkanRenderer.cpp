@@ -162,6 +162,17 @@ namespace Stellar {
 		vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
 	}
 
+	void VulkanRenderer::renderGeometry(STLR_Ptr<CommandBuffer> renderCommandBuffer, 
+							STLR_Ptr<Pipeline> pipeline,
+							STLR_Ptr<UniformBufferSet> uniformBufferSet, 
+							STLR_Ptr<Material> material, 
+							STLR_Ptr<Buffer> vertexBuffer, 
+							STLR_Ptr<Buffer> indexBuffer, 
+							const glm::mat4& transform, 
+							uint32_t indexCount) {
+		
+	}
+
 	void VulkanRenderer::renderGrid(STLR_Ptr<Buffer> vertexBuffer, STLR_Ptr<Buffer> indexBuffer, uint32_t indexCount) {
 		auto commandBuffer = (VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer();
 

@@ -6,6 +6,9 @@
 #include "Uniforms.h"
 #include "Texture.h"
 #include "FrameBuffer.h"
+#include "Pipeline.h"
+#include "Material.h"
+#include "UniformBufferSet.h"
 
 #include <glm/glm.hpp>
 
@@ -33,6 +36,15 @@ namespace Stellar {
 		virtual void renderGrid(STLR_Ptr<Buffer> vertexBuffer,
 								STLR_Ptr<Buffer> indexBuffer,
 								uint32_t indexCount = 0) = 0;
+
+		virtual void renderGeometry(STLR_Ptr<CommandBuffer> renderCommandBuffer, 
+									STLR_Ptr<Pipeline> pipeline,
+									STLR_Ptr<UniformBufferSet> uniformBufferSet, 
+									STLR_Ptr<Material> material, 
+									STLR_Ptr<Buffer> vertexBuffer, 
+									STLR_Ptr<Buffer> indexBuffer, 
+									const glm::mat4& transform, 
+									uint32_t indexCount = 0) = 0;
 		
 		virtual void bindUbo(const GlobalUniforms& ubo) = 0;
 		virtual STLR_Ptr<FrameBuffer> getFrameBuffer() = 0;
