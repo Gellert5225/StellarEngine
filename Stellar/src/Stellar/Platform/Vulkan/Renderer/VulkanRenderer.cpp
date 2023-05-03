@@ -21,7 +21,7 @@ namespace Stellar {
 
 	void VulkanRenderer::init() {
 		m_CommandBuffer = CommandBuffer::Create(Renderer::MAX_FRAMES_IN_FLIGHT);
-		m_UniformBuffer = STLR_Ptr<VulkanUniformBuffer>::Create(sizeof(GlobalUniforms), 0);//Buffer::Create(BufferType::Uniform, sizeof(GlobalUniforms));
+		m_UniformBuffer = Buffer::Create(sizeof(GlobalUniforms), 0);
 
 		FrameBufferSpec framebufferSpec;
 		framebufferSpec.width = 1280;
@@ -209,7 +209,7 @@ namespace Stellar {
 		descriptorWrite.dstArrayElement = 0;
 		descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 		descriptorWrite.descriptorCount = 1;
-		descriptorWrite.pBufferInfo = &m_UniformBuffer->getDescriptorBufferInfo();
+		descriptorWrite.pBufferInfo = &m_UniformBuffer.As<VulkanUniformBuffer>()->getDescriptorBufferInfo();
 
 		vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
 	}
