@@ -47,6 +47,8 @@ namespace Stellar {
 		STLR_Ptr<Buffer> m_QuadIndexBuffer;
 		STLR_Ptr<Pipeline> m_QuadPipeline;
 		STLR_Ptr<Material> m_QuadMaterial;
+		STLR_Ptr<Texture2D> m_WhiteTexture;
+		STLR_Ptr<CommandBuffer> m_RenderCommandBuffer;
 
 		uint32_t m_QuadIndexCount = 0;
 		QuadVertex* m_QuadVertexBufferBase = nullptr;
@@ -56,6 +58,8 @@ namespace Stellar {
 		uint32_t m_TextureSlotIndex = 1; // 0 = white texture
 
 		glm::vec4 m_QuadVertexPositions[4];
+
+		STLR_Ptr<UniformBufferSet> m_UniformBufferSet;
 
 	};
 }

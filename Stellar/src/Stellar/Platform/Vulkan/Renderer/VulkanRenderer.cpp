@@ -10,15 +10,56 @@
 #include "Stellar/Platform/Vulkan/VulkanCommon.h"
 #include "Stellar/Platform/Vulkan/Texture/VulkanTexture.h"
 #include "Stellar/Platform/Vulkan/Buffer/VulkanUniformBuffer.h"
+#include "Stellar/Platform/Vulkan/Material/VulkanMaterial.h"
 
 namespace Stellar {
 
 	struct VulkanRendererData {
 		VulkanPipeline* pipeline;
 		std::vector<VkDescriptorPool> DescriptorPools;
+
+		// UniformBufferSet -> Shader Hash -> Frame -> WriteDescriptor
+		std::unordered_map<UniformBufferSet*, std::unordered_map<uint64_t, std::vector<std::vector<VkWriteDescriptorSet>>>> uniformBufferWriteDescriptorCache;
 	};
 
 	static VulkanRendererData* s_Data = nullptr;
+
+	static const std::vector<std::vector<VkWriteDescriptorSet>>& RetrieveOrCreateWriteDescriptors(STLR_Ptr<UniformBufferSet> uniformBufferSet, STLR_Ptr<VulkanMaterial> vulkanMaterial) {
+		size_t shaderHash = vulkanMaterial->getShader()->getHash();
+		if (s_Data->uniformBufferWriteDescriptorCache.find(uniformBufferSet.raw()) != s_Data->uniformBufferWriteDescriptorCache.end()) {
+			const auto& shaderMap = s_Data->uniformBufferWriteDescriptorCache.at(uniformBufferSet.raw());
+			if (shaderMap.find(shaderHash) != shaderMap.end()) {
+				const auto& writeDescriptors = shaderMap.at(shaderHash);
+				return writeDescriptors;
+			}
+		}
+
+		uint32_t framesInFlight = Renderer::MAX_FRAMES_IN_FLIGHT;
+		STLR_Ptr<VulkanShader> vulkanShader = vulkanMaterial->getShader().As<VulkanShader>();
+		if (vulkanShader->hasDescriptorSet(0)) {
+			const auto& shaderDescriptorSets = vulkanShader->getShaderDescriptorSets();
+			if (!shaderDescriptorSets.empty()) {
+				for (auto&& [binding, shaderUB] : shaderDescriptorSets[0].uniformBuffers) {
+					auto& writeDescriptors = s_Data->uniformBufferWriteDescriptorCache[uniformBufferSet.raw()][shaderHash];
+					writeDescriptors.resize(framesInFlight);
+					for (uint32_t frame = 0; frame < framesInFlight; frame++) {
+						STLR_Ptr<VulkanUniformBuffer> uniformBuffer = uniformBufferSet->get(binding, 0, frame); // set = 0 for now
+
+						VkWriteDescriptorSet writeDescriptorSet = {};
+						writeDescriptorSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+						writeDescriptorSet.descriptorCount = 1;
+						writeDescriptorSet.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+						writeDescriptorSet.pBufferInfo = &uniformBuffer->getDescriptorBufferInfo();
+						writeDescriptorSet.dstBinding = uniformBuffer->getBinding();
+						writeDescriptors[frame].push_back(writeDescriptorSet);
+					}
+				}
+			
+			}
+		}
+
+		return s_Data->uniformBufferWriteDescriptorCache[uniformBufferSet.raw()][shaderHash];
+	}
 
 	void VulkanRenderer::init() {
 		m_CommandBuffer = CommandBuffer::Create(Renderer::MAX_FRAMES_IN_FLIGHT);
@@ -170,7 +211,32 @@ namespace Stellar {
 							STLR_Ptr<Buffer> indexBuffer, 
 							const glm::mat4& transform, 
 							uint32_t indexCount) {
+		auto vulkanMaterial = material.As<VulkanMaterial>();
+		uint32_t frameIndex = Renderer::GetCurrentFrameIndex();
+
+		VkCommandBuffer commandBuffer = renderCommandBuffer.As<VulkanCommandBuffer>()->getCurrentCommandBuffer(frameIndex);
 		
+		auto vulkanPipeline = pipeline.As<VulkanPipeline>();
+		VkPipeline vkPipeline = vulkanPipeline->getPipeline();
+		VkPipelineLayout layout = vulkanPipeline->getPipelineLayout();
+
+		VkDeviceSize offsets[] = {0};
+		auto buffers = (VkBuffer)vertexBuffer->getBuffer();
+		vkCmdBindVertexBuffers(commandBuffer, 0, 1, &buffers, offsets);
+		vkCmdBindIndexBuffer(commandBuffer, (VkBuffer)indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT16);
+
+		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vkPipeline);
+
+		const auto& writeDescriptors = RetrieveOrCreateWriteDescriptors(uniformBufferSet, vulkanMaterial);
+		vulkanMaterial->update(writeDescriptors);
+
+		uint32_t bufferIndex = Renderer::GetCurrentFrameIndex();
+		VkDescriptorSet descriptorSet = vulkanMaterial->getDescriptorSet(bufferIndex);
+		if (descriptorSet)
+			vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, layout, 0, 1, &descriptorSet, 0, nullptr);
+
+		vkCmdPushConstants(commandBuffer, layout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &transform);
+		vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
 	}
 
 	void VulkanRenderer::renderGrid(STLR_Ptr<Buffer> vertexBuffer, STLR_Ptr<Buffer> indexBuffer, uint32_t indexCount) {

@@ -33,6 +33,10 @@ namespace Stellar {
 		setVulkanDescriptor(name, texture);
 	}
 
+	STLR_Ptr<Texture2D> VulkanMaterial::getTexture2D(const std::string& name) {
+		return nullptr;
+	}
+
 	void VulkanMaterial::setVulkanDescriptor(const std::string& name, const STLR_Ptr<Texture2D>& texture) {
 		const ShaderResourceDeclaration* resource = findResourceDeclaration(name);
 		STLR_CORE_ASSERT(resource);
@@ -48,7 +52,9 @@ namespace Stellar {
 
 		const VkWriteDescriptorSet* wds = m_Shader.As<VulkanShader>()->getDescriptorSet(name);
 		STLR_CORE_ASSERT(wds);
-		m_ResidentDescriptors[binding] = std::make_shared<PendingDescriptor>(PendingDescriptor{ PendingDescriptorType::Texture2D, *wds, {}, texture.As<Texture2D>(), nullptr });
+		m_ResidentDescriptors[binding] = std::make_shared<PendingDescriptor>(PendingDescriptor{ 
+			PendingDescriptorType::Texture2D, *wds, {}, texture.As<Texture2D>(), nullptr 
+		});
 		m_PendingDescriptors.push_back(m_ResidentDescriptors.at(binding));
 
 		//invalidateDescriptorSets();
@@ -69,6 +75,10 @@ namespace Stellar {
 		return nullptr;
 	}
 
+	VkDescriptorSet VulkanMaterial::getDescriptorSet(uint32_t index) const {
+		return !m_DescriptorSets[index].DescriptorSets.empty() ? m_DescriptorSets[index].DescriptorSets[0] : nullptr;
+	}
+
 	void VulkanMaterial::update(const std::vector<std::vector<VkWriteDescriptorSet>>& uniformBufferWriteDescriptors) {
 		auto device = VulkanDevice::GetInstance()->logicalDevice();
 		for (auto&& [binding, descriptor] : m_ResidentDescriptors) {
@@ -77,7 +87,8 @@ namespace Stellar {
 				VulkanImageInfo* info = (VulkanImageInfo*)image->getImageInfo();
 				STLR_CORE_ASSERT(info->imageView, "ImageView is null");
 				if (descriptor->WDS.pImageInfo && info->imageView != descriptor->WDS.pImageInfo->imageView) {
-					STLR_CORE_WARN("Found out of date Image2D descriptor ({0} vs. {1})",(void*)info->imageView, (void*)descriptor->WDS.pImageInfo->imageView);
+					STLR_CORE_WARN("Found out of date Image2D descriptor ({0} vs. {1})",
+						(void*)info->imageView, (void*)descriptor->WDS.pImageInfo->imageView);
 					m_PendingDescriptors.emplace_back(descriptor);
 					invalidateDescriptorSets();
 				}

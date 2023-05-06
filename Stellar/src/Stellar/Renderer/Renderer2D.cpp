@@ -57,6 +57,16 @@ namespace Stellar {
 		m_QuadIndexBuffer = Buffer::Create(BufferType::Index, MaxIndices, quadIndices);
 		delete[] quadIndices;
 
+		m_WhiteTexture = Texture2D::Create(ImageFormat::RGBA, 1, 1);
+		m_TextureSlots[0] = m_WhiteTexture;
+
+		m_RenderCommandBuffer = CommandBuffer::Create(Renderer::MAX_FRAMES_IN_FLIGHT);
+
+		m_UniformBufferSet = UniformBufferSet::Create(Renderer::MAX_FRAMES_IN_FLIGHT);
+		m_UniformBufferSet->create(sizeof(GlobalUniforms), 0);
+
+		m_QuadMaterial = Material::Create(m_QuadPipeline->getSpecification().shader, "QuadMaterial");
+
 		const std::vector<Vertex> vertices = {
 			{{-1.0f, -1.0f, 0.0f}, {1.0f, 0.0f}, 1.0f},
 			{{ 1.0f, -1.0f, 0.0f}, {0.0f, 0.0f}, 1.0f},
@@ -83,31 +93,43 @@ namespace Stellar {
 	}
 
 	void Renderer2D::beginScene(const Camera& camera, const glm::mat4& transform) {
-		GlobalUniforms ubo{};
-		ubo.viewProjection = camera.getProjectionMatrix() * glm::inverse(transform);
+		auto viewProjection = camera.getProjectionMatrix() * glm::inverse(transform);
 
-		Renderer::BindUbo(ubo);
+		uint32_t bufferIndex = Renderer::GetCurrentFrameIndex();
+		m_UniformBufferSet->get(0, 0, bufferIndex)->setData(&viewProjection, sizeof(GlobalUniforms));
+
+		m_QuadIndexCount = 0;
+		m_QuadVertexBufferPtr = m_QuadVertexBufferBase;
+		m_TextureSlotIndex = 1;
+
+		//Renderer::BindUbo(ubo);
 		Renderer::BeginRenderPass();
 
-		Renderer::RenderGrid(m_QuadVertexBuffer, m_QuadIndexBuffer, m_QuadIndexCount);
+		//Renderer::RenderGrid(m_QuadVertexBuffer, m_QuadIndexBuffer, m_QuadIndexCount);
 	}
 	
 	void Renderer2D::beginScene(const EditorCamera& camera) {
-		GlobalUniforms ubo{};
-		ubo.viewProjection = camera.getViewProjectionMatrix();
+		auto viewProjection = camera.getViewProjectionMatrix();
 
-		Renderer::BindUbo(ubo);
-		Renderer::BeginRenderPass();
+		uint32_t bufferIndex = Renderer::GetCurrentFrameIndex();
+		m_UniformBufferSet->get(0, 0, bufferIndex)->setData(&viewProjection, sizeof(GlobalUniforms));
 
-		Renderer::RenderGrid(m_QuadVertexBuffer, m_QuadIndexBuffer, m_QuadIndexCount);
+		m_QuadIndexCount = 0;
+		m_QuadVertexBufferPtr = m_QuadVertexBufferBase;
+		m_TextureSlotIndex = 1;
+
+		//Renderer::RenderGrid(m_QuadVertexBuffer, m_QuadIndexBuffer, m_QuadIndexCount);
 	}
 
 	void Renderer2D::endScene() {
+		m_RenderCommandBuffer->begin();
+		Renderer::BeginRenderPass();
+
 		Renderer::EndRenderPass();
 	}
 
 	void Renderer2D::drawQuad(const glm::mat4& transform, const glm::vec4& color, STLR_Ptr<Texture2D> texture) {
-		Renderer::RenderGeometry(m_QuadVertexBuffer, m_QuadIndexBuffer, texture, color, m_QuadIndexCount, transform);
+		//Renderer::RenderGeometry(m_QuadVertexBuffer, m_QuadIndexBuffer, texture, color, m_QuadIndexCount, transform);
 	}
 
 	void Renderer2D::drawQuad(const glm::mat4& transform, const glm::vec4& color, const STLR_Ptr<Texture2D>& texture, float tilingFactor) {

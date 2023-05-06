@@ -18,10 +18,11 @@ namespace Stellar {
 
 		virtual STLR_Ptr<Shader> getShader() override { return m_Shader; };
 		virtual const std::string& getName() const override { return m_Name; };
-	
+
+		VkDescriptorSet getDescriptorSet(uint32_t index) const;
+		void update(const std::vector<std::vector<VkWriteDescriptorSet>>& uniformBufferWriteDescriptors = std::vector<std::vector<VkWriteDescriptorSet>>());
 	private:
 		void init();
-		void update(const std::vector<std::vector<VkWriteDescriptorSet>>& uniformBufferWriteDescriptors = std::vector<std::vector<VkWriteDescriptorSet>>());
 		void setVulkanDescriptor(const std::string& name, const STLR_Ptr<Texture2D>& texture);
 		void invalidateDescriptorSets();
 		
@@ -38,6 +39,8 @@ namespace Stellar {
 			STLR_Ptr<Image2D> image;
 			VkDescriptorImageInfo submittedImageInfo{};
 		};
+
+		std::vector<STLR_Ptr<Texture2D>> m_Textures;
 		std::unordered_map<uint32_t, std::shared_ptr<PendingDescriptor>> m_ResidentDescriptors;
 		std::vector<std::shared_ptr<PendingDescriptor>> m_PendingDescriptors;
 		std::vector<std::vector<VkWriteDescriptorSet>> m_WriteDescriptors;
