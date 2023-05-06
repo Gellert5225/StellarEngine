@@ -12,6 +12,10 @@ int main(int argc, char** argv) {
 	STLR_CORE_WARN("This engine is still under active development!");
 	
 	auto app = Stellar::CreateApplication();
+
+	STLR_CONSOLE_LOG_INFO("Welcome to Stellar Engine");
+	STLR_CONSOLE_LOG_WARN("This engine is still under active development!");
+
 	app->run();
 	delete app;
 }

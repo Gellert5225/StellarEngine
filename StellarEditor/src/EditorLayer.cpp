@@ -115,14 +115,19 @@ namespace Stellar {
 			auto dock_id_right = ImGui::DockBuilderSplitNode(dockspaceID, ImGuiDir_Right, 0.3f, nullptr, &dockspaceID);
 			auto dock_id_left = ImGui::DockBuilderSplitNode(dockspaceID, ImGuiDir_Left, 0.3f, nullptr, &dockspaceID);
 			auto properties = ImGui::DockBuilderSplitNode(dock_id_left, ImGuiDir_Down, 0.75f, nullptr, &dock_id_left);
+			auto log = ImGui::DockBuilderSplitNode(dockspaceID, ImGuiDir_Down, 0.25f, nullptr, &dockspaceID);
 			ImGui::DockBuilderDockWindow("Info", dock_id_right);
 			ImGui::DockBuilderDockWindow("Scene Hierarchy", dock_id_left);
 			ImGui::DockBuilderDockWindow("Properties", properties);
 			ImGui::DockBuilderDockWindow("View Port", dockspaceID);
+			ImGui::DockBuilderDockWindow("Log", log);
 			ImGui::DockBuilderFinish(dockspaceID);
 		}
 
 		m_SceneHierarchyPanel.onImGuiRender();
+		static bool isOpen = true;
+		m_ConsolePanel.onImGuiRender(isOpen);
+
 		//ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
 		ImGui::Begin("Info");
 		std::string debug;

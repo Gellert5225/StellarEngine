@@ -19,6 +19,7 @@
 #include "Stellar/Renderer/Texture.h"
 
 #include "Stellar/Editor/EditorCamera.h"
+#include "Stellar/Editor/ConsolePanel.h"
 
 #include "Stellar/Scene/Scene.h"
 #include "Stellar/Scene/Components.h"

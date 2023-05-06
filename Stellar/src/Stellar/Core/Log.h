@@ -10,9 +10,11 @@ namespace Stellar {
 		static void Init();
 		inline static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
 		inline static std::shared_ptr<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
+		inline static std::shared_ptr<spdlog::logger>& GetEditorConsoleLogger() { return s_EditorConsoleLogger; }
 	private:
 		static std::shared_ptr<spdlog::logger> s_CoreLogger;
 		static std::shared_ptr<spdlog::logger> s_ClientLogger;
+		static std::shared_ptr<spdlog::logger> s_EditorConsoleLogger;
 	};
 }
 
@@ -40,3 +42,11 @@ namespace Stellar {
 #define STLR_ERROR(...) ::Stellar::Log::GetClientLogger()->error(__VA_ARGS__)
 #define STLR_FATAL(...) ::Stellar::Log::GetClientLogger()->critical(__VA_ARGS__)
 #define STLR_ASSERT(...) STLR_EXPAND_VARGS( STLR_GET_ASSERT_MACRO(__VA_ARGS__)(__VA_ARGS__) )
+
+// Editor Console Logging Macros
+#define STLR_CONSOLE_LOG_TRACE(...)   Stellar::Log::GetEditorConsoleLogger()->trace(__VA_ARGS__)
+#define STLR_CONSOLE_LOG_INFO(...)    Stellar::Log::GetEditorConsoleLogger()->info(__VA_ARGS__)
+#define STLR_CONSOLE_LOG_DEBUG(...)   Stellar::Log::GetEditorConsoleLogger()->debug(__VA_ARGS__)
+#define STLR_CONSOLE_LOG_WARN(...)    Stellar::Log::GetEditorConsoleLogger()->warn(__VA_ARGS__)
+#define STLR_CONSOLE_LOG_ERROR(...)   Stellar::Log::GetEditorConsoleLogger()->error(__VA_ARGS__)
+#define STLR_CONSOLE_LOG_FATAL(...)   Stellar::Log::GetEditorConsoleLogger()->critical(__VA_ARGS__)

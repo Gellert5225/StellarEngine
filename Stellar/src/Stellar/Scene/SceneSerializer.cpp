@@ -188,7 +188,7 @@ namespace Stellar {
 		if (!data["Scene"]) return false;
 
 		std::string sceneName = data["Scene"].as<std::string>();
-		STLR_CORE_TRACE("Deserializing scene '{0}'", sceneName);
+		STLR_CONSOLE_LOG_DEBUG("Deserializing scene '{0}'", sceneName);
 
 		auto entities = data["Entities"];
 		if (entities) {
@@ -199,7 +199,7 @@ namespace Stellar {
 				auto tagComponent = entity["TagComponent"];
 				if (tagComponent)
 					name = tagComponent["Tag"].as<std::string>();
-				STLR_CORE_TRACE("Deserialized entity with ID: {0}, name: {1}", uuid, name);
+				STLR_CONSOLE_LOG_DEBUG("Deserialized entity with ID: {0}, name: {1}", uuid, name);
 
 				Entity deserialized = m_Scene->createEntity(name);
 
