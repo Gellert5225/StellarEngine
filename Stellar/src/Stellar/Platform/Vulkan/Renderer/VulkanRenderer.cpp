@@ -76,6 +76,8 @@ namespace Stellar {
 	}
 
 	void VulkanRenderer::beginRenderPass() {
+		m_CommandBuffer->begin();
+		
 		auto device = VulkanDevice::GetInstance()->logicalDevice();
 		auto swapChain = (VulkanSwapChain*)Application::Get().getWindow().getSwapChain();
 		uint32_t bufferIndex = swapChain->getCurrentFrameIndex();
@@ -86,8 +88,6 @@ namespace Stellar {
 
 			m_FrameBuffer->resize(m_ViewPortWidth, m_ViewPortHeight);
 		}
-
-		m_CommandBuffer->begin();
 
 		std::array<VkClearValue, 2> clearValues{};
 		clearValues[0].color = m_ClearColor;

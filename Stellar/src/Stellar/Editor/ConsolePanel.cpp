@@ -135,84 +135,84 @@ namespace Stellar {
 		ImGui::PushStyleColor(ImGuiCol_TableRowBgAlt, backgroundColor.Value);
 		ImGui::PushStyleColor(ImGuiCol_ChildBg, backgroundColor.Value);
 
-		ImGui::BeginTable("Console", 1, flags, size);
+		if (ImGui::BeginTable("Console", 1, flags, size)) {
+			const float cursorX = ImGui::GetCursorScreenPos().x;
 
-		const float cursorX = ImGui::GetCursorScreenPos().x;
+			ImGui::TableSetupColumn(columns[0]);
 
-		ImGui::TableSetupColumn(columns[0]);
-
-		//std::scoped_lock<std::mutex> lock(m_MessageBufferMutex);
-		
-		float scrollY = ImGui::GetScrollY();
-		if (scrollY < m_PreviousScrollY)
-			m_EnableScrollToLatest = false;
-
-		if (scrollY >= ImGui::GetScrollMaxY())
-			m_EnableScrollToLatest = true;
-
-		m_PreviousScrollY = scrollY;
-
-		float rowHeight = 24.0f;
-		for (uint32_t i = 0; i < m_MessageBuffer.size(); i++) {
-			const auto& msg = m_MessageBuffer[i];
-
-			if (!(m_MessageFilters & (int16_t)msg.Flags))
-				continue;
-
-			ImGui::PushID(&msg);
-
-			const bool clicked = tableRowClickable(msg.ShortMessage.c_str(), rowHeight);
-			auto color = getMessageColor(msg);
-			std::string messageType(getMessageType(msg));
-			std::stringstream timeString;
-			tm timeBuffer;
-			localtime_s(&timeBuffer, &msg.Time);
-			timeString << std::put_time(&timeBuffer, "%T");
-
-			std::string timeMessage = "[" + timeString.str() + "][" + messageType + "]";
-
-			ImGuiIO& io = ImGui::GetIO();
-			auto boldFont = io.Fonts->Fonts[2];
-			auto regFont = io.Fonts->Fonts[3];
-
-			ImGui::PushFont(boldFont);
-			ImGui::TextColored(color, timeMessage.c_str());
-			ImGui::PopFont();
-
-			ImGui::SameLine();
-
-			ImGui::PushFont(regFont);
-			ImGui::TextColored(color, msg.LongMessage.c_str());
-			ImGui::PopFont();
+			//std::scoped_lock<std::mutex> lock(m_MessageBufferMutex);
 			
-			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 4.0f);
+			float scrollY = ImGui::GetScrollY();
+			if (scrollY < m_PreviousScrollY)
+				m_EnableScrollToLatest = false;
 
-			if (i == m_MessageBuffer.size() - 1 && m_ScrollToLatest) {
-				ImGui::ScrollToItem();
-				m_ScrollToLatest = false;
+			if (scrollY >= ImGui::GetScrollMaxY())
+				m_EnableScrollToLatest = true;
+
+			m_PreviousScrollY = scrollY;
+
+			float rowHeight = 24.0f;
+			for (uint32_t i = 0; i < m_MessageBuffer.size(); i++) {
+				const auto& msg = m_MessageBuffer[i];
+
+				if (!(m_MessageFilters & (int16_t)msg.Flags))
+					continue;
+
+				ImGui::PushID(&msg);
+
+				const bool clicked = tableRowClickable(msg.ShortMessage.c_str(), rowHeight);
+				auto color = getMessageColor(msg);
+				std::string messageType(getMessageType(msg));
+				std::stringstream timeString;
+				tm timeBuffer;
+				localtime_s(&timeBuffer, &msg.Time);
+				timeString << std::put_time(&timeBuffer, "%T");
+
+				std::string timeMessage = "[" + timeString.str() + "][" + messageType + "]";
+
+				ImGuiIO& io = ImGui::GetIO();
+				auto boldFont = io.Fonts->Fonts[2];
+				auto regFont = io.Fonts->Fonts[3];
+
+				ImGui::PushFont(boldFont);
+				ImGui::TextColored(color, timeMessage.c_str());
+				ImGui::PopFont();
+
+				ImGui::SameLine();
+
+				ImGui::PushFont(regFont);
+				ImGui::TextColored(color, msg.LongMessage.c_str());
+				ImGui::PopFont();
+				
+				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 4.0f);
+
+				if (i == m_MessageBuffer.size() - 1 && m_ScrollToLatest) {
+					ImGui::ScrollToItem();
+					m_ScrollToLatest = false;
+				}
+
+				// if (clicked) {
+				// 	ImGui::OpenPopup("Detailed Message");
+				// 	ImVec2 size = ImGui::GetMainViewport()->Size;
+				// 	ImGui::SetNextWindowSize({ size.x * 0.5f, size.y * 0.5f });
+				// 	ImGui::SetNextWindowPos({ size.x / 2.0f, size.y / 2.5f }, 0, { 0.5, 0.5 });
+				// 	m_DetailedPanelOpen = true;
+				// }
+
+				// if (m_DetailedPanelOpen) {
+				// 	UI::ScopedStyle windowPadding(ImGuiStyleVar_WindowPadding, ImVec2(4.0f, 4.0f));
+				// 	UI::ScopedStyle framePadding(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 8.0f));
+
+				// 	if (ImGui::BeginPopupModal("Detailed Message", &m_DetailedPanelOpen, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)) {
+				// 		ImGui::TextWrapped(msg.LongMessage.c_str());
+				// 		ImGui::EndPopup();
+				// 	}
+				// }
+
+				ImGui::PopID();
 			}
-
-			// if (clicked) {
-			// 	ImGui::OpenPopup("Detailed Message");
-			// 	ImVec2 size = ImGui::GetMainViewport()->Size;
-			// 	ImGui::SetNextWindowSize({ size.x * 0.5f, size.y * 0.5f });
-			// 	ImGui::SetNextWindowPos({ size.x / 2.0f, size.y / 2.5f }, 0, { 0.5, 0.5 });
-			// 	m_DetailedPanelOpen = true;
-			// }
-
-			// if (m_DetailedPanelOpen) {
-			// 	UI::ScopedStyle windowPadding(ImGuiStyleVar_WindowPadding, ImVec2(4.0f, 4.0f));
-			// 	UI::ScopedStyle framePadding(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 8.0f));
-
-			// 	if (ImGui::BeginPopupModal("Detailed Message", &m_DetailedPanelOpen, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)) {
-			// 		ImGui::TextWrapped(msg.LongMessage.c_str());
-			// 		ImGui::EndPopup();
-			// 	}
-			// }
-
-			ImGui::PopID();
+			ImGui::EndTable();
 		}
-		ImGui::EndTable();
 		ImGui::PopStyleColor(3);
 		ImGui::PopStyleVar(2);
 	}
