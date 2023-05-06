@@ -10,7 +10,10 @@
 #include "Stellar/Platform/Vulkan/VulkanCommon.h"
 #include "Stellar/Platform/Vulkan/Texture/VulkanTexture.h"
 #include "Stellar/Platform/Vulkan/Buffer/VulkanUniformBuffer.h"
+<<<<<<< HEAD
 #include "Stellar/Platform/Vulkan/Material/VulkanMaterial.h"
+=======
+>>>>>>> af6cb0174d5afbcc1cf8bef2968139f4cc3467c3
 
 namespace Stellar {
 
