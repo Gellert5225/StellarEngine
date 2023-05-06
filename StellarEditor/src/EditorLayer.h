@@ -7,6 +7,7 @@
 #include <Stellar/Scene/Components.h>
 #include <Stellar/Events/KeyEvent.h>
 #include <Stellar/Events/MouseEvent.h>
+#include <Stellar/Editor/ConsolePanel.h>
 
 #include "Panels/SceneHierarchyPanel.h"
 
@@ -45,6 +46,7 @@ namespace Stellar {
 		glm::vec2 m_ViewportBounds[2];
 
 		SceneHierarchyPanel m_SceneHierarchyPanel;
+		ConsolePanel m_ConsolePanel;
 
 		int m_GizmoType = -1;
 		bool m_AllowViewportCameraEvents = false;

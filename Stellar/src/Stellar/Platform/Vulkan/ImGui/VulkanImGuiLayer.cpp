@@ -6,6 +6,8 @@
 #include <ImGuizmo.h>
 
 #include "Stellar/ImGui/imgui_impl_glfw.h"
+#include "Stellar/ImGui/WebFont.h"
+#include "Stellar/ImGui/ImGuiFont.h"
 #include "Stellar/Platform/Vulkan/ImGui/imgui_impl_vulkan.h"
 
 #include "Stellar/Platform/Vulkan/Device/VulkanDevice.h"
@@ -36,8 +38,21 @@ namespace Stellar {
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
 		io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/static/OpenSans/OpenSans-Bold.ttf", 18.0f);
+		io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/static/OpenSans/OpenSans-Regular.ttf", 18.0f);
+		io.Fonts->AddFontFromFileTTF("Resources/Fonts/SourceCodePro/static/SourceCodePro-Bold.ttf", 16.0f);
+		io.Fonts->AddFontFromFileTTF("Resources/Fonts/SourceCodePro/static/SourceCodePro-Regular.ttf", 16.0f);
+		//io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/static/OpenSans/OpenSans-Bold.ttf", 18.0f);
 
-		io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/OpenSans-VariableFont_wdth,wght.ttf", 16.0f);
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/OpenSans-VariableFont_wdth,wght.ttf", 15.0f);
+
+		static const ImWchar s_FontAwesomeRanges[] = { STLR_ICON_MIN, STLR_ICON_MAX, 0 };
+		UI::FontConfiguration fontAwesome;
+		fontAwesome.FontName = "FontAwesome";
+		fontAwesome.FilePath = "Resources/Fonts/FontAwesome/fontawesome-webfont.ttf";
+		fontAwesome.Size = 16.0f;
+		fontAwesome.GlyphRanges = s_FontAwesomeRanges;
+		fontAwesome.MergeWithLast = true;
+		UI::Fonts::Add(fontAwesome);
 
 		auto swapChain = (VulkanSwapChain*)Application::Get().getWindow().getSwapChain();
 		VkDescriptorPoolSize pool_sizes[] = {

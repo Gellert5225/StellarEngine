@@ -19,7 +19,7 @@ namespace Stellar {
 	VulkanTexture::VulkanTexture(const std::string& filePath) : Texture2D(filePath) {
 		bool loaded = loadImage(filePath);
 		if (!loaded) {
-			STLR_CORE_ERROR("Failed to load texture {0}", filePath);
+			STLR_CONSOLE_LOG_ERROR("Failed to load texture {0}", filePath);
 			loadImage("../Resources/Textures/ErrorTexture.png");
 		}
 		ImageSpecification imageSpec;
