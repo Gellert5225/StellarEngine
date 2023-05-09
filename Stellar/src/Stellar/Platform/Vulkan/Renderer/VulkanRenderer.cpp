@@ -62,21 +62,7 @@ namespace Stellar {
 	}
 
 	void VulkanRenderer::init() {
-		m_CommandBuffer = CommandBuffer::Create(Renderer::MAX_FRAMES_IN_FLIGHT);
-		m_UniformBuffer = UniformBuffer::Create(sizeof(GlobalUniforms), 0);
-
-		FrameBufferSpec framebufferSpec;
-		framebufferSpec.width = 1280;
-		framebufferSpec.height = 720;
-		framebufferSpec.attachments = { ImageFormat::RGBA32F, ImageFormat::Depth };
-		m_FrameBuffer = FrameBuffer::Create(framebufferSpec);
-
-		auto quadShader = Renderer::GetShaderLibrary()->get("shader");
-		auto gridShader = Renderer::GetShaderLibrary()->get("grid");
-		m_GraphicsPipeline = new VulkanPipeline(quadShader, ((VulkanFrameBuffer*)m_FrameBuffer.raw())->getRenderPass());
-		m_GridPipeline = new VulkanPipeline(gridShader, ((VulkanFrameBuffer*)m_FrameBuffer.raw())->getRenderPass());
 		s_Data = new VulkanRendererData();
-		s_Data->pipeline = m_GraphicsPipeline;
 
 		// descriptor pool
 		s_Data->DescriptorPools.resize(Renderer::MAX_FRAMES_IN_FLIGHT);
@@ -104,7 +90,7 @@ namespace Stellar {
 			VK_CHECK_RESULT(vkCreateDescriptorPool(device, &pool_info, nullptr, &s_Data->DescriptorPools[i]));
 		}
 
-		createUboDescriptorSet();
+		//createUboDescriptorSet();
 	}
 
 	void VulkanRenderer::shutDown() {
@@ -113,22 +99,27 @@ namespace Stellar {
 			vkDestroyDescriptorPool(device, s_Data->DescriptorPools[i], nullptr);
 		}
 		delete s_Data->pipeline;
-		delete m_GridPipeline;
+		//delete m_GridPipeline;
 	}
 
-	void VulkanRenderer::beginRenderPass() {
+	void VulkanRenderer::beginRenderPass(STLR_Ptr<CommandBuffer> commandBuffer, 
+										STLR_Ptr<RenderPass> renderPass, 
+										bool explicitClear) {
 		auto device = VulkanDevice::GetInstance()->logicalDevice();
 		auto swapChain = (VulkanSwapChain*)Application::Get().getWindow().getSwapChain();
 		uint32_t bufferIndex = swapChain->getCurrentFrameIndex();
+		VkCommandBuffer cmdBuffer = commandBuffer.As<VulkanCommandBuffer>()->getCurrentCommandBuffer(bufferIndex);
+
 		vkResetDescriptorPool(device, s_Data->DescriptorPools[bufferIndex], 0);
+
+		auto fb = renderPass->getSpecification().targetFramebuffer;
+		m_FrameBuffer = fb;
 
 		if (m_NeedResize) {
 			m_NeedResize = false;
 
-			m_FrameBuffer->resize(m_ViewPortWidth, m_ViewPortHeight);
+			fb->resize(m_ViewPortWidth, m_ViewPortHeight);
 		}
-
-		m_CommandBuffer->begin();
 
 		std::array<VkClearValue, 2> clearValues{};
 		clearValues[0].color = m_ClearColor;
@@ -136,42 +127,40 @@ namespace Stellar {
 
 		VkRenderPassBeginInfo renderPassInfo{};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassInfo.renderPass = ((VulkanFrameBuffer*)m_FrameBuffer.raw())->getRenderPass();
-		renderPassInfo.framebuffer = ((VulkanFrameBuffer*)m_FrameBuffer.raw())->getFramebuffer();
+		renderPassInfo.renderPass = ((VulkanFrameBuffer*)fb.raw())->getRenderPass();
+		renderPassInfo.framebuffer = ((VulkanFrameBuffer*)fb.raw())->getFramebuffer();
 		renderPassInfo.renderArea.offset = {0, 0};
-		renderPassInfo.renderArea.extent.width = m_FrameBuffer->getSpecification().width;
-		renderPassInfo.renderArea.extent.height = m_FrameBuffer->getSpecification().height;
+		renderPassInfo.renderArea.extent.width = fb->getSpecification().width;
+		renderPassInfo.renderArea.extent.height = fb->getSpecification().height;
 		renderPassInfo.clearValueCount = 2;
 		renderPassInfo.pClearValues = clearValues.data();
 
-		auto commandBuffer = (VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer();
-		vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+		vkCmdBeginRenderPass(cmdBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
 		VkViewport viewport{};
 		viewport.x = 0.0f;
-		viewport.y = static_cast<float>(m_FrameBuffer->getSpecification().height);
-		viewport.width = static_cast<float>(m_FrameBuffer->getSpecification().width);
-		viewport.height = -static_cast<float>(m_FrameBuffer->getSpecification().height);
+		viewport.y = static_cast<float>(fb->getSpecification().height);
+		viewport.width = static_cast<float>(fb->getSpecification().width);
+		viewport.height = -static_cast<float>(fb->getSpecification().height);
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
-		vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
+		vkCmdSetViewport(cmdBuffer, 0, 1, &viewport);
 
 		VkRect2D scissor{};
 		scissor.offset = {0, 0};
-		scissor.extent.width = m_FrameBuffer->getSpecification().width;
-		scissor.extent.height = m_FrameBuffer->getSpecification().height;
-		vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
-
-		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
-								m_GraphicsPipeline->getPipelineLayout(),
-								1, 1, &m_UboDescriptorSet, 0, nullptr);
+		scissor.extent.width = fb->getSpecification().width;
+		scissor.extent.height = fb->getSpecification().height;
+		vkCmdSetScissor(cmdBuffer, 0, 1, &scissor);
 	}
 
-	void VulkanRenderer::endRenderPass() {
+	void VulkanRenderer::endRenderPass(STLR_Ptr<CommandBuffer> commandBuffer) {
 		//vkResetDescriptorPool(VulkanDevice::GetInstance()->logicalDevice(), m_GraphicsPipeline->getDescriptorPool(), 0);
-		vkCmdEndRenderPass((VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer());
-		m_CommandBuffer->end();
-		m_CommandBuffer->submit();
+		auto swapChain = (VulkanSwapChain*)Application::Get().getWindow().getSwapChain();
+		uint32_t bufferIndex = swapChain->getCurrentFrameIndex();
+		VkCommandBuffer cmdBuffer = commandBuffer.As<VulkanCommandBuffer>()->getCurrentCommandBuffer(bufferIndex);
+		vkCmdEndRenderPass(cmdBuffer);
+		commandBuffer->end();
+		commandBuffer->submit();
 	}
 
 	void VulkanRenderer::renderGeometry(STLR_Ptr<Buffer> vertexBuffer,
@@ -180,27 +169,27 @@ namespace Stellar {
 										const glm::vec4& color,
 										uint32_t indexCount,
 										const glm::mat4& transform) {
-		Push push{};
-		push.model = transform;
-		push.color = color;
+		// Push push{};
+		// push.model = transform;
+		// push.color = color;
 
-		auto textureDescriptorSet = ((VulkanTexture*)texture.raw())->getDescriptorSets();
-		auto commandBuffer = (VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer();
+		// auto textureDescriptorSet = ((VulkanTexture*)texture.raw())->getDescriptorSets();
+		// auto commandBuffer = (VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer();
 
-		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GraphicsPipeline->getPipeline());
-		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
-								m_GraphicsPipeline->getPipelineLayout(),
-								0, 1, &textureDescriptorSet, 0, nullptr);
-		vkCmdPushConstants(commandBuffer, m_GraphicsPipeline->getPipelineLayout(),
-						VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
-						0, sizeof(Push), &push);
+		// vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GraphicsPipeline->getPipeline());
+		// vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
+		// 						m_GraphicsPipeline->getPipelineLayout(),
+		// 						0, 1, &textureDescriptorSet, 0, nullptr);
+		// vkCmdPushConstants(commandBuffer, m_GraphicsPipeline->getPipelineLayout(),
+		// 				VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+		// 				0, sizeof(Push), &push);
 
-		VkDeviceSize offsets[] = {0};
-		auto buffers = (VkBuffer)vertexBuffer->getBuffer();
+		// VkDeviceSize offsets[] = {0};
+		// auto buffers = (VkBuffer)vertexBuffer->getBuffer();
 
-		vkCmdBindVertexBuffers(commandBuffer, 0, 1, &buffers, offsets);
-		vkCmdBindIndexBuffer(commandBuffer, (VkBuffer)indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT16);
-		vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
+		// vkCmdBindVertexBuffers(commandBuffer, 0, 1, &buffers, offsets);
+		// vkCmdBindIndexBuffer(commandBuffer, (VkBuffer)indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT16);
+		// vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
 	}
 
 	void VulkanRenderer::renderGeometry(STLR_Ptr<CommandBuffer> renderCommandBuffer, 
@@ -240,16 +229,16 @@ namespace Stellar {
 	}
 
 	void VulkanRenderer::renderGrid(STLR_Ptr<Buffer> vertexBuffer, STLR_Ptr<Buffer> indexBuffer, uint32_t indexCount) {
-		auto commandBuffer = (VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer();
+		// auto commandBuffer = (VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer();
 
-		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GridPipeline->getPipeline());
+		// vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GridPipeline->getPipeline());
 
-		VkDeviceSize offsets[] = {0};
-		auto buffers = (VkBuffer)vertexBuffer->getBuffer();
+		// VkDeviceSize offsets[] = {0};
+		// auto buffers = (VkBuffer)vertexBuffer->getBuffer();
 
-		vkCmdBindVertexBuffers(commandBuffer, 0, 1, &buffers, offsets);
-		vkCmdBindIndexBuffer(commandBuffer, (VkBuffer)indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT16);
-		vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
+		// vkCmdBindVertexBuffers(commandBuffer, 0, 1, &buffers, offsets);
+		// vkCmdBindIndexBuffer(commandBuffer, (VkBuffer)indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT16);
+		// vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
 	}
 
 	void VulkanRenderer::setClearColor(const glm::vec4 &color) {
@@ -257,36 +246,36 @@ namespace Stellar {
 	}
 
 	void VulkanRenderer::bindUbo(const GlobalUniforms& ubo) {
-		m_UniformBuffer->setData(&ubo, sizeof(GlobalUniforms));
+		//m_UniformBuffer->setData(&ubo, sizeof(GlobalUniforms));
 	}
 
 	void VulkanRenderer::createUboDescriptorSet() {
-		auto device = VulkanDevice::GetInstance()->logicalDevice();
-		auto uboSetLayout = m_GraphicsPipeline->getUboSetLayout();
+		// auto device = VulkanDevice::GetInstance()->logicalDevice();
+		// auto uboSetLayout = m_GraphicsPipeline->getUboSetLayout();
 
-		VkDescriptorSetAllocateInfo allocInfo{};
-		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-		allocInfo.descriptorPool = m_GraphicsPipeline->getDescriptorPool();
-		allocInfo.descriptorSetCount = 1;
-		allocInfo.pSetLayouts = &uboSetLayout;
+		// VkDescriptorSetAllocateInfo allocInfo{};
+		// allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+		// allocInfo.descriptorPool = m_GraphicsPipeline->getDescriptorPool();
+		// allocInfo.descriptorSetCount = 1;
+		// allocInfo.pSetLayouts = &uboSetLayout;
 
-		VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocInfo, &m_UboDescriptorSet));
+		// VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocInfo, &m_UboDescriptorSet));
 
-		// VkDescriptorBufferInfo bufferInfo{};
-		// bufferInfo.buffer = (VkBuffer)m_UniformBuffer->getBuffer();
-		// bufferInfo.offset = 0;
-		// bufferInfo.range = sizeof(GlobalUniforms);
+		// // VkDescriptorBufferInfo bufferInfo{};
+		// // bufferInfo.buffer = (VkBuffer)m_UniformBuffer->getBuffer();
+		// // bufferInfo.offset = 0;
+		// // bufferInfo.range = sizeof(GlobalUniforms);
 
-		VkWriteDescriptorSet descriptorWrite{};
-		descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descriptorWrite.dstSet = m_UboDescriptorSet;
-		descriptorWrite.dstBinding = 0;
-		descriptorWrite.dstArrayElement = 0;
-		descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		descriptorWrite.descriptorCount = 1;
-		descriptorWrite.pBufferInfo = &m_UniformBuffer.As<VulkanUniformBuffer>()->getDescriptorBufferInfo();
+		// VkWriteDescriptorSet descriptorWrite{};
+		// descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		// descriptorWrite.dstSet = m_UboDescriptorSet;
+		// descriptorWrite.dstBinding = 0;
+		// descriptorWrite.dstArrayElement = 0;
+		// descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		// descriptorWrite.descriptorCount = 1;
+		// descriptorWrite.pBufferInfo = &m_UniformBuffer.As<VulkanUniformBuffer>()->getDescriptorBufferInfo();
 
-		vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
+		// vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
 	}
 
 	VulkanPipeline* VulkanRenderer::GetPipeline() {

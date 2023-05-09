@@ -26,7 +26,8 @@ namespace Stellar {
 		VkMemoryAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 		allocInfo.allocationSize = memRequirements.size;
-		allocInfo.memoryTypeIndex = FindMemoryType(memRequirements.memoryTypeBits, property);
+		allocInfo.memoryTypeIndex = FindMemoryType(memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
+														VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
 		VK_CHECK_RESULT(vkAllocateMemory(device, &allocInfo, nullptr, &m_BufferMemory));
 
@@ -132,5 +133,13 @@ namespace Stellar {
 
 	void VulkanBuffer::write(void *dst, const void *src) {
 		memcpy(dst, src, m_Size);
+	}
+
+	void VulkanBuffer::setData(void* data, uint32_t size, uint32_t offset) {
+		auto device = VulkanDevice::GetInstance()->logicalDevice();
+		void* local;
+		vkMapMemory(device, m_BufferMemory, 0, m_Size, 0, &local);
+		memcpy(local, data, m_Size);
+		vkUnmapMemory(device, m_BufferMemory);
 	}
 }

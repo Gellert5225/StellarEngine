@@ -23,8 +23,10 @@ namespace Stellar {
 		virtual void init() = 0;
 		virtual void shutDown() = 0;
 
-		virtual void beginRenderPass() = 0;
-		virtual void endRenderPass() = 0;
+		virtual void beginRenderPass(STLR_Ptr<CommandBuffer> commandBuffer, 
+									STLR_Ptr<RenderPass> renderPass, 
+									bool explicitClear = false) = 0;
+		virtual void endRenderPass(STLR_Ptr<CommandBuffer> commandBuffer) = 0;
 
 		virtual void setClearColor(const glm::vec4& color) = 0;
 		virtual void renderGeometry(STLR_Ptr<Buffer> vertexBuffers,

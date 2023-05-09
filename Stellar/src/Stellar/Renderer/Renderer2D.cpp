@@ -26,7 +26,9 @@ namespace Stellar {
 		pipelineSpecification.backfaceCulling = false;
 		pipelineSpecification.layout = {
 			{ "inPosition", ShaderDataType::Float3 },
+			{ "inColor", ShaderDataType::Float4 },
 			{ "inTexCoord", ShaderDataType::Float2 },
+			{ "inTexIndex", ShaderDataType::Float },
 			{ "inTilingFactor", ShaderDataType::Float }
 		};
 		m_QuadPipeline = Pipeline::Create(pipelineSpecification);
@@ -37,7 +39,7 @@ namespace Stellar {
 		m_QuadVertexPositions[3] = {  0.5f, -0.5f, 0.0f, 1.0f };
 
 		m_QuadVertexBufferBase = new QuadVertex[MaxVertices];
-		m_QuadVertexBuffer = Buffer::Create(BufferType::Vertex, MaxVertices * sizeof(QuadVertex), m_QuadVertexBufferBase);
+		m_QuadVertexBuffer = Buffer::Create(BufferType::Vertex, MaxVertices * sizeof(QuadVertex));
 
 		uint32_t* quadIndices = new uint32_t[MaxIndices];
 
@@ -66,27 +68,6 @@ namespace Stellar {
 		m_UniformBufferSet->create(sizeof(GlobalUniforms), 0);
 
 		m_QuadMaterial = Material::Create(m_QuadPipeline->getSpecification().shader, "QuadMaterial");
-
-		const std::vector<Vertex> vertices = {
-			{{-1.0f, -1.0f, 0.0f}, {1.0f, 0.0f}, 1.0f},
-			{{ 1.0f, -1.0f, 0.0f}, {0.0f, 0.0f}, 1.0f},
-			{{ 1.0f,  1.0f, 0.0f}, {0.0f, 1.0f}, 1.0f},
-			{{-1.0f,  1.0f, 0.0f}, {1.0f, 1.0f}, 1.0f}
-		};
-
-		const std::vector<uint16_t> indices = {
-			0, 1, 2, 2, 3, 0
-		};
-
-		m_QuadIndexCount = indices.size();
-
-		// vertex buffer
-		auto vertexBufferSize = sizeof(vertices[0]) * vertices.size();
-		m_QuadVertexBuffer = Buffer::Create(BufferType::Vertex, vertexBufferSize, vertices.data());
-
-		// index buffer
-		auto indexBufferSize = sizeof(indices[0]) * indices.size();
-		m_QuadIndexBuffer = Buffer::Create(BufferType::Index, indexBufferSize, indices.data());
 	}
 
 	void Renderer2D::shutDown() {
@@ -103,7 +84,7 @@ namespace Stellar {
 		m_TextureSlotIndex = 1;
 
 		//Renderer::BindUbo(ubo);
-		Renderer::BeginRenderPass();
+		//Renderer::BeginRenderPass();
 
 		//Renderer::RenderGrid(m_QuadVertexBuffer, m_QuadIndexBuffer, m_QuadIndexCount);
 	}
@@ -118,14 +99,34 @@ namespace Stellar {
 		m_QuadVertexBufferPtr = m_QuadVertexBufferBase;
 		m_TextureSlotIndex = 1;
 
+		for (uint32_t i = 1; i < m_TextureSlots.size(); i++)
+			m_TextureSlots[i] = nullptr;
+
 		//Renderer::RenderGrid(m_QuadVertexBuffer, m_QuadIndexBuffer, m_QuadIndexCount);
 	}
 
 	void Renderer2D::endScene() {
 		m_RenderCommandBuffer->begin();
-		Renderer::BeginRenderPass();
+		Renderer::BeginRenderPass(m_RenderCommandBuffer, m_QuadPipeline->getSpecification().renderPass);
 
-		Renderer::EndRenderPass();
+		uint32_t dataSize = (uint8_t*)m_QuadVertexBufferPtr - (uint8_t*)m_QuadVertexBufferBase;
+		if (dataSize) {
+			m_QuadVertexBuffer->setData(m_QuadVertexBufferBase, dataSize);
+
+			for (uint32_t i = 0; i < m_TextureSlots.size(); i++) {
+				if (m_TextureSlots[i])
+					m_QuadMaterial->set("texSampler", m_TextureSlots[i]);
+				else
+					m_QuadMaterial->set("texSampler", m_WhiteTexture);
+			}
+
+
+			Renderer::RenderGeometry(m_RenderCommandBuffer, m_QuadPipeline, m_UniformBufferSet, m_QuadMaterial, m_QuadVertexBuffer, m_QuadIndexBuffer, glm::mat4(1.0f), m_QuadIndexCount);
+
+			//s_Data.Stats.DrawCalls++;
+		}
+
+		Renderer::EndRenderPass(m_RenderCommandBuffer);
 	}
 
 	void Renderer2D::drawQuad(const glm::mat4& transform, const glm::vec4& color, STLR_Ptr<Texture2D> texture) {
@@ -174,9 +175,9 @@ namespace Stellar {
 	void Renderer2D::flushAndReset() {
 		endScene();
 
-		// s_Data.quadIndexCount = 0;
-		// s_Data.quadVertexBufferPtr = s_Data.quadVertexBufferBase;
+		m_QuadIndexCount = 0;
+		m_QuadVertexBufferPtr = m_QuadVertexBufferBase;
 
-		// s_Data.textureSlotIndex = 1;
+		m_TextureSlotIndex = 1;
 	}
 } 

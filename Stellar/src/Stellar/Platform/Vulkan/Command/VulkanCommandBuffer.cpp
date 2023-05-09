@@ -72,11 +72,7 @@ namespace Stellar {
 		beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 		beginInfo.pNext = nullptr;
 
-		VkCommandBuffer commandBuffer = nullptr;
-		commandBuffer = m_CommandBuffers[frameIndex];
-		m_ActiveCommandBuffer = commandBuffer;
-
-		if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
+		if (vkBeginCommandBuffer(m_CommandBuffers[frameIndex], &beginInfo) != VK_SUCCESS) {
 			throw std::runtime_error("failed to begin recording command buffer!");
 		}
 	}
@@ -84,7 +80,7 @@ namespace Stellar {
 	void VulkanCommandBuffer::end() {
 		auto commandBuffer = static_cast<VkCommandBuffer>(m_ActiveCommandBuffer);
 
-		if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
+		if (vkEndCommandBuffer(m_CommandBuffers[Renderer::GetCurrentFrameIndex()]) != VK_SUCCESS)
 			throw std::runtime_error("failed to record command buffer!");
 		m_ActiveCommandBuffer = nullptr;
 	}

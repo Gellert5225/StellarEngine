@@ -44,8 +44,8 @@ namespace Stellar {
 		s_RendererAPI = InitRendererAPI();
 
 		Renderer::GetShaderLibrary()->load("shader");
-		Renderer::GetShaderLibrary()->load("grid");
-		Renderer::GetShaderLibrary()->load("basicShader");
+		//Renderer::GetShaderLibrary()->load("grid");
+		//Renderer::GetShaderLibrary()->load("basicShader");
 
 		s_RendererAPI->init();
 	}
@@ -56,12 +56,14 @@ namespace Stellar {
 		delete s_RendererAPI;
 	}
 
-	void Renderer::BeginRenderPass() {
-		s_RendererAPI->beginRenderPass();
+	void Renderer::BeginRenderPass(STLR_Ptr<CommandBuffer> commandBuffer, 
+									STLR_Ptr<RenderPass> renderPass, 
+									bool explicitClear) {
+		s_RendererAPI->beginRenderPass(commandBuffer, renderPass, explicitClear);
 	}
 
-	void Renderer::EndRenderPass() {
-		s_RendererAPI->endRenderPass();
+	void Renderer::EndRenderPass(STLR_Ptr<CommandBuffer> commandBuffer) {
+		s_RendererAPI->endRenderPass(commandBuffer);
 	}
 
 	void Renderer::RenderGeometry(STLR_Ptr<Buffer> vertexBuffer,

@@ -56,6 +56,7 @@ namespace Stellar {
 		void map(void** data) override;
 		void unMap() override;
 		void write(void* dst, const void* src) override;
+		void setData(void* buffer, uint32_t size, uint32_t offset = 0) override;
 
 		[[nodiscard]] void* getBuffer() const override;
 	protected:

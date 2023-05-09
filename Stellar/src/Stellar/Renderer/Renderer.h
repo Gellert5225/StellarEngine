@@ -23,8 +23,10 @@ namespace Stellar {
 		static void Init();
 		static void Shutdown();
 
-		static void BeginRenderPass();
-		static void EndRenderPass();
+		static void BeginRenderPass(STLR_Ptr<CommandBuffer> commandBuffer, 
+									STLR_Ptr<RenderPass> renderPass, 
+									bool explicitClear = false);
+		static void EndRenderPass(STLR_Ptr<CommandBuffer> commandBuffer);
 
 		static void SetClearColor(const glm::vec4& color);
 		static void RenderGeometry(STLR_Ptr<Buffer> vertexBuffer,

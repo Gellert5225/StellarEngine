@@ -61,6 +61,7 @@ namespace Stellar {
 
 		static STLR_Ptr<Buffer> Create(BufferType type, uint64_t size, const void* data = nullptr);
 		
+		virtual void setData(void* buffer, uint32_t size, uint32_t offset = 0) = 0;
 		virtual void map(void** data) = 0;
 		virtual void unMap() = 0;
 		virtual void write(void* dst, const void* src) = 0;
