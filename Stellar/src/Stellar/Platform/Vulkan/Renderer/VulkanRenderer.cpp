@@ -102,6 +102,7 @@ namespace Stellar {
 		//delete m_GridPipeline;
 	}
 
+
 	void VulkanRenderer::beginRenderPass(STLR_Ptr<CommandBuffer> commandBuffer, 
 										STLR_Ptr<RenderPass> renderPass, 
 										bool explicitClear) {
