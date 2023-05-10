@@ -26,13 +26,13 @@ namespace Stellar {
 		void beginScene(const EditorCamera& camera);
 		void beginScene(const Camera& camera, const glm::mat4& transform);
 		void endScene();
-		void drawQuad(const glm::mat4& transform, const glm::vec4& color, STLR_Ptr<Texture2D> texture = nullptr);
+		void drawQuad(const glm::mat4& transform, const glm::vec4& color);
 		void drawQuad(const glm::mat4& transform, const glm::vec4& color, const STLR_Ptr<Texture2D>& texture, float tilingFactor);
 	private:
 		void flushAndReset();
 	private:
 		struct QuadVertex {
-			glm::vec3 Position;
+			glm::vec4 Position;
 			glm::vec4 Color;
 			glm::vec2 TexCoord;
 			float TexIndex;

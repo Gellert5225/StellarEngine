@@ -110,8 +110,6 @@ namespace Stellar {
 		uint32_t bufferIndex = swapChain->getCurrentFrameIndex();
 		VkCommandBuffer cmdBuffer = commandBuffer.As<VulkanCommandBuffer>()->getCurrentCommandBuffer(bufferIndex);
 
-		vkResetDescriptorPool(device, s_Data->DescriptorPools[bufferIndex], 0);
-
 		auto fb = renderPass->getSpecification().targetFramebuffer;
 		m_FrameBuffer = fb;
 
@@ -159,8 +157,15 @@ namespace Stellar {
 		uint32_t bufferIndex = swapChain->getCurrentFrameIndex();
 		VkCommandBuffer cmdBuffer = commandBuffer.As<VulkanCommandBuffer>()->getCurrentCommandBuffer(bufferIndex);
 		vkCmdEndRenderPass(cmdBuffer);
-		commandBuffer->end();
-		commandBuffer->submit();
+		// commandBuffer->end();
+		// commandBuffer->submit();
+	}
+
+	void VulkanRenderer::beginFrame() {
+		auto device = VulkanDevice::GetInstance()->logicalDevice();
+		auto swapChain = (VulkanSwapChain*)Application::Get().getWindow().getSwapChain();
+		uint32_t bufferIndex = swapChain->getCurrentFrameIndex();
+		vkResetDescriptorPool(device, s_Data->DescriptorPools[bufferIndex], 0);
 	}
 
 	void VulkanRenderer::renderGeometry(STLR_Ptr<Buffer> vertexBuffer,
@@ -200,6 +205,9 @@ namespace Stellar {
 							STLR_Ptr<Buffer> indexBuffer, 
 							const glm::mat4& transform, 
 							uint32_t indexCount) {
+		Push push{};
+		push.model = transform;
+
 		auto vulkanMaterial = material.As<VulkanMaterial>();
 		uint32_t frameIndex = Renderer::GetCurrentFrameIndex();
 
@@ -209,10 +217,10 @@ namespace Stellar {
 		VkPipeline vkPipeline = vulkanPipeline->getPipeline();
 		VkPipelineLayout layout = vulkanPipeline->getPipelineLayout();
 
-		VkDeviceSize offsets[] = {0};
+		VkDeviceSize offsets[1] = {0};
 		auto buffers = (VkBuffer)vertexBuffer->getBuffer();
 		vkCmdBindVertexBuffers(commandBuffer, 0, 1, &buffers, offsets);
-		vkCmdBindIndexBuffer(commandBuffer, (VkBuffer)indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT16);
+		vkCmdBindIndexBuffer(commandBuffer, (VkBuffer)indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vkPipeline);
 
@@ -224,7 +232,7 @@ namespace Stellar {
 		if (descriptorSet)
 			vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, layout, 0, 1, &descriptorSet, 0, nullptr);
 
-		vkCmdPushConstants(commandBuffer, layout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &transform);
+		vkCmdPushConstants(commandBuffer, layout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(Push), &push);
 		vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
 	}
 

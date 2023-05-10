@@ -41,8 +41,8 @@ namespace Stellar {
 	void VulkanUniformBuffer::setData(const void* data, uint32_t size, uint32_t offset) {
 		auto device = VulkanDevice::GetInstance()->logicalDevice();
 		void* local;
-		vkMapMemory(device, m_BufferMemory, 0, m_Size, 0, &local);
-		memcpy(local, data, m_Size);
+		vkMapMemory(device, m_BufferMemory, 0, size, 0, &local);
+		memcpy(local, data, size);
 		vkUnmapMemory(device, m_BufferMemory);
 	}
 }

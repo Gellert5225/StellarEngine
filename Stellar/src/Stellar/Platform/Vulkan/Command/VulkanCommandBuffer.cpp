@@ -94,10 +94,10 @@ namespace Stellar {
 		VkCommandBuffer commandBuffer = m_CommandBuffers[frameIndex];
 		submitInfo.pCommandBuffers = &commandBuffer;
 
-		VK_CHECK_RESULT(vkWaitForFences(VulkanDevice::GetInstance()->logicalDevice(),
-										1, &m_WaitFences[frameIndex], VK_TRUE, UINT64_MAX));
-		VK_CHECK_RESULT(vkResetFences(VulkanDevice::GetInstance()->logicalDevice(),
-									1, &m_WaitFences[frameIndex]));
+		auto device = VulkanDevice::GetInstance()->logicalDevice();
+
+		VK_CHECK_RESULT(vkWaitForFences(device, 1, &m_WaitFences[frameIndex], VK_TRUE, UINT64_MAX));
+		VK_CHECK_RESULT(vkResetFences(device, 1, &m_WaitFences[frameIndex]));
 		VK_CHECK_RESULT(vkQueueSubmit(VulkanDevice::GetInstance()->getGraphicsQueue(),
 									1, &submitInfo, m_WaitFences[frameIndex]));
 	}

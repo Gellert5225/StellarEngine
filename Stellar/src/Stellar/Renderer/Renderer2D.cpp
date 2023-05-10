@@ -25,21 +25,21 @@ namespace Stellar {
 		pipelineSpecification.renderPass = renderPass;
 		pipelineSpecification.backfaceCulling = false;
 		pipelineSpecification.layout = {
-			{ "inPosition", ShaderDataType::Float3 },
-			{ "inColor", ShaderDataType::Float4 },
-			{ "inTexCoord", ShaderDataType::Float2 },
-			{ "inTexIndex", ShaderDataType::Float },
+			{ "inPosition", 	ShaderDataType::Float4 },
+			{ "inColor", 		ShaderDataType::Float4 },
+			{ "inTexCoord", 	ShaderDataType::Float2 },
+			{ "inTexIndex", 	ShaderDataType::Float },
 			{ "inTilingFactor", ShaderDataType::Float }
 		};
 		m_QuadPipeline = Pipeline::Create(pipelineSpecification);
 
-		m_QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
-		m_QuadVertexPositions[1] = { -0.5f,  0.5f, 0.0f, 1.0f };
-		m_QuadVertexPositions[2] = {  0.5f,  0.5f, 0.0f, 1.0f };
-		m_QuadVertexPositions[3] = {  0.5f, -0.5f, 0.0f, 1.0f };
-
-		m_QuadVertexBufferBase = new QuadVertex[MaxVertices];
 		m_QuadVertexBuffer = Buffer::Create(BufferType::Vertex, MaxVertices * sizeof(QuadVertex));
+		m_QuadVertexBufferBase = new QuadVertex[MaxVertices];
+
+		m_QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
+		m_QuadVertexPositions[1] = {  0.5f, -0.5f, 0.0f, 1.0f };
+		m_QuadVertexPositions[2] = {  0.5f,  0.5f, 0.0f, 1.0f };
+		m_QuadVertexPositions[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
 
 		uint32_t* quadIndices = new uint32_t[MaxIndices];
 
@@ -78,7 +78,7 @@ namespace Stellar {
 
 		uint32_t bufferIndex = Renderer::GetCurrentFrameIndex();
 		m_UniformBufferSet->get(0, 0, bufferIndex)->setData(&viewProjection, sizeof(GlobalUniforms));
-
+		
 		m_QuadIndexCount = 0;
 		m_QuadVertexBufferPtr = m_QuadVertexBufferBase;
 		m_TextureSlotIndex = 1;
@@ -108,17 +108,18 @@ namespace Stellar {
 	void Renderer2D::endScene() {
 		m_RenderCommandBuffer->begin();
 		Renderer::BeginRenderPass(m_RenderCommandBuffer, m_QuadPipeline->getSpecification().renderPass);
+		uint32_t frameIndex = Renderer::GetCurrentFrameIndex();
 
 		uint32_t dataSize = (uint8_t*)m_QuadVertexBufferPtr - (uint8_t*)m_QuadVertexBufferBase;
 		if (dataSize) {
 			m_QuadVertexBuffer->setData(m_QuadVertexBufferBase, dataSize);
 
-			for (uint32_t i = 0; i < m_TextureSlots.size(); i++) {
-				if (m_TextureSlots[i])
-					m_QuadMaterial->set("texSampler", m_TextureSlots[i]);
-				else
-					m_QuadMaterial->set("texSampler", m_WhiteTexture);
-			}
+			// for (uint32_t i = 0; i < m_TextureSlots.size(); i++) {
+			// 	if (m_TextureSlots[i])
+			// 		m_QuadMaterial->set("texSampler", m_TextureSlots[i]);
+			// 	else
+			// 		m_QuadMaterial->set("texSampler", m_WhiteTexture);
+			// }
 
 
 			Renderer::RenderGeometry(m_RenderCommandBuffer, m_QuadPipeline, m_UniformBufferSet, m_QuadMaterial, m_QuadVertexBuffer, m_QuadIndexBuffer, glm::mat4(1.0f), m_QuadIndexCount);
@@ -127,16 +128,35 @@ namespace Stellar {
 		}
 
 		Renderer::EndRenderPass(m_RenderCommandBuffer);
+		m_RenderCommandBuffer->end();
+		m_RenderCommandBuffer->submit();
 	}
 
-	void Renderer2D::drawQuad(const glm::mat4& transform, const glm::vec4& color, STLR_Ptr<Texture2D> texture) {
-		//Renderer::RenderGeometry(m_QuadVertexBuffer, m_QuadIndexBuffer, texture, color, m_QuadIndexCount, transform);
+	void Renderer2D::drawQuad(const glm::mat4& transform, const glm::vec4& color) {
+		constexpr size_t quadVertexCount = 4;
+		const float textureIndex = 0.0f; // White Texture
+		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
+		const float tilingFactor = 1.0f;
+
+		if (m_QuadIndexCount >= MaxIndices)
+			flushAndReset();
+
+		for (size_t i = 0; i < quadVertexCount; i++) {
+			m_QuadVertexBufferPtr->Position = transform * m_QuadVertexPositions[i];
+			m_QuadVertexBufferPtr->Color = color;
+			m_QuadVertexBufferPtr->TexCoord = textureCoords[i];
+			m_QuadVertexBufferPtr->TexIndex = textureIndex;
+			m_QuadVertexBufferPtr->TilingFactor = tilingFactor;
+			m_QuadVertexBufferPtr++;
+		}
+
+		m_QuadIndexCount += 6;
 	}
 
 	void Renderer2D::drawQuad(const glm::mat4& transform, const glm::vec4& color, const STLR_Ptr<Texture2D>& texture, float tilingFactor) {
 		constexpr size_t quadVertexCount = 4;
 		//constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
-		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
+		constexpr glm::vec2 textureCoords[] = { { 1.0f, 0.0f }, { 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f } };
 
 		if (m_QuadIndexCount >= MaxIndices)
 			flushAndReset();
@@ -175,9 +195,9 @@ namespace Stellar {
 	void Renderer2D::flushAndReset() {
 		endScene();
 
-		m_QuadIndexCount = 0;
-		m_QuadVertexBufferPtr = m_QuadVertexBufferBase;
+		// m_QuadIndexCount = 0;
+		// m_QuadVertexBufferPtr = m_QuadVertexBufferBase[];
 
-		m_TextureSlotIndex = 1;
+		// m_TextureSlotIndex = 1;
 	}
 } 

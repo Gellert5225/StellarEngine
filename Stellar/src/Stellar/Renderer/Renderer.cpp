@@ -66,6 +66,10 @@ namespace Stellar {
 		s_RendererAPI->endRenderPass(commandBuffer);
 	}
 
+	void Renderer::BeginFrame() {
+		s_RendererAPI->beginFrame();
+	}
+
 	void Renderer::RenderGeometry(STLR_Ptr<Buffer> vertexBuffer,
 								STLR_Ptr<Buffer> indexBuffer,
 								STLR_Ptr<Texture2D> texture,

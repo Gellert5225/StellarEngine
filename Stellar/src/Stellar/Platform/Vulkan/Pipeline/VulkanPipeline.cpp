@@ -325,6 +325,8 @@ namespace Stellar {
 			vertexInputAttributs[location].format = ShaderDataTypeToVulkanFormat(element.type);
 			vertexInputAttributs[location].offset = element.offset;
 
+			STLR_CORE_INFO("Name: {0}, size: {1}, offset: {2}", element.name, element.size, element.offset);
+
 			location++;
 		}
 

@@ -1,7 +1,7 @@
 #version 450 core
 #pragma vert
 
-layout(location = 0) in vec3 inPosition;
+layout(location = 0) in vec4 inPosition;
 layout(location = 1) in vec4 inColor;
 layout(location = 2) in vec2 inTexCoord;
 layout(location = 3) in float inTexIndex;
@@ -25,7 +25,7 @@ struct VertexOutput {
 layout (location = 0) out VertexOutput Output;
 
 void main() {
-    gl_Position = ubo.viewProjection * push.model * vec4(inPosition, 1.0);
+    gl_Position = ubo.viewProjection * push.model * inPosition;
     Output.color = inColor;
 	Output.texCoord = inTexCoord;
 	Output.texIndex = inTexIndex;
@@ -35,7 +35,7 @@ void main() {
 #version 450 core
 #pragma frag
 
-precision mediump float;
+layout(location = 0) out vec4 outColor;
 
 struct VertexOutput {
 	vec4 color;
@@ -44,12 +44,11 @@ struct VertexOutput {
 	float tilingFactor;
 };
 
-layout (location = 0) in VertexOutput Input;
+layout(location = 0) in VertexOutput Input;
 
-layout(binding = 1) uniform sampler2D texSampler[32];
-
-layout(location = 0) out vec4 outColor;
+//layout(set = 0, binding = 1) uniform sampler2D texSampler[32];
 
 void main() {
-    outColor = texture(texSampler[int(Input.texIndex)], Input.texCoord * Input.tilingFactor) * Input.color;
+	outColor = Input.color;
+    //outColor = texture(texSampler[int(Input.texIndex)], Input.texCoord * Input.tilingFactor) * Input.color;
 }

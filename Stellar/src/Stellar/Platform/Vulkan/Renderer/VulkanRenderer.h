@@ -24,6 +24,8 @@ namespace Stellar {
 							bool explicitClear = false) override;
 		void endRenderPass(STLR_Ptr<CommandBuffer> commandBuffer) override;
 
+		void beginFrame() override;
+
 		void setClearColor(const glm::vec4& color) override;
 		void renderGeometry(STLR_Ptr<Buffer> vertexBuffer,
 							STLR_Ptr<Buffer>indexBuffer,

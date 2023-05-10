@@ -9,7 +9,6 @@ namespace Stellar {
 
 	struct Push {
 		alignas(16) glm::mat4 model{1.f};
-		alignas(16) glm::vec4 color{1.f};
 	};
 
 	struct InstanceData {
