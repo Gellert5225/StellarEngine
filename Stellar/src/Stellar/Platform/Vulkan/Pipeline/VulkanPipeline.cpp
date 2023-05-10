@@ -246,16 +246,15 @@ namespace Stellar {
 		// We need one blend attachment state per color attachment (even if blending is not used)
 		size_t colorAttachmentCount = framebuffer->getColorAttachmentCount();
 		std::vector<VkPipelineColorBlendAttachmentState> blendAttachmentStates(colorAttachmentCount);
-		for (size_t i = 0; i < colorAttachmentCount; i++)
-		{
+		for (size_t i = 0; i < colorAttachmentCount; i++) {
 			blendAttachmentStates[i].colorWriteMask = 0xf;
 			blendAttachmentStates[i].blendEnable = VK_TRUE;
 			blendAttachmentStates[i].srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
 			blendAttachmentStates[i].dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 			blendAttachmentStates[i].colorBlendOp = VK_BLEND_OP_ADD;
 			blendAttachmentStates[i].alphaBlendOp = VK_BLEND_OP_ADD;
-			blendAttachmentStates[i].srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
-			blendAttachmentStates[i].dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+			blendAttachmentStates[i].srcAlphaBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+			blendAttachmentStates[i].dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 		}
 		
 		VkPipelineColorBlendStateCreateInfo colorBlendState = {};
