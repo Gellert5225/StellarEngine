@@ -134,7 +134,7 @@ namespace Stellar {
 		STLR_CORE_TRACE(" Sampled Images:");
 		for (const auto& resource : resources.sampled_images) {
 			const auto& name = resource.name;
-			auto& type = compiler.get_type(resource.base_type_id);
+			auto& type = compiler.get_type(resource.type_id);
 			uint32_t binding = compiler.get_decoration(resource.id, spv::DecorationBinding);
 			uint32_t descriptorSet = compiler.get_decoration(resource.id, spv::DecorationDescriptorSet);
 			uint32_t dimension = type.image.dim;
