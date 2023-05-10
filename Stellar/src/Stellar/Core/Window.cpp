@@ -173,6 +173,7 @@ namespace Stellar {
 	Window::~Window() {
 		delete m_SwapChain;
 		shutDown();
+		STLR_CORE_INFO("Window destructor");
 	}
 
 	SwapChain *Window::getSwapChain() const {

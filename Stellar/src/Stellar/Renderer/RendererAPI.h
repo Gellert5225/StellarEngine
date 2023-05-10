@@ -6,6 +6,9 @@
 #include "Uniforms.h"
 #include "Texture.h"
 #include "FrameBuffer.h"
+#include "Pipeline.h"
+#include "Material.h"
+#include "UniformBufferSet.h"
 
 #include <glm/glm.hpp>
 
@@ -20,8 +23,12 @@ namespace Stellar {
 		virtual void init() = 0;
 		virtual void shutDown() = 0;
 
-		virtual void beginRenderPass() = 0;
-		virtual void endRenderPass() = 0;
+		virtual void beginRenderPass(STLR_Ptr<CommandBuffer> commandBuffer, 
+									STLR_Ptr<RenderPass> renderPass, 
+									bool explicitClear = false) = 0;
+		virtual void endRenderPass(STLR_Ptr<CommandBuffer> commandBuffer) = 0;
+
+		virtual void beginFrame() = 0;
 
 		virtual void setClearColor(const glm::vec4& color) = 0;
 		virtual void renderGeometry(STLR_Ptr<Buffer> vertexBuffers,
@@ -33,6 +40,15 @@ namespace Stellar {
 		virtual void renderGrid(STLR_Ptr<Buffer> vertexBuffer,
 								STLR_Ptr<Buffer> indexBuffer,
 								uint32_t indexCount = 0) = 0;
+
+		virtual void renderGeometry(STLR_Ptr<CommandBuffer> renderCommandBuffer, 
+									STLR_Ptr<Pipeline> pipeline,
+									STLR_Ptr<UniformBufferSet> uniformBufferSet, 
+									STLR_Ptr<Material> material, 
+									STLR_Ptr<Buffer> vertexBuffer, 
+									STLR_Ptr<Buffer> indexBuffer, 
+									const glm::mat4& transform, 
+									uint32_t indexCount = 0) = 0;
 		
 		virtual void bindUbo(const GlobalUniforms& ubo) = 0;
 		virtual STLR_Ptr<FrameBuffer> getFrameBuffer() = 0;
@@ -40,7 +56,7 @@ namespace Stellar {
 
 		static RendererAPIType Current() { return s_CurrentRendererAPI; }
 	protected:
-		CommandBuffer* m_CommandBuffer{};
+		STLR_Ptr<CommandBuffer> m_CommandBuffer{};
 		Camera m_Camera;
 	private:
 #ifdef __APPLE__

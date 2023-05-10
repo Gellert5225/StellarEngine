@@ -24,7 +24,7 @@ namespace Stellar {
 			std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions{};
 			attributeDescriptions[0].binding = 0;
 			attributeDescriptions[0].location = 0;
-			attributeDescriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
+			attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
 			attributeDescriptions[0].offset = offsetof(VulkanVertex, position);
 
 			attributeDescriptions[1].binding = 0;
@@ -56,14 +56,11 @@ namespace Stellar {
 		void map(void** data) override;
 		void unMap() override;
 		void write(void* dst, const void* src) override;
+		void setData(void* buffer, uint32_t size, uint32_t offset = 0) override;
 
 		[[nodiscard]] void* getBuffer() const override;
-	private:
+	protected:
 		VkBuffer m_Buffer = VK_NULL_HANDLE;
 		VkDeviceMemory m_BufferMemory = VK_NULL_HANDLE;
-	};
-
-	class VulkanUniformBuffer : public Buffer {
-		
 	};
 }

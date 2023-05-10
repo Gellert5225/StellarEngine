@@ -20,6 +20,7 @@ namespace Stellar {
 		struct ImageSampler {
 			uint32_t bindingPoint = 0;
 			uint32_t descriptorSet = 0;
+			uint32_t arraySize = 0;
 			std::string name;
 			VkShaderStageFlagBits shaderStage = VK_SHADER_STAGE_FLAG_BITS_MAX_ENUM;
 		};
@@ -34,6 +35,8 @@ namespace Stellar {
 			std::unordered_map<uint32_t, UniformBuffer*> uniformBuffers;
 			std::unordered_map<uint32_t, ImageSampler> imageSamplers;
 			std::unordered_map<uint32_t, ImageSampler> storageImages;
+			std::unordered_map<uint32_t, ImageSampler> separateSamplers;
+			std::unordered_map<uint32_t, ImageSampler> separateImages;
 
 			std::unordered_map<std::string, VkWriteDescriptorSet> writeDescriptorSets;
 

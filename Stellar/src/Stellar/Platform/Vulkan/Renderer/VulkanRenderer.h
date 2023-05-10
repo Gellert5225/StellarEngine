@@ -4,9 +4,11 @@
 
 #include "Stellar/Renderer/RendererAPI.h"
 #include "Stellar/Renderer/Buffer.h"
+#include "Stellar/Renderer/UniformBuffer.h"
 
 #include "Stellar/Platform/Vulkan/SwapChain/VulkanSwapChain.h"
 #include "Stellar/Platform/Vulkan/Buffer/VulkanFrameBuffer.h"
+#include "Stellar/Platform/Vulkan/Buffer/VulkanBuffer.h"
 #include "Stellar/Core/Application.h"
 
 #include <vulkan/vulkan.h>
@@ -17,8 +19,12 @@ namespace Stellar {
 		void init() override;
 		void shutDown() override;
 
-		void beginRenderPass() override;
-		void endRenderPass() override;
+		void beginRenderPass(STLR_Ptr<CommandBuffer> commandBuffer, 
+							STLR_Ptr<RenderPass> renderPass, 
+							bool explicitClear = false) override;
+		void endRenderPass(STLR_Ptr<CommandBuffer> commandBuffer) override;
+
+		void beginFrame() override;
 
 		void setClearColor(const glm::vec4& color) override;
 		void renderGeometry(STLR_Ptr<Buffer> vertexBuffer,
@@ -27,6 +33,14 @@ namespace Stellar {
 							const glm::vec4& color,
 							uint32_t indexCount,
 							const glm::mat4& transform) override;
+		void renderGeometry(STLR_Ptr<CommandBuffer> renderCommandBuffer, 
+							STLR_Ptr<Pipeline> pipeline,
+							STLR_Ptr<UniformBufferSet> uniformBufferSet, 
+							STLR_Ptr<Material> material, 
+							STLR_Ptr<Buffer> vertexBuffer, 
+							STLR_Ptr<Buffer> indexBuffer, 
+							const glm::mat4& transform, 
+							uint32_t indexCount = 0) override;
 		void renderGrid(STLR_Ptr<Buffer> vertexBuffer,
 						STLR_Ptr<Buffer> indexBuffer,
 						uint32_t indexCount = 0) override;
@@ -41,11 +55,8 @@ namespace Stellar {
 		static VkDescriptorPool GetDescriptorPool();
 		static VkDescriptorSet AllocateDesriptorSet(VkDescriptorSetAllocateInfo& allocInfo);
 	private:
-		VulkanPipeline* m_GraphicsPipeline = nullptr;
-		VulkanPipeline* m_GridPipeline = nullptr;
 		VkClearColorValue m_ClearColor = {{0.66f, 0.9f, 0.96f, 1.0f}};
 
-		STLR_Ptr<Buffer> m_UniformBuffer{};
 		STLR_Ptr<FrameBuffer> m_FrameBuffer;
 
 		VkDescriptorSet m_UboDescriptorSet;

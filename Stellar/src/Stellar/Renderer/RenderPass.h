@@ -15,7 +15,7 @@ namespace Stellar {
 
 	class RenderPass : public STLR_Base {
 	public:
-		~RenderPass() = default;
+		virtual ~RenderPass() = default;
 
 		RenderPassSpecification& getSpecification() { return m_Specification; };
 		const RenderPassSpecification& getSpecification() const { return m_Specification; };

@@ -9,7 +9,7 @@
 
 namespace Stellar {
 	Scene::Scene() {
-
+		m_Renderer2D = STLR_Ptr<Renderer2D>::Create();
 	}
 
 	Scene::~Scene() {
@@ -45,13 +45,13 @@ namespace Stellar {
 		}
 
 		if (mainCamera) {
-			Renderer2D::BeginScene(*mainCamera, cameraTransform);
+			m_Renderer2D->beginScene(*mainCamera, cameraTransform);
 			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto entity : group) {
 				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-				Renderer2D::DrawQuad(transform.getTransform(), sprite.color, sprite.texture);
+				m_Renderer2D->drawQuad(transform.getTransform(), sprite.color, sprite.texture, 1.0f);
 			}
-			Renderer2D::EndScene();
+			m_Renderer2D->endScene();
 		}
 	}
 
@@ -73,12 +73,12 @@ namespace Stellar {
 	}
 
 	void Scene::renderScene(EditorCamera& camera) {
-		Renderer2D::BeginScene(camera);
+		m_Renderer2D->beginScene(camera);
 		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 		for (auto entity : group) {
 			auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-			Renderer2D::DrawQuad(transform.getTransform(), sprite.color, sprite.texture);
+			m_Renderer2D->drawQuad(transform.getTransform(), sprite.color, sprite.texture, 1.0f);
 		}
-		Renderer2D::EndScene();
+		m_Renderer2D->endScene();
 	}
 }

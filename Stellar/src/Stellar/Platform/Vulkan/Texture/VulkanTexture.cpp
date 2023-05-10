@@ -31,32 +31,6 @@ namespace Stellar {
 		m_Image = Image2D::Create(imageSpec);
 
 		invalidate();
-
-		// binding
-		auto device = VulkanDevice::GetInstance()->logicalDevice();
-		auto pipeline = VulkanRenderer::GetPipeline();
-		auto textureLayout = pipeline->getTextureSetLayout();
-
-		VkDescriptorSetAllocateInfo allocInfo{};
-		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-		allocInfo.descriptorPool = pipeline->getDescriptorPool();
-		allocInfo.descriptorSetCount = 1;
-		allocInfo.pSetLayouts = &textureLayout;
-
-		VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocInfo, &m_DescriptorSet));
-
-		VkWriteDescriptorSet descriptorWrite{};
-		descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descriptorWrite.dstSet = m_DescriptorSet;
-		descriptorWrite.dstBinding = 0;
-		descriptorWrite.dstArrayElement = 0;
-		descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-		descriptorWrite.descriptorCount = 1;
-		descriptorWrite.pImageInfo = &((VulkanImage2D*)m_Image.raw())->getDescriptorInfo();
-
-		vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
-		// auto imageInfo = (VulkanImageInfo*)m_Image->getImageInfo();
-		// m_ImGuiDescriptorSet = ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 	}
 
 	VulkanTexture::VulkanTexture(ImageFormat format, uint32_t width, uint32_t height, const void* data) : m_Width(width), m_Height(height) {
@@ -78,37 +52,11 @@ namespace Stellar {
 		m_Image = Image2D::Create(imageSpec);
 
 		invalidate();
-
-		// binding
-		auto device = VulkanDevice::GetInstance()->logicalDevice();
-		auto pipeline = VulkanRenderer::GetPipeline();
-		auto textureLayout = pipeline->getTextureSetLayout();
-
-		VkDescriptorSetAllocateInfo allocInfo{};
-		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-		allocInfo.descriptorPool = pipeline->getDescriptorPool();
-		allocInfo.descriptorSetCount = 1;
-		allocInfo.pSetLayouts = &textureLayout;
-
-		VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocInfo, &m_DescriptorSet));
-
-		VkWriteDescriptorSet descriptorWrite{};
-		descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descriptorWrite.dstSet = m_DescriptorSet;
-		descriptorWrite.dstBinding = 0;
-		descriptorWrite.dstArrayElement = 0;
-		descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-		descriptorWrite.descriptorCount = 1;
-		descriptorWrite.pImageInfo = &((VulkanImage2D*)m_Image.raw())->getDescriptorInfo();
-
-		vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
 	}
 
 	VulkanTexture::~VulkanTexture() {
 		if (m_Image)
 			m_Image->release();
-
-		//ImGui_ImplVulkan_RemoveTexture(m_DescriptorSet);
 	}
 
 	bool VulkanTexture::loadImage(const std::string& filePath) {

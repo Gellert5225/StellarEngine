@@ -134,10 +134,13 @@ namespace Stellar {
 		STLR_CORE_TRACE(" Sampled Images:");
 		for (const auto& resource : resources.sampled_images) {
 			const auto& name = resource.name;
-			auto& type = compiler.get_type(resource.base_type_id);
+			auto& type = compiler.get_type(resource.type_id);
 			uint32_t binding = compiler.get_decoration(resource.id, spv::DecorationBinding);
 			uint32_t descriptorSet = compiler.get_decoration(resource.id, spv::DecorationDescriptorSet);
 			uint32_t dimension = type.image.dim;
+			uint32_t arraySize = type.array[0];
+			if (arraySize == 0)
+				arraySize = 1;
 
 			if (descriptorSet >= m_ShaderDescriptorSets.size())
 				m_ShaderDescriptorSets.resize(descriptorSet + 1);
@@ -148,6 +151,7 @@ namespace Stellar {
 			imageSampler.descriptorSet = descriptorSet;
 			imageSampler.name = name;
 			imageSampler.shaderStage = shaderStage;
+			imageSampler.arraySize = arraySize;
 
 			m_Resources[name] = ShaderResourceDeclaration(name, binding, 1);
 
@@ -228,7 +232,7 @@ namespace Stellar {
 			for (auto& [binding, imageSampler] : shaderDescriptorSet.imageSamplers) {
 				auto& layoutBinding = layoutBindings.emplace_back();
 				layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-				layoutBinding.descriptorCount = 1;
+				layoutBinding.descriptorCount = imageSampler.arraySize;
 				layoutBinding.stageFlags = imageSampler.shaderStage;
 				layoutBinding.pImmutableSamplers = nullptr;
 				layoutBinding.binding = binding;
@@ -239,7 +243,7 @@ namespace Stellar {
 				set = {};
 				set.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 				set.descriptorType = layoutBinding.descriptorType;
-				set.descriptorCount = 1;
+				set.descriptorCount = imageSampler.arraySize;
 				set.dstBinding = layoutBinding.binding;
 			}
 

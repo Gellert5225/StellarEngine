@@ -15,6 +15,7 @@ namespace Stellar {
 
 	VulkanDevice::~VulkanDevice() {
 		vkDestroyCommandPool(m_LogicalDevice, m_CommandPool, nullptr);
+		vkDeviceWaitIdle(m_LogicalDevice);
 		vkDestroyDevice(m_LogicalDevice, nullptr);
 	}
 

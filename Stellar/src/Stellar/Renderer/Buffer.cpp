@@ -12,14 +12,15 @@
 
 namespace Stellar {
 
+	// Vertex and Index Buffer
 	STLR_Ptr<Buffer> Buffer::Create(BufferType type, uint64_t size, const void *data) {
+		STLR_CORE_ASSERT(type != BufferType::Uniform, "Please use Buffer::Create(uint32_t size, uint32_t binding) to create uniform buffer");
 		switch (RendererAPI::Current()) {
 			case RendererAPIType::Vulkan:
 			#if defined(__linux__) || defined(_WIN64)
 				switch (type) {
 					case BufferType::Vertex:
 						return STLR_Ptr<VulkanBuffer>::Create(size,
-												VK_BUFFER_USAGE_TRANSFER_DST_BIT |
 												VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
 												VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 												data);
@@ -29,11 +30,6 @@ namespace Stellar {
 												VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
 												VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 												data);
-					case BufferType::Uniform:
-						return STLR_Ptr<VulkanBuffer>::Create(size,
-												VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-												VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
-												VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 				}
 			#endif
 			case RendererAPIType::Metal:

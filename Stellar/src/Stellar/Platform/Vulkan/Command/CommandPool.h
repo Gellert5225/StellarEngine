@@ -5,7 +5,7 @@
 #include <vulkan/vulkan.h>
 
 namespace Stellar {
-	class STLR_API CommandPool {
+	class CommandPool {
 	public:
 		static CommandPool* GetInstance();
 

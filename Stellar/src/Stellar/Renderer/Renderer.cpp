@@ -44,26 +44,30 @@ namespace Stellar {
 		s_RendererAPI = InitRendererAPI();
 
 		Renderer::GetShaderLibrary()->load("shader");
-		Renderer::GetShaderLibrary()->load("grid");
-		Renderer::GetShaderLibrary()->load("basicShader");
+		//Renderer::GetShaderLibrary()->load("grid");
+		//Renderer::GetShaderLibrary()->load("basicShader");
 
 		s_RendererAPI->init();
-		Renderer2D::Init();
 	}
 
 	void Renderer::Shutdown() {
 		delete Renderer::GetShaderLibrary();
 		s_RendererAPI->shutDown();
-		Renderer2D::ShutDown();
 		delete s_RendererAPI;
 	}
 
-	void Renderer::BeginRenderPass() {
-		s_RendererAPI->beginRenderPass();
+	void Renderer::BeginRenderPass(STLR_Ptr<CommandBuffer> commandBuffer, 
+									STLR_Ptr<RenderPass> renderPass, 
+									bool explicitClear) {
+		s_RendererAPI->beginRenderPass(commandBuffer, renderPass, explicitClear);
 	}
 
-	void Renderer::EndRenderPass() {
-		s_RendererAPI->endRenderPass();
+	void Renderer::EndRenderPass(STLR_Ptr<CommandBuffer> commandBuffer) {
+		s_RendererAPI->endRenderPass(commandBuffer);
+	}
+
+	void Renderer::BeginFrame() {
+		s_RendererAPI->beginFrame();
 	}
 
 	void Renderer::RenderGeometry(STLR_Ptr<Buffer> vertexBuffer,
@@ -73,6 +77,17 @@ namespace Stellar {
 								uint32_t indexCount,
 								const glm::mat4& transform) {
 		s_RendererAPI->renderGeometry(vertexBuffer, indexBuffer, texture, color, indexCount, transform);
+	}
+
+	void Renderer::RenderGeometry(STLR_Ptr<CommandBuffer> commandBuffer, 
+									STLR_Ptr<Pipeline> pipeline, 
+									STLR_Ptr<UniformBufferSet> uniformBufferSet, 
+									STLR_Ptr<Material> material, 
+									STLR_Ptr<Buffer> vertexBuffer, 
+									STLR_Ptr<Buffer> indexBuffer, 
+									const glm::mat4& transform, 
+									uint32_t indexCount) {
+		s_RendererAPI->renderGeometry(commandBuffer, pipeline, uniformBufferSet, material, vertexBuffer, indexBuffer, transform, indexCount);
 	}
 
 	void Renderer::RenderGrid(STLR_Ptr<Buffer> vertexBuffer, STLR_Ptr<Buffer> indexBuffer, uint32_t indexCount) {

@@ -246,16 +246,15 @@ namespace Stellar {
 		// We need one blend attachment state per color attachment (even if blending is not used)
 		size_t colorAttachmentCount = framebuffer->getColorAttachmentCount();
 		std::vector<VkPipelineColorBlendAttachmentState> blendAttachmentStates(colorAttachmentCount);
-		for (size_t i = 0; i < colorAttachmentCount; i++)
-		{
+		for (size_t i = 0; i < colorAttachmentCount; i++) {
 			blendAttachmentStates[i].colorWriteMask = 0xf;
 			blendAttachmentStates[i].blendEnable = VK_TRUE;
 			blendAttachmentStates[i].srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
 			blendAttachmentStates[i].dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 			blendAttachmentStates[i].colorBlendOp = VK_BLEND_OP_ADD;
 			blendAttachmentStates[i].alphaBlendOp = VK_BLEND_OP_ADD;
-			blendAttachmentStates[i].srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
-			blendAttachmentStates[i].dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+			blendAttachmentStates[i].srcAlphaBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+			blendAttachmentStates[i].dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 		}
 		
 		VkPipelineColorBlendStateCreateInfo colorBlendState = {};
@@ -325,6 +324,8 @@ namespace Stellar {
 			vertexInputAttributs[location].format = ShaderDataTypeToVulkanFormat(element.type);
 			vertexInputAttributs[location].offset = element.offset;
 
+			STLR_CORE_INFO("Name: {0}, size: {1}, offset: {2}", element.name, element.size, element.offset);
+
 			location++;
 		}
 
@@ -356,11 +357,10 @@ namespace Stellar {
 		// What is this pipeline cache?
 		VkPipelineCacheCreateInfo pipelineCacheCreateInfo = {};
 		pipelineCacheCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
-		VkPipelineCache pipelineCache;
-		VK_CHECK_RESULT(vkCreatePipelineCache(device, &pipelineCacheCreateInfo, nullptr, &pipelineCache));
+		VK_CHECK_RESULT(vkCreatePipelineCache(device, &pipelineCacheCreateInfo, nullptr, &m_PipelineCache));
 
 		// Create rendering pipeline using the specified states
-		VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_Pipeline));
+		VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, m_PipelineCache, 1, &pipelineCreateInfo, nullptr, &m_Pipeline));
 	}
 	
 	void VulkanPipeline::setUniformBuffer(STLR_Ptr<Buffer> uniformBuffer, uint32_t binding, uint32_t set) {
@@ -448,6 +448,7 @@ namespace Stellar {
 	VulkanPipeline::~VulkanPipeline() {
 		auto device = VulkanDevice::GetInstance()->logicalDevice();
 		vkDestroyPipeline(device, m_Pipeline, nullptr);
+		vkDestroyPipelineCache(device, m_PipelineCache, nullptr);
 		vkDestroyPipelineLayout(device, m_PipelineLayout, nullptr);
 
 		vkDestroyDescriptorPool(device, m_DescriptorPool, nullptr);
