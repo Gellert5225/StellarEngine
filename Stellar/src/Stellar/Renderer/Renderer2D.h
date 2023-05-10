@@ -43,7 +43,7 @@ namespace Stellar {
 		static const uint32_t MaxIndices = MaxQuads * 6;
 		static const uint32_t MaxTextureSlots = 32; // TODO: RenderCaps
 
-		STLR_Ptr<Buffer> m_QuadVertexBuffer;
+		std::vector<STLR_Ptr<Buffer>> m_QuadVertexBuffer;
 		STLR_Ptr<Buffer> m_QuadIndexBuffer;
 		STLR_Ptr<Pipeline> m_QuadPipeline;
 		STLR_Ptr<Material> m_QuadMaterial;
@@ -51,7 +51,7 @@ namespace Stellar {
 		STLR_Ptr<CommandBuffer> m_RenderCommandBuffer;
 
 		uint32_t m_QuadIndexCount = 0;
-		QuadVertex* m_QuadVertexBufferBase = nullptr;
+		std::vector<QuadVertex*> m_QuadVertexBufferBase;
 		QuadVertex* m_QuadVertexBufferPtr = nullptr;
 
 		std::array<STLR_Ptr<Texture2D>, MaxTextureSlots> m_TextureSlots;

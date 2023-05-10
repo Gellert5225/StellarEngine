@@ -15,6 +15,7 @@ namespace Stellar {
 		virtual void invalidate() = 0;
 
 		virtual void set(const std::string& name, const STLR_Ptr<Texture2D>& texture) = 0;
+		virtual void set(const std::string& name, const STLR_Ptr<Texture2D>& texture, uint32_t arrayIndex) = 0;
 
 		virtual STLR_Ptr<Texture2D> getTexture2D(const std::string& name) = 0;
 

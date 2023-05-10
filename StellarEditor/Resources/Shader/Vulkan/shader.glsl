@@ -46,9 +46,9 @@ struct VertexOutput {
 
 layout(location = 0) in VertexOutput Input;
 
-//layout(set = 0, binding = 1) uniform sampler2D texSampler[32];
+layout(set = 0, binding = 1) uniform sampler2D texSampler[32];
 
 void main() {
-	outColor = Input.color;
-    //outColor = texture(texSampler[int(Input.texIndex)], Input.texCoord * Input.tilingFactor) * Input.color;
+	//outColor = Input.color;
+    outColor = texture(texSampler[int(Input.texIndex)], Input.texCoord * Input.tilingFactor) * Input.color;
 }

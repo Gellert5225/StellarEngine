@@ -9,7 +9,10 @@
 #include "Stellar/Platform/Vulkan/Texture/VulkanTexture.h"
 
 namespace Stellar {
-	VulkanMaterial::VulkanMaterial(const STLR_Ptr<Shader>& shader, const std::string& name) : Material(shader, name), m_WriteDescriptors(Renderer::MAX_FRAMES_IN_FLIGHT) {
+	VulkanMaterial::VulkanMaterial(const STLR_Ptr<Shader>& shader, const std::string& name) 
+		: Material(shader, name), 
+		m_WriteDescriptors(Renderer::MAX_FRAMES_IN_FLIGHT), 
+		m_DirtyDescriptorSets(Renderer::MAX_FRAMES_IN_FLIGHT, true) {
 		init();
 	}
 
@@ -31,6 +34,10 @@ namespace Stellar {
 
 	void VulkanMaterial::set(const std::string& name, const STLR_Ptr<Texture2D>& texture) {
 		setVulkanDescriptor(name, texture);
+	}
+
+	void VulkanMaterial::set(const std::string& name, const STLR_Ptr<Texture2D>& texture, uint32_t arrayIndex) {
+		setVulkanDescriptor(name, texture, arrayIndex);
 	}
 
 	STLR_Ptr<Texture2D> VulkanMaterial::getTexture2D(const std::string& name) {
@@ -57,13 +64,45 @@ namespace Stellar {
 		});
 		m_PendingDescriptors.push_back(m_ResidentDescriptors.at(binding));
 
-		//invalidateDescriptorSets();
+		invalidateDescriptorSets();
+	}
+
+	void VulkanMaterial::setVulkanDescriptor(const std::string& name, const STLR_Ptr<Texture2D>& texture, uint32_t arrayIndex) {
+		const ShaderResourceDeclaration* resource = findResourceDeclaration(name);
+		STLR_CORE_ASSERT(resource);
+
+		uint32_t binding = resource->getRegister();
+		// Texture is already set
+		if (binding < m_TextureArrays.size() && m_TextureArrays[binding].size() < arrayIndex && texture->getHash() == m_TextureArrays[binding][arrayIndex]->getHash())
+			return;
+
+		if (binding >= m_TextureArrays.size())
+			m_TextureArrays.resize(binding + 1);
+
+		if (arrayIndex >= m_TextureArrays[binding].size())
+			m_TextureArrays[binding].resize(arrayIndex + 1);
+
+		m_TextureArrays[binding][arrayIndex] = texture;
+
+		const VkWriteDescriptorSet* wds = m_Shader.As<VulkanShader>()->getDescriptorSet(name);
+		STLR_CORE_ASSERT(wds);
+		if (m_ResidentDescriptorArrays.find(binding) == m_ResidentDescriptorArrays.end()) {
+			m_ResidentDescriptorArrays[binding] = std::make_shared<PendingDescriptorArray>(PendingDescriptorArray{ PendingDescriptorType::Texture2D, *wds, {}, {}, {} });
+		}
+
+		auto& residentDesriptorArray = m_ResidentDescriptorArrays.at(binding);
+		if (arrayIndex >= residentDesriptorArray->Textures.size())
+			residentDesriptorArray->Textures.resize(arrayIndex + 1);
+
+		residentDesriptorArray->Textures[arrayIndex] = texture;
+
+		invalidateDescriptorSets();
 	}
 
 	void VulkanMaterial::invalidateDescriptorSets() {
-		// uint32_t framesInFlight = Renderer::GetConfig().FramesInFlight;
-		// for (int i = 0; i < framesInFlight; i++)
-		// 	m_DirtyDescriptorSets[i] = true;
+		uint32_t framesInFlight = Renderer::MAX_FRAMES_IN_FLIGHT;
+		for (int i = 0; i < framesInFlight; i++)
+			m_DirtyDescriptorSets[i] = true;
 	}
 
 	const ShaderResourceDeclaration* VulkanMaterial::findResourceDeclaration(const std::string& name) const {
@@ -95,35 +134,53 @@ namespace Stellar {
 			}
 		}
 
+		std::vector<VkDescriptorImageInfo> arrayImageInfos;
+
 		uint32_t frameIndex = Renderer::GetCurrentFrameIndex();
 
-		m_WriteDescriptors[frameIndex].clear();
+		if (m_DirtyDescriptorSets[frameIndex]) {
+			m_DirtyDescriptorSets[frameIndex] = false;
+			m_WriteDescriptors[frameIndex].clear();
 
-		if (!uniformBufferWriteDescriptors.empty()) {
-			for (auto& wd : uniformBufferWriteDescriptors[frameIndex])
-				m_WriteDescriptors[frameIndex].push_back(wd);
-		}
-
-		for (auto&& [binding, pd] : m_ResidentDescriptors) {
-			if (pd->type == PendingDescriptorType::Texture2D) {
-				STLR_Ptr<VulkanTexture> texture = pd->texture.As<VulkanTexture>();
-				STLR_Ptr<VulkanImage2D> img = texture->getImage().As<VulkanImage2D>();
-				pd->imageInfo = img->getDescriptorInfo();
-				pd->WDS.pImageInfo = &pd->imageInfo;
-			} else {
-				STLR_CORE_ASSERT(false, "Unknown descriptor type");
+			if (!uniformBufferWriteDescriptors.empty()) {
+				for (auto& wd : uniformBufferWriteDescriptors[frameIndex])
+					m_WriteDescriptors[frameIndex].push_back(wd);
 			}
-			// else if (pd->Type == PendingDescriptorType::TextureCube) {
-			// 	Ref<VulkanTextureCube> texture = pd->Texture.As<VulkanTextureCube>();
-			// 	pd->ImageInfo = texture->GetVulkanDescriptorInfo();
-			// 	pd->WDS.pImageInfo = &pd->ImageInfo;
-			// } else if (pd->Type == PendingDescriptorType::Image2D) {
-			// 	Ref<VulkanImage2D> image = pd->Image.As<VulkanImage2D>();
-			// 	pd->ImageInfo = image->GetDescriptor();
-			// 	pd->WDS.pImageInfo = &pd->ImageInfo;
-			// }
 
-			m_WriteDescriptors[frameIndex].push_back(pd->WDS);
+			for (auto&& [binding, pd] : m_ResidentDescriptors) {
+				if (pd->type == PendingDescriptorType::Texture2D) {
+					STLR_Ptr<VulkanTexture> texture = pd->texture.As<VulkanTexture>();
+					STLR_Ptr<VulkanImage2D> img = texture->getImage().As<VulkanImage2D>();
+					pd->imageInfo = img->getDescriptorInfo();
+					pd->WDS.pImageInfo = &pd->imageInfo;
+				} else {
+					STLR_CORE_ASSERT(false, "Unknown descriptor type");
+				}
+				// else if (pd->Type == PendingDescriptorType::TextureCube) {
+				// 	Ref<VulkanTextureCube> texture = pd->Texture.As<VulkanTextureCube>();
+				// 	pd->ImageInfo = texture->GetVulkanDescriptorInfo();
+				// 	pd->WDS.pImageInfo = &pd->ImageInfo;
+				// } else if (pd->Type == PendingDescriptorType::Image2D) {
+				// 	Ref<VulkanImage2D> image = pd->Image.As<VulkanImage2D>();
+				// 	pd->ImageInfo = image->GetDescriptor();
+				// 	pd->WDS.pImageInfo = &pd->ImageInfo;
+				// }
+
+				m_WriteDescriptors[frameIndex].push_back(pd->WDS);
+			}
+
+			for (auto&& [binding, pd] : m_ResidentDescriptorArrays) {
+				if (pd->Type == PendingDescriptorType::Texture2D) {
+					for (auto tex : pd->Textures) {
+						STLR_Ptr<VulkanTexture> texture = tex.As<VulkanTexture>();
+						STLR_Ptr<VulkanImage2D> img = texture->getImage().As<VulkanImage2D>();
+						arrayImageInfos.emplace_back(img->getDescriptorInfo());
+					}
+				}
+				pd->WDS.pImageInfo = arrayImageInfos.data();
+				pd->WDS.descriptorCount = (uint32_t)arrayImageInfos.size();
+				m_WriteDescriptors[frameIndex].push_back(pd->WDS);
+			}
 		}
 
 		auto vulkanShader = m_Shader.As<VulkanShader>();

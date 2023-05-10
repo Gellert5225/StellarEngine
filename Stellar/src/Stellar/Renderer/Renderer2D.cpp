@@ -33,13 +33,19 @@ namespace Stellar {
 		};
 		m_QuadPipeline = Pipeline::Create(pipelineSpecification);
 
-		m_QuadVertexBuffer = Buffer::Create(BufferType::Vertex, MaxVertices * sizeof(QuadVertex));
-		m_QuadVertexBufferBase = new QuadVertex[MaxVertices];
+		auto framesInFlight = Renderer::MAX_FRAMES_IN_FLIGHT;
 
-		m_QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
-		m_QuadVertexPositions[1] = {  0.5f, -0.5f, 0.0f, 1.0f };
-		m_QuadVertexPositions[2] = {  0.5f,  0.5f, 0.0f, 1.0f };
-		m_QuadVertexPositions[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
+		m_QuadVertexBuffer.resize(framesInFlight);
+		m_QuadVertexBufferBase.resize(framesInFlight);
+		for (uint32_t i = 0; i < framesInFlight; i++) {
+			m_QuadVertexBuffer[i] = Buffer::Create(BufferType::Vertex, MaxVertices * sizeof(QuadVertex));
+			m_QuadVertexBufferBase[i] = new QuadVertex[MaxVertices];
+		}
+
+		m_QuadVertexPositions[0] = { -1.0f, -1.0f, 0.0f, 1.0f };
+		m_QuadVertexPositions[1] = {  1.0f, -1.0f, 0.0f, 1.0f };
+		m_QuadVertexPositions[2] = {  1.0f,  1.0f, 0.0f, 1.0f };
+		m_QuadVertexPositions[3] = { -1.0f,  1.0f, 0.0f, 1.0f };
 
 		uint32_t* quadIndices = new uint32_t[MaxIndices];
 
@@ -80,7 +86,7 @@ namespace Stellar {
 		m_UniformBufferSet->get(0, 0, bufferIndex)->setData(&viewProjection, sizeof(GlobalUniforms));
 		
 		m_QuadIndexCount = 0;
-		m_QuadVertexBufferPtr = m_QuadVertexBufferBase;
+		m_QuadVertexBufferPtr = m_QuadVertexBufferBase[bufferIndex];
 		m_TextureSlotIndex = 1;
 
 		//Renderer::BindUbo(ubo);
@@ -96,7 +102,7 @@ namespace Stellar {
 		m_UniformBufferSet->get(0, 0, bufferIndex)->setData(&viewProjection, sizeof(GlobalUniforms));
 
 		m_QuadIndexCount = 0;
-		m_QuadVertexBufferPtr = m_QuadVertexBufferBase;
+		m_QuadVertexBufferPtr = m_QuadVertexBufferBase[bufferIndex];
 		m_TextureSlotIndex = 1;
 
 		for (uint32_t i = 1; i < m_TextureSlots.size(); i++)
@@ -110,19 +116,18 @@ namespace Stellar {
 		Renderer::BeginRenderPass(m_RenderCommandBuffer, m_QuadPipeline->getSpecification().renderPass);
 		uint32_t frameIndex = Renderer::GetCurrentFrameIndex();
 
-		uint32_t dataSize = (uint8_t*)m_QuadVertexBufferPtr - (uint8_t*)m_QuadVertexBufferBase;
+		uint32_t dataSize = (uint8_t*)m_QuadVertexBufferPtr - (uint8_t*)m_QuadVertexBufferBase[frameIndex];
 		if (dataSize) {
-			m_QuadVertexBuffer->setData(m_QuadVertexBufferBase, dataSize);
+			m_QuadVertexBuffer[frameIndex]->setData(m_QuadVertexBufferBase[frameIndex], dataSize);
 
-			// for (uint32_t i = 0; i < m_TextureSlots.size(); i++) {
-			// 	if (m_TextureSlots[i])
-			// 		m_QuadMaterial->set("texSampler", m_TextureSlots[i]);
-			// 	else
-			// 		m_QuadMaterial->set("texSampler", m_WhiteTexture);
-			// }
+			for (uint32_t i = 0; i < m_TextureSlots.size(); i++) {
+				if (m_TextureSlots[i])
+					m_QuadMaterial->set("texSampler", m_TextureSlots[i], i);
+				else
+					m_QuadMaterial->set("texSampler", m_WhiteTexture, i);
+			}
 
-
-			Renderer::RenderGeometry(m_RenderCommandBuffer, m_QuadPipeline, m_UniformBufferSet, m_QuadMaterial, m_QuadVertexBuffer, m_QuadIndexBuffer, glm::mat4(1.0f), m_QuadIndexCount);
+			Renderer::RenderGeometry(m_RenderCommandBuffer, m_QuadPipeline, m_UniformBufferSet, m_QuadMaterial, m_QuadVertexBuffer[frameIndex], m_QuadIndexBuffer, glm::mat4(1.0f), m_QuadIndexCount);
 
 			//s_Data.Stats.DrawCalls++;
 		}
@@ -193,11 +198,12 @@ namespace Stellar {
 	}
 
 	void Renderer2D::flushAndReset() {
-		endScene();
+		uint32_t frameIndex = Renderer::GetCurrentFrameIndex();
+		//EndScene();
 
-		// m_QuadIndexCount = 0;
-		// m_QuadVertexBufferPtr = m_QuadVertexBufferBase[];
+		m_QuadIndexCount = 0;
+		m_QuadVertexBufferPtr = m_QuadVertexBufferBase[frameIndex];
 
-		// m_TextureSlotIndex = 1;
+		m_TextureSlotIndex = 1;
 	}
 } 
