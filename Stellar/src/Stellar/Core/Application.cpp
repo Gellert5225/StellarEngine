@@ -65,6 +65,7 @@ namespace Stellar {
 			auto swapChain = m_Window->getSwapChain();
 			swapChain->beginFrame();
 
+			Renderer::BeginFrame();
 			for (Layer* layer : m_LayerStack)
 				layer->onUpdate(timestep);
 

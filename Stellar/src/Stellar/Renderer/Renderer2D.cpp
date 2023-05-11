@@ -129,7 +129,7 @@ namespace Stellar {
 
 			Renderer::RenderGeometry(m_RenderCommandBuffer, m_QuadPipeline, m_UniformBufferSet, m_QuadMaterial, m_QuadVertexBuffer[frameIndex], m_QuadIndexBuffer, glm::mat4(1.0f), m_QuadIndexCount);
 
-			//s_Data.Stats.DrawCalls++;
+			m_Stats.drawCalls++;
 		}
 
 		Renderer::EndRenderPass(m_RenderCommandBuffer);
@@ -156,6 +156,7 @@ namespace Stellar {
 		}
 
 		m_QuadIndexCount += 6;
+		m_Stats.quadCount++;
 	}
 
 	void Renderer2D::drawQuad(const glm::mat4& transform, const glm::vec4& color, const STLR_Ptr<Texture2D>& texture, float tilingFactor) {
@@ -194,7 +195,7 @@ namespace Stellar {
 
 		m_QuadIndexCount += 6;
 
-		//s_Data.Stats.QuadCount++;
+		m_Stats.quadCount++;
 	}
 
 	void Renderer2D::flushAndReset() {
@@ -205,5 +206,13 @@ namespace Stellar {
 		m_QuadVertexBufferPtr = m_QuadVertexBufferBase[frameIndex];
 
 		m_TextureSlotIndex = 1;
+	}
+
+	void Renderer2D::resetStats() {
+		memset(&m_Stats, 0, sizeof(Statistics));
+	}
+
+	Renderer2D::Statistics Renderer2D::getStats() {
+		return m_Stats;
 	}
 } 

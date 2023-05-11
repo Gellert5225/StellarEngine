@@ -17,6 +17,18 @@
 namespace Stellar {
 	class Renderer2D : public STLR_Base {
 	public:
+		struct Statistics {
+			uint32_t drawCalls = 0;
+			uint32_t quadCount = 0;
+			uint32_t lineCount = 0;
+
+			uint32_t getTotalVertexCount() { return quadCount * 4 + lineCount * 2; }
+			uint32_t getTotalIndexCount() { return quadCount * 6 + lineCount * 2; }
+		};
+		void resetStats();
+		Statistics getStats();
+
+	public:
 		Renderer2D();
 		virtual ~Renderer2D() {}
 
@@ -61,5 +73,6 @@ namespace Stellar {
 
 		STLR_Ptr<UniformBufferSet> m_UniformBufferSet;
 
+		Statistics m_Stats;
 	};
 }
