@@ -26,8 +26,8 @@ namespace Stellar {
 			}
 		}
 
-		float padding = 1.0f;
-		float thumbnailSize = 100.0f;
+		float padding = 10.0f;
+		float thumbnailSize = 80.0f;
 		float cellSize = thumbnailSize + padding;
 		float panelWidth = ImGui::GetContentRegionAvail().x;
 		int columnCount = (int)(panelWidth / cellSize) < 1 ? 1 : (int)(panelWidth / cellSize);
@@ -49,6 +49,7 @@ namespace Stellar {
 					m_CurrentDir /= path.filename();
 				}
 			}
+			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + cellSize / 2 - ImGui::CalcTextSize(fileName.c_str()).x / 2);
 			ImGui::Text(fileName.c_str());
 
 			ImGui::NextColumn();
