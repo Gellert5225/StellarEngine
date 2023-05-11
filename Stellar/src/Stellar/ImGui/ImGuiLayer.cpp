@@ -120,7 +120,7 @@ namespace Stellar {
 }
 
 namespace Stellar::UI {
-	void* STLR_API Image(STLR_Ptr<Texture2D> texture, const ImVec2& size) {
+	void* Image(STLR_Ptr<Texture2D> texture, const ImVec2& size) {
 		#if defined __linux__ || defined _WIN64
 		auto tex = texture.As<VulkanTexture>();
 		auto image = tex->getImage();
@@ -133,7 +133,7 @@ namespace Stellar::UI {
 		return textureID;
 	}
 
-	void STLR_API ImageFromFB(STLR_Ptr<FrameBuffer> frameBuffer, const ImVec2& size) {
+	void ImageFromFB(STLR_Ptr<FrameBuffer> frameBuffer, const ImVec2& size) {
 		#if defined __linux__ || defined _WIN64
 		auto imageInfo = (VulkanImageInfo*)frameBuffer->getAttachmentImage()->getImageInfo();
 		const auto textureID = ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
@@ -143,7 +143,7 @@ namespace Stellar::UI {
 		#endif
 	}
 
-	void STLR_API SetInputEnabled(bool enable) {
+	void SetInputEnabled(bool enable) {
 		auto& io = ImGui::GetIO();
 		if (enable) {
 			io.ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
@@ -154,8 +154,20 @@ namespace Stellar::UI {
 		}
 	}
 
-	bool STLR_API IsInputEnabled() {
+	bool IsInputEnabled() {
 		const auto& io = ImGui::GetIO();
 		return (io.ConfigFlags & ImGuiConfigFlags_NoMouse) == 0 && (io.ConfigFlags & ImGuiConfigFlags_NavNoCaptureKeyboard) == 0;
+	}
+
+	bool ImageButton(STLR_Ptr<Texture2D> texture, const ImVec2& size, const ImVec2& uv0, const ImVec2& uv1, int frame_padding, const ImVec4& bg_col, const ImVec4& tint_col) {
+#if defined __linux__ || defined _WIN64
+		auto tex = texture.As<VulkanTexture>();
+		auto image = tex->getImage();
+		auto imageInfo = (VulkanImageInfo*)image->getImageInfo();
+		const auto textureID = ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+		return ImGui::ImageButton(textureID, size, uv0, uv1, frame_padding, bg_col, tint_col);
+#elif defined __APPLE__
+		ImGui::Image(((MetalTexture*)texture)->getTexture(), size);
+#endif
 	}
 }

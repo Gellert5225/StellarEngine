@@ -31,4 +31,6 @@ namespace Stellar::UI {
 
 	void* Image(STLR_Ptr<Texture2D>, const ImVec2& size);
 	void ImageFromFB(STLR_Ptr<FrameBuffer> frameBuffer, const ImVec2& size);
+
+	bool ImageButton(STLR_Ptr<Texture2D> texture, const ImVec2& size, const ImVec2& uv0 = {0,0}, const ImVec2& uv1 = {1,1}, int frame_padding = -1, const ImVec4& bg_col = {0,0,0,0}, const ImVec4& tint_col = {1,1,1,1});
 }

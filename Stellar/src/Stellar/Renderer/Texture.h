@@ -5,6 +5,8 @@
 #include "Stellar/Core/STLRBase.h"
 #include "Stellar/Renderer/Image.h"
 
+#include <imgui.h>
+
 #include <string>
 #include <utility>
 #include <vector>
@@ -31,6 +33,8 @@ namespace Stellar {
 		virtual bool operator!=(const Texture2D& other) const {
 			return !(*this == other);
 		}
+
+		virtual ImTextureID getImGuiTextureID() = 0;
 	protected:
 		Texture2D() = default;
 		explicit Texture2D(std::string path) : m_Path(std::move(path)) {}

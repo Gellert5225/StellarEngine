@@ -127,6 +127,7 @@ namespace Stellar {
 		m_SceneHierarchyPanel.onImGuiRender();
 		static bool isOpen = true;
 		m_ConsolePanel.onImGuiRender(isOpen);
+		m_ResourcePanel.onImGuiRender(isOpen);
 
 		//ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
 		ImGui::Begin("Info");

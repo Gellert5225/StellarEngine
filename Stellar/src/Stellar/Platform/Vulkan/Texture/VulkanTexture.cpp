@@ -177,4 +177,10 @@ namespace Stellar {
 		auto info = (VulkanImageInfo*)getImage()->getImageInfo();
 		return (uint64_t)info->image;
 	}
+
+	ImTextureID VulkanTexture::getImGuiTextureID() {
+		auto image = getImage();
+		auto imageInfo = (VulkanImageInfo*)image->getImageInfo();
+		return ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+	}
 }

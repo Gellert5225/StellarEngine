@@ -13,6 +13,8 @@ namespace Stellar {
 		~VulkanTexture() override;
 
 		uint64_t getHash() const override;
+
+		ImTextureID getImGuiTextureID() override;
 		// Vulkan
 		void invalidate();
 		STLR_Ptr<Image2D> getImage() const;

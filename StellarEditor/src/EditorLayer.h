@@ -10,6 +10,7 @@
 #include <Stellar/Editor/ConsolePanel.h>
 
 #include "Panels/SceneHierarchyPanel.h"
+#include "Panels/ResourcePanel.h"
 
 #include "imgui.h"
 #include "glm/gtc/type_ptr.hpp"
@@ -47,6 +48,7 @@ namespace Stellar {
 
 		SceneHierarchyPanel m_SceneHierarchyPanel;
 		ConsolePanel m_ConsolePanel;
+		ResourcePanel m_ResourcePanel;
 
 		int m_GizmoType = -1;
 		bool m_AllowViewportCameraEvents = false;
