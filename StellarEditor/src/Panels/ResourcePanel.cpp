@@ -36,7 +36,8 @@ namespace Stellar {
 		for(auto& dir: std::filesystem::directory_iterator(m_CurrentDir)) {
 			const auto& path = dir.path();
 			auto relativePath = std::filesystem::relative(dir.path(), s_ResourcePath);
-			auto fileName = relativePath.filename().string(); 
+			auto fileName = relativePath.filename().string();
+			ImGui::PushID(fileName.c_str());
 
 			STLR_Ptr<Texture2D> icon = dir.is_directory() ? m_FolderIcon : m_FileIcon;
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
@@ -59,6 +60,7 @@ namespace Stellar {
 			ImGui::Text(fileName.c_str());
 
 			ImGui::NextColumn();
+			ImGui::PopID();
 		}
 
 		ImGui::Columns(1);
