@@ -16,7 +16,7 @@
 #include <stb_image.h>
 
 namespace Stellar {
-	VulkanTexture::VulkanTexture(const std::string& filePath) : Texture2D(filePath) {
+	VulkanTexture::VulkanTexture(const std::string& filePath, bool isImGui) : Texture2D(filePath) {
 		bool loaded = loadImage(filePath);
 		if (!loaded) {
 			STLR_CONSOLE_LOG_ERROR("Failed to load texture {0}", filePath);
@@ -31,6 +31,13 @@ namespace Stellar {
 		m_Image = Image2D::Create(imageSpec);
 
 		invalidate();
+
+		if (isImGui) {
+			m_IsImGuiTexture = true;
+			auto image = getImage();
+			auto imageInfo = (VulkanImageInfo*)image->getImageInfo();
+			m_TextureId = ImGui_ImplVulkan_AddTexture_Original(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+		}
 	}
 
 	VulkanTexture::VulkanTexture(ImageFormat format, uint32_t width, uint32_t height, const void* data) : m_Width(width), m_Height(height) {
@@ -179,8 +186,7 @@ namespace Stellar {
 	}
 
 	ImTextureID VulkanTexture::getImGuiTextureID() {
-		auto image = getImage();
-		auto imageInfo = (VulkanImageInfo*)image->getImageInfo();
-		return ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+		STLR_CORE_ASSERT(m_IsImGuiTexture, "Cannot get ImTextureID on a non-ImGui texure");
+		return m_TextureId;
 	}
 }

@@ -11,17 +11,16 @@ namespace Stellar {
 	static const std::filesystem::path s_ResourcePath = "Resources";
 
 	ResourcePanel::ResourcePanel() : m_CurrentDir(s_ResourcePath) {
-		m_FolderIcon = Texture2D::Create("Resources/Icons/folder.png");
-		m_FileIcon = Texture2D::Create("Resources/Icons/file.png");
-		m_ArrowBackIcon = Texture2D::Create("Resources/Icons/arrow_back.png");
+		m_FolderIcon = Texture2D::Create("Resources/Icons/folder.png", true);
+		m_FileIcon = Texture2D::Create("Resources/Icons/file.png", true);
+		m_ArrowBackIcon = Texture2D::Create("Resources/Icons/arrow_back.png", true);
 	}
 
 	void ResourcePanel::onImGuiRender(bool &isOpen) {
 		ImGui::Begin("Resources");
 
 		if (m_CurrentDir != std::filesystem::path(s_ResourcePath)) {
-			UI::ImageButton(m_ArrowBackIcon, {20, 20});
-			if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+			if (ImGui::ImageButton(m_ArrowBackIcon->getImGuiTextureID(), {20, 20})) {
 				m_CurrentDir = m_CurrentDir.parent_path();
 			}
 		}
@@ -42,7 +41,14 @@ namespace Stellar {
 			STLR_Ptr<Texture2D> icon = dir.is_directory() ? m_FolderIcon : m_FileIcon;
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
 			ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
-			UI::ImageButton(icon, {thumbnailSize, thumbnailSize});
+			ImGui::ImageButton(icon->getImGuiTextureID(), {thumbnailSize, thumbnailSize});
+
+			if (ImGui::BeginDragDropSource()) {
+				const wchar_t* itemPath = relativePath.c_str();
+				ImGui::SetDragDropPayload("RESOURCE_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t), ImGuiCond_Once);
+				ImGui::EndDragDropSource();
+			}
+
 			ImGui::PopStyleColor(2);
 			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
 				if (dir.is_directory()) {

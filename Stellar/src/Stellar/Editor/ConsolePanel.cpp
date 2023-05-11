@@ -168,10 +168,10 @@ namespace Stellar {
 				localtime_s(&timeBuffer, &msg.Time);
 				timeString << std::put_time(&timeBuffer, "%T");
 
-				std::string timeMessage = "[" + timeString.str() + "][" + messageType + "]";
+				std::string timeMessage = "[" + timeString.str() + "]" + messageType;
 
 				ImGuiIO& io = ImGui::GetIO();
-				auto boldFont = io.Fonts->Fonts[2];
+				auto boldFont = io.Fonts->Fonts[4];
 				auto regFont = io.Fonts->Fonts[3];
 
 				ImGui::PushFont(boldFont);
@@ -218,11 +218,11 @@ namespace Stellar {
 	}
 
 	const char* ConsolePanel::getMessageType(const ConsoleMessage& message) const {
-		if (message.Flags & (int16_t)ConsoleMessageFlags::Info) return "INFO ";
-		if (message.Flags & (int16_t)ConsoleMessageFlags::Trace) return "TRACE";
-		if (message.Flags & (int16_t)ConsoleMessageFlags::Warning) return "WARN ";
-		if (message.Flags & (int16_t)ConsoleMessageFlags::Error) return "ERROR";
-		if (message.Flags & (int16_t)ConsoleMessageFlags::Debug) return "DEBUG";
+		if (message.Flags & (int16_t)ConsoleMessageFlags::Info) return "[INFO] ";
+		if (message.Flags & (int16_t)ConsoleMessageFlags::Trace) return "[TRACE]";
+		if (message.Flags & (int16_t)ConsoleMessageFlags::Warning) return "[WARN] ";
+		if (message.Flags & (int16_t)ConsoleMessageFlags::Error) return "[ERROR]";
+		if (message.Flags & (int16_t)ConsoleMessageFlags::Debug) return "[DEBUG]";
 		return "Unknown";
 	}
 

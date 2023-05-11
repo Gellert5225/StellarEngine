@@ -39,9 +39,9 @@ namespace Stellar {
 
 		io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/static/OpenSans/OpenSans-Bold.ttf", 18.0f);
 		io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/static/OpenSans/OpenSans-Regular.ttf", 18.0f);
-		io.Fonts->AddFontFromFileTTF("Resources/Fonts/SourceCodePro/static/SourceCodePro-Bold.ttf", 16.0f);
-		io.Fonts->AddFontFromFileTTF("Resources/Fonts/SourceCodePro/static/SourceCodePro-Regular.ttf", 16.0f);
-		//io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/static/OpenSans/OpenSans-Bold.ttf", 18.0f);
+		io.Fonts->AddFontFromFileTTF("Resources/Fonts/SourceCodePro/static/SourceCodePro-Bold.ttf", 18.0f);
+		io.Fonts->AddFontFromFileTTF("Resources/Fonts/SourceCodePro/static/SourceCodePro-Medium.ttf", 18.0f);
+		io.Fonts->AddFontFromFileTTF("Resources/Fonts/SourceCodePro/static/SourceCodePro-ExtraBold.ttf", 18.0f);
 
 		io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/static/OpenSans/OpenSans-SemiBold.ttf", 15.0f);
 

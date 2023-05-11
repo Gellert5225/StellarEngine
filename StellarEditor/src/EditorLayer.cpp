@@ -171,6 +171,17 @@ namespace Stellar {
 		
 		m_AllowViewportCameraEvents = m_ViewportPanelFocused || m_StartedRightClickInViewport;
 
+		if (ImGui::BeginDragDropTarget()) {
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("RESOURCE_ITEM")) {
+				const wchar_t* path = (const wchar_t*)payload->Data;
+
+				// TODO: "Resources" should be based on individual project
+				openScene(std::filesystem::path("Resources") / path);
+			}
+
+			ImGui::EndDragDropTarget();
+		}
+
 		// gizmo
 		Entity selected = m_SceneHierarchyPanel.getSelectedEntity();
 		if (selected && m_GizmoType != -1) {
@@ -282,6 +293,14 @@ namespace Stellar {
 			SceneSerializer serializer(m_ActiveScene);
 			serializer.deserialize(filePath);
 		}
+	}
+
+	void EditorLayer::openScene(const std::filesystem::path& path) {
+		m_ActiveScene = STLR_Ptr<Scene>::Create();
+		m_SceneHierarchyPanel.setContext(m_ActiveScene);
+
+		SceneSerializer serializer(m_ActiveScene);
+		serializer.deserialize(path.string());
 	}
 
 	void EditorLayer::saveSceneAs() {

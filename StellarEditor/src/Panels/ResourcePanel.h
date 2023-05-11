@@ -13,6 +13,7 @@ namespace Stellar {
 		virtual void onImGuiRender(bool& isOpen) override;
 	private:
 		std::filesystem::path m_CurrentDir;
+
 		STLR_Ptr<Texture2D> m_FolderIcon;
 		STLR_Ptr<Texture2D> m_FileIcon;
 		STLR_Ptr<Texture2D> m_ArrowBackIcon;

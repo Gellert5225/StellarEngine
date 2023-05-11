@@ -23,7 +23,7 @@ namespace Stellar {
 
 		virtual uint64_t getHash() const = 0;
 
-		static STLR_Ptr<Texture2D> Create(const std::string& filePath);
+		static STLR_Ptr<Texture2D> Create(const std::string& filePath, bool isImGuiTexture = false);
 		static STLR_Ptr<Texture2D> Create(ImageFormat format, uint32_t width = 1, uint32_t height = 1, const void* data = nullptr);
 	
 		virtual bool operator==(const Texture2D& other) const {
@@ -42,5 +42,9 @@ namespace Stellar {
 		virtual bool loadImage(const std::string& filePath) = 0;
 		std::string m_Path = "";
 		STLR_Ptr<Image2D> m_Image{};
+
+		ImTextureID m_TextureId;
+
+		bool m_IsImGuiTexture = false;
 	};
 }

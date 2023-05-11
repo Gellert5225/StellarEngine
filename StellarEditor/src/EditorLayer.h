@@ -30,6 +30,7 @@ namespace Stellar {
 
 		void newScene();
 		void openScene();
+		void openScene(const std::filesystem::path& path);
 		void saveSceneAs();
 
 		void menuBar();

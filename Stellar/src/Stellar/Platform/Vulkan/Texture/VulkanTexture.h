@@ -8,7 +8,7 @@
 namespace Stellar {
 	class VulkanTexture : public Texture2D {
 	public:
-		VulkanTexture(const std::string& filePath);
+		VulkanTexture(const std::string& filePath, bool isImGui = false);
 		VulkanTexture(ImageFormat format, uint32_t width, uint32_t height, const void* data);
 		~VulkanTexture() override;
 
