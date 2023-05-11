@@ -73,6 +73,7 @@ namespace Stellar {
 	}
 
 	void Scene::renderScene(EditorCamera& camera) {
+		m_Renderer2D->resetStats();
 		m_Renderer2D->beginScene(camera);
 		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 		for (auto entity : group) {
@@ -80,5 +81,9 @@ namespace Stellar {
 			m_Renderer2D->drawQuad(transform.getTransform(), sprite.color, sprite.texture, 1.0f);
 		}
 		m_Renderer2D->endScene();
+	}
+
+	Renderer2D::Statistics Scene::getRenderer2DStats() {
+		return m_Renderer2D->getStats();
 	}
 }

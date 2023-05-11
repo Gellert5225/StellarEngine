@@ -43,7 +43,7 @@ namespace Stellar {
 		io.Fonts->AddFontFromFileTTF("Resources/Fonts/SourceCodePro/static/SourceCodePro-Regular.ttf", 16.0f);
 		//io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/static/OpenSans/OpenSans-Bold.ttf", 18.0f);
 
-		io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/OpenSans-VariableFont_wdth,wght.ttf", 15.0f);
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/static/OpenSans/OpenSans-SemiBold.ttf", 15.0f);
 
 		static const ImWchar s_FontAwesomeRanges[] = { STLR_ICON_MIN, STLR_ICON_MAX, 0 };
 		UI::FontConfiguration fontAwesome;

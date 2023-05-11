@@ -29,6 +29,6 @@ namespace Stellar::UI {
 
 	bool IsInputEnabled();
 
-	void* Image(Texture2D* texture, const ImVec2& size);
+	void* Image(STLR_Ptr<Texture2D>, const ImVec2& size);
 	void ImageFromFB(STLR_Ptr<FrameBuffer> frameBuffer, const ImVec2& size);
 }

@@ -143,6 +143,11 @@ namespace Stellar {
 				"Frame time: %.3f ms, FPS: %.1f FPS",
 				1000.0f / ImGui::GetIO().Framerate,
 				ImGui::GetIO().Framerate);
+
+		ImGui::Text("Quad Count: %i", m_ActiveScene->getRenderer2DStats().quadCount);
+		ImGui::Text("Draw Calls: %i", m_ActiveScene->getRenderer2DStats().drawCalls);
+		ImGui::Text("Vertices: %i", m_ActiveScene->getRenderer2DStats().getTotalVertexCount());
+		ImGui::Text("Indicies: %i", m_ActiveScene->getRenderer2DStats().getTotalIndexCount());
 		ImGui::End();
 
 		// view port

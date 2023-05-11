@@ -223,9 +223,7 @@ namespace Stellar {
 
 		DrawComponent<SpriteRendererComponent>("Sprite", entity, [](auto& component) {
 			ImGui::ColorEdit4("Color", glm::value_ptr(component.color));
-			// auto windowWidth = ImGui::GetContentRegionAvail();
-			// UI::Image(component.texture.get(), { windowWidth.x, windowWidth.x });
-			// auto* drawList = ImGui::GetWindowDrawList();
+			UI::Image(component.texture, { 200, 200 });
 		});
 	}
 }

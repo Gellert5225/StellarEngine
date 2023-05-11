@@ -23,6 +23,8 @@ namespace Stellar {
 		void onUpdate(Timestep ts);
 		void onEditorUpdate(Timestep ts, EditorCamera& camera);
 		void onViewportResize(uint32_t width, uint32_t height);
+
+		Renderer2D::Statistics getRenderer2DStats();
 	private:
 		void renderScene(EditorCamera& camera);
 	private:
