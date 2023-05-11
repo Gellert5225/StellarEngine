@@ -45,11 +45,11 @@ namespace Stellar {
 
 		io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/static/OpenSans/OpenSans-SemiBold.ttf", 15.0f);
 
-		static const ImWchar s_FontAwesomeRanges[] = { STLR_ICON_MIN, STLR_ICON_MAX, 0 };
+		static const ImWchar s_FontAwesomeRanges[] = { STLR_ICON_MIN_FA, STLR_ICON_MAX_FA, 0 };
 		UI::FontConfiguration fontAwesome;
 		fontAwesome.FontName = "FontAwesome";
-		fontAwesome.FilePath = "Resources/Fonts/FontAwesome/fontawesome-webfont.ttf";
-		fontAwesome.Size = 16.0f;
+		fontAwesome.FilePath = "Resources/Fonts/FontAwesome/fa-solid-900.ttf";
+		fontAwesome.Size = 15.0f;
 		fontAwesome.GlyphRanges = s_FontAwesomeRanges;
 		fontAwesome.MergeWithLast = true;
 		UI::Fonts::Add(fontAwesome);

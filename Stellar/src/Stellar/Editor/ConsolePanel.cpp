@@ -66,7 +66,7 @@ namespace Stellar {
 			ImGui::PushStyleColor(ImGuiCol_Text, textColor);
 			ImGui::PushStyleColor(ImGuiCol_Button, getToolbarButtonColor(m_MessageFilters & (int16_t)ConsoleMessageFlags::Trace));
 
-			if (ImGui::Button(STLR_ICON_MAP_MARKER, buttonSize))
+			if (ImGui::Button(STLR_ICON_FA_LOCATION_DOT, buttonSize))
 				m_MessageFilters ^= (int16_t)ConsoleMessageFlags::Trace;
 
 			ImGui::PopStyleColor(2);
@@ -76,7 +76,7 @@ namespace Stellar {
 			ImGui::PushStyleColor(ImGuiCol_Text, textColor);
 			ImGui::PushStyleColor(ImGuiCol_Button, getToolbarButtonColor(m_MessageFilters & (int16_t)ConsoleMessageFlags::Info));
 
-			if (ImGui::Button(STLR_ICON_INFO_CIRCLE, buttonSize))
+			if (ImGui::Button(STLR_ICON_FA_CIRCLE_INFO, buttonSize))
 				m_MessageFilters ^= (int16_t)ConsoleMessageFlags::Info;
 
 			ImGui::PopStyleColor(2);
@@ -86,7 +86,7 @@ namespace Stellar {
 			ImGui::PushStyleColor(ImGuiCol_Text, textColor);
 			ImGui::PushStyleColor(ImGuiCol_Button, getToolbarButtonColor(m_MessageFilters & (int16_t)ConsoleMessageFlags::Warning));
 
-			if (ImGui::Button(STLR_ICON_EXCLAMATION_TRIANGLE, buttonSize))
+			if (ImGui::Button(STLR_ICON_FA_TRIANGLE_EXCLAMATION, buttonSize))
 				m_MessageFilters ^= (int16_t)ConsoleMessageFlags::Warning;
 
 			ImGui::PopStyleColor(2);
@@ -95,7 +95,7 @@ namespace Stellar {
 			textColor = (m_MessageFilters & (int16_t)ConsoleMessageFlags::Error) ? s_ErrorTint : style.Colors[ImGuiCol_TextDisabled];
 			ImGui::PushStyleColor(ImGuiCol_Text, textColor);
 			ImGui::PushStyleColor(ImGuiCol_Button, getToolbarButtonColor(m_MessageFilters & (int16_t)ConsoleMessageFlags::Error));
-			if (ImGui::Button(STLR_ICON_EXCLAMATION_CIRCLE, buttonSize))
+			if (ImGui::Button(STLR_ICON_FA_CIRCLE_EXCLAMATION, buttonSize))
 				m_MessageFilters ^= (int16_t)ConsoleMessageFlags::Error;
 			
 			ImGui::PopStyleColor(2);
@@ -104,7 +104,7 @@ namespace Stellar {
 			textColor = (m_MessageFilters & (int16_t)ConsoleMessageFlags::Debug) ? s_DebugTint : style.Colors[ImGuiCol_TextDisabled];
 			ImGui::PushStyleColor(ImGuiCol_Text, textColor);
 			ImGui::PushStyleColor(ImGuiCol_Button, getToolbarButtonColor(m_MessageFilters & (int16_t)ConsoleMessageFlags::Debug));
-			if (ImGui::Button(STLR_ICON_BUG, buttonSize))
+			if (ImGui::Button(STLR_ICON_FA_BUG, buttonSize))
 				m_MessageFilters ^= (int16_t)ConsoleMessageFlags::Debug;
 			
 			ImGui::PopStyleColor(2);

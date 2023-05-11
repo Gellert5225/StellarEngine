@@ -4,6 +4,7 @@
 
 #include "Stellar/Platform/Vulkan/ImGui/imgui_impl_vulkan.h"
 #include "Stellar/Platform/Vulkan/Texture/VulkanTexture.h"
+#include "Stellar/ImGui/WebFont.h"
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -160,7 +161,7 @@ namespace Stellar {
 			ImGui::PopStyleVar();
 
 			ImGui::SameLine(contentRegionAvail.x - lineHeight * 0.5);
-			if (ImGui::Button("...", ImVec2{lineHeight, lineHeight})) {
+			if (ImGui::Button(STLR_ICON_FA_GEARS, ImVec2{lineHeight, lineHeight})) {
 				ImGui::OpenPopup("ComponentSettings");
 			}
 
