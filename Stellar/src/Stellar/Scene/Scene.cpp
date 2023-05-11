@@ -78,7 +78,7 @@ namespace Stellar {
 		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 		for (auto entity : group) {
 			auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-			m_Renderer2D->drawQuad(transform.getTransform(), sprite.color, sprite.texture, 2.0f);
+			m_Renderer2D->drawQuad(transform.getTransform(), sprite.color, sprite.texture, sprite.tilingFactor);
 		}
 		m_Renderer2D->endScene();
 	}

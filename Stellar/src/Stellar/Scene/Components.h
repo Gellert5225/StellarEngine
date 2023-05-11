@@ -40,6 +40,7 @@ namespace Stellar {
 	struct SpriteRendererComponent {
 		glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 		STLR_Ptr<Texture2D> texture = Texture2D::Create(ImageFormat::RGBA);
+		float tilingFactor = 1.0f;
 
 		SpriteRendererComponent() = default;
 		SpriteRendererComponent(const SpriteRendererComponent&) = default;

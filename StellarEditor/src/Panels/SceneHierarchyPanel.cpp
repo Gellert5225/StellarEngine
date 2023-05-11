@@ -8,6 +8,7 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <glm/gtc/type_ptr.hpp>
+#include <filesystem>
 
 namespace Stellar {
 	SceneHierarchyPanel::SceneHierarchyPanel(const STLR_Ptr<Scene>& scene) {
@@ -223,7 +224,16 @@ namespace Stellar {
 
 		DrawComponent<SpriteRendererComponent>("Sprite", entity, [](auto& component) {
 			ImGui::ColorEdit4("Color", glm::value_ptr(component.color));
+			ImGui::DragFloat("Tiling Factor", &component.tilingFactor, 0.1f, 0.0f, 100.0f);
 			UI::Image(component.texture, { 200, 200 });
+			if (ImGui::BeginDragDropTarget()) {
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("RESOURCE_ITEM")) {
+					const wchar_t* path = (const wchar_t*)payload->Data;
+					auto texturePath = std::filesystem::path("Resources") / path;
+					component.texture = Texture2D::Create(texturePath.string());
+				}
+				ImGui::EndDragDropTarget();
+			}
 		});
 	}
 }

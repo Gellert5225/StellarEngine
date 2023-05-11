@@ -158,7 +158,7 @@ Select `Sandbox` from Scheme, then `CMD + R`
 * [x] Renderer
 * [x] Metal-cpp
 * [x] macOS support
-* [ ] Better 2D renderer
+* [x] Better 2D renderer
 * [ ] Load model
 * [ ] PBR
 * [ ] IBL
