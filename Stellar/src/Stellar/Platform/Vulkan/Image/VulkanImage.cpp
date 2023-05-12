@@ -46,8 +46,8 @@ namespace Stellar {
 		imageInfo.extent.width = static_cast<uint32_t>(m_Specification.width);
 		imageInfo.extent.height = static_cast<uint32_t>(m_Specification.height);
 		imageInfo.extent.depth = 1;
-		imageInfo.mipLevels = 1;
-		imageInfo.arrayLayers = 1;
+		imageInfo.mipLevels = m_Specification.mips;
+		imageInfo.arrayLayers = m_Specification.layers;
 		imageInfo.format = Utils::VulkanImageFormat(m_Specification.format);
 		imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
 		imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
@@ -78,9 +78,9 @@ namespace Stellar {
 		imageViewCreateInfo.subresourceRange.aspectMask = aspectMask;
 		imageViewCreateInfo.image = m_Info.image;
 		imageViewCreateInfo.subresourceRange.baseMipLevel = 0;
-		imageViewCreateInfo.subresourceRange.levelCount = 1;
+		imageViewCreateInfo.subresourceRange.levelCount = m_Specification.mips;
 		imageViewCreateInfo.subresourceRange.baseArrayLayer = 0;
-		imageViewCreateInfo.subresourceRange.layerCount = 1;
+		imageViewCreateInfo.subresourceRange.layerCount = m_Specification.layers;
 		VK_CHECK_RESULT(vkCreateImageView(device, &imageViewCreateInfo, nullptr, &m_Info.imageView));
 
 		// create texture sampler

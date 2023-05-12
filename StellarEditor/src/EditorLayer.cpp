@@ -125,11 +125,6 @@ namespace Stellar {
 			ImGui::DockBuilderFinish(dockspaceID);
 		}
 
-		m_SceneHierarchyPanel.onImGuiRender();
-		static bool isOpen = true;
-		m_ConsolePanel.onImGuiRender(isOpen);
-		m_ResourcePanel.onImGuiRender(isOpen);
-
 		//ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
 		ImGui::Begin("Info");
 		std::string debug;
@@ -171,6 +166,7 @@ namespace Stellar {
 		
 		m_AllowViewportCameraEvents = m_ViewportPanelFocused || m_StartedRightClickInViewport;
 
+		// this has to happen before scene hierarchy panel render to clear its selection context
 		if (ImGui::BeginDragDropTarget()) {
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("RESOURCE_ITEM")) {
 				const wchar_t* path = (const wchar_t*)payload->Data;
@@ -181,6 +177,11 @@ namespace Stellar {
 
 			ImGui::EndDragDropTarget();
 		}
+
+		m_SceneHierarchyPanel.onImGuiRender();
+		static bool isOpen = true;
+		m_ConsolePanel.onImGuiRender(isOpen);
+		m_ResourcePanel.onImGuiRender(isOpen);
 
 		// gizmo
 		Entity selected = m_SceneHierarchyPanel.getSelectedEntity();
