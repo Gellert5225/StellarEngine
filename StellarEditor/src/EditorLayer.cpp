@@ -169,7 +169,7 @@ namespace Stellar {
 		// this has to happen before scene hierarchy panel render to clear its selection context
 		if (ImGui::BeginDragDropTarget()) {
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("RESOURCE_ITEM")) {
-				const wchar_t* path = (const wchar_t*)payload->Data;
+				char* path = (char*)payload->Data;
 
 				// TODO: "Resources" should be based on individual project
 				openScene(std::filesystem::path("Resources") / path);

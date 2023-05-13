@@ -80,6 +80,6 @@ namespace Stellar {
 	ImTextureID MetalTexture::getImGuiTextureID() {
 		STLR_CORE_ASSERT(m_IsImGuiTexture, "Cannot get ImTextureID on a non-ImGui texure");
 
-		return nullptr;
+		return m_TextureId;
 	}
 }
