@@ -3,6 +3,7 @@ cmake_minimum_required (VERSION 3.24.0 FATAL_ERROR)
 if (WIN32)
 	# Change this to your own vcpkg installation folder
 	set(ENV{VCPKG_ROOT} "F:/Dev/vcpkg")
+	set(VCPKG_TARGET_TRIPLET x64-windows-static)
 endif()
 
 if(UNIX AND NOT APPLE)
