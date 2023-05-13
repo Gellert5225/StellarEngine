@@ -30,18 +30,18 @@ struct Push {
     float4x4 model;
 };
 
-v2f vertex vertexMain(uint vertexId                         [[vertex_id]],
-                      device const VertexData* vertexData   [[buffer(0)]],
-                      device const GlobalUniforms& uniform  [[buffer(1)]],
-                      constant Push& push                   [[buffer(2)]]) {
+v2f vertex vertexMain(uint vertexId                         		[[vertex_id]],
+                      device const VertexData* vertexData   		[[buffer(0)]],
+                      device const GlobalUniforms& globalUniforms  	[[buffer(1)]],
+                      constant Push& pushConstant                  	[[buffer(2)]]) {
     v2f o;
-    float4 pos = float4(vertexData[vertexId].position);
-    pos = uniform.viewProjection * push.model * pos;
-    o.position = pos;
+
+    o.position = globalUniforms.viewProjection * pushConstant.model * vertexData[vertexId].position;
     o.color = float4(vertexData[vertexId].color);
     o.texCoord = vertexData[vertexId].texCoord;
 	o.texIndex = vertexData[vertexId].texIndex;
 	o.tilingFactor = vertexData[vertexId].tilingFactor;
+
     return o;
 }
 
