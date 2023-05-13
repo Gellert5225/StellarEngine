@@ -19,6 +19,8 @@ namespace Stellar {
         framebufferSpec.height = 720;
         m_FrameBuffer = FrameBuffer::Create(framebufferSpec);
 
+		m_Semaphore = dispatch_semaphore_create(Renderer::MAX_FRAMES_IN_FLIGHT);
+
         MTL::DepthStencilDescriptor* pDsDesc = MTL::DepthStencilDescriptor::alloc()->init();
 		pDsDesc->setDepthCompareFunction(MTL::CompareFunction::CompareFunctionLess);
 		pDsDesc->setDepthWriteEnabled(true);
@@ -42,8 +44,9 @@ namespace Stellar {
 
         pool = NS::AutoreleasePool::alloc()->init();
         m_CommandBuffer = MetalDevice::GetInstance()->getCommandQueue()->commandBuffer();
-		m_CommandBuffer->addCompletedHandler([](MTL::CommandBuffer* pCmd) {
-
+		dispatch_semaphore_wait(m_Semaphore, DISPATCH_TIME_FOREVER);
+		m_CommandBuffer->addCompletedHandler([&](MTL::CommandBuffer* pCmd) {
+			dispatch_semaphore_signal(m_Semaphore);
 		});
         m_Encoder = m_CommandBuffer->renderCommandEncoder(m_FrameBuffer.As<MetalFrameBuffer>()->getFrameBuffer());
     }

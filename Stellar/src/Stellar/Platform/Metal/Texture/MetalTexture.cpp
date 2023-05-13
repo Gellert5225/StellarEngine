@@ -26,13 +26,12 @@ namespace Stellar {
     }
 
 	MetalTexture::MetalTexture(ImageFormat format, uint32_t width, uint32_t height, const void* data) : m_Width(width), m_Height(height) {
-		void* imageData = new uint8_t[width * height * 4];
+		m_Pixels = new uint8_t[width * height * 4];
 		if (data == nullptr) {
-			uint32_t whiteTex = 0xffffffff;
-			data = &whiteTex;
+			for (size_t y = 0; y < width * height * 4; ++y) {
+				m_Pixels[y] = 0xFF;
+			}
 		}
-		memcpy(imageData, data, width * height * 4);
-		m_Pixels = (unsigned char*)imageData;
 
 		invalidate();
 	}

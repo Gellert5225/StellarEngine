@@ -60,6 +60,8 @@ namespace Stellar {
     }
 
     void MetalSwapChain::present() {
+		m_CurrentFrameIndex = (m_CurrentFrameIndex + 1) % Renderer::MAX_FRAMES_IN_FLIGHT;
+		
         m_Drawable->present();
         m_Drawable->release();
     }
@@ -76,7 +78,7 @@ namespace Stellar {
     }
 
     uint32_t MetalSwapChain::getCurrentFrameIndex() const {
-        return 0;
+        return m_CurrentFrameIndex;
     }
 
     void* MetalSwapChain::getSwapChain() {

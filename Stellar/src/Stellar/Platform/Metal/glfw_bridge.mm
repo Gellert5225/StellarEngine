@@ -14,6 +14,7 @@ void* createLayer(GLFWwindow* window, double width, double height, void* device)
     layer.device = (__bridge id<MTLDevice>) device;
     layer.pixelFormat = MTLPixelFormatBGRA8Unorm;
     layer.drawableSize = size;
+	layer.displaySyncEnabled = false;
 
     NSWindow* nswindow = glfwGetCocoaWindow(window);
     nswindow.contentView.layer = layer;

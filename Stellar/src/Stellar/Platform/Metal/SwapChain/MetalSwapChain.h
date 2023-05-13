@@ -10,7 +10,7 @@ void* createLayer(GLFWwindow* window, double width, double height, void* device)
 void* nextDrawable(void* layer);
 
 namespace Stellar {
-    class STLR_API MetalSwapChain : public SwapChain {
+    class MetalSwapChain : public SwapChain {
     public:
         MetalSwapChain();
         ~MetalSwapChain() override;
@@ -34,6 +34,8 @@ namespace Stellar {
         MTL::RenderPassDescriptor* m_ImGuiRenderPass;
         MTL::CommandBuffer* m_CommandBuffer = nullptr;
         SwapChainExtent2D m_SwapChainExtant;
+
+		uint32_t m_CurrentFrameIndex = 0;
 
         void init();
         void createSwapChain();
