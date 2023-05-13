@@ -80,7 +80,9 @@ namespace Stellar {
 		Push p{};
         p.model = transform;
 
-		STLR_Ptr<MetalUniformBuffer> uniformBuffer = uniformBufferSet->get(0, 0, 0);
+		uint32_t currentFrame = Application::Get().getWindow().getSwapChain()->getCurrentFrameIndex();
+
+		STLR_Ptr<MetalUniformBuffer> uniformBuffer = uniformBufferSet->get(0, 0, currentFrame);
 
 		auto metalPipeline = pipeline.As<MetalPipeline>();
 		m_Encoder->setRenderPipelineState(metalPipeline->getPipelineState());
