@@ -13,6 +13,6 @@ namespace Stellar {
 		virtual void begin() override {};
 		virtual void end() override {};
 		virtual void submit() override {};
-		virtual void* getActiveCommandBuffer() override {};
+		virtual void* getActiveCommandBuffer() override { return nullptr; };
 	};
 }
