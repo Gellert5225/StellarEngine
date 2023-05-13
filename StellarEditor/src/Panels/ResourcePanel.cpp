@@ -45,7 +45,7 @@ namespace Stellar {
 			ImGui::ImageButton(icon->getImGuiTextureID(), {thumbnailSize, thumbnailSize});
 
 			if (ImGui::BeginDragDropSource()) {
-				const wchar_t* itemPath = relativePath.c_str();
+				const wchar_t* itemPath = (const wchar_t*)relativePath.c_str();
 				ImGui::SetDragDropPayload("RESOURCE_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t), ImGuiCond_Once);
 				ImGui::EndDragDropSource();
 			}
@@ -57,7 +57,7 @@ namespace Stellar {
 				}
 			}
 			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + cellSize / 2 - ImGui::CalcTextSize(fileName.c_str()).x / 2);
-			ImGui::Text(fileName.c_str());
+			ImGui::Text("%s", fileName.c_str());
 
 			ImGui::NextColumn();
 			ImGui::PopID();

@@ -69,6 +69,7 @@ namespace Stellar {
 					flags |= (int16_t)ConsoleMessageFlags::Error;
 					break;
 				}
+				default: break;
 			}
 
 			return flags;

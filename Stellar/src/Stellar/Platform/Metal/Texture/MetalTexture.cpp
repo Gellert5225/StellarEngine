@@ -20,6 +20,18 @@ namespace Stellar {
         invalidate();
     }
 
+	MetalTexture::MetalTexture(ImageFormat format, uint32_t width, uint32_t height, const void* data) {
+		void* imageData = new uint8_t[width * height * 4];
+		if (data == nullptr) {
+			uint32_t whiteTex = 0xffffffff;
+			data = &whiteTex;
+		}
+		memcpy(imageData, data, width * height * 4);
+		m_Pixels = (unsigned char*)imageData;
+
+		invalidate();
+	}
+
     MetalTexture::~MetalTexture() {
         m_Texture->release();
     }
@@ -53,4 +65,16 @@ namespace Stellar {
         m_Height = texHeight;
         return true;
     }
+
+	uint64_t MetalTexture::getHash() const {
+		void* bytes;
+		m_Texture->getBytes(bytes, m_Width * 4, MTL::Region( 0, 0, 0, m_Width, m_Height, 1 ), 0);
+		return (uint64_t)bytes;
+	}
+
+	ImTextureID MetalTexture::getImGuiTextureID() {
+		STLR_CORE_ASSERT(m_IsImGuiTexture, "Cannot get ImTextureID on a non-ImGui texure");
+
+		return nullptr;
+	}
 }

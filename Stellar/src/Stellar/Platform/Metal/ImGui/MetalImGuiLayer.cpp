@@ -82,4 +82,6 @@ namespace Stellar {
     }
 
     void MetalImGuiLayer::onImGuiRender() { }
+
+	void MetalImGuiLayer::onEvent(Event& e) {}
 }

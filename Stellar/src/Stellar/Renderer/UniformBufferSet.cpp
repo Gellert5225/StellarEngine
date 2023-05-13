@@ -7,7 +7,7 @@
 #endif
 
 #if defined(__APPLE__)
-#include "Stellar/Platform/Metal/Buffer/MetalBuffer.h"
+#include "Stellar/Platform/Metal/Buffer/MetalUniformBufferSet.h"
 #endif
 #include "Stellar/Core/Log.h"
 
@@ -20,7 +20,7 @@ namespace Stellar {
 			#endif
 			case RendererAPIType::Metal:
 			#if defined(__APPLE__)
-				return new MetalShader(filePath);
+				return STLR_Ptr<MetalUniformBufferSet>::Create(frames);
 			#endif
 			case RendererAPIType::None:
 				break;

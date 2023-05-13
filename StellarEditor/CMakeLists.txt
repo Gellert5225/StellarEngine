@@ -12,8 +12,6 @@ file(GLOB_RECURSE StellarEditor_SRC
 
 find_package(glfw3 CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
-LINK_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR}/../Stellar/Debug)
-message(STATUS "BIN DIR \"${CMAKE_CURRENT_BINARY_DIR}/../Stellar/Debug\"")
 
 add_executable(StellarEditor ${StellarEditor_SRC})
 

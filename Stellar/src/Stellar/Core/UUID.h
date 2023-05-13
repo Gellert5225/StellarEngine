@@ -1,4 +1,5 @@
-#include <xhash>
+#pragma once
+//#include <xhash>
 
 namespace Stellar {
 	class UUID {

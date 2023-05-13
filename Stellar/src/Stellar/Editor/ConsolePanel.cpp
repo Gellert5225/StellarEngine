@@ -9,6 +9,7 @@
 
 #include <cstdarg>
 #include <iomanip>
+#include <chrono>
 
 namespace Stellar {
 	static ConsolePanel* s_Instance = nullptr;
@@ -165,7 +166,7 @@ namespace Stellar {
 				std::string messageType(getMessageType(msg));
 				std::stringstream timeString;
 				tm timeBuffer;
-				localtime_s(&timeBuffer, &msg.Time);
+				timeBuffer = *localtime(&msg.Time);
 				timeString << std::put_time(&timeBuffer, "%T");
 
 				std::string timeMessage = "[" + timeString.str() + "]" + messageType;
@@ -175,13 +176,13 @@ namespace Stellar {
 				auto regFont = io.Fonts->Fonts[3];
 
 				ImGui::PushFont(boldFont);
-				ImGui::TextColored(color, timeMessage.c_str());
+				ImGui::TextColored(color, "%s", timeMessage.c_str());
 				ImGui::PopFont();
 
 				ImGui::SameLine();
 
 				ImGui::PushFont(regFont);
-				ImGui::TextColored(color, msg.LongMessage.c_str());
+				ImGui::TextColored(color, "%s", msg.LongMessage.c_str());
 				ImGui::PopFont();
 				
 				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 4.0f);

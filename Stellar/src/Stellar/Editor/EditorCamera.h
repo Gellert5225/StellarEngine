@@ -12,6 +12,7 @@ namespace Stellar {
 
 	class STLR_API EditorCamera : public Camera {
 	public:
+		EditorCamera() = default;
 		EditorCamera(const float fov, const float width, const float height, const float near, const float far);
 
 		void onUpdate(const Timestep ts);

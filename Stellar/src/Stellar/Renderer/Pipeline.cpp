@@ -7,6 +7,10 @@
 #include "Stellar/Platform/Vulkan/Pipeline/VulkanPipeline.h"
 #endif
 
+#if defined(__APPLE__)
+#include "Stellar/Platform/Metal/Pipeline/MetalPipeline.h"
+#endif
+
 namespace Stellar {
     STLR_Ptr<Pipeline> Pipeline::Create(const PipelineSpecification& spec) {
 		switch (RendererAPI::Current()) {
@@ -16,7 +20,7 @@ namespace Stellar {
 			#endif
 			case RendererAPIType::Metal:
 			#if defined(__APPLE__)
-				//TODO: Implement Metal Pipeline
+				return STLR_Ptr<MetalPipeline>::Create(spec);
 			#endif
 			case RendererAPIType::None:
 				break;

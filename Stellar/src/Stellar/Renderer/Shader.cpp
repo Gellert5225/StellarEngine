@@ -72,7 +72,7 @@ namespace Stellar {
 		#if defined(_WIN64) || defined(__linux__)
 		filePath = "Resources/Shader/Vulkan/" + fileName + ".glsl";
 		#elif defined(__APPLE__)
-		filePath = "../Resources/Shader/Metal/" + fileName + ".metal";
+		filePath = "./Debug/Resources/Shader/Metal/" + fileName + ".metal";
 		#endif
 		auto shader = Shader::Create(filePath);
 		add(shader);
@@ -84,7 +84,7 @@ namespace Stellar {
 		#if defined(_WIN64) || defined(__linux__)
 		filePath = "../../Resources/Shader/Vulkan/" + fileName + ".glsl";
 		#elif defined(__APPLE__)
-		filePath = "../Resources/Shader/Metal/" + fileName + ".metal";
+		filePath = "./Debug/Resources/Shader/Metal/" + fileName + ".metal";
 		#endif
 		auto shader = Shader::Create(filePath);
 		add(name, shader);

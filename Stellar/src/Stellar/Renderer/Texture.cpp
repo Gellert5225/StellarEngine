@@ -20,7 +20,7 @@ namespace Stellar {
 			#endif
 			case RendererAPIType::Metal:
 			#if defined(__APPLE__)
-				return new MetalTexture(filePath);
+				return STLR_Ptr<MetalTexture>::Create(filePath);
 			#endif
 			case RendererAPIType::None:
 				break;
@@ -37,7 +37,7 @@ namespace Stellar {
 			#endif
 			case RendererAPIType::Metal:
 			#if defined(__APPLE__)
-				return new MetalTexture(filePath);
+				return STLR_Ptr<MetalTexture>::Create(format, width, height, data);;
 			#endif
 			case RendererAPIType::None:
 				break;

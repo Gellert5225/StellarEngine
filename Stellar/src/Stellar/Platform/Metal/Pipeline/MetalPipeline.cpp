@@ -5,9 +5,9 @@
 #include "Stellar/Core/Log.h"
 
 namespace Stellar {
-    MetalPipeline::MetalPipeline(Shader* shader) {
-        MTL::Function* vertexFn = ((MetalShader*)shader)->getLibrary()->newFunction(NS::String::string("vertexMain", NS::StringEncoding::UTF8StringEncoding));
-        MTL::Function* fragFn = ((MetalShader*)shader)->getLibrary()->newFunction(NS::String::string("fragmentMain", NS::StringEncoding::UTF8StringEncoding));
+    MetalPipeline::MetalPipeline(STLR_Ptr<Shader> shader) {
+        MTL::Function* vertexFn = shader.As<MetalShader>()->getLibrary()->newFunction(NS::String::string("vertexMain", NS::StringEncoding::UTF8StringEncoding));
+        MTL::Function* fragFn = shader.As<MetalShader>()->getLibrary()->newFunction(NS::String::string("fragmentMain", NS::StringEncoding::UTF8StringEncoding));
 
         MTL::RenderPipelineDescriptor* descriptor = MTL::RenderPipelineDescriptor::alloc()->init();
         descriptor->setVertexFunction(vertexFn);
@@ -22,6 +22,22 @@ namespace Stellar {
         vertexFn->release();
         fragFn->release();
     }
+
+	MetalPipeline::MetalPipeline(PipelineSpecification spec) : m_Specification(spec) {
+
+	}
+
+	void MetalPipeline::invalidate() {
+
+	}
+
+	void MetalPipeline::setUniformBuffer(STLR_Ptr<Buffer> uniformBuffer, uint32_t binding, uint32_t set) {
+
+	}
+
+	void MetalPipeline::bind() {
+
+	}
 
     MetalPipeline::~MetalPipeline() {
         m_PipelineState->release();

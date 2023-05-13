@@ -5,8 +5,7 @@
 #include "Stellar/Core/Log.h"
 
 namespace Stellar {
-    MetalBuffer::MetalBuffer(uint64_t size,
-                const void* data) : Buffer(size) {
+    MetalBuffer::MetalBuffer(uint64_t size, const void* data) : Buffer(size) {
         auto device = MetalDevice::GetInstance()->getDevice();
         m_Buffer = device->newBuffer(size, MTL::ResourceStorageModeManaged);
 
@@ -33,6 +32,11 @@ namespace Stellar {
         memcpy(dst, src, m_Size);
     }
 
+	void MetalBuffer::setData(void* buffer, uint32_t size, uint32_t offset) {
+		void* local;
+		memcpy(local, buffer, size);
+	}
+
     void* MetalBuffer::getBuffer() const { 
         return m_Buffer;
     }
@@ -40,4 +44,5 @@ namespace Stellar {
     void MetalBuffer::didModifyrange() {
         m_Buffer->didModifyRange(NS::Range::Make(0, m_Buffer->length()));
     }
+	
 }

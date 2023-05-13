@@ -25,4 +25,8 @@ namespace Stellar {
     MetalShader::~MetalShader() {
         m_Library->release();
     }
+
+	const std::unordered_map<std::string, ShaderResourceDeclaration>& MetalShader::getResources() const {
+		return m_Resources;
+	}
 }

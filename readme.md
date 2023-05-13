@@ -116,6 +116,7 @@ I will try to list as detailed as possible. However I have not tested the build 
 * C++17
 * Visual Studio Code (optional)
 * CMake
+* vkpkg
 * Windows:
   * Visual Studio 2019
 * Linux:
@@ -124,6 +125,7 @@ I will try to list as detailed as possible. However I have not tested the build 
 * macOS:
   * Xcode (optional)
   * Clang++
+  * pkg-config
   
 > Note: On maoOS, if you want to enable `Address Sanitation(Valgrind)` you need to manually install clang from llvm as the default clang in `/usr/bin` shipped by Apple does not support it.
 
