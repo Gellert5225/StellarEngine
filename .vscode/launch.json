@@ -22,6 +22,27 @@
             ],
             "console": "integratedTerminal",
 			"internalConsoleOptions": "openOnSessionStart",
+        },
+		{
+            "name": "macOS Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            // Resolved by CMake Tools:
+            "program": "${command:cmake.launchTargetPath}",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${command:cmake.getLaunchTargetDirectory}",
+            "environment": [
+                {
+                    "name": "PATH",
+                    "value": "${env:PATH}:${command:cmake.getLaunchTargetDirectory}"
+                },
+                {
+                    "name": "OTHER_VALUE",
+                    "value": "Something something"
+                }
+            ],
+			"internalConsoleOptions": "openOnSessionStart",
         }
     ]
 }

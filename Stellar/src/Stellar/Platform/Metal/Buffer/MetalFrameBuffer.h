@@ -15,8 +15,8 @@ namespace Stellar {
 
         void invalidate();
         void release();
-        Image2D* getAttachmentImage() override { return m_AttachmentImage; }
-        Image2D* getDepthAttachmentImage() override { return m_DepthAttachmentImage; }
+        STLR_Ptr<Image2D> getAttachmentImage() override { return m_AttachmentImages[0]; }
+        STLR_Ptr<Image2D> getDepthAttachmentImage() override { return m_DepthAttachmentImage; }
         const FrameBufferSpec& getSpecification() const override { return m_Spec; }
 
         // metal

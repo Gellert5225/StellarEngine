@@ -127,10 +127,11 @@ namespace Stellar::UI {
 		auto imageInfo = (VulkanImageInfo*)image->getImageInfo();
 		const auto textureID = ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 		ImGui::Image(textureID, size);
-		#elif defined __APPLE__
-		ImGui::Image(((MetalTexture*)texture)->getTexture(), size);
-		#endif
 		return textureID;
+		#elif defined __APPLE__
+		ImGui::Image(texture.As<MetalTexture>()->getTexture(), size);
+		return nullptr;
+		#endif
 	}
 
 	void ImageFromFB(STLR_Ptr<FrameBuffer> frameBuffer, const ImVec2& size) {
@@ -139,7 +140,7 @@ namespace Stellar::UI {
 		const auto textureID = ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 		ImGui::Image(textureID, size);
 		#elif defined __APPLE__
-		ImGui::Image(((MetalFrameBuffer*)frameBuffer)->getAttachmentTexture(), size);
+		ImGui::Image(frameBuffer.As<MetalFrameBuffer>()->getAttachmentTexture(), size);
 		#endif
 	}
 
@@ -167,7 +168,7 @@ namespace Stellar::UI {
 		const auto textureID = ImGui_ImplVulkan_AddTexture(imageInfo->sampler, imageInfo->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 		return ImGui::ImageButton(textureID, size, uv0, uv1, frame_padding, bg_col, tint_col);
 #elif defined __APPLE__
-		ImGui::Image(((MetalTexture*)texture)->getTexture(), size);
+		return ImGui::ImageButton(texture.As<MetalTexture>()->getTexture(), size);
 #endif
 	}
 }

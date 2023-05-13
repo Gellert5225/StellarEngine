@@ -2,8 +2,8 @@
 
 #include "Stellar/ImGui/ImGuiLayer.h"
 
-#include "Stellar/Platform/Vulkan/ImGui/imgui_impl_vulkan.h"
-#include "Stellar/Platform/Vulkan/Texture/VulkanTexture.h"
+//#include "Stellar/Platform/Vulkan/ImGui/imgui_impl_vulkan.h"
+//#include "Stellar/Platform/Vulkan/Texture/VulkanTexture.h"
 #include "Stellar/ImGui/WebFont.h"
 
 #include <imgui.h>
@@ -57,7 +57,7 @@ namespace Stellar {
 		ImGuiTreeNodeFlags flags = ((m_SelectionContext == entity) ? ImGuiTreeNodeFlags_Selected  : 0 )| ImGuiTreeNodeFlags_OpenOnArrow;
 		flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
 
-		bool opened = ImGui::TreeNodeEx((void*)(size_t)(uint32_t)entity, flags, tag.c_str());
+		bool opened = ImGui::TreeNodeEx((void*)(size_t)(uint32_t)entity, flags, "%s", tag.c_str());
 		if (ImGui::IsItemClicked()) {
 			m_SelectionContext = entity;
 		}
@@ -88,7 +88,7 @@ namespace Stellar {
 
 		ImGui::Columns(2);
 		ImGui::SetColumnWidth(0, columnWidth);
-		ImGui::Text(label.c_str());
+		ImGui::Text("%s", label.c_str());
 		ImGui::NextColumn();
 
 		ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
@@ -157,7 +157,7 @@ namespace Stellar {
 			float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 			ImGui::Separator();
 
-			bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), treeNodeFlags, name.c_str());
+			bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), treeNodeFlags, "%s", name.c_str());
 			ImGui::PopStyleVar();
 
 			ImGui::SameLine(contentRegionAvail.x - lineHeight * 0.5);
@@ -233,7 +233,7 @@ namespace Stellar {
 			UI::Image(component.texture, { 200, 200 });
 			if (ImGui::BeginDragDropTarget()) {
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("RESOURCE_ITEM")) {
-					const wchar_t* path = (const wchar_t*)payload->Data;
+					char* path = (char*)payload->Data;
 					auto texturePath = std::filesystem::path("Resources") / path;
 					component.texture = Texture2D::Create(texturePath.string());
 				}

@@ -3,8 +3,10 @@ using namespace metal;
 
 struct v2f {
     float4 position [[position]];
-    half3 color;
+	float4 color;
     float2 texCoord;
+    float  texIndex;
+	float  tilingFactor;
 };
 
 struct InstanceData {
@@ -13,9 +15,11 @@ struct InstanceData {
 };
 
 struct VertexData {
-    packed_float2 position;
-    packed_float2 texCoord;
-    float tilingFactor;
+	float4 position;
+    float4 color;
+    float2 texCoord;
+    float  texIndex;
+	float  tilingFactor;
 };
 
 struct GlobalUniforms {
@@ -24,26 +28,27 @@ struct GlobalUniforms {
 
 struct Push {
     float4x4 model;
-    packed_float3 color;
 };
 
-v2f vertex vertexMain(uint vertexId                         [[vertex_id]],
-                      device const VertexData* vertexData   [[buffer(0)]],
-                      device const GlobalUniforms& uniform  [[buffer(1)]],
-                      constant Push& push                   [[buffer(2)]]) {
+v2f vertex vertexMain(uint vertexId                         		[[vertex_id]],
+                      device const VertexData* vertexData   		[[buffer(0)]],
+                      device const GlobalUniforms& globalUniforms  	[[buffer(1)]],
+                      constant Push& pushConstant                  	[[buffer(2)]]) {
     v2f o;
-    float4 pos = float4(vertexData[vertexId].position, 0.0, 1.0);
-    pos = uniform.viewProjection * push.model * pos;
-    o.position = pos;
-    o.color = half3(push.color);
+
+    o.position = globalUniforms.viewProjection * pushConstant.model * vertexData[vertexId].position;
+    o.color = float4(vertexData[vertexId].color);
     o.texCoord = vertexData[vertexId].texCoord;
+	o.texIndex = vertexData[vertexId].texIndex;
+	o.tilingFactor = vertexData[vertexId].tilingFactor;
+
     return o;
 }
 
-half4 fragment fragmentMain(v2f in [[stage_in]],
-                            texture2d<half, access::sample> tex [[texture(0)]]) {
+float4 fragment fragmentMain(v2f in [[stage_in]],
+                        	array<texture2d<float, access::sample>, 32> tex [[texture(0)]]) {
     constexpr sampler s(address::repeat, filter::linear);
-    half3 texel = tex.sample(s, in.texCoord).rgb;
+    float4 texel = tex[in.texIndex].sample(s, in.texCoord * in.tilingFactor).rgba;
 
-    return half4(in.color * texel , 1.0);
+    return texel * float4(in.color);
 }

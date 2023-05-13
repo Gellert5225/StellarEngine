@@ -3,6 +3,9 @@
 
 #include <imgui.h>
 #include "Stellar/ImGui/imgui_impl_glfw.h"
+#include "Stellar/ImGui/WebFont.h"
+#include "Stellar/ImGui/ImGuiFont.h"
+
 #include "Stellar/Platform/Metal/ImGui/imgui_impl_metal.h"
 #include "Stellar/Platform/Metal/Device/MetalDevice.h"
 #include "Stellar/Platform/Metal/SwapChain/MetalSwapChain.h"
@@ -18,8 +21,31 @@ namespace Stellar {
     void MetalImGuiLayer::onAttach() {
         ImGui::CreateContext();
         ImGui::StyleColorsDark();
+
+		setDarkThemeColors();
+
+		ImGuiIO& io = ImGui::GetIO();
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+		io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/static/OpenSans/OpenSans-Bold.ttf", 18.0f);
+		io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/static/OpenSans/OpenSans-Regular.ttf", 18.0f);
+		io.Fonts->AddFontFromFileTTF("Resources/Fonts/SourceCodePro/static/SourceCodePro-Bold.ttf", 18.0f);
+		io.Fonts->AddFontFromFileTTF("Resources/Fonts/SourceCodePro/static/SourceCodePro-Medium.ttf", 18.0f);
+		io.Fonts->AddFontFromFileTTF("Resources/Fonts/SourceCodePro/static/SourceCodePro-ExtraBold.ttf", 18.0f);
+
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/static/OpenSans/OpenSans-SemiBold.ttf", 15.0f);
+
+		static const ImWchar s_FontAwesomeRanges[] = { STLR_ICON_MIN_FA, STLR_ICON_MAX_FA, 0 };
+		UI::FontConfiguration fontAwesome;
+		fontAwesome.FontName = "FontAwesome";
+		fontAwesome.FilePath = "Resources/Fonts/FontAwesome/fa-solid-900.ttf";
+		fontAwesome.Size = 15.0f;
+		fontAwesome.GlyphRanges = s_FontAwesomeRanges;
+		fontAwesome.MergeWithLast = true;
+		UI::Fonts::Add(fontAwesome);
         
-        ImGuiIO& io = ImGui::GetIO();
         io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
         io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -82,4 +108,6 @@ namespace Stellar {
     }
 
     void MetalImGuiLayer::onImGuiRender() { }
+
+	void MetalImGuiLayer::onEvent(Event& e) {}
 }

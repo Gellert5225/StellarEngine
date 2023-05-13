@@ -12,8 +12,6 @@ file(GLOB_RECURSE StellarEditor_SRC
 
 find_package(glfw3 CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
-LINK_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR}/../Stellar/Debug)
-message(STATUS "BIN DIR \"${CMAKE_CURRENT_BINARY_DIR}/../Stellar/Debug\"")
 
 add_executable(StellarEditor ${StellarEditor_SRC})
 
@@ -25,6 +23,13 @@ target_include_directories(StellarEditor PUBLIC
 	${Stb_INCLUDE_DIR})
 target_link_libraries(StellarEditor PUBLIC spdlog::spdlog spdlog::spdlog_header_only)
 target_link_libraries(StellarEditor PUBLIC Stellar)
+
+set_target_properties(StellarEditor
+    PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>"
+    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>"
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>"
+)
 
 add_custom_target(copy_resources ALL
 	COMMAND ${CMAKE_COMMAND} -E copy_directory

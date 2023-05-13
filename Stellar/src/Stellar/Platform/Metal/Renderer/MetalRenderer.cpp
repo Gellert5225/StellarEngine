@@ -7,7 +7,9 @@
 #include "Stellar/Platform/Metal/Device/MetalDevice.h"
 #include "Stellar/Platform/Metal/Shader/MetalShader.h"
 #include "Stellar/Platform/Metal/Buffer/MetalBuffer.h"
+#include "Stellar/Platform/Metal/Buffer/MetalUniformBuffer.h"
 #include "Stellar/Platform/Metal/Texture/MetalTexture.h"
+#include "Stellar/Platform/Metal/Material/MetalMaterial.h"
 
 namespace Stellar {
     void MetalRenderer::init() {
@@ -17,29 +19,33 @@ namespace Stellar {
         framebufferSpec.height = 720;
         m_FrameBuffer = FrameBuffer::Create(framebufferSpec);
 
-        auto shader = Renderer::GetShaderLibrary()->get("shader");
-        m_Pipeline = new MetalPipeline(shader);
+        MTL::DepthStencilDescriptor* pDsDesc = MTL::DepthStencilDescriptor::alloc()->init();
+		pDsDesc->setDepthCompareFunction(MTL::CompareFunction::CompareFunctionLess);
+		pDsDesc->setDepthWriteEnabled(true);
 
-        m_UniformBuffer = Buffer::Create(BufferType::Uniform, sizeof(GlobalUniforms));
+		m_DepthStencilState = MetalDevice::GetInstance()->getDevice()->newDepthStencilState(pDsDesc);
+
+		pDsDesc->release();
     }
 
     void MetalRenderer::shutDown() {
-        delete m_Pipeline;
-        delete m_UniformBuffer;
     }
 
-    void MetalRenderer::beginRenderPass() {
+	void MetalRenderer::beginFrame() {
+		
+	}
+
+    void MetalRenderer::beginRenderPass(STLR_Ptr<CommandBuffer> commandBuffer, 
+										STLR_Ptr<RenderPass> renderPass, 
+										bool explicitClear) {
         // resize framebuffer
 
         pool = NS::AutoreleasePool::alloc()->init();
         m_CommandBuffer = MetalDevice::GetInstance()->getCommandQueue()->commandBuffer();
-
-        m_Encoder = m_CommandBuffer->renderCommandEncoder(((MetalFrameBuffer*)m_FrameBuffer)->getFrameBuffer());
-        m_Encoder->setRenderPipelineState(m_Pipeline->getPipelineState());
-        m_Encoder->setVertexBuffer((MTL::Buffer*)m_UniformBuffer->getBuffer(), 0, 1);
+        m_Encoder = m_CommandBuffer->renderCommandEncoder(m_FrameBuffer.As<MetalFrameBuffer>()->getFrameBuffer());
     }
 
-    void MetalRenderer::endRenderPass() {
+    void MetalRenderer::endRenderPass(STLR_Ptr<CommandBuffer> commandBuffer) {
         m_Encoder->endEncoding();
         m_CommandBuffer->commit();
 
@@ -52,19 +58,19 @@ namespace Stellar {
         m_ClearColor = {color.r, color.g, color.b, color.a};
     }
 
-    void MetalRenderer::renderGeometry(Buffer *vertexBuffer,
-                                       Buffer *indexBuffer,
-                                       Texture2D* texture,
-                                       const glm::vec4& color,
-                                       uint32_t indexCount,
-                                       const glm::mat4 &transform) {
+    void MetalRenderer::renderGeometry(STLR_Ptr<Buffer> vertexBuffer,
+										STLR_Ptr<Buffer> indexBuffer,
+										STLR_Ptr<Texture2D> texture,
+										const glm::vec4& color,
+										uint32_t indexCount,
+										const glm::mat4& transform) {
         Push p{};
         p.model = transform;
-        p.color = color;
-
+        //p.color = color;
+		
         m_Encoder->setVertexBuffer((MTL::Buffer*)vertexBuffer->getBuffer(), 0, 0);
         m_Encoder->setVertexBytes(&p, sizeof(Push), 2);
-        m_Encoder->setFragmentTexture(((MetalTexture*)texture)->getTexture(), 0);
+        m_Encoder->setFragmentTexture(texture.As<MetalTexture>()->getTexture(), 0);
         m_Encoder->drawIndexedPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle,
                                          indexCount, 
                                          MTL::IndexType::IndexTypeUInt16,
@@ -72,12 +78,41 @@ namespace Stellar {
                                          0);
     }
 
+	void MetalRenderer::renderGeometry(STLR_Ptr<CommandBuffer> renderCommandBuffer, 
+							STLR_Ptr<Pipeline> pipeline,
+							STLR_Ptr<UniformBufferSet> uniformBufferSet, 
+							STLR_Ptr<Material> material, 
+							STLR_Ptr<Buffer> vertexBuffer, 
+							STLR_Ptr<Buffer> indexBuffer, 
+							const glm::mat4& transform, 
+							uint32_t indexCount) {
+		Push p{};
+        p.model = transform;
+
+		STLR_Ptr<MetalUniformBuffer> uniformBuffer = uniformBufferSet->get(0, 0, 0);
+
+		auto metalPipeline = pipeline.As<MetalPipeline>();
+		m_Encoder->setRenderPipelineState(metalPipeline->getPipelineState());
+		m_Encoder->setDepthStencilState(m_DepthStencilState);
+		m_Encoder->setVertexBuffer(uniformBuffer->getBuffer(), 0, 1);
+        m_Encoder->setVertexBuffer((MTL::Buffer*)vertexBuffer->getBuffer(), 0, 0);
+        m_Encoder->setVertexBytes(&p, sizeof(Push), 2);
+
+		auto metalMaterial = material.As<MetalMaterial>();
+        m_Encoder->setFragmentTextures(metalMaterial->getMetalTextures(), NS::Range(0, 32));
+        m_Encoder->drawIndexedPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle,
+                                        indexCount, 
+                                        MTL::IndexType::IndexTypeUInt32,
+                                        (MTL::Buffer*)indexBuffer->getBuffer(),
+                                        0);
+	}
+
     void MetalRenderer::bindUbo(const GlobalUniforms& ubo) {
-        reinterpret_cast<GlobalUniforms*>(((MTL::Buffer*)m_UniformBuffer->getBuffer())->contents())->viewProjection = ubo.viewProjection;
-        ((MetalBuffer*)m_UniformBuffer)->didModifyrange();
+        // reinterpret_cast<GlobalUniforms*>(((MTL::Buffer*)m_UniformBuffer->getBuffer())->contents())->viewProjection = ubo.viewProjection;
+        // ((MetalBuffer*)m_UniformBuffer)->didModifyrange();
     }
 
-    FrameBuffer* MetalRenderer::getFrameBuffer() {
+    STLR_Ptr<FrameBuffer> MetalRenderer::getFrameBuffer() {
         return m_FrameBuffer;
     }
 
@@ -85,7 +120,9 @@ namespace Stellar {
 
     }
 
-    void MetalRenderer::renderGrid(Buffer* vertexBuffer, Buffer* indexBuffer, uint32_t indexCount) {
+    void MetalRenderer::renderGrid(STLR_Ptr<Buffer> vertexBuffer,
+                                STLR_Ptr<Buffer> indexBuffer,
+                                uint32_t indexCount) {
         
     }
 }

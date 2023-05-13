@@ -13,6 +13,7 @@ namespace Stellar {
 
         void begin() override;
         void end() override;
+		void onEvent(Event& e) override;
 
         void onAttach() override;
         void onDetach() override;

@@ -7,6 +7,12 @@ endif()
 
 if(UNIX AND NOT APPLE)
 	set(ENV{VCPKG_ROOT} "/home/gellert/Documents/vcpkg")
+	set(VCPKG_TARGET_TRIPLET x64-windows-static)
+endif()
+
+if(APPLE)
+	set(ENV{VCPKG_ROOT} "/Users/gellert/Desktop/Projects/vcpkg")
+	set(VCPKG_TARGET_TRIPLET arm64-osx)
 endif()
 
 set(vcpkg "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
@@ -15,8 +21,6 @@ if(NOT CMAKE_TOOLCHAIN_FILE AND EXISTS "${vcpkg}")
       CACHE FILEPATH "CMake toolchain file")
   message(STATUS "vcpkg toolchain found: ${CMAKE_TOOLCHAIN_FILE}")
 endif()
-
-set(VCPKG_TARGET_TRIPLET x64-windows-static)
 
 project(StellarEngine)
 
