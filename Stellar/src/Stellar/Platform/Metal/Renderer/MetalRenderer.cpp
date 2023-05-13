@@ -42,6 +42,9 @@ namespace Stellar {
 
         pool = NS::AutoreleasePool::alloc()->init();
         m_CommandBuffer = MetalDevice::GetInstance()->getCommandQueue()->commandBuffer();
+		m_CommandBuffer->addCompletedHandler([](MTL::CommandBuffer* pCmd) {
+
+		});
         m_Encoder = m_CommandBuffer->renderCommandEncoder(m_FrameBuffer.As<MetalFrameBuffer>()->getFrameBuffer());
     }
 
@@ -50,8 +53,6 @@ namespace Stellar {
         m_CommandBuffer->commit();
 
         pool->release();
-        //STLR_CORE_INFO("Command Buffer retain count: {0}", m_CommandBuffer->retainCount());
-        //STLR_CORE_INFO("Command Encoder retain count: {0}", m_Encoder->retainCount());
     }
 
     void MetalRenderer::setClearColor(const glm::vec4 &color) {
@@ -63,20 +64,7 @@ namespace Stellar {
 										STLR_Ptr<Texture2D> texture,
 										const glm::vec4& color,
 										uint32_t indexCount,
-										const glm::mat4& transform) {
-        Push p{};
-        p.model = transform;
-        //p.color = color;
-		
-        m_Encoder->setVertexBuffer((MTL::Buffer*)vertexBuffer->getBuffer(), 0, 0);
-        m_Encoder->setVertexBytes(&p, sizeof(Push), 2);
-        m_Encoder->setFragmentTexture(texture.As<MetalTexture>()->getTexture(), 0);
-        m_Encoder->drawIndexedPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle,
-                                         indexCount, 
-                                         MTL::IndexType::IndexTypeUInt16,
-                                         (MTL::Buffer*)indexBuffer->getBuffer(),
-                                         0);
-    }
+										const glm::mat4& transform) {}
 
 	void MetalRenderer::renderGeometry(STLR_Ptr<CommandBuffer> renderCommandBuffer, 
 							STLR_Ptr<Pipeline> pipeline,
@@ -107,10 +95,7 @@ namespace Stellar {
                                         0);
 	}
 
-    void MetalRenderer::bindUbo(const GlobalUniforms& ubo) {
-        // reinterpret_cast<GlobalUniforms*>(((MTL::Buffer*)m_UniformBuffer->getBuffer())->contents())->viewProjection = ubo.viewProjection;
-        // ((MetalBuffer*)m_UniformBuffer)->didModifyrange();
-    }
+    void MetalRenderer::bindUbo(const GlobalUniforms& ubo) {}
 
     STLR_Ptr<FrameBuffer> MetalRenderer::getFrameBuffer() {
         return m_FrameBuffer;

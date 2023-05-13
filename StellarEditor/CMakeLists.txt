@@ -15,6 +15,8 @@ find_package(spdlog CONFIG REQUIRED)
 
 add_executable(StellarEditor ${StellarEditor_SRC})
 
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${StellarEditor_SRC})
+
 target_include_directories(StellarEditor PUBLIC 
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>/../Stellar/src
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>/../Stellar/vendor/imgui

@@ -13,7 +13,7 @@ endif()
 
 if(APPLE)
 	set(ENV{VCPKG_ROOT} "/Users/gellert/Desktop/Projects/vcpkg")
-	set(VCPKG_TARGET_TRIPLET arm64-osx)
+	# set(VCPKG_TARGET_TRIPLET arm64-osx)
 endif()
 
 set(vcpkg "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")

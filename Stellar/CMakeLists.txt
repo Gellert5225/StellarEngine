@@ -106,6 +106,8 @@ file(GLOB IMGUIZMO_SRC
 
 add_library(Stellar ${Stellar_SRC} ${IMGUI_SRC} ${IMGUIZMO_SRC})
 
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${Stellar_SRC} ${IMGUI_SRC} ${IMGUIZMO_SRC})
+
 target_compile_definitions(Stellar PUBLIC STLR_BUILD_DLL GLFW_INCLUDE_NONE)
 
 target_include_directories(Stellar PUBLIC 

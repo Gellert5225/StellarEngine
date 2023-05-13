@@ -4,19 +4,26 @@ A custom game engine using C++ and Vulkan/Metal API.
 
 ## Table of Contents
 
-* [Introduction](#introduction)
-  * [How it works](#how-it-works)
-  * [Current stage](#current-stage)
-* [Dependencies](#dependencies)
-  * [GLFW](#glfw)
-  * [glm](#glm)
-  * [ImGui](#imgui)
-  * [Metal-cpp](#metal-cpp)
-  * [spdlog](#spdlog)
-* [Installation](#installation)
-  * [Prerequisite](#prerequisite)
-  * [Running](#running)
-* [ToDo](#todo)
+- [Stellar Engine](#stellar-engine)
+	- [Table of Contents](#table-of-contents)
+	- [Introduction](#introduction)
+		- [How it works](#how-it-works)
+		- [Current Stage](#current-stage)
+	- [Dependencies](#dependencies)
+		- [GLFW](#glfw)
+		- [GLM](#glm)
+			- [glm](#glm-1)
+			- [simd](#simd)
+		- [ImGui](#imgui)
+		- [Metal-cpp](#metal-cpp)
+		- [spdlog](#spdlog)
+	- [Installation](#installation)
+		- [Prerequisite](#prerequisite)
+		- [Running](#running)
+			- [From Command Line](#from-command-line)
+			- [From VS-Code](#from-vs-code)
+			- [From Xcode](#from-xcode)
+	- [ToDo](#todo)
 
 ## Introduction
 
@@ -127,17 +134,18 @@ I will try to list as detailed as possible. However I have not tested the build 
   * Clang++
   * pkg-config
   
-> Note: On maoOS, if you want to enable `Address Sanitation(Valgrind)` you need to manually install clang from llvm as the default clang in `/usr/bin` shipped by Apple does not support it.
+> Note: On macOS, if you want to enable `Address Sanitation(Valgrind)` you need to manually install clang from llvm as the default clang in `/usr/bin` shipped by Apple does not support it.
 
 ### Running
 
 #### From Command Line
 
-First create a build folder: `mkdir build && cd build`.
-Then Configure the project: `cmake ..`.
-
-* Debug: `cmake --build . --config Debug --target ALL_BUILD -j`
-* Release: `cmake --build . --config Release --target ALL_BUILD -j`
+1. Create a build folder: `mkdir build && cd build`.
+2. Configure the project: `cmake ..`.
+	* On Windows, the default generator is Visual Studio.
+	* On macOS, it is recommended to use Xcode as generator: `cmake .. -G Xcode`, as it provides Metal API Validation Layer. 
+  	And depending on your platform, whether an M1 or Intel, append `-DCMAKE_OSX_ARCHITECTURES=x86_64 or arm64`.
+3. Build the project: `cmake --build . --config Debug/Release`
 
 #### From VS-Code
 
@@ -145,7 +153,9 @@ Then Configure the project: `cmake ..`.
 
 #### From Xcode
 
-Select `Sandbox` from Scheme, then `CMD + R`
+After building the project using `cmake`, go to your build folder and open `StellarEngine.xcodeproj`.
+
+Select `StellarEditor` from Scheme, then `CMD + R`.
 
 ## ToDo
 
