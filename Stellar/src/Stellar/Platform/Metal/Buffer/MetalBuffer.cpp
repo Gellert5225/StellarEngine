@@ -33,8 +33,7 @@ namespace Stellar {
     }
 
 	void MetalBuffer::setData(void* buffer, uint32_t size, uint32_t offset) {
-		void* local;
-		memcpy(local, buffer, size);
+		memcpy(m_Buffer->contents(), buffer, size);
 	}
 
     void* MetalBuffer::getBuffer() const { 

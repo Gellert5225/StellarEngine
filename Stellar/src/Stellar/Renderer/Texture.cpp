@@ -20,7 +20,7 @@ namespace Stellar {
 			#endif
 			case RendererAPIType::Metal:
 			#if defined(__APPLE__)
-				return STLR_Ptr<MetalTexture>::Create(filePath);
+				return STLR_Ptr<MetalTexture>::Create(filePath, isImGuiTexture);
 			#endif
 			case RendererAPIType::None:
 				break;

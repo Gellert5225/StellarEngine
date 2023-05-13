@@ -10,7 +10,7 @@
 
 namespace Stellar {
 
-    MetalTexture::MetalTexture(const std::string& filePath) : Texture2D(filePath) {
+    MetalTexture::MetalTexture(const std::string& filePath, bool isImGui) : Texture2D(filePath) {
         bool loaded = loadImage(filePath);
         if (!loaded) {
             STLR_CORE_ERROR("Failed to load texture {0}", filePath);
@@ -18,9 +18,14 @@ namespace Stellar {
         }
 
         invalidate();
+
+		if (isImGui) {
+			m_IsImGuiTexture = true;
+			m_TextureId = m_Texture;
+		}
     }
 
-	MetalTexture::MetalTexture(ImageFormat format, uint32_t width, uint32_t height, const void* data) {
+	MetalTexture::MetalTexture(ImageFormat format, uint32_t width, uint32_t height, const void* data) : m_Width(width), m_Height(height) {
 		void* imageData = new uint8_t[width * height * 4];
 		if (data == nullptr) {
 			uint32_t whiteTex = 0xffffffff;

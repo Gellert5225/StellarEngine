@@ -24,6 +24,13 @@ target_include_directories(StellarEditor PUBLIC
 target_link_libraries(StellarEditor PUBLIC spdlog::spdlog spdlog::spdlog_header_only)
 target_link_libraries(StellarEditor PUBLIC Stellar)
 
+set_target_properties(StellarEditor
+    PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>"
+    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>"
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>"
+)
+
 add_custom_target(copy_resources ALL
 	COMMAND ${CMAKE_COMMAND} -E copy_directory
 			${CMAKE_SOURCE_DIR}/StellarEditor/Resources

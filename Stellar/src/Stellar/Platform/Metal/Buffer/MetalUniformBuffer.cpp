@@ -2,6 +2,8 @@
 
 #include "MetalUniformBuffer.h"
 
+#include "Stellar/Renderer/Uniforms.h"
+
 #include "Stellar/Platform/Metal/Device/MetalDevice.h"
 #include "Stellar/Core/Log.h"
 
@@ -16,8 +18,8 @@ namespace Stellar {
     }
 
 	void MetalUniformBuffer::setData(const void* data, uint32_t size, uint32_t offset) {
-		void* local;
-		memcpy(local, data, size);
+		reinterpret_cast<GlobalUniforms*>(m_Buffer->contents())->viewProjection = *(const glm::mat4*)data;
+        didModifyrange();
 	}
 
 	void MetalUniformBuffer::didModifyrange() {

@@ -7,6 +7,10 @@
 #include "Stellar/Platform/Vulkan/Command/VulkanCommandBuffer.h"
 #endif
 
+#if defined(__APPLE__)
+#include "Stellar/Platform/Metal/CommandBuffer/MetalCommandBuffer.h"
+#endif
+
 #include "Stellar/Core/Log.h"
 
 namespace Stellar {
@@ -18,8 +22,10 @@ namespace Stellar {
 				return STLR_Ptr<VulkanCommandBuffer>::Create(size);
 			#endif
 			case RendererAPIType::Metal:
-			STLR_CORE_ASSERT(false, "Metal is not yet supported");
+			#if defined __APPLE__
+				return STLR_Ptr<MetalCommandBuffer>::Create(size);
 				break;
+			#endif
 			case RendererAPIType::None:
 				break;
 		}

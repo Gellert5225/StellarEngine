@@ -8,7 +8,7 @@
 namespace Stellar {
     class STLR_API MetalTexture : public Texture2D {
     public:
-        MetalTexture(const std::string& filePath);
+        MetalTexture(const std::string& filePath, bool isImGui = false);
 		MetalTexture(ImageFormat format, uint32_t width, uint32_t height, const void* data);
         ~MetalTexture() override;
 
