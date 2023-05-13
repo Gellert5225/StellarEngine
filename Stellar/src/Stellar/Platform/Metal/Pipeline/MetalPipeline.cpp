@@ -24,7 +24,22 @@ namespace Stellar {
     }
 
 	MetalPipeline::MetalPipeline(PipelineSpecification spec) : m_Specification(spec) {
+		auto shader = spec.shader.As<MetalShader>();
+		MTL::Function* vertexFn = shader->getLibrary()->newFunction(NS::String::string("vertexMain", NS::StringEncoding::UTF8StringEncoding));
+        MTL::Function* fragFn = shader->getLibrary()->newFunction(NS::String::string("fragmentMain", NS::StringEncoding::UTF8StringEncoding));
 
+        MTL::RenderPipelineDescriptor* descriptor = MTL::RenderPipelineDescriptor::alloc()->init();
+        descriptor->setVertexFunction(vertexFn);
+        descriptor->setFragmentFunction(fragFn);
+        descriptor->colorAttachments()->object(0)->setPixelFormat(MTL::PixelFormat::PixelFormatBGRA8Unorm);
+
+        NS::Error* error = nullptr; 
+        m_PipelineState =  MetalDevice::GetInstance()->getDevice()->newRenderPipelineState(descriptor, &error);
+        STLR_CORE_ASSERT(m_PipelineState,  error->localizedDescription()->utf8String());
+
+        descriptor->release();
+        vertexFn->release();
+        fragFn->release();
 	}
 
 	void MetalPipeline::invalidate() {

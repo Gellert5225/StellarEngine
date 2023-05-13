@@ -233,7 +233,7 @@ namespace Stellar {
 			UI::Image(component.texture, { 200, 200 });
 			if (ImGui::BeginDragDropTarget()) {
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("RESOURCE_ITEM")) {
-					const wchar_t* path = (const wchar_t*)payload->Data;
+					char* path = (char*)payload->Data;
 					auto texturePath = std::filesystem::path("Resources") / path;
 					component.texture = Texture2D::Create(texturePath.string());
 				}

@@ -9,6 +9,7 @@
 #include "Stellar/Platform/Metal/Buffer/MetalBuffer.h"
 #include "Stellar/Platform/Metal/Buffer/MetalUniformBuffer.h"
 #include "Stellar/Platform/Metal/Texture/MetalTexture.h"
+#include "Stellar/Platform/Metal/Material/MetalMaterial.h"
 
 namespace Stellar {
     void MetalRenderer::init() {
@@ -18,8 +19,13 @@ namespace Stellar {
         framebufferSpec.height = 720;
         m_FrameBuffer = FrameBuffer::Create(framebufferSpec);
 
-        auto shader = Renderer::GetShaderLibrary()->get("shader");
-        m_Pipeline = STLR_Ptr<MetalPipeline>::Create(shader);
+        MTL::DepthStencilDescriptor* pDsDesc = MTL::DepthStencilDescriptor::alloc()->init();
+		pDsDesc->setDepthCompareFunction(MTL::CompareFunction::CompareFunctionLess);
+		pDsDesc->setDepthWriteEnabled(true);
+
+		m_DepthStencilState = MetalDevice::GetInstance()->getDevice()->newDepthStencilState(pDsDesc);
+
+		pDsDesc->release();
     }
 
     void MetalRenderer::shutDown() {
@@ -37,7 +43,6 @@ namespace Stellar {
         pool = NS::AutoreleasePool::alloc()->init();
         m_CommandBuffer = MetalDevice::GetInstance()->getCommandQueue()->commandBuffer();
         m_Encoder = m_CommandBuffer->renderCommandEncoder(m_FrameBuffer.As<MetalFrameBuffer>()->getFrameBuffer());
-        m_Encoder->setRenderPipelineState(m_Pipeline->getPipelineState());
     }
 
     void MetalRenderer::endRenderPass(STLR_Ptr<CommandBuffer> commandBuffer) {
@@ -62,7 +67,7 @@ namespace Stellar {
         Push p{};
         p.model = transform;
         //p.color = color;
-
+		
         m_Encoder->setVertexBuffer((MTL::Buffer*)vertexBuffer->getBuffer(), 0, 0);
         m_Encoder->setVertexBytes(&p, sizeof(Push), 2);
         m_Encoder->setFragmentTexture(texture.As<MetalTexture>()->getTexture(), 0);
@@ -86,15 +91,20 @@ namespace Stellar {
 
 		STLR_Ptr<MetalUniformBuffer> uniformBuffer = uniformBufferSet->get(0, 0, 0);
 
+		auto metalPipeline = pipeline.As<MetalPipeline>();
+		m_Encoder->setRenderPipelineState(metalPipeline->getPipelineState());
+		m_Encoder->setDepthStencilState(m_DepthStencilState);
 		m_Encoder->setVertexBuffer(uniformBuffer->getBuffer(), 0, 1);
         m_Encoder->setVertexBuffer((MTL::Buffer*)vertexBuffer->getBuffer(), 0, 0);
         m_Encoder->setVertexBytes(&p, sizeof(Push), 2);
-        //m_Encoder->setFragmentTexture(texture.As<MetalTexture>()->getTexture(), 0);
+
+		auto metalMaterial = material.As<MetalMaterial>();
+        m_Encoder->setFragmentTextures(metalMaterial->getMetalTextures(), NS::Range(0, 32));
         m_Encoder->drawIndexedPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle,
-                                         indexCount, 
-                                         MTL::IndexType::IndexTypeUInt32,
-                                         (MTL::Buffer*)indexBuffer->getBuffer(),
-                                         0);
+                                        indexCount, 
+                                        MTL::IndexType::IndexTypeUInt32,
+                                        (MTL::Buffer*)indexBuffer->getBuffer(),
+                                        0);
 	}
 
     void MetalRenderer::bindUbo(const GlobalUniforms& ubo) {

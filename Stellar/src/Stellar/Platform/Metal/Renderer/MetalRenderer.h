@@ -53,6 +53,7 @@ namespace Stellar {
         MTL::ClearColor m_ClearColor = {0.66f, 0.9f, 0.96f, 1.0f};
         MTL::RenderCommandEncoder* m_Encoder;
         MTL::CommandBuffer* m_CommandBuffer;
+		MTL::DepthStencilState* m_DepthStencilState;
         STLR_Ptr<MetalPipeline> m_Pipeline;
         STLR_Ptr<FrameBuffer> m_FrameBuffer;
         STLR_Ptr<UniformBuffer> m_UniformBuffer;

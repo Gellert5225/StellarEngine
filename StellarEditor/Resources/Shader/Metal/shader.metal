@@ -6,7 +6,7 @@ struct v2f {
 	float4 color;
     float2 texCoord;
     float  texIndex;
-	float tilingFactor;
+	float  tilingFactor;
 };
 
 struct InstanceData {
@@ -19,7 +19,7 @@ struct VertexData {
     float4 color;
     float2 texCoord;
     float  texIndex;
-	float tilingFactor;
+	float  tilingFactor;
 };
 
 struct GlobalUniforms {
@@ -40,13 +40,15 @@ v2f vertex vertexMain(uint vertexId                         [[vertex_id]],
     o.position = pos;
     o.color = float4(vertexData[vertexId].color);
     o.texCoord = vertexData[vertexId].texCoord;
+	o.texIndex = vertexData[vertexId].texIndex;
+	o.tilingFactor = vertexData[vertexId].tilingFactor;
     return o;
 }
 
 float4 fragment fragmentMain(v2f in [[stage_in]],
-                            texture2d<float, access::sample> tex [[texture(0)]]) {
+                        	array<texture2d<float, access::sample>, 32> tex [[texture(0)]]) {
     constexpr sampler s(address::repeat, filter::linear);
-    float4 texel = tex.sample(s, in.texCoord).rgba;
+    float4 texel = tex[in.texIndex].sample(s, in.texCoord * in.tilingFactor).rgba;
 
-    return float4(in.color);
+    return float4(in.color * texel);
 }
