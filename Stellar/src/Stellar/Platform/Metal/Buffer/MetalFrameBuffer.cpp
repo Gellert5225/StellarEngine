@@ -16,6 +16,16 @@ namespace Stellar {
         pTextureDesc->setStorageMode(MTL::StorageModePrivate);
         pTextureDesc->setUsage(MTL::TextureUsageRenderTarget | MTL::TextureUsageShaderRead);
 
+		MTL::TextureDescriptor* pDepthTextureDesc = MTL::TextureDescriptor::alloc()->init();
+        pDepthTextureDesc->setWidth(m_Width);
+        pDepthTextureDesc->setHeight(m_Height);
+        pDepthTextureDesc->setPixelFormat(MTL::PixelFormatDepth32Float);
+        pDepthTextureDesc->setTextureType(MTL::TextureType2D);
+        pDepthTextureDesc->setStorageMode(MTL::StorageModePrivate);
+        pDepthTextureDesc->setUsage(MTL::TextureUsageRenderTarget);
+
+		auto depth = MetalDevice::GetInstance()->getDevice()->newTexture(pDepthTextureDesc);
+
         m_Texture = MetalDevice::GetInstance()->getDevice()->newTexture(pTextureDesc);
 
         auto colorAttachment =m_FrameBuffer->colorAttachments()->object(0);
@@ -24,7 +34,14 @@ namespace Stellar {
         colorAttachment->setStoreAction(MTL::StoreActionStore);
         colorAttachment->setTexture(m_Texture);
 
+		auto depthAttach = m_FrameBuffer->depthAttachment();
+		depthAttach->setTexture(depth);
+		depthAttach->setClearDepth(1.0);
+		depthAttach->setStoreAction(MTL::StoreAction::StoreActionDontCare);
+
+		depth->release();
         pTextureDesc->release();
+		pDepthTextureDesc->release();
     }
 
     MetalFrameBuffer::~MetalFrameBuffer() {
