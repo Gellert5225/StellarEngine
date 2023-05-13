@@ -50,5 +50,5 @@ float4 fragment fragmentMain(v2f in [[stage_in]],
     constexpr sampler s(address::repeat, filter::linear);
     float4 texel = tex[in.texIndex].sample(s, in.texCoord * in.tilingFactor).rgba;
 
-    return float4(in.color * texel);
+    return texel * float4(in.color);
 }
