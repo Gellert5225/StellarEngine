@@ -136,6 +136,5 @@
 		"*.ipp": "cpp",
 		"resumable": "cpp",
 		"__std_stream": "cpp"
-	},
-	"cmake.cmakePath": "/usr/local/bin/cmake"
+	}
 }

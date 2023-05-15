@@ -243,7 +243,7 @@ namespace Stellar {
 	void VulkanSwapChain::createSemaphores() {
 		auto device = VulkanDevice::GetInstance()->logicalDevice();
 
-		m_ImagesInFlight.resize(getImageCount(), VK_NULL_HANDLE);
+		//m_ImagesInFlight.resize(getImageCount(), VK_NULL_HANDLE);
 		if (m_ImageAvailableSemaphores.size() != Renderer::MAX_FRAMES_IN_FLIGHT ||
 			m_RenderFinishedSemaphores.size() != Renderer::MAX_FRAMES_IN_FLIGHT) {
 			m_ImageAvailableSemaphores.resize(Renderer::MAX_FRAMES_IN_FLIGHT);
@@ -322,10 +322,10 @@ namespace Stellar {
 
 	void VulkanSwapChain::present() {
 		auto device = VulkanDevice::GetInstance()->logicalDevice();
-		if (m_ImagesInFlight[m_CurrentImageIndex] != VK_NULL_HANDLE) {
-			vkWaitForFences(device, 1, &m_ImagesInFlight[m_CurrentImageIndex], VK_TRUE, UINT64_MAX);
-		}
-		m_ImagesInFlight[m_CurrentImageIndex] = m_InFlightFences[m_CurrentFrameIndex];
+		// if (m_ImagesInFlight[m_CurrentImageIndex] != VK_NULL_HANDLE) {
+		// 	vkWaitForFences(device, 1, &m_ImagesInFlight[m_CurrentImageIndex], VK_TRUE, UINT64_MAX);
+		// }
+		// m_ImagesInFlight[m_CurrentImageIndex] = m_InFlightFences[m_CurrentFrameIndex];
 
 		VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
 
