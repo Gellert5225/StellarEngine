@@ -1,9 +1,6 @@
 #include "SceneHierarchyPanel.h"
 
 #include "Stellar/ImGui/ImGuiLayer.h"
-
-//#include "Stellar/Platform/Vulkan/ImGui/imgui_impl_vulkan.h"
-//#include "Stellar/Platform/Vulkan/Texture/VulkanTexture.h"
 #include "Stellar/ImGui/WebFont.h"
 
 #include <imgui.h>
@@ -233,10 +230,10 @@ namespace Stellar {
 			UI::Image(component.texture, { 200, 200 });
 			if (ImGui::BeginDragDropTarget()) {
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("RESOURCE_ITEM")) {
-#if defined(__linux__) || defined(_WIN64)
+#if defined(_WIN64)
 				const wchar_t* path = (const wchar_t*)payload->Data;
 #endif
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(__linux__)
 				char* path = (char*)payload->Data;
 #endif
 					auto texturePath = std::filesystem::path("Resources") / path;

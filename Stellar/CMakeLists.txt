@@ -23,7 +23,7 @@ find_package(yaml-cpp CONFIG REQUIRED)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/nfd)
 
-if (WIN32)
+if (WIN32 OR (UNIX AND NOT APPLE))
 	option(AUTO_LOCATE_VULKAN "AUTO_LOCATE_VULKAN" ON)
 
 	if(AUTO_LOCATE_VULKAN)
@@ -123,7 +123,7 @@ if (APPLE)
 endif()
 
 target_link_libraries(Stellar PUBLIC glfw)
-if (WIN32)
+if (WIN32 OR (UNIX AND NOT APPLE))
 	target_link_libraries(Stellar PUBLIC Vulkan::Vulkan)
 	target_link_libraries(Stellar PUBLIC ${Shaderc_ROOT})
 endif()

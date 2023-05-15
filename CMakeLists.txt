@@ -8,7 +8,7 @@ endif()
 
 if(UNIX AND NOT APPLE)
 	set(ENV{VCPKG_ROOT} "/home/gellert/Documents/vcpkg")
-	set(VCPKG_TARGET_TRIPLET x64-windows-static)
+	set(VCPKG_TARGET_TRIPLET x64-linux)
 endif()
 
 if(APPLE)
