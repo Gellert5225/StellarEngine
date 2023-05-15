@@ -105,6 +105,7 @@ file(GLOB IMGUIZMO_SRC
 )
 
 add_library(Stellar ${Stellar_SRC} ${IMGUI_SRC} ${IMGUIZMO_SRC})
+target_precompile_headers(Stellar PRIVATE src/stlrpch.h)
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${Stellar_SRC} ${IMGUI_SRC} ${IMGUIZMO_SRC})
 

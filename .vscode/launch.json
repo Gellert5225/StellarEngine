@@ -2,63 +2,61 @@
 	"version": "0.2.0",
     "configurations": [
 		{
-			"name": "macOS Launch",
+			"name": "Launch",
 			"type": "cppdbg",
 			"request": "launch",
 			"program":"${command:cmake.launchTargetPath}",
+			"linux": {
+				"name": "Linux Launch",
+				"type": "cppdbg",
+				"request": "launch",
+				"program": "${command:cmake.launchTargetPath}"
+			},
+			"windows": {
+				"name": "Linux Launch",
+				"type": "cppvsdbg",
+				"request": "launch",
+				"program": "${command:cmake.launchTargetPath}",
+				"console": "integratedTerminal",
+				"internalConsoleOptions": "openOnSessionStart",
+			},
+			"osx": {
+				"name": "Linux Launch",
+				"type": "cppdbg",
+				"request": "launch",
+				"program": "${command:cmake.launchTargetPath}",
+				"environment": [
+					{
+						"name": "METAL_DEVICE_WRAPPER_TYPE",
+						"value": "5"
+					},
+					{
+						"name": "METAL_ERROR_MODE",
+						"value": "0"
+					},
+					{
+						"name": "METAL_DEBUG_ERROR_MODE",
+						"value": "0"
+					},
+					{
+						"name": "METAL_DEVICE_FORCE_COMMAND_BUFFER_ENHANCED_ERRORS",
+						"value": "1"
+					},
+					{
+						"name": "METAL_DIAGNOSTICS_ENABLED",
+						"value": "1"
+					},
+					{
+						"name": "METAL_SHADER_VALIDATION",
+						"value": "1"
+					}
+				]
+			},
 			"args": [],
 			"stopAtEntry": false,
 			"cwd": "${command:cmake.getLaunchTargetDirectory}",
-			"environment": [
-				{
-					"name": "METAL_DEVICE_WRAPPER_TYPE",
-					"value": "5"
-				},
-				{
-					"name": "METAL_ERROR_MODE",
-					"value": "0"
-				},
-				{
-					"name": "METAL_DEBUG_ERROR_MODE",
-					"value": "0"
-				},
-				{
-					"name": "METAL_DEVICE_FORCE_COMMAND_BUFFER_ENHANCED_ERRORS",
-					"value": "1"
-				},
-				{
-					"name": "METAL_DIAGNOSTICS_ENABLED",
-					"value": "1"
-				},
-				{
-					"name": "METAL_SHADER_VALIDATION",
-					"value": "1"
-				}
-			],
 			"externalConsole": false,
 			"MIMode": "lldb"
-		},
-        {
-            "name": "Windows Launch",
-            "type": "cppvsdbg",
-            "request": "launch",
-            // Resolved by CMake Tools:
-            "program": "${command:cmake.launchTargetPath}",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${command:cmake.getLaunchTargetDirectory}",
-            "environment": [
-                {
-                    "name": "PATH",
-                    "value": "${env:PATH}:${command:cmake.getLaunchTargetDirectory}"
-                },
-                {
-                    "name": "OTHER_VALUE",
-                    "value": "Something something"
-                }
-            ],
-            "console": "integratedTerminal",
-			"internalConsoleOptions": "openOnSessionStart",
-        }
+		}
     ]
 }
