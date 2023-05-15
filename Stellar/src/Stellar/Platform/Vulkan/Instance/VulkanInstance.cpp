@@ -76,9 +76,9 @@ namespace Stellar {
 		uint32_t instanceVersion = VK_API_VERSION_1_3;
 		vkEnumerateInstanceVersion(&instanceVersion);
 		// 3 macros to extract version info
-		uint32_t major = VK_VERSION_MAJOR(instanceVersion);
-		uint32_t minor = VK_VERSION_MINOR(instanceVersion);
-		uint32_t patch = VK_VERSION_PATCH(instanceVersion);
+		uint32_t major = VK_API_VERSION_MAJOR(instanceVersion);
+		uint32_t minor = VK_API_VERSION_MINOR(instanceVersion);
+		uint32_t patch = VK_API_VERSION_PATCH(instanceVersion);
 
 		m_InstanceVersion = "Vulkan: v" + std::to_string(major) +
 				"." + std::to_string(minor) + "." + std::to_string(patch);
