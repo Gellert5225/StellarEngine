@@ -10,7 +10,8 @@
 				"name": "Linux Launch",
 				"type": "cppdbg",
 				"request": "launch",
-				"program": "${command:cmake.launchTargetPath}"
+				"program": "${command:cmake.launchTargetPath}",
+				"MIMode": "gdb"
 			},
 			"windows": {
 				"name": "Linux Launch",
