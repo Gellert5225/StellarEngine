@@ -18,7 +18,7 @@ namespace Stellar {
 		ImageFormat format = ImageFormat::RGBA;
 		uint32_t width = 1;
 		uint32_t height = 1;
-		bool generateMips = true;
+		bool generateMips = false;
 		bool isImGuiTexture = false;
 	};
 
@@ -31,9 +31,7 @@ namespace Stellar {
 
 		virtual uint64_t getHash() const = 0;
 		virtual void generateMips() = 0;
-
-		static STLR_Ptr<Texture2D> Create(const std::string& filePath, const TextureSpecification& spec);
-		static STLR_Ptr<Texture2D> Create(const TextureSpecification& spec, const void* data = nullptr);
+		virtual ImTextureID getImGuiTextureID() = 0;
 	
 		virtual bool operator==(const Texture2D& other) const {
 			return Handle == other.Handle;
@@ -43,7 +41,9 @@ namespace Stellar {
 			return !(*this == other);
 		}
 
-		virtual ImTextureID getImGuiTextureID() = 0;
+		static STLR_Ptr<Texture2D> Create(const std::string& filePath, const TextureSpecification& spec);
+		static STLR_Ptr<Texture2D> Create(const TextureSpecification& spec, const void* data = nullptr);
+		static uint32_t GetMipCount(uint32_t width, uint32_t height);
 	protected:
 		Texture2D() = default;
 		explicit Texture2D(std::string path) : m_Path(std::move(path)) {}

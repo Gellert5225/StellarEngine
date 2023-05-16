@@ -17,17 +17,18 @@
 
 namespace Stellar {
 	VulkanTexture::VulkanTexture(const std::string& filePath, const TextureSpecification& spec) : Texture2D(filePath), m_Specification(spec) {
+		m_Specification.generateMips = !m_Specification.isImGuiTexture;
 		bool loaded = loadImage(filePath);
 		if (!loaded) {
 			STLR_CONSOLE_LOG_ERROR("Failed to load texture {0}", filePath);
 			loadImage("../Resources/Textures/ErrorTexture.png");
 		}
 		ImageSpecification imageSpec;
-		imageSpec.format = spec.format;
+		imageSpec.format = m_Specification.format;
 		imageSpec.usage = ImageUsage::Texture;
 		imageSpec.width = m_Specification.width;
 		imageSpec.height = m_Specification.height;
-		imageSpec.mips = 1;
+		imageSpec.mips = m_Specification.generateMips ? Texture2D::GetMipCount(m_Specification.width, m_Specification.height) : 1;
 		m_Image = Image2D::Create(imageSpec);
 
 		invalidate();
@@ -41,7 +42,7 @@ namespace Stellar {
 	}
 
 	VulkanTexture::VulkanTexture(const TextureSpecification& spec, const void* data) : m_Specification(spec) {
-		m_ImageSize = spec.width * spec.height * 4;
+		m_ImageSize = m_Specification.width * m_Specification.height * 4;
 		void* imageData = new uint8_t[m_ImageSize];
 		if (data == nullptr) {
 			uint32_t whiteTex = 0xffffffff;
@@ -51,11 +52,11 @@ namespace Stellar {
 		m_Pixels = (unsigned char*)imageData;
 
 		ImageSpecification imageSpec;
-		imageSpec.format = spec.format;
+		imageSpec.format = m_Specification.format;
 		imageSpec.usage = ImageUsage::Texture;
 		imageSpec.width = m_Specification.width;
 		imageSpec.height = m_Specification.height;
-		imageSpec.mips = 1;
+		imageSpec.mips = m_Specification.generateMips ? Texture2D::GetMipCount(m_Specification.width, m_Specification.height) : 1;
 		m_Image = Image2D::Create(imageSpec);
 
 		invalidate();
@@ -174,10 +175,93 @@ namespace Stellar {
 		delete stagingBuffer;
 
 		((VulkanImage2D*)m_Image.raw())->updateDescriptor();
+
+		if (m_Specification.generateMips) generateMips();
 	}
 
 	void VulkanTexture::generateMips() {
+		auto device = VulkanDevice::GetInstance();
 
+		auto vulkanImage = m_Image.As<VulkanImage2D>();
+		auto imageInfo = (VulkanImageInfo*)vulkanImage->getImageInfo();
+
+		VkCommandBuffer commandBuffer = device->beginSingleTimeCommands();
+
+		VkImageMemoryBarrier barrier{};
+		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+		barrier.image = imageInfo->image;
+		barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		barrier.subresourceRange.baseArrayLayer = 0;
+		barrier.subresourceRange.layerCount = 1;
+		barrier.subresourceRange.levelCount = 1;
+
+		const auto mipLevels = Texture2D::GetMipCount(m_Specification.width, m_Specification.height);
+		int32_t width = (int32_t)m_Specification.width;
+		int32_t height = (int32_t)m_Specification.height;
+
+        for (uint32_t i = 1; i < mipLevels; i++) {
+            barrier.subresourceRange.baseMipLevel = i - 1;
+            barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+            barrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+            barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+            barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+
+            vkCmdPipelineBarrier(commandBuffer,
+                VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0,
+                0, nullptr,
+                0, nullptr,
+                1, &barrier);
+
+            VkImageBlit blit{};
+            blit.srcOffsets[0] = {0, 0, 0};
+            blit.srcOffsets[1] = {width, height, 1};
+            blit.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+            blit.srcSubresource.mipLevel = i - 1;
+            blit.srcSubresource.baseArrayLayer = 0;
+            blit.srcSubresource.layerCount = 1;
+            blit.dstOffsets[0] = {0, 0, 0};
+            blit.dstOffsets[1] = {width > 1 ? width / 2 : 1, height > 1 ? height / 2 : 1, 1 };
+            blit.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+            blit.dstSubresource.mipLevel = i;
+            blit.dstSubresource.baseArrayLayer = 0;
+            blit.dstSubresource.layerCount = 1;
+
+            vkCmdBlitImage(commandBuffer,
+                imageInfo->image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                imageInfo->image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                1, &blit,
+                VK_FILTER_LINEAR);
+
+            barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+            barrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+            barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+            barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+
+            vkCmdPipelineBarrier(commandBuffer,
+                VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0,
+                0, nullptr,
+                0, nullptr,
+                1, &barrier);
+
+            if (width > 1) width /= 2;
+            if (height > 1) height /= 2;
+        }
+
+		barrier.subresourceRange.baseMipLevel = mipLevels - 1;
+        barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+        barrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+        barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+
+		vkCmdPipelineBarrier(commandBuffer,
+            VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0,
+            0, nullptr,
+            0, nullptr,
+            1, &barrier);
+
+		device->endSingleTimeCommands(commandBuffer);
 	}
 
 	STLR_Ptr<Image2D> VulkanTexture::getImage() const {

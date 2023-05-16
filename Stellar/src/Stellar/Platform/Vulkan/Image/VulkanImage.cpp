@@ -105,7 +105,7 @@ namespace Stellar {
 		samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
 		samplerInfo.mipLodBias = 0.0f;
 		samplerInfo.minLod = 0.0f;
-		samplerInfo.maxLod = 0.0f;
+		samplerInfo.maxLod = static_cast<float>(m_Specification.mips);
 
 		VK_CHECK_RESULT(vkCreateSampler(device, &samplerInfo, nullptr, &m_Info.sampler));
 	}
