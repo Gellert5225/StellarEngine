@@ -17,7 +17,7 @@
 
 namespace Stellar {
 	VulkanTexture::VulkanTexture(const std::string& filePath, const TextureSpecification& spec) : Texture2D(filePath), m_Specification(spec) {
-		m_Specification.generateMips = !m_Specification.isImGuiTexture;
+		m_Specification.generateMips = m_Specification.generateMips && !m_Specification.isImGuiTexture;
 		bool loaded = loadImage(filePath);
 		if (!loaded) {
 			STLR_CONSOLE_LOG_ERROR("Failed to load texture {0}", filePath);
@@ -152,44 +152,74 @@ namespace Stellar {
 
 		device->endSingleTimeCommands(commandBuffer2);
 
-		// to access it in shader:
-		VkCommandBuffer commandBuffer3 = device->beginSingleTimeCommands();
+		// // to access it in shader:
+		uint32_t mipCount = m_Specification.generateMips ? Texture2D::GetMipCount(m_Specification.width, m_Specification.height) : 1;
+		if (mipCount <= 1) {
+			VkCommandBuffer commandBuffer3 = device->beginSingleTimeCommands();
 
-		barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-		barrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-		barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+			barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+			barrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+			barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
 
-		vkCmdPipelineBarrier(
-			commandBuffer3,
-			VK_PIPELINE_STAGE_TRANSFER_BIT, 
-			VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
-			0,
-			0, nullptr,
-			0, nullptr,
-			1, &barrier
-		);
-		
-		device->endSingleTimeCommands(commandBuffer3);
+			vkCmdPipelineBarrier(
+				commandBuffer3,
+				VK_PIPELINE_STAGE_TRANSFER_BIT, 
+				VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+				0,
+				0, nullptr,
+				0, nullptr,
+				1, &barrier
+			);
+			
+			device->endSingleTimeCommands(commandBuffer3);
+		} else {
+			// VkCommandBuffer commandBuffer3 = device->beginSingleTimeCommands();
+
+			// barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+			// barrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+			// barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+			// barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+
+			// vkCmdPipelineBarrier(
+			// 	commandBuffer3,
+			// 	VK_PIPELINE_STAGE_TRANSFER_BIT, 
+			// 	VK_PIPELINE_STAGE_TRANSFER_BIT,
+			// 	0,
+			// 	0, nullptr,
+			// 	0, nullptr,
+			// 	1, &barrier
+			// );
+			
+			// device->endSingleTimeCommands(commandBuffer3);
+		}
 
 		delete stagingBuffer;
 
-		((VulkanImage2D*)m_Image.raw())->updateDescriptor();
+		m_Image.As<VulkanImage2D>()->updateDescriptor();
 
-		if (m_Specification.generateMips) generateMips();
+		const auto mipLevels = Texture2D::GetMipCount(m_Specification.width, m_Specification.height);
+
+		if (m_Specification.generateMips && mipLevels > 1) generateMips();
 	}
 
 	void VulkanTexture::generateMips() {
+		VkFormatProperties formatProperties;
+    	vkGetPhysicalDeviceFormatProperties(VulkanDevice::GetInstance()->physicalDevice(), Utils::VulkanImageFormat(m_Specification.format), &formatProperties);
+
+		if (!(formatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT)) {
+			throw std::runtime_error("texture image format does not support linear blitting!");
+		}
+
 		auto device = VulkanDevice::GetInstance();
 
-		auto vulkanImage = m_Image.As<VulkanImage2D>();
-		auto imageInfo = (VulkanImageInfo*)vulkanImage->getImageInfo();
+		auto info = (VulkanImageInfo*)m_Image->getImageInfo();
 
 		VkCommandBuffer commandBuffer = device->beginSingleTimeCommands();
 
 		VkImageMemoryBarrier barrier{};
 		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-		barrier.image = imageInfo->image;
+		barrier.image = info->image;
 		barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 		barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 		barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -229,8 +259,8 @@ namespace Stellar {
             blit.dstSubresource.layerCount = 1;
 
             vkCmdBlitImage(commandBuffer,
-                imageInfo->image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-                imageInfo->image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                info->image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                info->image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                 1, &blit,
                 VK_FILTER_LINEAR);
 

@@ -108,6 +108,8 @@ namespace Stellar {
 		samplerInfo.maxLod = static_cast<float>(m_Specification.mips);
 
 		VK_CHECK_RESULT(vkCreateSampler(device, &samplerInfo, nullptr, &m_Info.sampler));
+
+		updateDescriptor();
 	}
 
 	void VulkanImage2D::release() {

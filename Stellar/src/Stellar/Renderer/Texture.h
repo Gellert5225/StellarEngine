@@ -18,7 +18,7 @@ namespace Stellar {
 		ImageFormat format = ImageFormat::RGBA;
 		uint32_t width = 1;
 		uint32_t height = 1;
-		bool generateMips = false;
+		bool generateMips = true;
 		bool isImGuiTexture = false;
 	};
 

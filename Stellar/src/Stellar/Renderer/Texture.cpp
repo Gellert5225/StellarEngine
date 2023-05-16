@@ -47,6 +47,6 @@ namespace Stellar {
 	}
 
 	uint32_t Texture2D::GetMipCount(uint32_t width, uint32_t height) {
-		return (uint32_t)std::floor(std::log2(glm::min(width, height))) + 1;
+		return (uint32_t)std::floor(std::log2(std::max(width, height))) + 1;
 	}
 }
