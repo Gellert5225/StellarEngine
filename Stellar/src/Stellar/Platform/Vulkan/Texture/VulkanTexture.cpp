@@ -16,23 +16,23 @@
 #include <stb_image.h>
 
 namespace Stellar {
-	VulkanTexture::VulkanTexture(const std::string& filePath, bool isImGui) : Texture2D(filePath) {
+	VulkanTexture::VulkanTexture(const std::string& filePath, const TextureSpecification& spec) : Texture2D(filePath), m_Specification(spec) {
 		bool loaded = loadImage(filePath);
 		if (!loaded) {
 			STLR_CONSOLE_LOG_ERROR("Failed to load texture {0}", filePath);
 			loadImage("../Resources/Textures/ErrorTexture.png");
 		}
 		ImageSpecification imageSpec;
-		imageSpec.format = ImageFormat::RGBA;
+		imageSpec.format = spec.format;
 		imageSpec.usage = ImageUsage::Texture;
-		imageSpec.width = m_Width;
-		imageSpec.height = m_Height;
+		imageSpec.width = m_Specification.width;
+		imageSpec.height = m_Specification.height;
 		imageSpec.mips = 1;
 		m_Image = Image2D::Create(imageSpec);
 
 		invalidate();
 
-		if (isImGui) {
+		if (spec.isImGuiTexture) {
 			m_IsImGuiTexture = true;
 			auto image = getImage();
 			auto imageInfo = (VulkanImageInfo*)image->getImageInfo();
@@ -40,21 +40,21 @@ namespace Stellar {
 		}
 	}
 
-	VulkanTexture::VulkanTexture(ImageFormat format, uint32_t width, uint32_t height, const void* data) : m_Width(width), m_Height(height) {
-		void* imageData = new uint8_t[width * height * 4];
+	VulkanTexture::VulkanTexture(const TextureSpecification& spec, const void* data) : m_Specification(spec) {
+		m_ImageSize = spec.width * spec.height * 4;
+		void* imageData = new uint8_t[m_ImageSize];
 		if (data == nullptr) {
 			uint32_t whiteTex = 0xffffffff;
 			data = &whiteTex;
 		}
-		memcpy(imageData, data, width * height * 4);
+		memcpy(imageData, data, m_ImageSize);
 		m_Pixels = (unsigned char*)imageData;
-		m_ImageSize = width * height * 4;
 
 		ImageSpecification imageSpec;
-		imageSpec.format = ImageFormat::RGBA;
+		imageSpec.format = spec.format;
 		imageSpec.usage = ImageUsage::Texture;
-		imageSpec.width = m_Width;
-		imageSpec.height = m_Height;
+		imageSpec.width = m_Specification.width;
+		imageSpec.height = m_Specification.height;
 		imageSpec.mips = 1;
 		m_Image = Image2D::Create(imageSpec);
 
@@ -73,8 +73,8 @@ namespace Stellar {
 
 		if (!m_Pixels) return false;
 
-		m_Width = texWidth;
-		m_Height = texHeight;
+		m_Specification.width = texWidth;
+		m_Specification.height = texHeight;
 		return true;
 	}
 
@@ -138,7 +138,7 @@ namespace Stellar {
 		region.imageSubresource.baseArrayLayer = 0;
 		region.imageSubresource.layerCount = 1;
 		region.imageOffset = {0, 0, 0};
-		region.imageExtent = { m_Width, m_Height, 1 };
+		region.imageExtent = { m_Specification.width,  m_Specification.height, 1 };
 
 		vkCmdCopyBufferToImage(
 			commandBuffer2,
@@ -174,6 +174,10 @@ namespace Stellar {
 		delete stagingBuffer;
 
 		((VulkanImage2D*)m_Image.raw())->updateDescriptor();
+	}
+
+	void VulkanTexture::generateMips() {
+
 	}
 
 	STLR_Ptr<Image2D> VulkanTexture::getImage() const {

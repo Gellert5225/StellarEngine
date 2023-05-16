@@ -8,11 +8,12 @@
 namespace Stellar {
 	class VulkanTexture : public Texture2D {
 	public:
-		VulkanTexture(const std::string& filePath, bool isImGui = false);
-		VulkanTexture(ImageFormat format, uint32_t width, uint32_t height, const void* data);
+		VulkanTexture(const std::string& filePath, const TextureSpecification& spec);
+		VulkanTexture(const TextureSpecification& spec, const void* data);
 		~VulkanTexture() override;
 
 		uint64_t getHash() const override;
+		void generateMips() override;
 
 		ImTextureID getImGuiTextureID() override;
 		// Vulkan
@@ -23,8 +24,7 @@ namespace Stellar {
 	protected:
 		virtual bool loadImage(const std::string& filePath) override;
 	private:
-		uint32_t m_Width{};
-		uint32_t m_Height{};
+		TextureSpecification m_Specification;
 		unsigned char* m_Pixels{};
 		VkDeviceSize m_ImageSize{};
 		VkDescriptorSet m_DescriptorSet = VK_NULL_HANDLE;

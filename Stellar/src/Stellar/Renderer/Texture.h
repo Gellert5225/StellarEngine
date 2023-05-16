@@ -14,6 +14,14 @@
 namespace Stellar {
 	using AssetHandle = UUID;
 
+	struct TextureSpecification {
+		ImageFormat format = ImageFormat::RGBA;
+		uint32_t width = 1;
+		uint32_t height = 1;
+		bool generateMips = true;
+		bool isImGuiTexture = false;
+	};
+
 	class Texture2D : public STLR_Base {
 	public:
 		AssetHandle Handle;
@@ -22,9 +30,10 @@ namespace Stellar {
 		std::string getPath() const { return m_Path; }
 
 		virtual uint64_t getHash() const = 0;
+		virtual void generateMips() = 0;
 
-		static STLR_Ptr<Texture2D> Create(const std::string& filePath, bool isImGuiTexture = false);
-		static STLR_Ptr<Texture2D> Create(ImageFormat format, uint32_t width = 1, uint32_t height = 1, const void* data = nullptr);
+		static STLR_Ptr<Texture2D> Create(const std::string& filePath, const TextureSpecification& spec);
+		static STLR_Ptr<Texture2D> Create(const TextureSpecification& spec, const void* data = nullptr);
 	
 		virtual bool operator==(const Texture2D& other) const {
 			return Handle == other.Handle;

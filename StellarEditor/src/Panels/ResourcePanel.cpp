@@ -11,9 +11,11 @@ namespace Stellar {
 	static const std::filesystem::path s_ResourcePath = "Resources";
 
 	ResourcePanel::ResourcePanel() : m_CurrentDir(s_ResourcePath) {
-		m_FolderIcon = Texture2D::Create("Resources/Icons/folder.png", true);
-		m_FileIcon = Texture2D::Create("Resources/Icons/file.png", true);
-		m_ArrowBackIcon = Texture2D::Create("Resources/Icons/arrow_back.png", true);
+		TextureSpecification spec{};
+		spec.isImGuiTexture = true;
+		m_FolderIcon = Texture2D::Create("Resources/Icons/folder.png", spec);
+		m_FileIcon = Texture2D::Create("Resources/Icons/file.png", spec);
+		m_ArrowBackIcon = Texture2D::Create("Resources/Icons/arrow_back.png", spec);
 	}
 
 	void ResourcePanel::onImGuiRender(bool &isOpen) {

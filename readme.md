@@ -171,9 +171,12 @@ Select `StellarEditor` from Scheme, then `CMD + R`.
 * [x] Metal-cpp
 * [x] macOS support
 * [x] Better 2D renderer
+* [ ] DirectX 12
 * [ ] Load model
 * [ ] PBR
 * [ ] IBL
+* [ ] SSAO
 * [ ] Deferred rendering
 * [ ] Memory allocator
 * [ ] Multi-threading
+* [ ] Ray Tracing

@@ -65,7 +65,7 @@ namespace Stellar {
 		m_QuadIndexBuffer = Buffer::Create(BufferType::Index, MaxIndices, quadIndices);
 		delete[] quadIndices;
 
-		m_WhiteTexture = Texture2D::Create(ImageFormat::RGBA, 1, 1);
+		m_WhiteTexture = Texture2D::Create({});
 		m_TextureSlots[0] = m_WhiteTexture;
 
 		m_RenderCommandBuffer = CommandBuffer::Create(Renderer::MAX_FRAMES_IN_FLIGHT);

@@ -208,7 +208,7 @@ namespace Stellar {
 				ImGui::CloseCurrentPopup();
 			}
 			if (ImGui::MenuItem("Sprite Renderer")) {
-				m_SelectionContext.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, Texture2D::Create(ImageFormat::RGBA));
+				m_SelectionContext.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, Texture2D::Create({}));
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::EndPopup();
@@ -237,7 +237,7 @@ namespace Stellar {
 				char* path = (char*)payload->Data;
 #endif
 					auto texturePath = std::filesystem::path("Resources") / path;
-					component.texture = Texture2D::Create(texturePath.string());
+					component.texture = Texture2D::Create(texturePath.string(), {});
 				}
 				ImGui::EndDragDropTarget();
 			}
