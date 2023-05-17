@@ -13,8 +13,13 @@ namespace Stellar {
 	Scene::~Scene() { }
 
 	Entity Scene::createEntity(const std::string& name) {
+		return createEntity(UUID(), name);
+	}
+
+	Entity Scene::createEntity(UUID id, const std::string& name) {
 		Entity entity = { m_Registry.create(), this };
 		
+		entity.addComponent<IDComponent>(id);
 		entity.addComponent<TransformComponent>();
 		auto& tag = entity.addComponent<TagComponent>();
 		tag.tag = name == "" ? "Entity" : name ;

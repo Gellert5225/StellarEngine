@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Stellar/Core/Core.h"
+#include "Stellar/Core/UUID.h"
 #include "Stellar/Core/Timestep.h"
 #include "Stellar/Core/STLRBase.h"
 #include "Stellar/Editor/EditorCamera.h"
@@ -18,6 +19,7 @@ namespace Stellar {
 		~Scene();
 
 		Entity createEntity(const std::string& name = "");
+		Entity createEntity(UUID id, const std::string& name = "");
 		void destroyEntity(Entity entity);
 
 		void onUpdate(STLR_Ptr<Renderer2D>& renderer2D, Timestep ts);

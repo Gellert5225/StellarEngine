@@ -1,13 +1,13 @@
 Scene: Untitled
 Entities:
-  - Entity: 1234
+  - Entity: 16068184397999965448
     TagComponent:
       Tag: Scene Camera
     TransformComponent:
       Translation: [0, -1, 1]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-  - Entity: 1234
+  - Entity: 12031245447736382714
     TagComponent:
       Tag: Quad Square
     TransformComponent:
@@ -17,7 +17,7 @@ Entities:
     SpriteRendererComponent:
       Color: [1, 1, 1, 1]
       Texture: ""
-  - Entity: 1234
+  - Entity: 200660123304127226
     TagComponent:
       Tag: Logo Square
     TransformComponent:
@@ -27,7 +27,7 @@ Entities:
     SpriteRendererComponent:
       Color: [1, 1, 1, 1]
       Texture: Resources/Textures/StellarEngine.png
-  - Entity: 1234
+  - Entity: 15491236983576878201
     TagComponent:
       Tag: Example Square
     TransformComponent:

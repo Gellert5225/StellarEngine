@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Stellar/Core/Core.h"
+#include "Stellar/Core/UUID.h"
 #include "Stellar/Renderer/Texture.h"
 #include "Stellar/Renderer/Camera.h"
 #include "Stellar/Scene/SceneCamera.h"
@@ -13,6 +14,13 @@
 #include <string>
 
 namespace Stellar {
+	struct IDComponent {
+		UUID uuid;
+
+		IDComponent() = default;
+		IDComponent(const IDComponent&) = default;
+	};
+
 	struct TagComponent {
 		std::string tag;
 		TagComponent() = default;

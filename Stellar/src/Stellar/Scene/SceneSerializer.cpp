@@ -94,8 +94,9 @@ namespace Stellar {
 	}
 
 	static void SerializeEntity(YAML::Emitter& out, Entity entity) {
+		STLR_CORE_ASSERT(entity.hasComponent<IDComponent>());
 		out << YAML::BeginMap;
-		out << YAML::Key << "Entity" << YAML::Value << "1234";
+		out << YAML::Key << "Entity" << YAML::Value << entity.getUUID();
 
 		if (entity.hasComponent<TagComponent>()) {
 			auto& tag = entity.getComponent<TagComponent>().tag;
@@ -201,7 +202,7 @@ namespace Stellar {
 					name = tagComponent["Tag"].as<std::string>();
 				STLR_CONSOLE_LOG_DEBUG("Deserialized entity with ID: {0}, name: {1}", uuid, name);
 
-				Entity deserialized = m_Scene->createEntity(name);
+				Entity deserialized = m_Scene->createEntity(uuid, name);
 
 				auto transform = entity["TransformComponent"];
 				if (transform) {

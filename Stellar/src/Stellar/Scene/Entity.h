@@ -2,6 +2,8 @@
 
 #include "Stellar/Core/Core.h"
 #include "Stellar/Core/Log.h"
+#include "Stellar/Core/UUID.h"
+#include "Stellar/Scene/Components.h"
 #include "Stellar/Scene/Scene.h"
 
 #include <entt/entt.hpp>
@@ -35,6 +37,8 @@ namespace Stellar {
 			STLR_CORE_ASSERT(hasComponent<T>(), "Entity does not have component");
 			m_Scene->m_Registry.remove<T>(m_Entity);
 		}
+
+		UUID getUUID() { return getComponent<IDComponent>().uuid; }
 
 		operator bool() const { return m_Entity != entt::null; }
 		operator uint32_t() const { return (uint32_t)m_Entity; }
