@@ -70,15 +70,6 @@ namespace Stellar {
 		s_RendererAPI->beginFrame();
 	}
 
-	void Renderer::RenderGeometry(STLR_Ptr<Buffer> vertexBuffer,
-								STLR_Ptr<Buffer> indexBuffer,
-								STLR_Ptr<Texture2D> texture,
-								const glm::vec4& color,
-								uint32_t indexCount,
-								const glm::mat4& transform) {
-		s_RendererAPI->renderGeometry(vertexBuffer, indexBuffer, texture, color, indexCount, transform);
-	}
-
 	void Renderer::RenderGeometry(STLR_Ptr<CommandBuffer> commandBuffer, 
 									STLR_Ptr<Pipeline> pipeline, 
 									STLR_Ptr<UniformBufferSet> uniformBufferSet, 

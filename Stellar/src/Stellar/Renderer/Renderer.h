@@ -31,12 +31,7 @@ namespace Stellar {
 		static void BeginFrame();
 
 		static void SetClearColor(const glm::vec4& color);
-		static void RenderGeometry(STLR_Ptr<Buffer> vertexBuffer,
-								STLR_Ptr<Buffer> indexBuffer,
-								STLR_Ptr<Texture2D>,
-								const glm::vec4& color,
-								uint32_t indexCount = 0,
-								const glm::mat4& transform = {});
+
 		static void RenderGeometry(STLR_Ptr<CommandBuffer> commandBuffer, 
 									STLR_Ptr<Pipeline> pipeline, 
 									STLR_Ptr<UniformBufferSet> uniformBufferSet, 

@@ -1,5 +1,7 @@
 #pragma once
-//#include <xhash>
+#if defined (_WIN64)
+#include <xhash>
+#endif
 
 namespace Stellar {
 	class UUID {

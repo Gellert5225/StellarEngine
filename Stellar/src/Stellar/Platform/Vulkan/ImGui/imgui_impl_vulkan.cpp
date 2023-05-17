@@ -1253,12 +1253,6 @@ struct VkDetails
 
 static std::unordered_map<void*, VkDetails> s_VulkanCache;
 
-void ImGui_ImplVulkan_RemoveTexture(VkDescriptorSet descriptor_set)
-{
-	auto pipeline = Stellar::VulkanRenderer::GetPipeline();
-    vkFreeDescriptorSets(Stellar::VulkanDevice::GetInstance()->logicalDevice(), pipeline->getDescriptorPool(), 1, &descriptor_set);
-}
-
 ImTextureID ImGui_ImplVulkan_AddTexture(VkSampler sampler, VkImageView image_view, VkImageLayout image_layout)
 {
     VkDescriptorSetAllocateInfo alloc_info = {};

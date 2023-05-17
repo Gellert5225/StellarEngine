@@ -9,6 +9,7 @@ namespace Stellar {
 
 	struct Push {
 		alignas(16) glm::mat4 model{1.f};
+		alignas(8) glm::vec2 screenSize{1.f, 1.f};
 	};
 
 	struct InstanceData {

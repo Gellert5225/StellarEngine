@@ -27,12 +27,6 @@ namespace Stellar {
 		void beginFrame() override;
 
 		void setClearColor(const glm::vec4& color) override;
-		void renderGeometry(STLR_Ptr<Buffer> vertexBuffer,
-							STLR_Ptr<Buffer>indexBuffer,
-							STLR_Ptr<Texture2D> texture,
-							const glm::vec4& color,
-							uint32_t indexCount,
-							const glm::mat4& transform) override;
 		void renderGeometry(STLR_Ptr<CommandBuffer> renderCommandBuffer, 
 							STLR_Ptr<Pipeline> pipeline,
 							STLR_Ptr<UniformBufferSet> uniformBufferSet, 
@@ -51,7 +45,6 @@ namespace Stellar {
 		void bindUbo(const GlobalUniforms& ubo) override;
 
 		// vulkan
-		static VulkanPipeline* GetPipeline();
 		static VkDescriptorPool GetDescriptorPool();
 		static VkDescriptorSet AllocateDesriptorSet(VkDescriptorSetAllocateInfo& allocInfo);
 	private:
@@ -63,7 +56,5 @@ namespace Stellar {
 
 		bool m_NeedResize = false;
 		uint32_t m_ViewPortWidth, m_ViewPortHeight;
-
-		void createUboDescriptorSet();
 	};
 }

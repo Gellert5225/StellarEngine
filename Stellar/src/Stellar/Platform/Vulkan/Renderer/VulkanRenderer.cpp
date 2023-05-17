@@ -15,7 +15,6 @@
 namespace Stellar {
 
 	struct VulkanRendererData {
-		VulkanPipeline* pipeline;
 		std::vector<VkDescriptorPool> DescriptorPools;
 
 		// UniformBufferSet -> Shader Hash -> Frame -> WriteDescriptor
@@ -98,8 +97,6 @@ namespace Stellar {
 		for (uint32_t i = 0; i < Renderer::MAX_FRAMES_IN_FLIGHT; i++) {
 			vkDestroyDescriptorPool(device, s_Data->DescriptorPools[i], nullptr);
 		}
-		delete s_Data->pipeline;
-		//delete m_GridPipeline;
 	}
 
 
@@ -169,35 +166,6 @@ namespace Stellar {
 		vkResetDescriptorPool(device, s_Data->DescriptorPools[bufferIndex], 0);
 	}
 
-	void VulkanRenderer::renderGeometry(STLR_Ptr<Buffer> vertexBuffer,
-										STLR_Ptr<Buffer> indexBuffer,
-										STLR_Ptr<Texture2D> texture,
-										const glm::vec4& color,
-										uint32_t indexCount,
-										const glm::mat4& transform) {
-		// Push push{};
-		// push.model = transform;
-		// push.color = color;
-
-		// auto textureDescriptorSet = ((VulkanTexture*)texture.raw())->getDescriptorSets();
-		// auto commandBuffer = (VkCommandBuffer)m_CommandBuffer->getActiveCommandBuffer();
-
-		// vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GraphicsPipeline->getPipeline());
-		// vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
-		// 						m_GraphicsPipeline->getPipelineLayout(),
-		// 						0, 1, &textureDescriptorSet, 0, nullptr);
-		// vkCmdPushConstants(commandBuffer, m_GraphicsPipeline->getPipelineLayout(),
-		// 				VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
-		// 				0, sizeof(Push), &push);
-
-		// VkDeviceSize offsets[] = {0};
-		// auto buffers = (VkBuffer)vertexBuffer->getBuffer();
-
-		// vkCmdBindVertexBuffers(commandBuffer, 0, 1, &buffers, offsets);
-		// vkCmdBindIndexBuffer(commandBuffer, (VkBuffer)indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT16);
-		// vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
-	}
-
 	void VulkanRenderer::renderGeometry(STLR_Ptr<CommandBuffer> renderCommandBuffer, 
 							STLR_Ptr<Pipeline> pipeline,
 							STLR_Ptr<UniformBufferSet> uniformBufferSet, 
@@ -208,6 +176,7 @@ namespace Stellar {
 							uint32_t indexCount) {
 		Push push{};
 		push.model = transform;
+		push.screenSize = {m_FrameBuffer->getSpecification().width, m_FrameBuffer->getSpecification().height};
 
 		auto vulkanMaterial = material.As<VulkanMaterial>();
 		uint32_t frameIndex = Renderer::GetCurrentFrameIndex();
@@ -256,39 +225,6 @@ namespace Stellar {
 
 	void VulkanRenderer::bindUbo(const GlobalUniforms& ubo) {
 		//m_UniformBuffer->setData(&ubo, sizeof(GlobalUniforms));
-	}
-
-	void VulkanRenderer::createUboDescriptorSet() {
-		// auto device = VulkanDevice::GetInstance()->logicalDevice();
-		// auto uboSetLayout = m_GraphicsPipeline->getUboSetLayout();
-
-		// VkDescriptorSetAllocateInfo allocInfo{};
-		// allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-		// allocInfo.descriptorPool = m_GraphicsPipeline->getDescriptorPool();
-		// allocInfo.descriptorSetCount = 1;
-		// allocInfo.pSetLayouts = &uboSetLayout;
-
-		// VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocInfo, &m_UboDescriptorSet));
-
-		// // VkDescriptorBufferInfo bufferInfo{};
-		// // bufferInfo.buffer = (VkBuffer)m_UniformBuffer->getBuffer();
-		// // bufferInfo.offset = 0;
-		// // bufferInfo.range = sizeof(GlobalUniforms);
-
-		// VkWriteDescriptorSet descriptorWrite{};
-		// descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		// descriptorWrite.dstSet = m_UboDescriptorSet;
-		// descriptorWrite.dstBinding = 0;
-		// descriptorWrite.dstArrayElement = 0;
-		// descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		// descriptorWrite.descriptorCount = 1;
-		// descriptorWrite.pBufferInfo = &m_UniformBuffer.As<VulkanUniformBuffer>()->getDescriptorBufferInfo();
-
-		// vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
-	}
-
-	VulkanPipeline* VulkanRenderer::GetPipeline() {
-		return s_Data->pipeline;
 	}
 
 	STLR_Ptr<FrameBuffer> VulkanRenderer::getFrameBuffer() {

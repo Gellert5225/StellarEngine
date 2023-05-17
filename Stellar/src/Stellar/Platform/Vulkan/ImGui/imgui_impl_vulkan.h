@@ -53,7 +53,6 @@ IMGUI_IMPL_API ImTextureID    ImGui_ImplVulkan_AddTexture(VkSampler sampler, VkI
 IMGUI_IMPL_API ImTextureID    ImGui_ImplVulkan_AddTexture_Custom(VkSampler sampler, VkImageView image_view, VkImageLayout image_layout, VkDescriptorSet descriptorSet);
 IMGUI_IMPL_API VkDescriptorSet ImGui_ImplVulkan_AddTexture_Original(VkSampler sampler, VkImageView image_view, VkImageLayout image_layout);
 IMGUI_IMPL_API ImTextureID    ImGui_ImplVulkan_UpdateTextureInfo(VkDescriptorSet descriptorSet, VkSampler sampler, VkImageView image_view, VkImageLayout image_layout);
-IMGUI_IMPL_API void			ImGui_ImplVulkan_RemoveTexture(VkDescriptorSet descriptor_set);
 IMGUI_IMPL_API void     ImGui_ImplVulkan_ClearCache();
 
 
