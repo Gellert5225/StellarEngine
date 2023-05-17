@@ -158,13 +158,14 @@ namespace Stellar {
 			ImGui::PopStyleVar();
 
 			ImGui::SameLine(contentRegionAvail.x - lineHeight * 0.5);
-			//ImGui::PushStyleColor(ImGuiCol_Text, textColor);
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(142.0f / 255.0f, 171.0f / 255.0f, 184.0f / 255.0f, 1.0f));
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 1.0f, 1.0f, 0.0f));
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.0f, 1.0f, 1.0f, 0.0f));
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
 			if (ImGui::Button(STLR_ICON_FA_GEAR, ImVec2{lineHeight, lineHeight})) {
 				ImGui::OpenPopup("ComponentSettings");
 			}
 
-			ImGui::PopStyleColor();
+			ImGui::PopStyleColor(3);
 
 			bool removeComponent = false;
 			if (ImGui::BeginPopup("ComponentSettings")) {

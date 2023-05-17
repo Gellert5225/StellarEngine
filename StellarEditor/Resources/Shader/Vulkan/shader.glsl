@@ -13,7 +13,6 @@ layout(set = 0, binding = 0) uniform GlobalUniforms {
 
 layout(push_constant) uniform Push {
     mat4 model;
-	vec2 screenSize;
 } push;
 
 struct VertexOutput {
@@ -24,19 +23,21 @@ struct VertexOutput {
 
 layout (location = 0) out VertexOutput Output;
 layout (location = 5) out flat float TexIndex;
-layout (location = 6) out vec2 screenSize;
 
 void main() {
     Output.color = inColor;
 	Output.texCoord = inTexCoord;
 	Output.tilingFactor = inTilingFactor;
 	TexIndex = inTexIndex;
-	screenSize = push.screenSize;
 	gl_Position = ubo.viewProjection * push.model * inPosition;
 }
 
 #version 450 core
 #pragma frag
+
+layout(push_constant) uniform ScreenSizePush {
+	vec2 screenSize;
+} p;
 
 layout(location = 0) out vec4 outColor;
 
@@ -48,7 +49,6 @@ struct VertexOutput {
 
 layout(location = 0) in VertexOutput Input;
 layout(location = 5) in flat float TexIndex;
-layout(location = 6) in vec2 screenSize;
 
 #extension GL_EXT_nonuniform_qualifier : enable
 
@@ -92,7 +92,7 @@ float QUALITY(int i) {
 void main() {
 	//outColor = Input.color;
 	// vec4 colorCenter = texture(texSampler[int(TexIndex)], Input.texCoord * Input.tilingFactor).rgba;
-	// vec2 inverseScreenSize = vec2(1.0/screenSize.x, 1.0/screenSize.y);
+	// vec2 inverseScreenSize = vec2(1.0/p.screenSize.x, 1.0/p.screenSize.y);
 
 	// // Luma at the current fragment
 	// float lumaCenter = rgb2luma(colorCenter);

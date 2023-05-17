@@ -58,10 +58,10 @@ namespace Stellar {
 		colors[ImGuiCol_FrameBgActive]		= ImGui::ColorConvertU32ToFloat4(Colors::Theme::propertyField);
 
 		// Tabs
-		colors[ImGuiCol_Tab]				= ImGui::ColorConvertU32ToFloat4(Colors::Theme::titlebar);
+		colors[ImGuiCol_Tab]				= ImGui::ColorConvertU32ToFloat4(Colors::Theme::tab);
 		colors[ImGuiCol_TabHovered]			= ImGui::ColorConvertU32ToFloat4(Colors::Theme::tabHovered);
 		colors[ImGuiCol_TabActive]			= ImGui::ColorConvertU32ToFloat4(Colors::Theme::tabActive);
-		colors[ImGuiCol_TabUnfocused]		= ImGui::ColorConvertU32ToFloat4(Colors::Theme::titlebar);
+		colors[ImGuiCol_TabUnfocused]		= ImGui::ColorConvertU32ToFloat4(Colors::Theme::tabUnfocused);
 		colors[ImGuiCol_TabUnfocusedActive] = colors[ImGuiCol_TabActive];
 
 		// Title
@@ -94,15 +94,15 @@ namespace Stellar {
 		colors[ImGuiCol_CheckMark]			= ImGui::ColorConvertU32ToFloat4(Colors::Theme::text);
 
 		// Separator
-		colors[ImGuiCol_Separator]			= ImGui::ColorConvertU32ToFloat4(Colors::Theme::backgroundDark);
+		colors[ImGuiCol_Separator]			= ImGui::ColorConvertU32ToFloat4(Colors::Theme::separater);
 		colors[ImGuiCol_SeparatorActive]	= ImGui::ColorConvertU32ToFloat4(Colors::Theme::highlight);
 		colors[ImGuiCol_SeparatorHovered]	= ImGui::ColorConvertU32ToFloat4(Colors::Theme::separaterHovered);
 
 		// Window Background
-		colors[ImGuiCol_WindowBg]			= ImGui::ColorConvertU32ToFloat4(Colors::Theme::titlebar);
-		colors[ImGuiCol_ChildBg]			= ImGui::ColorConvertU32ToFloat4(Colors::Theme::background);
+		colors[ImGuiCol_WindowBg]			= ImGui::ColorConvertU32ToFloat4(Colors::Theme::background);
+		colors[ImGuiCol_ChildBg]			= ImGui::ColorConvertU32ToFloat4(Colors::Theme::childBackground);
 		colors[ImGuiCol_PopupBg]			= ImGui::ColorConvertU32ToFloat4(Colors::Theme::backgroundPopup);
-		colors[ImGuiCol_Border]				= ImGui::ColorConvertU32ToFloat4(Colors::Theme::backgroundDark);
+		colors[ImGuiCol_Border]				= ImGui::ColorConvertU32ToFloat4(Colors::Theme::border);
 
 		// Tables
 		colors[ImGuiCol_TableHeaderBg]		= ImGui::ColorConvertU32ToFloat4(Colors::Theme::groupHeader);

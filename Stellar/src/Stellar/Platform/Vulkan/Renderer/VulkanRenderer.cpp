@@ -176,7 +176,9 @@ namespace Stellar {
 							uint32_t indexCount) {
 		Push push{};
 		push.model = transform;
-		push.screenSize = {m_FrameBuffer->getSpecification().width, m_FrameBuffer->getSpecification().height};
+
+		ScreenPush screenPush{};
+		screenPush.screenSize = {m_FrameBuffer->getSpecification().width, m_FrameBuffer->getSpecification().height};
 
 		auto vulkanMaterial = material.As<VulkanMaterial>();
 		uint32_t frameIndex = Renderer::GetCurrentFrameIndex();
@@ -203,6 +205,9 @@ namespace Stellar {
 			vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, layout, 0, 1, &descriptorSet, 0, nullptr);
 
 		vkCmdPushConstants(commandBuffer, layout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(Push), &push);
+#ifdef USE_FXAA
+		vkCmdPushConstants(commandBuffer, layout, VK_SHADER_STAGE_FRAGMENT_BIT, 64, sizeof(ScreenPush), &screenPush);
+#endif
 		vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
 	}
 

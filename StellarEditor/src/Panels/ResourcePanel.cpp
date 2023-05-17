@@ -22,9 +22,11 @@ namespace Stellar {
 		ImGui::Begin("Resources");
 
 		if (m_CurrentDir != std::filesystem::path(s_ResourcePath)) {
+			ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(1,1,1,0));
 			if (ImGui::ImageButton(m_ArrowBackIcon->getImGuiTextureID(), {20, 20})) {
 				m_CurrentDir = m_CurrentDir.parent_path();
 			}
+			ImGui::PopStyleColor();
 		}
 
 		float padding = 10.0f;
