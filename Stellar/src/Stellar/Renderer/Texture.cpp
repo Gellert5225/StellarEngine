@@ -45,4 +45,8 @@ namespace Stellar {
 		STLR_CORE_ASSERT(false, "Unknown RendererAPI");
 		return nullptr;
 	}
+
+	uint32_t Texture2D::GetMipCount(uint32_t width, uint32_t height) {
+		return (uint32_t)std::floor(std::log2(std::max(width, height))) + 1;
+	}
 }

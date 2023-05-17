@@ -43,8 +43,8 @@ namespace Stellar {
 		VkImageCreateInfo imageInfo{};
 		imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 		imageInfo.imageType = VK_IMAGE_TYPE_2D;
-		imageInfo.extent.width = static_cast<uint32_t>(m_Specification.width);
-		imageInfo.extent.height = static_cast<uint32_t>(m_Specification.height);
+		imageInfo.extent.width = m_Specification.width;
+		imageInfo.extent.height = m_Specification.height;
 		imageInfo.extent.depth = 1;
 		imageInfo.mipLevels = m_Specification.mips;
 		imageInfo.arrayLayers = m_Specification.layers;
@@ -105,9 +105,11 @@ namespace Stellar {
 		samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
 		samplerInfo.mipLodBias = 0.0f;
 		samplerInfo.minLod = 0.0f;
-		samplerInfo.maxLod = 0.0f;
+		samplerInfo.maxLod = static_cast<float>(m_Specification.mips);
 
 		VK_CHECK_RESULT(vkCreateSampler(device, &samplerInfo, nullptr, &m_Info.sampler));
+
+		updateDescriptor();
 	}
 
 	void VulkanImage2D::release() {
