@@ -134,7 +134,7 @@ namespace Stellar {
 		STLR_CORE_INFO("GPU Max Descripor Sets: {0}", deviceProperties.limits.maxBoundDescriptorSets);
 		STLR_CORE_INFO("GPU: {0}", deviceProperties.deviceName);
 
-		Queue::QueueFamilyIndices indices = findQueueFamilies(device);
+		QueueFamilyIndices indices = findQueueFamilies(device);
 
 		bool extensionSupported = checkDeviceExtensionSupport(device);
 		bool swapChainAdequate = false;
@@ -168,8 +168,8 @@ namespace Stellar {
 		return requiredExtensions.empty();
 	}
 
-	Queue::QueueFamilyIndices VulkanDevice::findQueueFamilies(VkPhysicalDevice device) const {
-		Queue::QueueFamilyIndices indices;
+	QueueFamilyIndices VulkanDevice::findQueueFamilies(VkPhysicalDevice device) const {
+		QueueFamilyIndices indices;
 
 		uint32_t queueFamilyCount = 0;
 		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
@@ -203,7 +203,7 @@ namespace Stellar {
 		return m_PhysicalDevice;
 	}
 
-	Queue::QueueFamilyIndices VulkanDevice::getIndices() const {
+	QueueFamilyIndices VulkanDevice::getIndices() const {
 		return m_Indices;
 	}
 
@@ -289,6 +289,7 @@ namespace Stellar {
 		}
 		VK_CHECK_RESULT(vkWaitForFences(m_LogicalDevice, 1, &fence, VK_TRUE, DEFAULT_FENCE_TIMEOUT));
 
+		vkDestroyFence(m_LogicalDevice, fence, nullptr);
 		vkFreeCommandBuffers(m_LogicalDevice, m_CommandPool, 1, &commandBuffer);
 	}
 }

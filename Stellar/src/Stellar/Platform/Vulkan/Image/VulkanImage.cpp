@@ -43,8 +43,8 @@ namespace Stellar {
 		VkImageCreateInfo imageInfo{};
 		imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 		imageInfo.imageType = VK_IMAGE_TYPE_2D;
-		imageInfo.extent.width = static_cast<uint32_t>(m_Specification.width);
-		imageInfo.extent.height = static_cast<uint32_t>(m_Specification.height);
+		imageInfo.extent.width = m_Specification.width;
+		imageInfo.extent.height = m_Specification.height;
 		imageInfo.extent.depth = 1;
 		imageInfo.mipLevels = m_Specification.mips;
 		imageInfo.arrayLayers = m_Specification.layers;

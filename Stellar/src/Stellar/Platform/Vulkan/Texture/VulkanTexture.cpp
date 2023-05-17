@@ -96,6 +96,7 @@ namespace Stellar {
 
 		auto info = (VulkanImageInfo*)m_Image->getImageInfo();
 		auto device = VulkanDevice::GetInstance();
+		uint32_t mipCount = m_Specification.generateMips ? Texture2D::GetMipCount(m_Specification.width, m_Specification.height) : 1;
 
 		// transition image layout
 		VkCommandBuffer commandBuffer1 = device->beginSingleTimeCommands();
@@ -109,7 +110,7 @@ namespace Stellar {
 		barrier.image = info->image;
 		barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 		barrier.subresourceRange.baseMipLevel = 0;
-		barrier.subresourceRange.levelCount = 1;
+		barrier.subresourceRange.levelCount = mipCount;
 		barrier.subresourceRange.baseArrayLayer = 0;
 		barrier.subresourceRange.layerCount = 1;
 		barrier.srcAccessMask = 0;
@@ -153,7 +154,6 @@ namespace Stellar {
 		device->endSingleTimeCommands(commandBuffer2);
 
 		// // to access it in shader:
-		uint32_t mipCount = m_Specification.generateMips ? Texture2D::GetMipCount(m_Specification.width, m_Specification.height) : 1;
 		if (mipCount <= 1) {
 			VkCommandBuffer commandBuffer3 = device->beginSingleTimeCommands();
 

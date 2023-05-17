@@ -17,7 +17,7 @@ namespace Stellar {
 
 		[[nodiscard]] VkQueue& getGraphicsQueue() { return m_GraphicsQueue; }
 		[[nodiscard]] VkQueue& getPresentQueue() { return m_PresentQueue; }
-		[[nodiscard]] Queue::QueueFamilyIndices getIndices() const;
+		[[nodiscard]] QueueFamilyIndices getIndices() const;
 		[[nodiscard]] VkCommandPool getCommandPool() const;
 
 		[[nodiscard]] VkPhysicalDevice physicalDevice() const;
@@ -44,7 +44,7 @@ namespace Stellar {
 
 		VkCommandPool m_CommandPool = VK_NULL_HANDLE;
 
-		Queue::QueueFamilyIndices m_Indices;
+		QueueFamilyIndices m_Indices;
 
 		VulkanDevice() = default;
 		bool isDeviceSuitable(VkPhysicalDevice device) const;
@@ -56,7 +56,7 @@ namespace Stellar {
 
 		VkFormat findDepthFormat() const;
 
-		Queue::QueueFamilyIndices findQueueFamilies(VkPhysicalDevice) const;
+		QueueFamilyIndices findQueueFamilies(VkPhysicalDevice) const;
 		VulkanSwapChain::SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice) const;
 	};
 }

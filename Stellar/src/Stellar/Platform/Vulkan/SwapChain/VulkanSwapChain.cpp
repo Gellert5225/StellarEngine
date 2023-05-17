@@ -204,7 +204,7 @@ namespace Stellar {
 		createInfo.imageArrayLayers = 1;
 		createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-		Queue::QueueFamilyIndices indices = VulkanDevice::GetInstance()->getIndices();
+		QueueFamilyIndices indices = VulkanDevice::GetInstance()->getIndices();
 
 		uint32_t queueFamilyIndices[] = {
 				indices.graphicsFamily.value(),
@@ -217,8 +217,6 @@ namespace Stellar {
 			createInfo.pQueueFamilyIndices = queueFamilyIndices;
 		} else {
 			createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
-			createInfo.queueFamilyIndexCount = 0;
-			createInfo.pQueueFamilyIndices = nullptr;
 		}
 
 		createInfo.preTransform = support.capabilities.currentTransform;
