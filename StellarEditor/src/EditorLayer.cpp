@@ -32,6 +32,8 @@ namespace Stellar {
 
 		m_EditorCamera = EditorCamera(60.0f, (float)m_ViewPortSize.x, (float)m_ViewPortSize.y, 0.1f, 100.0f);
 
+		m_Renderer2D = STLR_Ptr<Renderer2D>::Create();
+		
 		m_SceneHierarchyPanel.setContext(m_ActiveScene);
 	}
 
@@ -47,7 +49,7 @@ namespace Stellar {
 		if (!Input::IsMouseButtonPressed(STLR_MOUSE_RIGHT))
 			m_StartedRightClickInViewport = false;
 
-		m_ActiveScene->onEditorUpdate(ts, m_EditorCamera);
+		m_ActiveScene->onEditorUpdate(m_Renderer2D, ts, m_EditorCamera);
 	}
 
 	void EditorLayer::onEvent(Event& event) {
@@ -141,10 +143,10 @@ namespace Stellar {
 				1000.0f / ImGui::GetIO().Framerate,
 				ImGui::GetIO().Framerate);
 
-		ImGui::Text("Quad Count: %i", m_ActiveScene->getRenderer2DStats().quadCount);
-		ImGui::Text("Draw Calls: %i", m_ActiveScene->getRenderer2DStats().drawCalls);
-		ImGui::Text("Vertices: %i", m_ActiveScene->getRenderer2DStats().getTotalVertexCount());
-		ImGui::Text("Indicies: %i", m_ActiveScene->getRenderer2DStats().getTotalIndexCount());
+		ImGui::Text("Quad Count: %i", m_Renderer2D->getStats().quadCount);
+		ImGui::Text("Draw Calls: %i", m_Renderer2D->getStats().drawCalls);
+		ImGui::Text("Vertices: %i", m_Renderer2D->getStats().getTotalVertexCount());
+		ImGui::Text("Indicies: %i", m_Renderer2D->getStats().getTotalIndexCount());
 		ImGui::End();
 
 		// view port

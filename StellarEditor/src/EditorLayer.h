@@ -38,6 +38,8 @@ namespace Stellar {
 		EditorCamera m_EditorCamera;
 		SceneCamera m_SceneCamera;
 
+		STLR_Ptr<Renderer2D> m_Renderer2D;
+
 		STLR_Ptr<Scene> m_ActiveScene;
 		Entity m_LogoEntity;
 		Entity m_ExampleEntity;
