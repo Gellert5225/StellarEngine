@@ -144,18 +144,18 @@ namespace Stellar {
 		const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen |
 												 ImGuiTreeNodeFlags_AllowItemOverlap |
 												 ImGuiTreeNodeFlags_Framed |
-												 ImGuiTreeNodeFlags_FramePadding |
 												 ImGuiTreeNodeFlags_SpanAvailWidth;
 		if (entity.hasComponent<T>()) {
 			auto& component = entity.getComponent<T>();
 			
 			auto contentRegionAvail = ImGui::GetContentRegionAvail();
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{4, 4});
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
+			ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.0f);
 			float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
-			ImGui::Separator();
-
+			ImGui::Dummy({1.0f, 1.0f});
 			bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), treeNodeFlags, "%s", name.c_str());
-			ImGui::PopStyleVar();
+			ImGui::PopStyleVar(3);
 
 			ImGui::SameLine(contentRegionAvail.x - lineHeight * 0.5);
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 1.0f, 1.0f, 0.0f));
@@ -177,6 +177,7 @@ namespace Stellar {
 			
 			if (open) {
 				uiFunction(component);
+				ImGui::Dummy({2.0f, 2.0f});
 				ImGui::TreePop();
 			}
 

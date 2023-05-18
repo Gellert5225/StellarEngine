@@ -41,7 +41,7 @@ namespace Stellar {
 	}
 
 	VkExtent2D VulkanSwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) {
-		if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
+		if (capabilities.currentExtent.width != (uint32_t)-1) {
 			return capabilities.currentExtent;
 		} else {
 			int width, height;

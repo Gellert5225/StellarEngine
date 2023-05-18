@@ -40,6 +40,7 @@ namespace Stellar {
 
 	void ImGuiLayer::setDarkThemeColors() {
 		auto& style = ImGui::GetStyle();
+		style.WindowMenuButtonPosition = ImGuiDir_None;
 		auto& colors = ImGui::GetStyle().Colors;
 
 		// Headers
@@ -95,7 +96,7 @@ namespace Stellar {
 
 		// Separator
 		colors[ImGuiCol_Separator]			= ImGui::ColorConvertU32ToFloat4(Colors::Theme::separater);
-		colors[ImGuiCol_SeparatorActive]	= ImGui::ColorConvertU32ToFloat4(Colors::Theme::highlight);
+		colors[ImGuiCol_SeparatorActive]	= ImGui::ColorConvertU32ToFloat4(Colors::Theme::separaterActive);
 		colors[ImGuiCol_SeparatorHovered]	= ImGui::ColorConvertU32ToFloat4(Colors::Theme::separaterHovered);
 
 		// Window Background
@@ -104,6 +105,7 @@ namespace Stellar {
 		colors[ImGuiCol_PopupBg]			= ImGui::ColorConvertU32ToFloat4(Colors::Theme::backgroundPopup);
 		colors[ImGuiCol_Border]				= ImGui::ColorConvertU32ToFloat4(Colors::Theme::border);
 
+		colors[ImGuiCol_DockingEmptyBg] 	= ImGui::ColorConvertU32ToFloat4(Colors::Theme::backgroundDark);
 		// Tables
 		colors[ImGuiCol_TableHeaderBg]		= ImGui::ColorConvertU32ToFloat4(Colors::Theme::groupHeader);
 		colors[ImGuiCol_TableBorderLight]	= ImGui::ColorConvertU32ToFloat4(Colors::Theme::backgroundDark);

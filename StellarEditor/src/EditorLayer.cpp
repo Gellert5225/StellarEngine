@@ -8,6 +8,7 @@
 #include <Stellar/Core/KeyCodes.h>
 #include <Stellar/Core/Input.h>
 #include <Stellar/Maths/Math.h>
+#include <Stellar/ImGui/WebFont.h>
 
 namespace Stellar {
 	EditorLayer::EditorLayer() : Layer("Sandbox2D"), m_EditorCamera(60.0f, 1.0f, 1.0f, 0.1f, 1000.0f) {
@@ -75,7 +76,7 @@ namespace Stellar {
 		ImGui::SetNextWindowViewport(viewport->ID);
 		ImGui::SetKeyOwner(ImGuiMod_Alt, viewport->ID);
 
-		ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
+		ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 		ImGuiWindowFlags host_window_flags = 0;
 		host_window_flags |= ImGuiWindowFlags_NoTitleBar | 
 							ImGuiWindowFlags_NoCollapse | 
@@ -84,18 +85,15 @@ namespace Stellar {
 		host_window_flags |= ImGuiWindowFlags_MenuBar | 
 							ImGuiWindowFlags_NoBringToFrontOnFocus | 
 							ImGuiWindowFlags_NoNavFocus;
-		if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
-			host_window_flags |= ImGuiWindowFlags_NoBackground;
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0.0f);
-
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
 		ImGui::Begin("DockSpace Window", nullptr, host_window_flags);
-		ImGui::PopStyleVar(4);
-
-		menuBar();
+		ImGui::PopStyleVar(6);
 
 		ImGuiStyle& style = ImGui::GetStyle();
 		float minWinSize = style.WindowMinSize.x;
@@ -103,6 +101,17 @@ namespace Stellar {
 
 		ImGuiID dockspaceID = ImGui::GetID("HUB_DockSpace");
 		ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), dockspace_flags, nullptr);
+
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar;
+		float height = ImGui::GetFrameHeight();
+
+		if (ImGui::BeginViewportSideBar("##MainStatusBar", viewport, ImGuiDir_Down, height, window_flags)) {
+			if (ImGui::BeginMenuBar()) {
+				ImGui::Text("Happy status bar");
+				ImGui::EndMenuBar();
+			}
+		}
+		ImGui::End();
 
 		style.WindowMinSize.x = minWinSize;
 
@@ -127,6 +136,9 @@ namespace Stellar {
 			ImGui::DockBuilderFinish(dockspaceID);
 		}
 
+
+		menuBar();
+		
 		//ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
 		ImGui::Begin("Info");
 		std::string debug;
@@ -151,12 +163,13 @@ namespace Stellar {
 
 		// view port
 		ImGuiIO& io = ImGui::GetIO();
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(255,255,255,0));
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(3.0f, 3.0f));
+		ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
 		ImGui::Begin("View Port");
 
-		ImGui::PopStyleVar();
-		ImGui::PopStyleColor();
+		ImGui::PopStyleVar(4);
 		io.ConfigWindowsMoveFromTitleBarOnly = true;
 		m_ViewPortSize = ImGui::GetContentRegionAvail();
 		m_EditorCamera.setViewportSize(m_ViewPortSize.x, m_ViewPortSize.y);
@@ -235,6 +248,9 @@ namespace Stellar {
 		ImGui::End();
 
 		ImGui::End();
+
+		static bool show = true;
+		ImGui::ShowDemoWindow(&show);
 	}
 
 	bool EditorLayer::onKeyPressed(KeyPressedEvent& e) {
@@ -319,6 +335,7 @@ namespace Stellar {
 	}
 
 	void EditorLayer::menuBar() {
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
 		if (ImGui::BeginMenuBar()) {
 			if (ImGui::BeginMenu("File")) {
 				if (ImGui::MenuItem("New", "Ctrl+N")) newScene();
@@ -329,5 +346,6 @@ namespace Stellar {
 			}
 			ImGui::EndMenuBar();
 		}
+		ImGui::PopStyleVar();
 	}
 }
