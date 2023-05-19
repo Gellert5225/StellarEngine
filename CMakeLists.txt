@@ -23,7 +23,7 @@ if(NOT CMAKE_TOOLCHAIN_FILE AND EXISTS "${vcpkg}")
   message(STATUS "vcpkg toolchain found: ${CMAKE_TOOLCHAIN_FILE}")
 endif()
 
-project(StellarEngine)
+project(StellarEngine LANGUAGES C CXX OBJC OBJCXX)
 
 set(CMAKE_CXX_STANDARD 17
 	CACHE STRING "C++ standard to use")

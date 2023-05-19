@@ -10,7 +10,7 @@
 
 namespace Stellar {
 
-    MetalTexture::MetalTexture(const std::string& filePath, bool isImGui) : Texture2D(filePath) {
+    MetalTexture::MetalTexture(const std::string& filePath, const TextureSpecification& spec) : Texture2D(filePath), m_Specification(spec) {
         bool loaded = loadImage(filePath);
         if (!loaded) {
             STLR_CORE_ERROR("Failed to load texture {0}", filePath);
@@ -19,16 +19,16 @@ namespace Stellar {
 
         invalidate();
 
-		if (isImGui) {
+		if (spec.isImGuiTexture) {
 			m_IsImGuiTexture = true;
 			m_TextureId = m_Texture;
 		}
     }
 
-	MetalTexture::MetalTexture(ImageFormat format, uint32_t width, uint32_t height, const void* data) : m_Width(width), m_Height(height) {
-		m_Pixels = new uint8_t[width * height * 4];
+	MetalTexture::MetalTexture(const TextureSpecification& spec, const void* data) : m_Specification(spec) {
+		m_Pixels = new uint8_t[spec.width * spec.height * 4];
 		if (data == nullptr) {
-			for (size_t y = 0; y < width * height * 4; ++y) {
+			for (size_t y = 0; y < spec.width * spec.height * 4; ++y) {
 				m_Pixels[y] = 0xFF;
 			}
 		}
@@ -45,15 +45,15 @@ namespace Stellar {
             m_Texture->release();
 
         MTL::TextureDescriptor* textureDesc = MTL::TextureDescriptor::alloc()->init();
-        textureDesc->setWidth(m_Width);
-        textureDesc->setHeight(m_Height);
+        textureDesc->setWidth(m_Specification.width);
+        textureDesc->setHeight(m_Specification.height);
         textureDesc->setPixelFormat(MTL::PixelFormatRGBA8Unorm);
         textureDesc->setTextureType(MTL::TextureType2D);
         textureDesc->setStorageMode(MTL::StorageModeManaged);
         textureDesc->setUsage(MTL::ResourceUsageSample | MTL::ResourceUsageRead);
         
         m_Texture = MetalDevice::GetInstance()->getDevice()->newTexture(textureDesc);
-        m_Texture->replaceRegion(MTL::Region( 0, 0, 0, m_Width, m_Height, 1 ), 0, m_Pixels, m_Width * 4);
+        m_Texture->replaceRegion(MTL::Region( 0, 0, 0, m_Specification.width, m_Specification.height, 1 ), 0, m_Pixels, m_Specification.width * 4);
 
         textureDesc->release();
         stbi_image_free(m_Pixels);
@@ -65,14 +65,14 @@ namespace Stellar {
 
         if (!m_Pixels) return false;
 
-        m_Width = texWidth;
-        m_Height = texHeight;
+        m_Specification.width = texWidth;
+        m_Specification.height = texHeight;
         return true;
     }
 
 	uint64_t MetalTexture::getHash() const {
 		void* bytes;
-		m_Texture->getBytes(bytes, m_Width * 4, MTL::Region( 0, 0, 0, m_Width, m_Height, 1 ), 0);
+		m_Texture->getBytes(bytes, m_Specification.width * 4, MTL::Region( 0, 0, 0, m_Specification.width, m_Specification.height, 1 ), 0);
 		return (uint64_t)bytes;
 	}
 
@@ -80,5 +80,9 @@ namespace Stellar {
 		STLR_CORE_ASSERT(m_IsImGuiTexture, "Cannot get ImTextureID on a non-ImGui texure");
 
 		return m_TextureId;
+	}
+
+	void MetalTexture::generateMips() {
+
 	}
 }

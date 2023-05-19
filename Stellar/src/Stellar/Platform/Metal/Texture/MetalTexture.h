@@ -8,12 +8,13 @@
 namespace Stellar {
     class STLR_API MetalTexture : public Texture2D {
     public:
-        MetalTexture(const std::string& filePath, bool isImGui = false);
-		MetalTexture(ImageFormat format, uint32_t width, uint32_t height, const void* data);
+        MetalTexture(const std::string& filePath, const TextureSpecification& spec);
+		MetalTexture(const TextureSpecification& spec, const void* data);
         ~MetalTexture() override;
 
 		uint64_t getHash() const override;
 		ImTextureID getImGuiTextureID() override;
+		void generateMips() override;
 
         // Metal
         void invalidate();
@@ -21,8 +22,7 @@ namespace Stellar {
     protected:
         virtual bool loadImage(const std::string& filePath) override;
     private:
-        uint32_t m_Width{};
-        uint32_t m_Height{};
+		TextureSpecification m_Specification;
         unsigned char* m_Pixels{};
         MTL::Texture* m_Texture;
     };

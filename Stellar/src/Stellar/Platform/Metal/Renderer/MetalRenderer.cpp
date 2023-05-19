@@ -62,13 +62,6 @@ namespace Stellar {
         m_ClearColor = {color.r, color.g, color.b, color.a};
     }
 
-    void MetalRenderer::renderGeometry(STLR_Ptr<Buffer> vertexBuffer,
-										STLR_Ptr<Buffer> indexBuffer,
-										STLR_Ptr<Texture2D> texture,
-										const glm::vec4& color,
-										uint32_t indexCount,
-										const glm::mat4& transform) {}
-
 	void MetalRenderer::renderGeometry(STLR_Ptr<CommandBuffer> renderCommandBuffer, 
 							STLR_Ptr<Pipeline> pipeline,
 							STLR_Ptr<UniformBufferSet> uniformBufferSet, 

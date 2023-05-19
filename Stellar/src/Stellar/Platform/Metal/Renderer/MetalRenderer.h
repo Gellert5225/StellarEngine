@@ -25,12 +25,6 @@ namespace Stellar {
 		void beginFrame() override;
 
         void setClearColor(const glm::vec4& color) override;
-        void renderGeometry(STLR_Ptr<Buffer> vertexBuffer,
-                            STLR_Ptr<Buffer> indexBuffer,
-                            STLR_Ptr<Texture2D> texture,
-                            const glm::vec4& color,
-                            uint32_t indexCount = 0,
-                            const glm::mat4& transform = {}) override;
 
 		void renderGeometry(STLR_Ptr<CommandBuffer> renderCommandBuffer, 
 							STLR_Ptr<Pipeline> pipeline,
