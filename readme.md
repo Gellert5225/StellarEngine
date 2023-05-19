@@ -2,13 +2,14 @@
 
 A custom game engine using C++ and Vulkan/Metal API.
 
+![Current Stage](Screenshots/currentStage.png)
+
 ## Table of Contents
 
 - [Stellar Engine](#stellar-engine)
 	- [Table of Contents](#table-of-contents)
 	- [Introduction](#introduction)
 		- [How it works](#how-it-works)
-		- [Current Stage](#current-stage)
 	- [Dependencies](#dependencies)
 		- [GLFW](#glfw)
 		- [GLM](#glm)
@@ -42,10 +43,6 @@ This project has 2 sub projects, the `core engine` and a `sandbox`. The `core en
 | Windows       | Vulkan       | C++               | g++       |
 | Linux         | Vulkan       | C++               | g++       |
 | Mac           | Metal        | C++/Objective-C++ | clang++   |
-
-### Current Stage
-
-![Current Stage](Screenshots/currentStage.png)
 
 ## Dependencies
 
