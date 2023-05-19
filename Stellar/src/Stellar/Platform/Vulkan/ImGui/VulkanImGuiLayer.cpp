@@ -142,10 +142,6 @@ namespace Stellar {
 	void VulkanImGuiLayer::end() {
 		ImGuiIO& io = ImGui::GetIO();
 		ImGui::Render();
-		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-			ImGui::UpdatePlatformWindows();
-			ImGui::RenderPlatformWindowsDefault();
-		}
 
 		auto swapChain = (VulkanSwapChain*)Application::Get().getWindow().getSwapChain();
 
@@ -159,8 +155,9 @@ namespace Stellar {
 		drawCmdBufInfo.pNext = nullptr;
 
 		uint32_t commandBufferIndex = swapChain->getCurrentFrameIndex();
+		VkCommandBuffer drawCommandBuffer = swapChain->getCurrentCommandBuffer();
 
-		VK_CHECK_RESULT(vkBeginCommandBuffer(swapChain->getCurrentCommandBuffer(), &drawCmdBufInfo));
+		VK_CHECK_RESULT(vkBeginCommandBuffer(drawCommandBuffer, &drawCmdBufInfo));
 
 		VkRenderPassBeginInfo renderPassBeginInfo = {};
 		renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -174,7 +171,7 @@ namespace Stellar {
 		renderPassBeginInfo.pClearValues = clearValues;
 		renderPassBeginInfo.framebuffer = swapChain->getCurrentFrameBuffer();
 
-		vkCmdBeginRenderPass(swapChain->getCurrentCommandBuffer(), &renderPassBeginInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
+		vkCmdBeginRenderPass(drawCommandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
 
 		VkCommandBufferInheritanceInfo inheritanceInfo = {};
 		inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
@@ -215,11 +212,16 @@ namespace Stellar {
 		std::vector<VkCommandBuffer> commandBuffers;
 		commandBuffers.push_back(s_ImGuiCommandBuffers[commandBufferIndex]);
 
-		vkCmdExecuteCommands(swapChain->getCurrentCommandBuffer(), uint32_t(commandBuffers.size()), commandBuffers.data());
+		vkCmdExecuteCommands(drawCommandBuffer, uint32_t(commandBuffers.size()), commandBuffers.data());
 
-		vkCmdEndRenderPass(swapChain->getCurrentCommandBuffer());
+		vkCmdEndRenderPass(drawCommandBuffer);
 
-		VK_CHECK_RESULT(vkEndCommandBuffer(swapChain->getCurrentCommandBuffer()));
+		VK_CHECK_RESULT(vkEndCommandBuffer(drawCommandBuffer));
+
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+		}
 	}
 
 	void VulkanImGuiLayer::onImGuiRender() {

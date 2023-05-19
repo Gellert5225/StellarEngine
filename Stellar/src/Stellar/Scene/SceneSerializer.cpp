@@ -122,7 +122,7 @@ namespace Stellar {
 			auto& cameraComponent = entity.getComponent<CameraComponent>();
 			auto& cam = cameraComponent.camera;
 
-			out << YAML::Key << "CameraComponnet";
+			out << YAML::Key << "CameraComponent";
 			out << YAML::BeginMap;
 			out << YAML::Key << "Camera" << YAML::Value;
 			out << YAML::BeginMap;

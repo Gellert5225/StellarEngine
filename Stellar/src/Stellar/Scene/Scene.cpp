@@ -40,12 +40,12 @@ namespace Stellar {
 			if (camera.primary) {
 				mainCamera = &camera.camera;
 				cameraTransform = transform.getTransform();
-				STLR_CORE_INFO("Camera transform: {0}", cameraTransform[0][0]);
 				break;
 			}
 		}
 
 		if (mainCamera) {
+			renderer2D->resetStats();
 			renderer2D->beginScene(*mainCamera, cameraTransform);
 			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto entity : group) {
@@ -66,7 +66,7 @@ namespace Stellar {
 
 		auto view = m_Registry.view<CameraComponent>();
 		for (auto entity : view) {
-			auto camera = view.get<CameraComponent>(entity);
+			auto& camera = view.get<CameraComponent>(entity);
 			if (!camera.fixedAspectRatio) {
 				camera.camera.setViewPortSize(width, height);
 			}

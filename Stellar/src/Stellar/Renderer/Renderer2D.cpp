@@ -80,6 +80,7 @@ namespace Stellar {
 	}
 
 	void Renderer2D::beginScene(const Camera& camera, const glm::mat4& transform) {
+		auto proje = camera.getProjectionMatrix();
 		auto viewProjection = camera.getProjectionMatrix() * glm::inverse(transform);
 
 		uint32_t bufferIndex = Renderer::GetCurrentFrameIndex();
@@ -89,8 +90,8 @@ namespace Stellar {
 		m_QuadVertexBufferPtr = m_QuadVertexBufferBase[bufferIndex];
 		m_TextureSlotIndex = 1;
 
-		//Renderer::BindUbo(ubo);
-		//Renderer::BeginRenderPass();
+		for (uint32_t i = 1; i < m_TextureSlots.size(); i++)
+			m_TextureSlots[i] = nullptr;
 
 		//Renderer::RenderGrid(m_QuadVertexBuffer, m_QuadIndexBuffer, m_QuadIndexCount);
 	}

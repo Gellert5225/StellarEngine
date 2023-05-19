@@ -4,7 +4,7 @@
 #include "Stellar/Renderer/Camera.h"
 
 namespace Stellar {
-	class STLR_API SceneCamera : public Camera {
+	class SceneCamera : public Camera {
 	public:
 		enum class ProjectionType { Perspective = 0, Orthographic = 1 };
 	public:

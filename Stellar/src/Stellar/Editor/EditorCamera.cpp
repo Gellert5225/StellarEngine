@@ -106,7 +106,7 @@ namespace Stellar {
 				DisableMouse();
 				mousePan(delta);
 			} else if (Input::IsMouseButtonPressed(STLR_MOUSE_LEFT)) {
-				DisableMouse();
+				//DisableMouse();
 				mouseRotate(delta);
 			} else if (Input::IsMouseButtonPressed(STLR_MOUSE_RIGHT)) {
 				DisableMouse();
@@ -166,10 +166,13 @@ namespace Stellar {
 	}
 	void EditorCamera::mouseZoom(float delta) {
 		m_Distance -= delta * zoomSpeed();
+		const glm::vec3 forwardDir = getForwardDirection();
+		m_Position = m_FocalPoint - forwardDir * m_Distance;
 		if (m_Distance < 1.0f) {
 			m_FocalPoint += getForwardDirection();
 			m_Distance = 1.0f;
 		}
+		m_PositionDelta += delta * zoomSpeed() * forwardDir;
 	}
 
 	glm::vec3 EditorCamera::calculatePosition() const {
@@ -206,5 +209,22 @@ namespace Stellar {
 			speed *= 2 - glm::log(m_NormalSpeed);
 
 		return glm::clamp(speed, MIN_SPEED, MAX_SPEED);
+	}
+
+	void EditorCamera::onEvent(Event& e) {
+		EventDispatcher dispatcher(e);
+		dispatcher.dispatch<MouseScrolledEvent>(BIND_EVENT_FN(EditorCamera::onMouseScroll));
+	}
+
+	bool EditorCamera::onMouseScroll(MouseScrolledEvent& e) {
+		if (Input::IsMouseButtonPressed(STLR_MOUSE_RIGHT)) {
+			m_NormalSpeed += e.getYOffset() * 0.3f * m_NormalSpeed;
+			m_NormalSpeed = std::clamp(m_NormalSpeed, MIN_SPEED, MAX_SPEED);
+		} else {
+			mouseZoom(e.getYOffset() * 0.1f);
+			recalculateViewMatrix();
+		}
+
+		return false;
 	}
 } 

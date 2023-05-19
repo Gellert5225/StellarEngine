@@ -42,11 +42,24 @@ namespace Stellar {
 			auto relativePath = std::filesystem::relative(dir.path(), s_ResourcePath);
 			auto fileName = relativePath.filename().string();
 			ImGui::PushID(fileName.c_str());
+			//STLR_CORE_INFO("Extension: {0}", path.extension().string().c_str());
+			//STLR_CORE_INFO("path: {0}", path.string());
 
 			STLR_Ptr<Texture2D> icon = dir.is_directory() ? m_FolderIcon : m_FileIcon;
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
 			ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
-			ImGui::ImageButton(icon->getImGuiTextureID(), {thumbnailSize, thumbnailSize});
+			if (path.extension().string() == ".png" || path.extension().string() == ".jpg") {
+				auto texture = m_PreviewTextuers[path.string()];
+				if (!texture) {
+					TextureSpecification spec{};
+					spec.isImGuiTexture = true;
+					m_PreviewTextuers[path.string()] = Texture2D::Create(path.string(), spec);
+				}
+				texture = m_PreviewTextuers[path.string()];
+				ImGui::ImageButton(texture->getImGuiTextureID(), {thumbnailSize, thumbnailSize});
+			} else {
+				ImGui::ImageButton(icon->getImGuiTextureID(), {thumbnailSize, thumbnailSize});
+			}
 
 			if (ImGui::BeginDragDropSource()) {
 				const wchar_t* itemPath = (const wchar_t*)relativePath.c_str();

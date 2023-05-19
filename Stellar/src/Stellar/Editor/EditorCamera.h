@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Stellar/Core/Core.h"
-#include "Stellar/Renderer/Camera.h"
 #include "Stellar/Core/Timestep.h"
 #include "Stellar/Events/Event.h"
+#include "Stellar/Events/MouseEvent.h"
+#include "Stellar/Renderer/Camera.h"
 
 namespace Stellar {
 	enum class CameraMode {
@@ -39,6 +40,8 @@ namespace Stellar {
 		void mousePan(const glm::vec2& delta);
 		void mouseRotate(const glm::vec2& delta);
 		void mouseZoom(float delta);
+
+		bool onMouseScroll(MouseScrolledEvent& e);
 
 		glm::vec3 calculatePosition() const;
 

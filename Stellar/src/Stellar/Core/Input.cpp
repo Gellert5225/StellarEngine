@@ -29,8 +29,7 @@ namespace Stellar {
 
 			auto state = glfwGetMouseButton(static_cast<GLFWwindow*>(windowHandle), static_cast<int32_t>(button));
 			if (state == GLFW_PRESS || state == GLFW_REPEAT) {
-				pressed = true;
-				break;
+				return true;
 			}
 		}
 		return pressed;

@@ -6,7 +6,7 @@
 #include <glm/glm.hpp>
 
 namespace Stellar {
-	class STLR_API Camera {
+	class Camera {
 	public:
 		Camera() = default;
 		Camera(const float fov, const float width, const float height, const float near, const float far);
@@ -27,8 +27,8 @@ namespace Stellar {
 		// [[nodiscard]] const glm::vec3& getFront() const { return m_Front; }
 		// [[nodiscard]] float getRotation() const { return m_Rotation; }
 	protected:
-		glm::mat4 m_ProjectionMatrix{};
-		glm::mat4 m_ViewMatrix{};
+		glm::mat4 m_ProjectionMatrix{1.0f};
+		glm::mat4 m_ViewMatrix{1.0f};
 		glm::vec3 m_Position{0.0f, 0.0f, -2.0f};
 	};
 }

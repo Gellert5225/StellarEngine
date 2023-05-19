@@ -207,8 +207,8 @@ namespace Stellar {
 		QueueFamilyIndices indices = VulkanDevice::GetInstance()->getIndices();
 
 		uint32_t queueFamilyIndices[] = {
-				indices.graphicsFamily.value(),
-				indices.presentFamily.value()
+			indices.graphicsFamily.value(),
+			indices.presentFamily.value()
 		};
 
 		if (indices.graphicsFamily != indices.presentFamily) {

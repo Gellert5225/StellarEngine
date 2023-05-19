@@ -226,6 +226,59 @@ namespace Stellar {
 			DrawVec3Control("Scale", component.scale, 1.0f);
 		});
 
+		DrawComponent<CameraComponent>("Camera", entity, [](auto& component) {
+			auto& camera = component.camera;
+
+			ImGui::Checkbox("Primary", &component.primary);
+
+			const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
+			const char* currentProjectionTypeString = projectionTypeStrings[(int)camera.getProjectionType()];
+			if (ImGui::BeginCombo("Projection", currentProjectionTypeString)) {
+				for (int i = 0; i < 2; i++) {
+					bool isSelected = currentProjectionTypeString == projectionTypeStrings[i];
+					if (ImGui::Selectable(projectionTypeStrings[i], isSelected)) {
+						currentProjectionTypeString = projectionTypeStrings[i];
+						camera.setProjectionType((SceneCamera::ProjectionType)i);
+					}
+
+					if (isSelected)
+						ImGui::SetItemDefaultFocus();
+				}
+
+				ImGui::EndCombo();
+			}
+
+			if (camera.getProjectionType() == SceneCamera::ProjectionType::Perspective) {
+				float perspectiveVerticalFov = camera.getFov();
+				if (ImGui::DragFloat("Vertical FOV", &perspectiveVerticalFov))
+					camera.setFov(perspectiveVerticalFov);
+
+				float perspectiveNear = camera.getPerspectiveNear();
+				if (ImGui::DragFloat("Near", &perspectiveNear))
+					camera.setPerspectiveNear(perspectiveNear);
+
+				float perspectiveFar = camera.getPerspectiveFar();
+				if (ImGui::DragFloat("Far", &perspectiveFar))
+					camera.setPerspectiveFar(perspectiveFar);
+			}
+
+			if (camera.getProjectionType() == SceneCamera::ProjectionType::Orthographic) {
+				float orthoSize = camera.getOrthoGraphicSize();
+				if (ImGui::DragFloat("Size", &orthoSize))
+					camera.setOrthoGraphicSize(orthoSize);
+
+				float orthoNear = camera.getOrthographicNear();
+				if (ImGui::DragFloat("Near", &orthoNear))
+					camera.setOrthographicNear(orthoNear);
+
+				float orthoFar = camera.getOrthographicFar();
+				if (ImGui::DragFloat("Far", &orthoFar))
+					camera.setOrthographicFar(orthoFar);
+
+				ImGui::Checkbox("Fixed Aspect Ratio", &component.fixedAspectRatio);
+			}
+		});
+
 		DrawComponent<SpriteRendererComponent>("Sprite", entity, [](auto& component) {
 			ImGui::ColorEdit4("Color", glm::value_ptr(component.color));
 			ImGui::DragFloat("Tiling Factor", &component.tilingFactor, 0.1f, 0.0f, 100.0f);

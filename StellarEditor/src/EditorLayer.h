@@ -33,14 +33,19 @@ namespace Stellar {
 		void openScene(const std::filesystem::path& path);
 		void saveSceneAs();
 
+		void onScenePlay();
+		void onSceneStop();
+
 		void menuBar();
+		void toolBar();
 	private:
 		EditorCamera m_EditorCamera;
-		SceneCamera m_SceneCamera;
 
 		STLR_Ptr<Renderer2D> m_Renderer2D;
 
 		STLR_Ptr<Scene> m_ActiveScene;
+		STLR_Ptr<Texture2D> m_PlayIcon;
+		STLR_Ptr<Texture2D> m_StopIcon;
 		Entity m_LogoEntity;
 		Entity m_ExampleEntity;
 		Entity m_QuadEntity;
@@ -58,5 +63,12 @@ namespace Stellar {
 		bool m_ViewportPanelFocused = false;
 		bool m_StartedRightClickInViewport = false;
 		bool m_ViewportPanelMouseOver = false;
+
+		enum class SceneState {
+			Edit = 0,
+			Play = 1
+		};
+
+		SceneState m_SceneState = SceneState::Edit;
 	};
 }

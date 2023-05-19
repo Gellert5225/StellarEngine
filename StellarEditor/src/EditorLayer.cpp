@@ -12,7 +12,10 @@
 
 namespace Stellar {
 	EditorLayer::EditorLayer() : Layer("Sandbox2D"), m_EditorCamera(60.0f, 1.0f, 1.0f, 0.1f, 1000.0f) {
-		m_SceneCamera.setPerspective(60.0f, 0.1f, 1000.0f);
+		TextureSpecification spec{};
+		spec.isImGuiTexture = true;
+		m_PlayIcon = Texture2D::Create("Resources/Icons/play.png", spec);
+		m_StopIcon = Texture2D::Create("Resources/Icons/stop.png", spec);
 	}
 
 	void EditorLayer::onAttach() {
@@ -29,7 +32,7 @@ namespace Stellar {
 		m_QuadEntity.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, Texture2D::Create({}));
 
 		m_CameraEntity = m_ActiveScene->createEntity("Scene Camera");
-		m_CameraEntity.addComponent<CameraComponent>(m_SceneCamera);
+		m_CameraEntity.addComponent<CameraComponent>();
 
 		m_EditorCamera = EditorCamera(60.0f, (float)m_ViewPortSize.x, (float)m_ViewPortSize.y, 0.1f, 100.0f);
 
@@ -41,21 +44,30 @@ namespace Stellar {
 	void EditorLayer::onDetach() {}
 
 	void EditorLayer::onUpdate(Timestep ts) {
-		m_EditorCamera.setActive(m_AllowViewportCameraEvents);
-		m_EditorCamera.onUpdate(ts);
-		
+		m_ActiveScene->onViewportResize(m_ViewPortSize.x, m_ViewPortSize.y);
 		if (Input::IsMouseButtonPressed(STLR_MOUSE_RIGHT) && !m_StartedRightClickInViewport && m_ViewportPanelFocused && m_ViewportPanelMouseOver)
 			m_StartedRightClickInViewport = true;
 
 		if (!Input::IsMouseButtonPressed(STLR_MOUSE_RIGHT))
 			m_StartedRightClickInViewport = false;
 
-		m_ActiveScene->onEditorUpdate(m_Renderer2D, ts, m_EditorCamera);
+		switch (m_SceneState) {
+			case SceneState::Edit: {
+				m_EditorCamera.setActive(m_AllowViewportCameraEvents);
+				m_EditorCamera.onUpdate(ts);
+				m_ActiveScene->onEditorUpdate(m_Renderer2D, ts, m_EditorCamera);
+				break;
+			}
+			case SceneState::Play: {
+				m_ActiveScene->onUpdate(m_Renderer2D, ts);
+				break;
+			}
+		}
 	}
 
 	void EditorLayer::onEvent(Event& event) {
-		// if (m_AllowViewportCameraEvents)
-		// 	m_EditorCamera.onEvent(event);
+		if (m_AllowViewportCameraEvents)
+			m_EditorCamera.onEvent(event);
 		EventDispatcher dispatcher(event);
 		dispatcher.dispatch<KeyPressedEvent>(BIND_EVENT_FN(EditorLayer::onKeyPressed));
 		dispatcher.dispatch<MouseButtonPressedEvent>(BIND_EVENT_FN(EditorLayer::onMouseButtonPressed));
@@ -78,10 +90,6 @@ namespace Stellar {
 
 		ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 		ImGuiWindowFlags host_window_flags = 0;
-		host_window_flags |= ImGuiWindowFlags_NoTitleBar | 
-							ImGuiWindowFlags_NoCollapse | 
-							ImGuiWindowFlags_NoResize | 
-							ImGuiWindowFlags_NoMove;
 		host_window_flags |= ImGuiWindowFlags_MenuBar | 
 							ImGuiWindowFlags_NoBringToFrontOnFocus | 
 							ImGuiWindowFlags_NoNavFocus;
@@ -90,8 +98,8 @@ namespace Stellar {
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0.0f);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 7.0f));
 		ImGui::Begin("DockSpace Window", nullptr, host_window_flags);
 		ImGui::PopStyleVar(6);
 
@@ -101,6 +109,12 @@ namespace Stellar {
 
 		ImGuiID dockspaceID = ImGui::GetID("HUB_DockSpace");
 		ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), dockspace_flags, nullptr);
+
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+		menuBar();
+		ImGui::PopStyleVar();
+
+		toolBar();
 
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar;
 		float height = ImGui::GetFrameHeight();
@@ -136,9 +150,6 @@ namespace Stellar {
 			ImGui::DockBuilderFinish(dockspaceID);
 		}
 
-
-		menuBar();
-		
 		//ImGui::SetNextWindowDockID(dockspaceID , ImGuiCond_FirstUseEver);
 		ImGui::Begin("Info");
 		std::string debug;
@@ -336,7 +347,7 @@ namespace Stellar {
 
 	void EditorLayer::menuBar() {
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
-		if (ImGui::BeginMenuBar()) {
+		if (ImGui::BeginMainMenuBar()) {
 			if (ImGui::BeginMenu("File")) {
 				if (ImGui::MenuItem("New", "Ctrl+N")) newScene();
 				if (ImGui::MenuItem("Open", "Ctrl+O")) openScene();
@@ -344,8 +355,54 @@ namespace Stellar {
 				if (ImGui::MenuItem("Exit")) Application::Get().close();
 				ImGui::EndMenu();
 			}
-			ImGui::EndMenuBar();
+			ImGui::Dummy(ImVec2(100, 0));
+			ImGui::Text("Hi");
+			ImGui::EndMainMenuBar();
 		}
 		ImGui::PopStyleVar();
+	}
+
+	void EditorLayer::toolBar() {
+		ImGuiViewport* viewport = ImGui::GetMainViewport();
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar;
+		float height = ImGui::GetFrameHeight();
+
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 10));
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+		ImGui::PushStyleColor(ImGuiCol_MenuBarBg, ImVec4(48.0f / 255, 52.0f / 255, 64.0f / 255, 1.0f));
+		if (ImGui::BeginViewportSideBar("##SecondMenuBar", viewport, ImGuiDir_Up, height, window_flags)) {
+			if (ImGui::BeginMenuBar()) {
+				auto icon = m_SceneState == SceneState::Edit ? m_PlayIcon : m_StopIcon;
+				float buttonSize = 20.0f;
+
+				ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+				ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
+				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+				ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
+				ImGui::SetCursorPosX(ImGui::GetWindowContentRegionMax().x * 0.5f - buttonSize / 2);
+				ImGui::SetCursorPosY(ImGui::GetWindowContentRegionMax().y * 0.5f - buttonSize / 2 + 2);
+				if (ImGui::ImageButton(icon->getImGuiTextureID(), ImVec2(buttonSize, buttonSize), {0,0}, {1,1}, 2)) {
+					if (m_SceneState == SceneState::Edit)
+						onScenePlay();
+					else if (m_SceneState == SceneState::Play)
+						onSceneStop();
+				}
+
+				ImGui::PopStyleVar(2);
+				ImGui::PopStyleColor(2);
+				ImGui::EndMenuBar();
+			}
+		}
+		ImGui::PopStyleColor();
+		ImGui::PopStyleVar(2);
+		ImGui::End();
+	}
+
+	void EditorLayer::onScenePlay() {
+		m_SceneState = SceneState::Play;
+	}
+
+	void EditorLayer::onSceneStop() {
+		m_SceneState = SceneState::Edit;
 	}
 }

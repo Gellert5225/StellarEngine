@@ -1,32 +1,5 @@
 Scene: Untitled
 Entities:
-  - Entity: 16068184397999965448
-    TagComponent:
-      Tag: Scene Camera
-    TransformComponent:
-      Translation: [0, -1, 1]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 12031245447736382714
-    TagComponent:
-      Tag: Quad Square
-    TransformComponent:
-      Translation: [0, -1, 3]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    SpriteRendererComponent:
-      Color: [1, 1, 1, 1]
-      Texture: ""
-  - Entity: 200660123304127226
-    TagComponent:
-      Tag: Logo Square
-    TransformComponent:
-      Translation: [0, -2, 2]
-      Rotation: [1.57105565, 0.000487992918, -0.00060487329]
-      Scale: [1.0000509, 0.999717057, 1.00032675]
-    SpriteRendererComponent:
-      Color: [1, 1, 1, 1]
-      Texture: Resources/Textures/StellarEngine.png
   - Entity: 15491236983576878201
     TagComponent:
       Tag: Example Square
@@ -37,3 +10,41 @@ Entities:
     SpriteRendererComponent:
       Color: [1, 1, 1, 1]
       Texture: Resources/Textures/Example_texture.jpg
+  - Entity: 200660123304127226
+    TagComponent:
+      Tag: Logo Square
+    TransformComponent:
+      Translation: [0, -2, 2]
+      Rotation: [1.57105565, 0.000487992918, -0.00060487329]
+      Scale: [1.0000509, 0.999717057, 1.00032675]
+    SpriteRendererComponent:
+      Color: [1, 1, 1, 1]
+      Texture: Resources/Textures/StellarEngine.png
+  - Entity: 12031245447736382714
+    TagComponent:
+      Tag: Quad Square
+    TransformComponent:
+      Translation: [0, -1, 3]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    SpriteRendererComponent:
+      Color: [1, 1, 1, 1]
+      Texture: ""
+  - Entity: 16068184397999965448
+    TagComponent:
+      Tag: Scene Camera
+    TransformComponent:
+      Translation: [2.9000001, -3.01999998, 5.34000015]
+      Rotation: [-0.336848527, -0.640535831, 3.14159274]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      Camera:
+        ProjectionType: 0
+        PerspectiveFOV: 60
+        PerspectiveNear: 0.100000001
+        PerspectiveFar: 1000
+        OrthographicSize: 10
+        OrthographicNear: 0.100000001
+        OrthographicFar: 1
+      Primary: true
+      FixedAspectRatio: false

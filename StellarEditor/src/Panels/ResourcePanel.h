@@ -17,5 +17,7 @@ namespace Stellar {
 		STLR_Ptr<Texture2D> m_FolderIcon;
 		STLR_Ptr<Texture2D> m_FileIcon;
 		STLR_Ptr<Texture2D> m_ArrowBackIcon;
+
+		std::map<std::string, STLR_Ptr<Texture2D>> m_PreviewTextuers;
 	};
 }
