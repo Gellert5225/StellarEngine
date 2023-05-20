@@ -319,6 +319,8 @@ void ImGui_ImplMetal_RenderDrawData(ImDrawData* drawData, id<MTLCommandBuffer> c
             }
         });
     }];
+    
+    [bd->SharedMetalContext.framebufferDescriptor release];
 }
 
 bool ImGui_ImplMetal_CreateFontsTexture(id<MTLDevice> device)
@@ -727,6 +729,8 @@ static void ImGui_ImplMetal_InvalidateDeviceObjectsForPlatformWindows()
     id<MTLRenderPipelineState> renderPipelineState = [device newRenderPipelineStateWithDescriptor:pipelineDescriptor error:&error];
     if (error != nil)
         NSLog(@"Error: failed to create Metal pipeline state: %@", error);
+    
+    [pipelineDescriptor release];
 
     return renderPipelineState;
 }

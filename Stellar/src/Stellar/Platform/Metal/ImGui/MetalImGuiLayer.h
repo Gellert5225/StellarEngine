@@ -18,6 +18,8 @@ namespace Stellar {
         void onAttach() override;
         void onDetach() override;
         void onImGuiRender() override;
+    private:
+        NS::AutoreleasePool* m_AutoreleasePool;
     };
 
 }

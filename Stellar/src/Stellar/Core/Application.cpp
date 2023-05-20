@@ -57,18 +57,22 @@ namespace Stellar {
 	}
 
 	void Application::run() {
+        
 		while (m_Running) {
+#if defined(__APPLE__)
+            NS::AutoreleasePool* pool = NS::AutoreleasePool::alloc()->init();
+#endif
 			auto time = (float)glfwGetTime();
 			Timestep timestep{time - m_LastFrameTime};
 			m_LastFrameTime = time;
-
+            
 			auto swapChain = m_Window->getSwapChain();
 			swapChain->beginFrame();
 
 			Renderer::BeginFrame();
 			for (Layer* layer : m_LayerStack)
 				layer->onUpdate(timestep);
-
+            
 			// imGui
 			m_ImGuiLayer->begin();
 			for (Layer* layer : m_LayerStack)
@@ -77,8 +81,12 @@ namespace Stellar {
 
 			// present
 			m_Window->swapBuffers();
-
-			m_Window->onUpdate();
+            
+            m_Window->onUpdate();
+            
+#if defined(__APPLE__)
+            pool->release();
+#endif
 		}
 	}
 

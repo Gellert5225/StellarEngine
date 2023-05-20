@@ -50,7 +50,11 @@
 					{
 						"name": "METAL_SHADER_VALIDATION",
 						"value": "1"
-					}
+					},
+					// {
+					// 	"name": "OBJC_DEBUG_MISSING_POOLS",
+					// 	"value": "YES"
+					// }
 				]
 			},
 			"args": [],

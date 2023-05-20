@@ -25,7 +25,6 @@ namespace Stellar {
     }
 
     void MetalSwapChain::createSwapChain() {
-        NS::AutoreleasePool* pPool = NS::AutoreleasePool::alloc()->init();
         float xscale, yscale;
         glfwGetWindowContentScale(Application::Get().getWindow().getGLFWWindow(), &xscale, &yscale);
 
@@ -37,8 +36,6 @@ namespace Stellar {
                                        MetalDevice::GetInstance()->getDevice());
         m_SwapChainExtant.width = width * xscale;
         m_SwapChainExtant.height = height * yscale;
-
-        pPool->release();
 
     }
 
@@ -63,7 +60,7 @@ namespace Stellar {
 		m_CurrentFrameIndex = (m_CurrentFrameIndex + 1) % Renderer::MAX_FRAMES_IN_FLIGHT;
 		
         m_Drawable->present();
-        m_Drawable->release();
+        //m_Drawable->release();
     }
 
     void MetalSwapChain::onResize() {

@@ -13,12 +13,6 @@
 
 namespace Stellar {
     void MetalRenderer::init() {
-        // create framebuffer
-        FrameBufferSpec framebufferSpec;
-        framebufferSpec.width = 1280;
-        framebufferSpec.height = 720;
-        m_FrameBuffer = FrameBuffer::Create(framebufferSpec);
-
 		m_Semaphore = dispatch_semaphore_create(Renderer::MAX_FRAMES_IN_FLIGHT);
 
         MTL::DepthStencilDescriptor* pDsDesc = MTL::DepthStencilDescriptor::alloc()->init();
@@ -41,8 +35,8 @@ namespace Stellar {
 										STLR_Ptr<RenderPass> renderPass, 
 										bool explicitClear) {
         // resize framebuffer
-
-        pool = NS::AutoreleasePool::alloc()->init();
+        m_FrameBuffer = renderPass->getSpecification().targetFramebuffer;
+        
         m_CommandBuffer = MetalDevice::GetInstance()->getCommandQueue()->commandBuffer();
 		dispatch_semaphore_wait(m_Semaphore, DISPATCH_TIME_FOREVER);
 		m_CommandBuffer->addCompletedHandler([&](MTL::CommandBuffer* pCmd) {
@@ -55,7 +49,7 @@ namespace Stellar {
         m_Encoder->endEncoding();
         m_CommandBuffer->commit();
 
-        pool->release();
+        // pool->release();
     }
 
     void MetalRenderer::setClearColor(const glm::vec4 &color) {

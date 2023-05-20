@@ -17,7 +17,7 @@ namespace Stellar {
         STLR_CORE_ASSERT(m_Library,  error->localizedDescription()->utf8String());
         STLR_CORE_INFO("Loaded shader {0}", filePath);
 
-		reflect();
+		//reflect();
     }
 
     MTL::Library* MetalShader::getLibrary() {

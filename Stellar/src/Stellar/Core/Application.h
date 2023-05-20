@@ -11,6 +11,10 @@
 #include "Stellar/Renderer/Renderer.h"
 #include "Stellar/Renderer/Camera.h"
 
+#if defined (__APPLE__)
+#include "Stellar/Platform/Metal/MetalAPI.h"
+#endif
+
 namespace Stellar {
 	class STLR_API Application {
 		struct AppInfo {
@@ -43,6 +47,10 @@ namespace Stellar {
 		LayerStack m_LayerStack;
 		float m_LastFrameTime = 0.0f;
 		bool m_Running = true;
+        
+#if defined(__APPLE__)
+        NS::AutoreleasePool* m_AutoreleasePool;
+#endif
 
 	private:
 		bool onWindowClose(WindowCloseEvent&);

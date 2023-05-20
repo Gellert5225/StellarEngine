@@ -51,7 +51,6 @@ namespace Stellar {
         STLR_Ptr<MetalPipeline> m_Pipeline;
         STLR_Ptr<FrameBuffer> m_FrameBuffer;
         STLR_Ptr<UniformBuffer> m_UniformBuffer;
-        NS::AutoreleasePool* pool;
 
 		dispatch_semaphore_t m_Semaphore;
     };

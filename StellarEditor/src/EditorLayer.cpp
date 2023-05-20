@@ -260,8 +260,8 @@ namespace Stellar {
 
 		ImGui::End();
 
-		static bool show = true;
-		ImGui::ShowDemoWindow(&show);
+//		static bool show = false;
+//		ImGui::ShowDemoWindow(&show);
 	}
 
 	bool EditorLayer::onKeyPressed(KeyPressedEvent& e) {
