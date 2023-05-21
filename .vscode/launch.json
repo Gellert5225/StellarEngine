@@ -22,7 +22,7 @@
 				"internalConsoleOptions": "openOnSessionStart",
 			},
 			"osx": {
-				"name": "Linux Launch",
+				"name": "Mac Debug",
 				"type": "cppdbg",
 				"request": "launch",
 				"program": "${command:cmake.launchTargetPath}",
@@ -51,10 +51,10 @@
 						"name": "METAL_SHADER_VALIDATION",
 						"value": "1"
 					},
-					// {
-					// 	"name": "OBJC_DEBUG_MISSING_POOLS",
-					// 	"value": "YES"
-					// }
+					{
+						"name": "OBJC_DEBUG_MISSING_POOLS",
+						"value": "YES"
+					}
 				]
 			},
 			"args": [],
