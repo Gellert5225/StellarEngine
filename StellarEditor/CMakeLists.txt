@@ -14,9 +14,6 @@ find_package(glfw3 CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
 add_executable(StellarEditor ${StellarEditor_SRC})
-if(APPLE)
-	target_compile_options(StellarEditor PUBLIC "-fno-objc-arc")
-endif()
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${StellarEditor_SRC})
 
