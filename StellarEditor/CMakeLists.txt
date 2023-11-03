@@ -13,6 +13,16 @@ file(GLOB_RECURSE StellarEditor_SRC
 find_package(glfw3 CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
+find_library(VLD vld HINTS "C:/Program Files (x86)/Visual Leak Detector/lib/Win64/")
+find_file(VLD_H vld.h HINTS "C:/Program Files (x86)/Visual Leak Detector/include")
+if(VLD_H)
+	message(${VLD_H})
+	include_directories("C:/Program Files (x86)/Visual Leak Detector/include")
+	link_directories(${_Visual_Leak_Detector}/lib/Win64/)
+	link_libraries(${VLD})
+endif()
+message("Enabling Visual Leak Detector Done")
+
 add_executable(StellarEditor ${StellarEditor_SRC})
 if(APPLE)
 target_compile_options(StellarEditor PUBLIC "-fno-objc-arc")

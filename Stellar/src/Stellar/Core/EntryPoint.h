@@ -4,6 +4,8 @@
 #include "Stellar/Core/Log.h"
 #include "Stellar/Core/Application.h"
 
+#include <vld.h>
+
 #if defined(__APPLE__)
 #include "Stellar/Platform/Metal/MetalAPI.h"
 #endif

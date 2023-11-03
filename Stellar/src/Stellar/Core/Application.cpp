@@ -28,6 +28,7 @@ namespace Stellar {
 		}
 
 		Renderer::Shutdown();
+		Input::Close();
 	};
 
 	void Application::onEvent(Event& e) {

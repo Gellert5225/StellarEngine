@@ -41,7 +41,9 @@ namespace Stellar {
 		m_SceneHierarchyPanel.setContext(m_ActiveScene);
 	}
 
-	void EditorLayer::onDetach() {}
+	void EditorLayer::onDetach() {
+		m_Renderer2D->shutDown();
+	}
 
 	void EditorLayer::onUpdate(Timestep ts) {
 		m_ActiveScene->onViewportResize(m_ViewPortSize.x, m_ViewPortSize.y);

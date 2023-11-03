@@ -77,6 +77,9 @@ namespace Stellar {
 	}
 
 	void Renderer2D::shutDown() {
+		for (auto i : m_QuadVertexBufferBase) {
+			delete i;
+		}
 	}
 
 	void Renderer2D::beginScene(const Camera& camera, const glm::mat4& transform) {

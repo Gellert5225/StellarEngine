@@ -12,6 +12,7 @@ namespace Stellar {
 		static int GetMouseX() { return s_Instance->getMouseXImpl(); }
 		static int GetMouseY() { return s_Instance->getMouseYImpl(); }
 		static void SetCursorMode(CursorMode mode);
+		static void Close() { delete s_Instance; }
 		static CursorMode GetCursorMode();
 	protected:
 		virtual bool isKeypressedImpl(int);

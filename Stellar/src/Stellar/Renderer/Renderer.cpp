@@ -54,6 +54,7 @@ namespace Stellar {
 		delete Renderer::GetShaderLibrary();
 		s_RendererAPI->shutDown();
 		delete s_RendererAPI;
+		delete s_Data;
 	}
 
 	void Renderer::BeginRenderPass(STLR_Ptr<CommandBuffer> commandBuffer, 

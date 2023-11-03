@@ -340,6 +340,11 @@ namespace Stellar {
 				shader, nullptr);
 		for (auto layout : m_DescriptorSetLayouts)
 			vkDestroyDescriptorSetLayout(device, layout, nullptr);
+		for (auto a : s_UniformBuffers) {
+			for (auto b : a.second) {
+				delete b.second;
+			}
+		}
 	}
 
 	const std::vector<VkPipelineShaderStageCreateInfo>& VulkanShader::getStageInfos() const {
