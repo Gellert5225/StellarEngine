@@ -99,10 +99,10 @@ endif()
 message("Enabling Visual Leak Detector Done")
 
 foreach (TMP_PATH ${Stellar_SRC})
-string (FIND ${TMP_PATH} ${EXCLUDE_DIR} EXCLUDE_DIR_FOUND)
-if (NOT ${EXCLUDE_DIR_FOUND} EQUAL -1)
-	list (REMOVE_ITEM Stellar_SRC ${TMP_PATH})
-endif ()
+	string (FIND ${TMP_PATH} ${EXCLUDE_DIR} EXCLUDE_DIR_FOUND)
+	if (NOT ${EXCLUDE_DIR_FOUND} EQUAL -1)
+		list (REMOVE_ITEM Stellar_SRC ${TMP_PATH})
+	endif ()
 endforeach(TMP_PATH)
 
 file(GLOB IMGUI_SRC
@@ -116,9 +116,6 @@ file(GLOB IMGUIZMO_SRC
 
 add_library(Stellar ${Stellar_SRC} ${IMGUI_SRC} ${IMGUIZMO_SRC})
 target_precompile_headers(Stellar PRIVATE src/stlrpch.h)
-if(APPLE)
-target_compile_options(Stellar PUBLIC "-fno-objc-arc")
-endif()
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${Stellar_SRC} ${IMGUI_SRC} ${IMGUIZMO_SRC})
 

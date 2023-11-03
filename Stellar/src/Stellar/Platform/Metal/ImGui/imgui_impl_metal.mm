@@ -370,6 +370,8 @@ bool ImGui_ImplMetal_CreateDeviceObjects(id<MTLDevice> device)
     bd->SharedMetalContext.depthStencilState = [device newDepthStencilStateWithDescriptor:depthStencilDescriptor];
     ImGui_ImplMetal_CreateDeviceObjectsForPlatformWindows();
     ImGui_ImplMetal_CreateFontsTexture(device);
+    
+    [depthStencilDescriptor release];
 
     return true;
 }
@@ -610,15 +612,15 @@ static void ImGui_ImplMetal_InvalidateDeviceObjectsForPlatformWindows()
     @synchronized(self.bufferCache)
     {
         // Purge old buffers that haven't been useful for a while
-        if (now - self.lastBufferCachePurge > 1.0)
-        {
-            NSMutableArray* survivors = [NSMutableArray array];
-            for (MetalBuffer* candidate in self.bufferCache)
-                if (candidate.lastReuseTime > self.lastBufferCachePurge)
-                    [survivors addObject:candidate];
-            self.bufferCache = [survivors mutableCopy];
-            self.lastBufferCachePurge = now;
-        }
+//        if (now - self.lastBufferCachePurge > 1.0)
+//        {
+//            NSMutableArray* survivors = [NSMutableArray array];
+//            for (MetalBuffer* candidate in self.bufferCache)
+//                if (candidate.lastReuseTime > self.lastBufferCachePurge)
+//                    [survivors addObject:candidate];
+//            self.bufferCache = [survivors mutableCopy];
+//            self.lastBufferCachePurge = now;
+//        }
 
         // See if we have a buffer we can reuse
         MetalBuffer* bestCandidate = nil;
@@ -731,6 +733,9 @@ static void ImGui_ImplMetal_InvalidateDeviceObjectsForPlatformWindows()
         NSLog(@"Error: failed to create Metal pipeline state: %@", error);
     
     [pipelineDescriptor release];
+    [fragmentFunction release];
+    [vertexFunction release];
+    [library release];
 
     return renderPipelineState;
 }
