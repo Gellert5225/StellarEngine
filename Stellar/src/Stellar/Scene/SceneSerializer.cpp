@@ -162,12 +162,13 @@ namespace Stellar {
 		out << YAML::Key << "Entities";
 		out << YAML::Value << YAML::BeginSeq;
 
-		m_Scene->m_Registry.each([&](auto entityID) {
+        auto idComponent = m_Scene->m_Registry.view<IDComponent>();
+		for (auto entityID : idComponent) {
 			Entity entity = { entityID, m_Scene.raw() };
 			if (!entity) return;
 
 			SerializeEntity(out, entity);
-		});
+		};
 
 		out << YAML::EndSeq;
 		out << YAML::EndMap;

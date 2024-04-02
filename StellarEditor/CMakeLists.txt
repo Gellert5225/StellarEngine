@@ -36,6 +36,8 @@ target_include_directories(StellarEditor PUBLIC
 target_link_libraries(StellarEditor PUBLIC spdlog::spdlog spdlog::spdlog_header_only)
 target_link_libraries(StellarEditor PUBLIC Stellar)
 
+target_compile_definitions(StellarEditor PUBLIC _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING)
+
 set_target_properties(StellarEditor
     PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>"

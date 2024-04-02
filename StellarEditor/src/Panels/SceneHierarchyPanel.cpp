@@ -20,11 +20,13 @@ namespace Stellar {
 
 	void SceneHierarchyPanel::onImGuiRender() {
 		ImGui::Begin("Scene Hierarchy");
+
+        auto idComponent = m_Context->m_Registry.view<IDComponent>();
 		
-		m_Context->m_Registry.each([&](auto entityID) {
+		for (auto entityID : idComponent) {
 			Entity entity{ entityID, m_Context.raw() };
 			drawEntityNode(entity);
-		});
+		};
 
 		if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
 			m_SelectionContext = {};

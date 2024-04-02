@@ -5,14 +5,9 @@ project(Stellar CXX)
 option(STATIC_WINDOWS_RUNTIME "Use static (MT/MTd) Windows runtime" ON)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
-if (WIN32)
-	set(Shaderc_ROOT F:/Dev/shaderc/build/install/lib/shaderc_shared.lib)
-	set(unofficial-shaderc_FOUND true)
-endif()
-
-if(UNIX AND NOT APPLE)
-	set(Shaderc_ROOT /home/gellert/Documents/shaderc/install/lib/libshaderc_combined.a)
-endif()
+# if(UNIX AND NOT APPLE)
+# 	set(Shaderc_ROOT /home/gellert/Documents/shaderc/install/lib/libshaderc_combined.a)
+# endif()
 
 
 find_package(glfw3 CONFIG REQUIRED)
@@ -70,6 +65,10 @@ endif()
 find_package(spdlog CONFIG REQUIRED)
 find_package(spirv_cross_core CONFIG REQUIRED)
 find_package(spirv_cross_glsl CONFIG REQUIRED)
+find_package(glslang CONFIG REQUIRED)
+find_package(SPIRV-Tools-opt CONFIG REQUIRED)
+find_package(SPIRV-Tools CONFIG REQUIRED)
+find_package(unofficial-shaderc CONFIG REQUIRED)
 
 if (WIN32 OR (UNIX AND NOT APPLE))
 	set (EXCLUDE_DIR "/Metal/")
@@ -119,7 +118,7 @@ target_precompile_headers(Stellar PRIVATE src/stlrpch.h)
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${Stellar_SRC} ${IMGUI_SRC} ${IMGUIZMO_SRC})
 
-target_compile_definitions(Stellar PUBLIC STLR_BUILD_DLL GLFW_INCLUDE_NONE)
+target_compile_definitions(Stellar PUBLIC STLR_BUILD_DLL GLFW_INCLUDE_NONE _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING)
 
 target_include_directories(Stellar PUBLIC 
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>/vendor/imgui 
@@ -136,16 +135,16 @@ endif()
 target_link_libraries(Stellar PUBLIC glfw)
 if (WIN32 OR (UNIX AND NOT APPLE))
 	target_link_libraries(Stellar PUBLIC Vulkan::Vulkan)
-	target_link_libraries(Stellar PUBLIC ${Shaderc_ROOT})
+	#target_link_libraries(Stellar PUBLIC ${Shaderc_ROOT})
 endif()
-# target_link_libraries(Stellar PUBLIC unofficial::shaderc::shaderc)
-# target_link_libraries(Stellar PUBLIC unofficial::shaderc_util::shaderc_util)
+target_link_libraries(Stellar PUBLIC SPIRV-Tools-static)
+target_link_libraries(Stellar PUBLIC unofficial::shaderc::shaderc)
 target_link_libraries(Stellar PUBLIC spirv-cross-core)
 target_link_libraries(Stellar PUBLIC spirv-cross-glsl)
 target_link_libraries(Stellar PUBLIC glm::glm)
 target_link_libraries(Stellar PUBLIC EnTT::EnTT)
 target_link_libraries(Stellar PUBLIC spdlog::spdlog spdlog::spdlog_header_only)
-target_link_libraries(Stellar PUBLIC yaml-cpp)
+target_link_libraries(Stellar PUBLIC yaml-cpp::yaml-cpp)
 target_link_libraries(Stellar PUBLIC nfd)
 
 if (APPLE)
