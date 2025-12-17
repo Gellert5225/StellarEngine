@@ -126,6 +126,7 @@ I will try to list as detailed as possible. However I have not tested the build 
 * Linux:
   * GNU GCC
   * X11
+  * GTK+ 3.0
 * macOS:
   * Xcode (optional)
   * Clang++

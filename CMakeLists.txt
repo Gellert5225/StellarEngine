@@ -7,7 +7,7 @@ if (WIN32)
 endif()
 
 if(UNIX AND NOT APPLE)
-	set(ENV{VCPKG_ROOT} "/home/gellert/Documents/vcpkg")
+	set(ENV{VCPKG_ROOT} "/home/gellert/Developer/vcpkg")
 	set(VCPKG_TARGET_TRIPLET x64-linux)
 endif()
 
@@ -23,7 +23,11 @@ if(NOT CMAKE_TOOLCHAIN_FILE AND EXISTS "${vcpkg}")
   message(STATUS "vcpkg toolchain found: ${CMAKE_TOOLCHAIN_FILE}")
 endif()
 
-project(StellarEngine LANGUAGES C CXX OBJC OBJCXX)
+if(APPLE)
+  project(StellarEngine LANGUAGES C CXX OBJC OBJCXX)
+else()
+  project(StellarEngine LANGUAGES C CXX)
+endif()
 
 set(CMAKE_CXX_STANDARD 17
 	CACHE STRING "C++ standard to use")
