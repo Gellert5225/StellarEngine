@@ -69,6 +69,7 @@ find_package(glslang CONFIG REQUIRED)
 find_package(SPIRV-Tools-opt CONFIG REQUIRED)
 find_package(SPIRV-Tools CONFIG REQUIRED)
 find_package(unofficial-shaderc CONFIG REQUIRED)
+find_package(assimp CONFIG REQUIRED)
 
 if (WIN32 OR (UNIX AND NOT APPLE))
 	set (EXCLUDE_DIR "/Metal/")
@@ -146,6 +147,7 @@ target_link_libraries(Stellar PUBLIC EnTT::EnTT)
 target_link_libraries(Stellar PUBLIC spdlog::spdlog spdlog::spdlog_header_only)
 target_link_libraries(Stellar PUBLIC yaml-cpp::yaml-cpp)
 target_link_libraries(Stellar PUBLIC nfd)
+target_link_libraries(Stellar PUBLIC assimp::assimp)
 
 if (APPLE)
 	target_link_libraries(Stellar PUBLIC
