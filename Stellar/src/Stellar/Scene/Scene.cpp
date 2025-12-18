@@ -76,6 +76,7 @@ namespace Stellar {
 	void Scene::renderScene(STLR_Ptr<Renderer2D>& renderer2D, EditorCamera& camera) {
 		renderer2D->resetStats();
 		renderer2D->beginScene(camera);
+        renderer2D->drawGrid(40, 1.0f, glm::vec4(0.7f, 0.7f, 0.7f, 1.0f));
 		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 		for (auto entity : group) {
 			auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);

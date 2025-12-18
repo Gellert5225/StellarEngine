@@ -162,6 +162,32 @@ namespace Stellar {
 		m_QuadIndexCount += 6;
 		m_Stats.quadCount++;
 	}
+	
+	// Draws a grid on the X-Z plane centered at the origin
+	void Renderer2D::drawGrid(int gridCount, float spacing, const glm::vec4& color) {
+	    // Grid lines are drawn as thin quads for batch compatibility
+		float gridLength = gridCount * spacing;
+		float lineThickness = spacing * 0.005f;
+
+		glm::vec4 xAxisColor = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f); // Red
+		glm::vec4 zAxisColor = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f); // Blue
+
+		for (int i = -gridCount; i <= gridCount; ++i) {
+			float pos = i * spacing;
+			// X lines (parallel to X, at constant Z): color X axis red
+			glm::vec4 xLineColor = (i == 0) ? xAxisColor : color;
+			glm::mat4 xLineTransform = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, pos))
+				* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0))
+				* glm::scale(glm::mat4(1.0f), glm::vec3(gridLength * 2.0f, lineThickness, lineThickness));
+			drawQuad(xLineTransform, xLineColor);
+			// Z lines (parallel to Z, at constant X): color Z axis blue
+			glm::vec4 zLineColor = (i == 0) ? zAxisColor : color;
+			glm::mat4 zLineTransform = glm::translate(glm::mat4(1.0f), glm::vec3(pos, 0.0f, 0.0f))
+                * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0))
+				* glm::scale(glm::mat4(1.0f), glm::vec3(lineThickness, gridLength * 2.0f, lineThickness));
+			drawQuad(zLineTransform, zLineColor);
+		}
+	}
 
 	void Renderer2D::drawQuad(const glm::mat4& transform, const glm::vec4& color, const STLR_Ptr<Texture2D>& texture, float tilingFactor) {
 		constexpr size_t quadVertexCount = 4;
