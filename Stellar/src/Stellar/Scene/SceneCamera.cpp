@@ -21,12 +21,15 @@ namespace Stellar {
 		switch (m_ProjectionType) {
 		case ProjectionType::Perspective:
 			setPerspectiveProjection(m_Fov, float(width), float(height), m_PerspectiveNear, m_PerspectiveFar);
-			break;
+            m_ProjectionMatrix[1][1] *= -1;
+            break;
 		case ProjectionType::Orthographic:
 			float aspect = float(width) / float(height);
 			float w = m_OrthoSize * aspect;
 			float h = m_OrthoSize;
 			setOrthographicProjection(w, h, m_OrthoNear, m_OrthoFar);
+
+            m_ProjectionMatrix[1][1] *= -1;
 			break;
 		}
 	}
