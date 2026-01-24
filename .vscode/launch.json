@@ -2,60 +2,33 @@
 	"version": "0.2.0",
     "configurations": [
 		{
+			"name": "Launch (macOS)",
+			"type": "lldb-dap",
+			"request": "launch",
+			"program": "${command:cmake.launchTargetPath}",
+			"args": [],
+			"cwd": "${command:cmake.getLaunchTargetDirectory}",
+	
+			"env": {
+				"METAL_DEVICE_WRAPPER_TYPE": "5",
+				"METAL_ERROR_MODE": "0",
+				"METAL_DEBUG_ERROR_MODE": "0",
+				"METAL_DEVICE_FORCE_COMMAND_BUFFER_ENHANCED_ERRORS": "1",
+				"METAL_DIAGNOSTICS_ENABLED": "1",
+				"METAL_SHADER_VALIDATION": "1"
+			}
+		},
+		{
 			"name": "Launch",
 			"type": "cppdbg",
 			"request": "launch",
 			"program":"${command:cmake.launchTargetPath}",
 			"linux": {
-				"name": "Linux Launch",
-				"type": "cppdbg",
-				"request": "launch",
-				"program": "${command:cmake.launchTargetPath}",
 				"MIMode": "gdb"
 			},
 			"windows": {
-				"name": "Linux Launch",
-				"type": "cppvsdbg",
-				"request": "launch",
-				"program": "${command:cmake.launchTargetPath}",
 				"console": "integratedTerminal",
-				"internalConsoleOptions": "openOnSessionStart",
-			},
-			"osx": {
-				"name": "Mac Debug",
-				"type": "cppdbg",
-				"request": "launch",
-				"program": "${command:cmake.launchTargetPath}",
-				"environment": [
-					{
-						"name": "METAL_DEVICE_WRAPPER_TYPE",
-						"value": "5"
-					},
-					{
-						"name": "METAL_ERROR_MODE",
-						"value": "0"
-					},
-					{
-						"name": "METAL_DEBUG_ERROR_MODE",
-						"value": "0"
-					},
-					{
-						"name": "METAL_DEVICE_FORCE_COMMAND_BUFFER_ENHANCED_ERRORS",
-						"value": "1"
-					},
-					{
-						"name": "METAL_DIAGNOSTICS_ENABLED",
-						"value": "1"
-					},
-					{
-						"name": "METAL_SHADER_VALIDATION",
-						"value": "1"
-					},
-					{
-						"name": "OBJC_DEBUG_MISSING_POOLS",
-						"value": "YES"
-					}
-				]
+				"internalConsoleOptions": "openOnSessionStart"
 			},
 			"args": [],
 			"stopAtEntry": false,

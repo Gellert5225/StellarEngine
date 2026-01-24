@@ -45,7 +45,9 @@ namespace Stellar {
         m_CommandBuffer = MetalDevice::GetInstance()->getCommandQueue()->commandBuffer();
 		dispatch_semaphore_wait(m_Semaphore, DISPATCH_TIME_FOREVER);
 		m_CommandBuffer->addCompletedHandler([&](MTL::CommandBuffer* pCmd) {
+			NS::AutoreleasePool* pool = NS::AutoreleasePool::alloc()->init();
 			dispatch_semaphore_signal(m_Semaphore);
+			pool->release();
 		});
         m_Encoder = m_CommandBuffer->renderCommandEncoder(m_FrameBuffer.As<MetalFrameBuffer>()->getFrameBuffer());
 

@@ -2,6 +2,8 @@
 #define MTL_PRIVATE_IMPLEMENTATION
 #define CA_PRIVATE_IMPLEMENTATION
 
+#include "Stellar/Platform/Metal/MetalAPI.h"
+
 #include "stlrpch.h"
 #include "MetalRendererContext.h"
 #include "Stellar/Platform/Metal/Device/MetalDevice.h"

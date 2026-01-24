@@ -16,8 +16,10 @@ namespace Stellar {
     }
 
     void MetalDevice::init() {
+        NS::AutoreleasePool* pool = NS::AutoreleasePool::alloc()->init();
         m_Device = MTL::CreateSystemDefaultDevice();
         m_CommandQueue = m_Device->newCommandQueue();
+        pool->release();
     }
 
     MTL::Device* MetalDevice::getDevice() {

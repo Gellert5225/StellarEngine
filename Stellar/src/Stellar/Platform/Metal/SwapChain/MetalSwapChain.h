@@ -6,8 +6,8 @@
 
 #include <GLFW/glfw3.h>
 
-void* createLayer(GLFWwindow* window, double width, double height, void* device);
-void* nextDrawable(void* layer);
+float getScale(GLFWwindow* window);
+void setWindowContentView(GLFWwindow* window, CA::MetalLayer* layer);
 
 namespace Stellar {
     class MetalSwapChain : public SwapChain {
@@ -28,7 +28,7 @@ namespace Stellar {
         MTL::CommandBuffer* getCommandBuffer();
         void* getSwapChain();
     private:
-        void* m_MetalSwapChain;
+        CA::MetalLayer* m_MetalSwapChain;
         CA::MetalDrawable* m_Drawable;
         MTL::RenderPassDescriptor* m_RenderPass;
         MTL::RenderPassDescriptor* m_ImGuiRenderPass;
@@ -41,5 +41,8 @@ namespace Stellar {
         void createSwapChain();
         void createRenderPass();
         void createCommandBuffer();
+
+        CA::MetalLayer* createLayer(GLFWwindow* window, double width, double height, MTL::Device* device);
+        CA::MetalDrawable* nextDrawable(CA::MetalLayer* layer);
     };
 }

@@ -413,30 +413,32 @@ struct ImGuiViewportDataMetal
 
 static void ImGui_ImplMetal_CreateWindow(ImGuiViewport* viewport)
 {
-    ImGui_ImplMetal_Data* bd = ImGui_ImplMetal_GetBackendData();
-    ImGuiViewportDataMetal* data = IM_NEW(ImGuiViewportDataMetal)();
-    viewport->RendererUserData = data;
+    @autoreleasepool {
+        ImGui_ImplMetal_Data* bd = ImGui_ImplMetal_GetBackendData();
+        ImGuiViewportDataMetal* data = IM_NEW(ImGuiViewportDataMetal)();
+        viewport->RendererUserData = data;
 
-    // PlatformHandleRaw should always be a NSWindow*, whereas PlatformHandle might be a higher-level handle (e.g. GLFWWindow*, SDL_Window*).
-    // Some back-ends will leave PlatformHandleRaw NULL, in which case we assume PlatformHandle will contain the NSWindow*.
-    void* handle = viewport->PlatformHandleRaw ? viewport->PlatformHandleRaw : viewport->PlatformHandle;
-    IM_ASSERT(handle != NULL);
+        // PlatformHandleRaw should always be a NSWindow*, whereas PlatformHandle might be a higher-level handle (e.g. GLFWWindow*, SDL_Window*).
+        // Some back-ends will leave PlatformHandleRaw NULL, in which case we assume PlatformHandle will contain the NSWindow*.
+        void* handle = viewport->PlatformHandleRaw ? viewport->PlatformHandleRaw : viewport->PlatformHandle;
+        IM_ASSERT(handle != NULL);
 
-    id<MTLDevice> device = [bd->SharedMetalContext.depthStencilState device];
-    CAMetalLayer* layer = [CAMetalLayer layer];
-    layer.device = device;
-    layer.framebufferOnly = YES;
-    layer.pixelFormat = bd->SharedMetalContext.framebufferDescriptor.colorPixelFormat;
+        id<MTLDevice> device = [bd->SharedMetalContext.depthStencilState device];
+        CAMetalLayer* layer = [CAMetalLayer layer];
+        layer.device = device;
+        layer.framebufferOnly = YES;
+        layer.pixelFormat = bd->SharedMetalContext.framebufferDescriptor.colorPixelFormat;
 #if TARGET_OS_OSX
-    NSWindow* window = (__bridge NSWindow*)handle;
-    NSView* view = window.contentView;
-    view.layer = layer;
-    view.wantsLayer = YES;
+        NSWindow* window = (__bridge NSWindow*)handle;
+        NSView* view = window.contentView;
+        view.layer = layer;
+        view.wantsLayer = YES;
 #endif
-    data->MetalLayer = layer;
-    data->CommandQueue = [device newCommandQueue];
-    data->RenderPassDescriptor = [[MTLRenderPassDescriptor alloc] init];
-    data->Handle = handle;
+        data->MetalLayer = layer;
+        data->CommandQueue = [device newCommandQueue];
+        data->RenderPassDescriptor = [[MTLRenderPassDescriptor alloc] init];
+        data->Handle = handle;
+    }
 }
 
 static void ImGui_ImplMetal_DestroyWindow(ImGuiViewport* viewport)
@@ -460,47 +462,49 @@ static void ImGui_ImplMetal_SetWindowSize(ImGuiViewport* viewport, ImVec2 size)
 
 static void ImGui_ImplMetal_RenderWindow(ImGuiViewport* viewport, void*)
 {
-    ImGuiViewportDataMetal* data = (ImGuiViewportDataMetal*)viewport->RendererUserData;
+    @autoreleasepool {
+        ImGuiViewportDataMetal* data = (ImGuiViewportDataMetal*)viewport->RendererUserData;
 
 #if TARGET_OS_OSX
-    void* handle = viewport->PlatformHandleRaw ? viewport->PlatformHandleRaw : viewport->PlatformHandle;
-    NSWindow* window = (__bridge NSWindow*)handle;
+        void* handle = viewport->PlatformHandleRaw ? viewport->PlatformHandleRaw : viewport->PlatformHandle;
+        NSWindow* window = (__bridge NSWindow*)handle;
 
-    // Always render the first frame, regardless of occlusionState, to avoid an initial flicker
-    if ((window.occlusionState & NSWindowOcclusionStateVisible) == 0 && !data->FirstFrame)
-    {
-        // Do not render windows which are completely occluded. Calling -[CAMetalLayer nextDrawable] will hang for
-        // approximately 1 second if the Metal layer is completely occluded.
-        return;
-    }
-    data->FirstFrame = false;
+        // Always render the first frame, regardless of occlusionState, to avoid an initial flicker
+        if ((window.occlusionState & NSWindowOcclusionStateVisible) == 0 && !data->FirstFrame)
+        {
+            // Do not render windows which are completely occluded. Calling -[CAMetalLayer nextDrawable] will hang for
+            // approximately 1 second if the Metal layer is completely occluded.
+            return;
+        }
+        data->FirstFrame = false;
 
-    viewport->DpiScale = (float)window.backingScaleFactor;
-    if (data->MetalLayer.contentsScale != viewport->DpiScale)
-    {
-        data->MetalLayer.contentsScale = viewport->DpiScale;
-        data->MetalLayer.drawableSize = MakeScaledSize(window.frame.size, viewport->DpiScale);
-    }
-    viewport->DrawData->FramebufferScale = ImVec2(viewport->DpiScale, viewport->DpiScale);
+        viewport->DpiScale = (float)window.backingScaleFactor;
+        if (data->MetalLayer.contentsScale != viewport->DpiScale)
+        {
+            data->MetalLayer.contentsScale = viewport->DpiScale;
+            data->MetalLayer.drawableSize = MakeScaledSize(window.frame.size, viewport->DpiScale);
+        }
+        viewport->DrawData->FramebufferScale = ImVec2(viewport->DpiScale, viewport->DpiScale);
 #endif
 
-    id <CAMetalDrawable> drawable = [data->MetalLayer nextDrawable];
-    if (drawable == nil)
-        return;
+        id <CAMetalDrawable> drawable = [data->MetalLayer nextDrawable];
+        if (drawable == nil)
+            return;
 
-    MTLRenderPassDescriptor* renderPassDescriptor = data->RenderPassDescriptor;
-    renderPassDescriptor.colorAttachments[0].texture = drawable.texture;
-    renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(0, 0, 0, 0);
-    if ((viewport->Flags & ImGuiViewportFlags_NoRendererClear) == 0)
-        renderPassDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
+        MTLRenderPassDescriptor* renderPassDescriptor = data->RenderPassDescriptor;
+        renderPassDescriptor.colorAttachments[0].texture = drawable.texture;
+        renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(0, 0, 0, 0);
+        if ((viewport->Flags & ImGuiViewportFlags_NoRendererClear) == 0)
+            renderPassDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
 
-    id <MTLCommandBuffer> commandBuffer = [data->CommandQueue commandBuffer];
-    id <MTLRenderCommandEncoder> renderEncoder = [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
-    ImGui_ImplMetal_RenderDrawData(viewport->DrawData, commandBuffer, renderEncoder);
-    [renderEncoder endEncoding];
+        id <MTLCommandBuffer> commandBuffer = [data->CommandQueue commandBuffer];
+        id <MTLRenderCommandEncoder> renderEncoder = [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
+        ImGui_ImplMetal_RenderDrawData(viewport->DrawData, commandBuffer, renderEncoder);
+        [renderEncoder endEncoding];
 
-    [commandBuffer presentDrawable:drawable];
-    [commandBuffer commit];
+        [commandBuffer presentDrawable:drawable];
+        [commandBuffer commit];
+    }
 }
 
 static void ImGui_ImplMetal_InitPlatformInterface()

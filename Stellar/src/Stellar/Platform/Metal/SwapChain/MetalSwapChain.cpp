@@ -48,8 +48,29 @@ namespace Stellar {
         m_CommandBuffer = MetalDevice::GetInstance()->getCommandQueue()->commandBuffer();
     }
 
+    CA::MetalLayer* MetalSwapChain::createLayer(GLFWwindow* window, double width, double height, MTL::Device* device) {
+        float scale = getScale(window);
+        CGSize size = {};
+        size.height = height * scale;
+        size.width = width * scale;
+
+        CA::MetalLayer* layer = CA::MetalLayer::layer();
+        layer->setDevice(device);
+        layer->setPixelFormat(MTL::PixelFormatBGRA8Unorm);
+        layer->setDrawableSize(size);
+        layer->setDisplaySyncEnabled(false);
+
+        setWindowContentView(window, layer);
+
+        return layer;
+    }
+
+    CA::MetalDrawable* MetalSwapChain::nextDrawable(CA::MetalLayer* layer) {
+        return layer->nextDrawable();
+    }
+
     void MetalSwapChain::beginFrame() {
-        m_Drawable = reinterpret_cast<CA::MetalDrawable*>(nextDrawable(m_MetalSwapChain));
+        m_Drawable = nextDrawable(m_MetalSwapChain);
 
         if (m_Drawable == nullptr) {
             STLR_CORE_ASSERT(false, "Failed to acquire Metal Drawable");
