@@ -40,6 +40,12 @@ namespace Stellar {
 		void endScene();
 		void drawQuad(const glm::mat4& transform, const glm::vec4& color);
 		void drawQuad(const glm::mat4& transform, const glm::vec4& color, const STLR_Ptr<Texture2D>& texture, float tilingFactor);
+		// Draws a grid on the X-Z plane centered at the origin
+		// gridCount: number of lines on each side of origin (total lines = 2*gridCount+1)
+		// spacing: distance between lines
+		// color: color of grid lines
+		// axisColor: color for the main X and Z axes
+		void drawGrid(int gridCount, float spacing, const glm::vec4& color);
 	private:
 		void flushAndReset();
 	private:
