@@ -307,17 +307,21 @@ void ImGui_ImplMetal_RenderDrawData(ImDrawData* drawData, id<MTLCommandBuffer> c
 
     [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer>)
     {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            ImGui_ImplMetal_Data* bd = ImGui_ImplMetal_GetBackendData();
-            if (bd != NULL)
-            {
-                @synchronized(bd->SharedMetalContext.bufferCache)
-                {
-                    [bd->SharedMetalContext.bufferCache addObject:vertexBuffer];
-                    [bd->SharedMetalContext.bufferCache addObject:indexBuffer];
+        @autoreleasepool {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                @autoreleasepool {
+                    ImGui_ImplMetal_Data* bd = ImGui_ImplMetal_GetBackendData();
+                    if (bd != NULL)
+                    {
+                        @synchronized(bd->SharedMetalContext.bufferCache)
+                        {
+                            [bd->SharedMetalContext.bufferCache addObject:vertexBuffer];
+                            [bd->SharedMetalContext.bufferCache addObject:indexBuffer];
+                        }
+                    }
                 }
-            }
-        });
+            });
+        }
     }];
     
     [bd->SharedMetalContext.framebufferDescriptor release];
