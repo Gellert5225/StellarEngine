@@ -53,5 +53,9 @@ namespace Stellar {
         STLR_Ptr<UniformBuffer> m_UniformBuffer;
 
 		dispatch_semaphore_t m_Semaphore;
+
+        uint32_t m_ViewPortWidth = 0;
+        uint32_t m_ViewPortHeight = 0;
+        bool m_NeedResize = false;
     };
 }

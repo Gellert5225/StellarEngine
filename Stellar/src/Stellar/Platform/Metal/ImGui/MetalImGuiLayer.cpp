@@ -29,19 +29,25 @@ namespace Stellar {
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-		io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/static/OpenSans/OpenSans-Bold.ttf", 18.0f);
-		io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/static/OpenSans/OpenSans-Regular.ttf", 18.0f);
-		io.Fonts->AddFontFromFileTTF("Resources/Fonts/SourceCodePro/static/SourceCodePro-Bold.ttf", 18.0f);
-		io.Fonts->AddFontFromFileTTF("Resources/Fonts/SourceCodePro/static/SourceCodePro-Medium.ttf", 18.0f);
-		io.Fonts->AddFontFromFileTTF("Resources/Fonts/SourceCodePro/static/SourceCodePro-ExtraBold.ttf", 18.0f);
+		// Get content scale for Retina displays
+		float xscale = 1.0f, yscale = 1.0f;
+		auto window = Application::Get().getWindow().getGLFWWindow();
+		glfwGetWindowContentScale(window, &xscale, &yscale);
 
-		io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/static/OpenSans/OpenSans-SemiBold.ttf", 15.0f);
+		io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/static/OpenSans/OpenSans-Bold.ttf", 18.0f * xscale);
+		io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/static/OpenSans/OpenSans-Regular.ttf", 18.0f * xscale);
+		io.Fonts->AddFontFromFileTTF("Resources/Fonts/SourceCodePro/static/SourceCodePro-Bold.ttf", 18.0f * xscale);
+		io.Fonts->AddFontFromFileTTF("Resources/Fonts/SourceCodePro/static/SourceCodePro-Medium.ttf", 18.0f * xscale);
+		io.Fonts->AddFontFromFileTTF("Resources/Fonts/SourceCodePro/static/SourceCodePro-ExtraBold.ttf", 18.0f * xscale);
+
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/static/OpenSans/OpenSans-SemiBold.ttf", 15.0f * xscale);
+		io.FontGlobalScale = 1.0f / xscale;
 
 		static const ImWchar s_FontAwesomeRanges[] = { STLR_ICON_MIN_FA, STLR_ICON_MAX_FA, 0 };
 		UI::FontConfiguration fontAwesome;
 		fontAwesome.FontName = "FontAwesome";
 		fontAwesome.FilePath = "Resources/Fonts/FontAwesome/fa-solid-900.ttf";
-		fontAwesome.Size = 15.0f;
+		fontAwesome.Size = 15.0f * xscale;
 		fontAwesome.GlyphRanges = s_FontAwesomeRanges;
 		fontAwesome.MergeWithLast = true;
 		UI::Fonts::Add(fontAwesome);
@@ -52,7 +58,6 @@ namespace Stellar {
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-        auto window = Application::Get().getWindow().getGLFWWindow();
         ImGui_ImplGlfw_InitForOther(window, true);
         ImGui_ImplMetal_Init(MetalDevice::GetInstance()->getDevice());
 

@@ -6,17 +6,20 @@
 #import <QuartzCore/QuartzCore.h>
 
 void* createLayer(GLFWwindow* window, double width, double height, void* device) {
+    NSWindow* nswindow = glfwGetCocoaWindow(window);
+    CGFloat scale = nswindow.backingScaleFactor;
+    
     CGSize size = {};
-    size.height = height;
-    size.width = width;
+    size.height = height * scale;
+    size.width = width * scale;
 
     CAMetalLayer* layer = [CAMetalLayer layer];
     layer.device = (__bridge id<MTLDevice>) device;
     layer.pixelFormat = MTLPixelFormatBGRA8Unorm;
     layer.drawableSize = size;
+    layer.contentsScale = scale;
 	layer.displaySyncEnabled = false;
 
-    NSWindow* nswindow = glfwGetCocoaWindow(window);
     nswindow.contentView.layer = layer;
     nswindow.contentView.wantsLayer = YES;
 

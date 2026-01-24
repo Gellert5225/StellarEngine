@@ -34,8 +34,13 @@ namespace Stellar {
     void MetalRenderer::beginRenderPass(STLR_Ptr<CommandBuffer> commandBuffer, 
 										STLR_Ptr<RenderPass> renderPass, 
 										bool explicitClear) {
-        // resize framebuffer
         m_FrameBuffer = renderPass->getSpecification().targetFramebuffer;
+
+        // Resize framebuffer if needed
+        if (m_NeedResize) {
+            m_NeedResize = false;
+            m_FrameBuffer->resize(m_ViewPortWidth, m_ViewPortHeight);
+        }
         
         m_CommandBuffer = MetalDevice::GetInstance()->getCommandQueue()->commandBuffer();
 		dispatch_semaphore_wait(m_Semaphore, DISPATCH_TIME_FOREVER);
@@ -43,6 +48,20 @@ namespace Stellar {
 			dispatch_semaphore_signal(m_Semaphore);
 		});
         m_Encoder = m_CommandBuffer->renderCommandEncoder(m_FrameBuffer.As<MetalFrameBuffer>()->getFrameBuffer());
+
+        // Set viewport to match scaled texture size
+        auto metalFB = m_FrameBuffer.As<MetalFrameBuffer>();
+        float scale = metalFB->getScale();
+
+        STLR_CONSOLE_LOG_DEBUG("MetalRenderer: Scale: {0}", scale);
+        MTL::Viewport viewport;
+        viewport.originX = 0.0;
+        viewport.originY = 0.0;
+        viewport.width = static_cast<double>(m_FrameBuffer->getSpecification().width * scale);
+        viewport.height = static_cast<double>(m_FrameBuffer->getSpecification().height * scale);
+        viewport.znear = 0.0;
+        viewport.zfar = 1.0;
+        m_Encoder->setViewport(viewport);
     }
 
     void MetalRenderer::endRenderPass(STLR_Ptr<CommandBuffer> commandBuffer) {
@@ -94,7 +113,13 @@ namespace Stellar {
     }
 
     void MetalRenderer::resizeFrameBuffer(uint32_t width, uint32_t height) {
-
+        if (width == 0 || height == 0) return;
+        
+        if (m_ViewPortWidth != width || m_ViewPortHeight != height) {
+            m_ViewPortWidth = width;
+            m_ViewPortHeight = height;
+            m_NeedResize = true;
+        }
     }
 
     void MetalRenderer::renderGrid(STLR_Ptr<Buffer> vertexBuffer,

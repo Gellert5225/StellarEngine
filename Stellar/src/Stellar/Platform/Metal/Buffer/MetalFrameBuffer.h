@@ -22,8 +22,11 @@ namespace Stellar {
         // metal
         MTL::Texture* getAttachmentTexture() { return m_Texture; }
         MTL::RenderPassDescriptor* getFrameBuffer() { return m_FrameBuffer; }
+        float getScale() const { return m_Scale; }
     private:
         MTL::RenderPassDescriptor* m_FrameBuffer;
         MTL::Texture* m_Texture;
+        MTL::Texture* m_DepthTexture = nullptr;
+        float m_Scale = 1.0f;
     };
 }
