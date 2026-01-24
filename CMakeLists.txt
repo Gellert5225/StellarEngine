@@ -12,7 +12,7 @@ if(UNIX AND NOT APPLE)
 endif()
 
 if(APPLE)
-	set(ENV{VCPKG_ROOT} "/Users/gellert/Desktop/Projects/vcpkg")
+	set(ENV{VCPKG_ROOT} "/Users/gellertli/Developer/vcpkg")
 	# set(VCPKG_TARGET_TRIPLET arm64-osx)
 endif()
 

@@ -25,18 +25,18 @@ namespace Stellar {
     }
 
     void MetalSwapChain::createSwapChain() {
-        float xscale, yscale;
-        glfwGetWindowContentScale(Application::Get().getWindow().getGLFWWindow(), &xscale, &yscale);
-
         int width, height;
-        glfwGetFramebufferSize(Application::Get().getWindow().getGLFWWindow(), &width, &height);
+        glfwGetWindowSize(Application::Get().getWindow().getGLFWWindow(), &width, &height);
         m_MetalSwapChain = createLayer(Application::Get().getWindow().getGLFWWindow(),
-                                       width * xscale,
-                                       height * yscale,
+                                       width,
+                                       height,
                                        MetalDevice::GetInstance()->getDevice());
-        m_SwapChainExtant.width = width * xscale;
-        m_SwapChainExtant.height = height * yscale;
-
+        
+        // Get actual framebuffer size for extent
+        int fbWidth, fbHeight;
+        glfwGetFramebufferSize(Application::Get().getWindow().getGLFWWindow(), &fbWidth, &fbHeight);
+        m_SwapChainExtant.width = fbWidth;
+        m_SwapChainExtant.height = fbHeight;
     }
 
     void MetalSwapChain::createRenderPass() {
