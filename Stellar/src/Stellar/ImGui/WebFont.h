@@ -309,7 +309,7 @@
 #define STLR_ICON_FA_CIRCLE_EXCLAMATION "\xef\x81\xaa"	// U+f06a
 #define STLR_ICON_FA_CIRCLE_H "\xef\x91\xbe"	// U+f47e
 #define STLR_ICON_FA_CIRCLE_HALF_STROKE "\xef\x81\x82"	// U+f042
-#define STLR_ICON_FA_CIRCLE_INFO u8"\uf05a"
+#define STLR_ICON_FA_CIRCLE_INFO "\xef\x81\x9a"
 #define STLR_ICON_FA_CIRCLE_LEFT "\xef\x8d\x99"	// U+f359
 #define STLR_ICON_FA_CIRCLE_MINUS "\xef\x81\x96"	// U+f056
 #define STLR_ICON_FA_CIRCLE_NODES "\xee\x93\xa2"	// U+e4e2

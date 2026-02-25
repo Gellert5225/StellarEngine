@@ -19,6 +19,7 @@ namespace Stellar {
 
 		IDComponent() = default;
 		IDComponent(const IDComponent&) = default;
+		IDComponent(const UUID& id) : uuid(id) {}
 	};
 
 	struct TagComponent {

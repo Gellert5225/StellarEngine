@@ -19,22 +19,25 @@
 			}
 		},
 		{
-			"name": "Launch",
+			"name": "Launch (Linux)",
 			"type": "cppdbg",
 			"request": "launch",
-			"program":"${command:cmake.launchTargetPath}",
-			"linux": {
-				"MIMode": "gdb"
-			},
-			"windows": {
-				"console": "integratedTerminal",
-				"internalConsoleOptions": "openOnSessionStart"
-			},
+			"program": "${command:cmake.launchTargetPath}",
 			"args": [],
 			"stopAtEntry": false,
 			"cwd": "${command:cmake.getLaunchTargetDirectory}",
 			"externalConsole": false,
-			"MIMode": "lldb"
+			"MIMode": "gdb"
+		},
+		{
+			"name": "Launch (Windows)",
+			"type": "cppvsdbg",
+			"request": "launch",
+			"program": "${command:cmake.launchTargetPath}",
+			"args": [],
+			"stopAtEntry": false,
+			"cwd": "${command:cmake.getLaunchTargetDirectory}",
+			"console": "integratedTerminal"
 		}
     ]
 }

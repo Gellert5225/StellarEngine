@@ -4,6 +4,7 @@
 #include "Stellar/Core/UUID.h"
 #include "Stellar/Core/STLRBase.h"
 #include "Stellar/Renderer/Image.h"
+#include "Stellar/Asset/Asset.h"
 
 #include <imgui.h>
 
@@ -12,7 +13,6 @@
 #include <vector>
 
 namespace Stellar {
-	using AssetHandle = UUID;
 
 	struct TextureSpecification {
 		ImageFormat format = ImageFormat::RGBA;
@@ -22,9 +22,8 @@ namespace Stellar {
 		bool isImGuiTexture = false;
 	};
 
-	class Texture2D : public STLR_Base {
+	class Texture2D : public Asset {
 	public:
-		AssetHandle Handle;
 		virtual ~Texture2D() = default;
 
 		std::string getPath() const { return m_Path; }
@@ -34,7 +33,7 @@ namespace Stellar {
 		virtual ImTextureID getImGuiTextureID() = 0;
 	
 		virtual bool operator==(const Texture2D& other) const {
-			return Handle == other.Handle;
+			return id == other.id;
 		}
 		
 		virtual bool operator!=(const Texture2D& other) const {

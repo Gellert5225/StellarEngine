@@ -10,8 +10,8 @@
             "defines": [
                 "__STRICT_ANSI__"
             ],
-            "compilerPath": "F:/Visual Studio/VC/Tools/MSVC/14.35.32215/bin/Hostx64/x64/cl.exe",
-            "cppStandard": "c++17",
+            "compilerPath": "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.50.35717\\bin\\Hostx64\\x64\\cl.exe",
+            "cppStandard": "c++20",
             "intelliSenseMode": "${default}"
         },
         {
@@ -24,7 +24,7 @@
             ],
             "compilerPath": "/usr/bin/g++",
             "cStandard": "gnu17",
-            "cppStandard": "c++17",
+            "cppStandard": "c++20",
             "intelliSenseMode": "linux-gcc-x64",
             "configurationProvider": "ms-vscode.cmake-tools"
         },
@@ -38,7 +38,7 @@
             ],
             "compilerPath": "/usr/bin/g++",
             "cStandard": "gnu17",
-            "cppStandard": "c++17",
+            "cppStandard": "c++20",
             "intelliSenseMode": "macos-clang-arm64",
             "configurationProvider": "ms-vscode.makefile-tools"
         }

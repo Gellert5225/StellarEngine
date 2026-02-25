@@ -29,11 +29,11 @@ else()
   project(StellarEngine LANGUAGES C CXX)
 endif()
 
-set(CMAKE_CXX_STANDARD 17
+set(CMAKE_CXX_STANDARD 20
 	CACHE STRING "C++ standard to use")
 
-if (CMAKE_CXX_STANDARD LESS 17)
-	message(FATAL_ERROR "Must compile `test` with C++17 or newer")
+if (CMAKE_CXX_STANDARD LESS 20)
+	message(FATAL_ERROR "Must compile with C++20 or newer")
 endif ()
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})

@@ -7,10 +7,10 @@ A custom game engine using C++ and Vulkan/Metal API.
 ## Table of Contents
 
 - [Stellar Engine](#stellar-engine)
-	- [Table of Contents](#table-of-contents)
-	- [Introduction](#introduction)
-		- [How it works](#how-it-works)
-	- [Dependencies](#dependencies)
+  - [Table of Contents](#table-of-contents)
+    - [Introduction](#introduction)
+      - [How it works](#how-it-works)
+    - [Dependencies](#dependencies)
 		- [GLFW](#glfw)
 		- [GLM](#glm)
 			- [glm](#glm-1)
@@ -117,7 +117,7 @@ I will try to list as detailed as possible. However I have not tested the build 
 
 * Follow the Development Environment Tutorial (<https://vulkan-tutorial.com/Development_environment>)
 
-* C++17
+* C++20
 * Visual Studio Code (optional)
 * CMake
 * vkpkg
