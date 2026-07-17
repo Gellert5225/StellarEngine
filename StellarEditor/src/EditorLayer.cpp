@@ -9,6 +9,7 @@
 #include <Stellar/Core/Input.h>
 #include <Stellar/Maths/Math.h>
 #include <Stellar/ImGui/WebFont.h>
+#include <Stellar/Asset/AssetManager.h>
 
 namespace Stellar {
 	EditorLayer::EditorLayer() : Layer("Sandbox2D"), m_EditorCamera(60.0f, 1.0f, 1.0f, 0.1f, 1000.0f) {
@@ -22,11 +23,14 @@ namespace Stellar {
 		Renderer::SetClearColor({ 0.66f, 0.9f, 0.96f, 1.0f });
 
 		m_ActiveScene = STLR_Ptr<Scene>::Create();
-		m_ExampleEntity = m_ActiveScene->createEntity("Example Square");
-		m_ExampleEntity.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, Texture2D::Create("Resources/Textures/Example_texture.jpg", {}));
 
+        AssetID exampleHandle = AssetManager::Get().loadTexture("Resources/Textures/Example_texture.jpg");
+		m_ExampleEntity = m_ActiveScene->createEntity("Example Square");
+		m_ExampleEntity.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, AssetManager::Get().getTexture(exampleHandle));
+
+        AssetID logoHandle = AssetManager::Get().loadTexture("Resources/Textures/StellarEngine.png");
 		m_LogoEntity = m_ActiveScene->createEntity("Logo Square"); 
-		m_LogoEntity.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, Texture2D::Create("Resources/Textures/StellarEngine.png", {}));
+		m_LogoEntity.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, AssetManager::Get().getTexture(logoHandle));
 		
 		m_QuadEntity = m_ActiveScene->createEntity("Quad Square");
 		m_QuadEntity.addComponent<SpriteRendererComponent>(glm::vec4{1.0f}, Texture2D::Create({}));
@@ -37,8 +41,18 @@ namespace Stellar {
 		m_EditorCamera = EditorCamera(60.0f, (float)m_ViewPortSize.x, (float)m_ViewPortSize.y, 0.1f, 100.0f);
 
 		m_Renderer2D = STLR_Ptr<Renderer2D>::Create();
-		
+
 		m_SceneHierarchyPanel.setContext(m_ActiveScene);
+
+		// TEMP (Stage 1 smoke test): verify handles are stable across runs.
+		// Run once -> note the handle + that Resources/AssetRegistry.stlr appears.
+		// Restart -> the SAME handle should log. Remove this when sprites use
+		// handles in Stage 2.
+		// AssetID logoHandle = AssetManager::Get().loadTexture("Resources/Textures/StellarEngine.png");
+		// STLR_CORE_INFO("[Stage1] logo handle = {0}", (uint64_t)logoHandle);
+		// auto logoTex = AssetManager::Get().getTexture(logoHandle);
+		// STLR_CORE_INFO("[Stage1] logo loaded = {0}, cached = {1}",
+		// 	(bool)logoTex, AssetManager::Get().isAssetLoaded(logoHandle));
 	}
 
 	void EditorLayer::onDetach() {

@@ -44,8 +44,8 @@ namespace Stellar {
 		static STLR_Ptr<Texture2D> Create(const TextureSpecification& spec, const void* data = nullptr);
 		static uint32_t GetMipCount(uint32_t width, uint32_t height);
 	protected:
-		Texture2D() = default;
-		explicit Texture2D(std::string path) : m_Path(std::move(path)) {}
+		Texture2D() : Asset(AssetType::Texture) {}
+		explicit Texture2D(std::string path) : Asset(AssetType::Texture), m_Path(std::move(path)) {}
 
 		virtual bool loadImage(const std::string& filePath) = 0;
 		std::string m_Path = "";

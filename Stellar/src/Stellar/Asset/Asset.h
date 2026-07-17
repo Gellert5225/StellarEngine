@@ -11,8 +11,10 @@ namespace Stellar {
 
     class Asset : public STLR_Base {
     public:
-        AssetID id = 0;
-        AssetType type;
+        Asset() = default;
+        Asset(AssetType type) : type(type) {}
+        AssetID id = UUID(); 
+        AssetType type = AssetType::None;
 
         std::filesystem::path filePath;
         bool isLoaded = false;
