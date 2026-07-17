@@ -4,6 +4,7 @@
 #include "Stellar/Core/UUID.h"
 #include "Stellar/Core/STLRBase.h"
 #include "Stellar/Renderer/Image.h"
+#include "Stellar/Asset/Asset.h"
 
 #include <imgui.h>
 
@@ -12,7 +13,6 @@
 #include <vector>
 
 namespace Stellar {
-	using AssetHandle = UUID;
 
 	struct TextureSpecification {
 		ImageFormat format = ImageFormat::RGBA;
@@ -22,9 +22,8 @@ namespace Stellar {
 		bool isImGuiTexture = false;
 	};
 
-	class Texture2D : public STLR_Base {
+	class Texture2D : public Asset {
 	public:
-		AssetHandle Handle;
 		virtual ~Texture2D() = default;
 
 		std::string getPath() const { return m_Path; }
@@ -34,7 +33,7 @@ namespace Stellar {
 		virtual ImTextureID getImGuiTextureID() = 0;
 	
 		virtual bool operator==(const Texture2D& other) const {
-			return Handle == other.Handle;
+			return id == other.id;
 		}
 		
 		virtual bool operator!=(const Texture2D& other) const {
@@ -45,8 +44,8 @@ namespace Stellar {
 		static STLR_Ptr<Texture2D> Create(const TextureSpecification& spec, const void* data = nullptr);
 		static uint32_t GetMipCount(uint32_t width, uint32_t height);
 	protected:
-		Texture2D() = default;
-		explicit Texture2D(std::string path) : m_Path(std::move(path)) {}
+		Texture2D() : Asset(AssetType::Texture) {}
+		explicit Texture2D(std::string path) : Asset(AssetType::Texture), m_Path(std::move(path)) {}
 
 		virtual bool loadImage(const std::string& filePath) = 0;
 		std::string m_Path = "";

@@ -4,6 +4,9 @@
 #include "Log.h"
 #include "Input.h"
 
+#include "Stellar/Asset/AssetImporter.h"
+#include "Stellar/Asset/AssetManager.h"
+
 namespace Stellar {
 	Application* Application::s_Instance = nullptr;
 
@@ -15,6 +18,10 @@ namespace Stellar {
 		m_Window->setEventCallback(BIND_EVENT_FN(Application::onEvent));
 
 		Renderer::Init();
+
+		AssetImporter::init();
+		AssetManager::Get().init();
+
 		m_ImGuiLayer = ImGuiLayer::Create();
 		pushLayer(m_ImGuiLayer);
 	}
@@ -26,6 +33,8 @@ namespace Stellar {
 			layer->onDetach();
 			delete layer;
 		}
+
+		AssetManager::Get().clear();
 
 		Renderer::Shutdown();
 		Input::Close();

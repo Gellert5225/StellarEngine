@@ -131,7 +131,15 @@ namespace Stellar {
 					m_QuadMaterial->set("texSampler", m_WhiteTexture, i);
 			}
 
-			Renderer::RenderGeometry(m_RenderCommandBuffer, m_QuadPipeline, m_UniformBufferSet, m_QuadMaterial, m_QuadVertexBuffer[frameIndex], m_QuadIndexBuffer, glm::mat4(1.0f), m_QuadIndexCount);
+			Renderer::RenderGeometry(m_RenderCommandBuffer, 
+                m_QuadPipeline, 
+                m_UniformBufferSet, 
+                m_QuadMaterial, 
+                m_QuadVertexBuffer[frameIndex], 
+                m_QuadIndexBuffer, 
+                glm::mat4(1.0f), 
+                m_QuadIndexCount
+            );
 
 			m_Stats.drawCalls++;
 		}

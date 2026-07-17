@@ -5,6 +5,8 @@
 namespace Stellar {
 	class STLR_Base {
 	public:
+		virtual ~STLR_Base() = default;
+
 		void incrementRefCount() const { m_RefCount++; }
 
 		void decrementRefCount() const { m_RefCount--; }
