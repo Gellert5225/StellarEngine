@@ -2,6 +2,7 @@
 
 #include "Stellar/ImGui/ImGuiLayer.h"
 #include "Stellar/ImGui/WebFont.h"
+#include "Stellar/Asset/AssetManager.h"
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -294,7 +295,9 @@ namespace Stellar {
 				char* path = (char*)payload->Data;
 #endif
 					auto texturePath = std::filesystem::path("Resources") / path;
-					component.texture = Texture2D::Create(texturePath.string(), {});
+                    AssetID textureHandle = AssetManager::Get().loadTexture(texturePath.string());
+					if (auto texture = AssetManager::Get().getTexture(textureHandle))
+						component.texture = texture;
 				}
 				ImGui::EndDragDropTarget();
 			}

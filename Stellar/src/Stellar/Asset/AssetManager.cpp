@@ -11,7 +11,7 @@ namespace Stellar {
 	}
 
 	AssetID AssetManager::importAsset(const std::filesystem::path& filePath, AssetType type) {
-		const std::string key = filePath.string();
+		const std::string key = filePath.lexically_normal().generic_string();
 
 		// Already registered -> return the stable handle
 		if (m_PathToHandle.contains(key))
@@ -25,7 +25,7 @@ namespace Stellar {
 		AssetMetadata metadata;
 		metadata.id = AssetID();          // fresh, non-zero UUID
 		metadata.type = type;
-		metadata.filePath = filePath;
+		metadata.filePath = key;          // store the canonical form
 		metadata.status = AssetStatus::Ready;
 
 		m_Registry.set(metadata.id, metadata);
@@ -64,7 +64,7 @@ namespace Stellar {
 	}
 
 	AssetID AssetManager::getAssetIDFromPath(const std::filesystem::path& filePath) const {
-		auto it = m_PathToHandle.find(filePath.string());
+		auto it = m_PathToHandle.find(filePath.lexically_normal().generic_string());
 		if (it != m_PathToHandle.end())
 			return it->second;
 		return 0;
@@ -104,14 +104,18 @@ namespace Stellar {
 			return;
 
 		for (auto entry : entries) {
+			// Normalize on load so any legacy backslash entries self-heal to the
+			// canonical form on the next serialize.
+			const std::string filePath = std::filesystem::path(entry["FilePath"].as<std::string>()).lexically_normal().generic_string();
+
 			AssetMetadata metadata;
 			metadata.id = entry["Handle"].as<uint64_t>();
-			metadata.filePath = entry["FilePath"].as<std::string>();
+			metadata.filePath = filePath;
 			metadata.type = assetTypeFromString(entry["Type"].as<std::string>());
 			metadata.status = AssetStatus::Ready;
 
 			m_Registry.set(metadata.id, metadata);
-			m_PathToHandle[metadata.filePath.string()] = metadata.id;
+			m_PathToHandle[filePath] = metadata.id;
 		}
 
 		STLR_CORE_INFO("Loaded asset registry ({0} entries)", m_Registry.count());

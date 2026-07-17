@@ -4,6 +4,8 @@
 #include "Components.h"
 #include "SceneSerializer.h"
 
+#include "Stellar/Asset/AssetManager.h"
+
 #define YAML_CPP_API
 
 #include <yaml-cpp/yaml.h>
@@ -238,7 +240,13 @@ namespace Stellar {
 					src.color = spriteRendererComponent["Color"].as<glm::vec4>();
 
 					std::string texturePath = spriteRendererComponent["Texture"].as<std::string>();
-					src.texture = texturePath == "" ? Texture2D::Create({}) : Texture2D::Create(texturePath, {});
+                    if (texturePath != "") {
+                        AssetID textureHandle = AssetManager::Get().loadTexture(texturePath);
+                        auto texture = AssetManager::Get().getTexture(textureHandle);
+                        src.texture = texture ? texture : Texture2D::Create({});
+                    } else {
+                        src.texture = Texture2D::Create({});
+                    }
 				}
 			}
 		}

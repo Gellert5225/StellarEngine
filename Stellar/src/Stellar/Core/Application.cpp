@@ -34,6 +34,8 @@ namespace Stellar {
 			delete layer;
 		}
 
+		AssetManager::Get().clear();
+
 		Renderer::Shutdown();
 		Input::Close();
 	};
