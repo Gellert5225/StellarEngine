@@ -89,7 +89,7 @@ namespace Stellar {
 
 			constexpr float maxRate{ 0.12f };
 			m_YawDelta += glm::clamp(yawSign * delta.x * rotationSpeed() / 3.0f, -maxRate, maxRate);
-			m_PitchDelta += glm::clamp(delta.y * rotationSpeed() / 3.0f, -maxRate, maxRate);
+			m_PitchDelta += glm::clamp(-delta.y * rotationSpeed() / 3.0f, -maxRate, maxRate);
 
 			m_RightDirection = glm::cross(m_Direction, glm::vec3{ 0.f, yawSign, 0.f });
 
@@ -156,13 +156,13 @@ namespace Stellar {
 	void EditorCamera::mousePan(const glm::vec2& delta) {
 		auto [xSpeed, ySpeed] = panSpeed();
 		m_FocalPoint += -getRightDirection() * delta.x * xSpeed * m_Distance;
-		m_FocalPoint -= getUpDirection() * delta.y * ySpeed * m_Distance;
+		m_FocalPoint -= getUpDirection() * -delta.y * ySpeed * m_Distance;
 	}
 
 	void EditorCamera::mouseRotate(const glm::vec2& delta) {
 		float yawSign = getUpDirection().y < 0 ? -1.0f : 1.0f;
 		m_Yaw += yawSign * delta.x * rotationSpeed();
-		m_Pitch += delta.y * rotationSpeed();
+		m_Pitch += -delta.y * rotationSpeed();
 	}
 	void EditorCamera::mouseZoom(float delta) {
 		m_Distance -= delta * zoomSpeed();
