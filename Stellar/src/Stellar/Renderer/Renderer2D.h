@@ -46,6 +46,8 @@ namespace Stellar {
 		// color: color of grid lines
 		// axisColor: color for the main X and Z axes
 		void drawGrid(int gridCount, float spacing, const glm::vec4& color);
+		// Records a cube to be drawn (into the same render pass as the 2D layer).
+		void drawCube(const glm::mat4& transform);
 	private:
 		void flushAndReset();
 	private:
@@ -80,5 +82,17 @@ namespace Stellar {
 		STLR_Ptr<UniformBufferSet> m_UniformBufferSet;
 
 		Statistics m_Stats;
+
+        struct MeshVertex {
+            glm::vec3 position;
+            glm::vec3 normal;
+            glm::vec2 uv;
+        };
+
+        STLR_Ptr<Pipeline> m_MeshPipeline;
+        STLR_Ptr<Material> m_MeshMaterial;
+        STLR_Ptr<Buffer> m_CubeVertexBuffer;
+        STLR_Ptr<Buffer> m_CubeIndexBuffer;
+        std::vector<glm::mat4> m_CubeTransforms;
 	};
 }

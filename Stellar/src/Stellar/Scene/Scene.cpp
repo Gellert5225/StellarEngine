@@ -77,6 +77,8 @@ namespace Stellar {
 		renderer2D->resetStats();
 		renderer2D->beginScene(camera);
         renderer2D->drawGrid(40, 1.0f, glm::vec4(0.7f, 0.7f, 0.7f, 1.0f));
+        // TEMP demo: a cube sitting on the grid. Replace with MeshComponent iteration in Track B.
+        renderer2D->drawCube(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.5f, 0.0f)));
 		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 		for (auto entity : group) {
 			auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);

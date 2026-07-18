@@ -74,6 +74,62 @@ namespace Stellar {
 		m_UniformBufferSet->create(sizeof(GlobalUniforms), 0);
 
 		m_QuadMaterial = Material::Create(m_QuadPipeline->getSpecification().shader, "QuadMaterial");
+
+        PipelineSpecification meshSpec;
+        meshSpec.shader = Renderer::GetShaderLibrary()->get("mesh");
+        meshSpec.renderPass = renderPass;
+        meshSpec.layout = { 
+            {"inPosition", ShaderDataType::Float3},
+            {"inNormal",   ShaderDataType::Float3},
+            {"inUV",       ShaderDataType::Float2} 
+        };
+        meshSpec.backfaceCulling = false;   // first cut: don't cull, so winding / the flipped viewport can't hide faces
+        m_MeshPipeline = Pipeline::Create(meshSpec);
+        m_MeshMaterial = Material::Create(meshSpec.shader, "MeshMaterial");
+
+        // Unit cube centered at origin, per-face normals (flat shading).
+        MeshVertex cubeVertices[24] = {
+            // Front (+Z)
+            {{-0.5f,-0.5f, 0.5f}, { 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}},
+            {{ 0.5f,-0.5f, 0.5f}, { 0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
+            {{ 0.5f, 0.5f, 0.5f}, { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+            {{-0.5f, 0.5f, 0.5f}, { 0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+            // Back (-Z)
+            {{ 0.5f,-0.5f,-0.5f}, { 0.0f, 0.0f,-1.0f}, {0.0f, 0.0f}},
+            {{-0.5f,-0.5f,-0.5f}, { 0.0f, 0.0f,-1.0f}, {1.0f, 0.0f}},
+            {{-0.5f, 0.5f,-0.5f}, { 0.0f, 0.0f,-1.0f}, {1.0f, 1.0f}},
+            {{ 0.5f, 0.5f,-0.5f}, { 0.0f, 0.0f,-1.0f}, {0.0f, 1.0f}},
+            // Left (-X)
+            {{-0.5f,-0.5f,-0.5f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
+            {{-0.5f,-0.5f, 0.5f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+            {{-0.5f, 0.5f, 0.5f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}},
+            {{-0.5f, 0.5f,-0.5f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}},
+            // Right (+X)
+            {{ 0.5f,-0.5f, 0.5f}, { 1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
+            {{ 0.5f,-0.5f,-0.5f}, { 1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+            {{ 0.5f, 0.5f,-0.5f}, { 1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}},
+            {{ 0.5f, 0.5f, 0.5f}, { 1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}},
+            // Top (+Y)
+            {{-0.5f, 0.5f, 0.5f}, { 0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+            {{ 0.5f, 0.5f, 0.5f}, { 0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
+            {{ 0.5f, 0.5f,-0.5f}, { 0.0f, 1.0f, 0.0f}, {1.0f, 1.0f}},
+            {{-0.5f, 0.5f,-0.5f}, { 0.0f, 1.0f, 0.0f}, {0.0f, 1.0f}},
+            // Bottom (-Y)
+            {{-0.5f,-0.5f,-0.5f}, { 0.0f,-1.0f, 0.0f}, {0.0f, 0.0f}},
+            {{ 0.5f,-0.5f,-0.5f}, { 0.0f,-1.0f, 0.0f}, {1.0f, 0.0f}},
+            {{ 0.5f,-0.5f, 0.5f}, { 0.0f,-1.0f, 0.0f}, {1.0f, 1.0f}},
+            {{-0.5f,-0.5f, 0.5f}, { 0.0f,-1.0f, 0.0f}, {0.0f, 1.0f}},
+        };
+        uint32_t cubeIndices[36] = {
+             0, 1, 2,  2, 3, 0,   // front
+             4, 5, 6,  6, 7, 4,   // back
+             8, 9,10, 10,11, 8,   // left
+            12,13,14, 14,15,12,   // right
+            16,17,18, 18,19,16,   // top
+            20,21,22, 22,23,20,   // bottom
+        };
+        m_CubeVertexBuffer = Buffer::Create(BufferType::Vertex, sizeof(cubeVertices), cubeVertices);
+        m_CubeIndexBuffer  = Buffer::Create(BufferType::Index,  sizeof(cubeIndices),  cubeIndices);
 	}
 
 	void Renderer2D::shutDown() {
@@ -92,6 +148,7 @@ namespace Stellar {
 		m_QuadIndexCount = 0;
 		m_QuadVertexBufferPtr = m_QuadVertexBufferBase[bufferIndex];
 		m_TextureSlotIndex = 1;
+		m_CubeTransforms.clear();
 
 		for (uint32_t i = 1; i < m_TextureSlots.size(); i++)
 			m_TextureSlots[i] = nullptr;
@@ -108,6 +165,7 @@ namespace Stellar {
 		m_QuadIndexCount = 0;
 		m_QuadVertexBufferPtr = m_QuadVertexBufferBase[bufferIndex];
 		m_TextureSlotIndex = 1;
+		m_CubeTransforms.clear();
 
 		for (uint32_t i = 1; i < m_TextureSlots.size(); i++)
 			m_TextureSlots[i] = nullptr;
@@ -119,6 +177,13 @@ namespace Stellar {
 		m_RenderCommandBuffer->begin();
 		Renderer::BeginRenderPass(m_RenderCommandBuffer, m_QuadPipeline->getSpecification().renderPass);
 		uint32_t frameIndex = Renderer::GetCurrentFrameIndex();
+
+		// Meshes draw into the same render pass, so they composite with the 2D layer.
+		for (const auto& transform : m_CubeTransforms) {
+			Renderer::RenderGeometry(m_RenderCommandBuffer, m_MeshPipeline, m_UniformBufferSet,
+				m_MeshMaterial, m_CubeVertexBuffer, m_CubeIndexBuffer, transform, 36);
+			m_Stats.drawCalls++;
+		}
 
 		uint32_t dataSize = (uint8_t*)m_QuadVertexBufferPtr - (uint8_t*)m_QuadVertexBufferBase[frameIndex];
 		if (dataSize) {
@@ -147,6 +212,10 @@ namespace Stellar {
 		Renderer::EndRenderPass(m_RenderCommandBuffer);
 		m_RenderCommandBuffer->end();
 		m_RenderCommandBuffer->submit();
+	}
+
+	void Renderer2D::drawCube(const glm::mat4& transform) {
+		m_CubeTransforms.push_back(transform);
 	}
 
 	void Renderer2D::drawQuad(const glm::mat4& transform, const glm::vec4& color) {
@@ -200,7 +269,7 @@ namespace Stellar {
 	void Renderer2D::drawQuad(const glm::mat4& transform, const glm::vec4& color, const STLR_Ptr<Texture2D>& texture, float tilingFactor) {
 		constexpr size_t quadVertexCount = 4;
 		//constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
-		constexpr glm::vec2 textureCoords[] = { { 1.0f, 0.0f }, { 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f } };
+		constexpr glm::vec2 textureCoords[] = { { 1.0f, 1.0f }, { 0.0f, 1.0f }, { 0.0f, 0.0f }, { 1.0f, 0.0f } };
 
 		if (m_QuadIndexCount >= MaxIndices)
 			flushAndReset();

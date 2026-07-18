@@ -241,7 +241,12 @@ namespace Stellar {
 			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
 
 			// Editor camera
-			const glm::mat4& cameraProjection = m_EditorCamera.getProjectionMatrix();
+			// getProjectionMatrix() now bakes in the Vulkan Y-flip, making it
+			// left-handed -- ImGuizmo tumbles on that. It needs a right-handed
+			// projection, so undo the flip for ImGuizmo only. The camera is Y-up now,
+			// so this does NOT re-introduce the earlier Y inversion.
+			glm::mat4 cameraProjection = m_EditorCamera.getProjectionMatrix();
+			cameraProjection[1][1] *= -1.0f;
 			glm::mat4 cameraView = m_EditorCamera.getViewmatrix();
 
 			// Entity transform

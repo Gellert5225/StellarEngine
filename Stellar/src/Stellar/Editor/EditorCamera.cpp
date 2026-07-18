@@ -27,7 +27,7 @@ namespace Stellar {
 		m_Distance = glm::distance(position, m_FocalPoint);
 
 		m_Yaw = -glm::radians(45.0f);
-		m_Pitch = glm::radians(45.0f);
+		m_Pitch = -glm::radians(45.0f);
 
 		m_Position = calculatePosition();
 		const glm::quat orientation = getOrientation();
@@ -138,11 +138,11 @@ namespace Stellar {
 	}
 
 	glm::vec3 EditorCamera::getUpDirection() const {
-		return glm::rotate(getOrientation(), glm::vec3(0.0f, -1.0f, 0.0f));
+		return glm::rotate(getOrientation(), glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 
 	glm::vec3 EditorCamera::getRightDirection() const {
-		return glm::rotate(getOrientation(), glm::vec3(-1.0f, 0.0f, 0.0f));
+		return glm::rotate(getOrientation(), glm::vec3(1.0f, 0.0f, 0.0f));
 	}
 
 	glm::vec3 EditorCamera::getForwardDirection() const {
@@ -156,7 +156,7 @@ namespace Stellar {
 	void EditorCamera::mousePan(const glm::vec2& delta) {
 		auto [xSpeed, ySpeed] = panSpeed();
 		m_FocalPoint += -getRightDirection() * delta.x * xSpeed * m_Distance;
-		m_FocalPoint += getUpDirection() * delta.y * ySpeed * m_Distance;
+		m_FocalPoint -= getUpDirection() * delta.y * ySpeed * m_Distance;
 	}
 
 	void EditorCamera::mouseRotate(const glm::vec2& delta) {
