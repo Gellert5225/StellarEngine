@@ -45,7 +45,6 @@ namespace Stellar {
 
 		Renderer::GetShaderLibrary()->load("shader");
 		Renderer::GetShaderLibrary()->load("mesh");
-		//Renderer::GetShaderLibrary()->load("grid");
 		//Renderer::GetShaderLibrary()->load("basicShader");
 
 		s_RendererAPI->init();

@@ -35,8 +35,7 @@ namespace Stellar {
 		Camera* mainCamera = nullptr;
 		glm::mat4 cameraTransform;
 		auto view = m_Registry.view<CameraComponent, TransformComponent>();
-		for (auto entity : view) {
-			auto [camera, transform] = view.get<CameraComponent, TransformComponent>(entity);
+		for (auto [entity, camera, transform] : view.each()) {
 			if (camera.primary) {
 				mainCamera = &camera.camera;
 				cameraTransform = transform.getTransform();
@@ -76,8 +75,7 @@ namespace Stellar {
 	void Scene::renderScene(STLR_Ptr<Renderer2D>& renderer2D, EditorCamera& camera) {
 		renderer2D->resetStats();
 		renderer2D->beginScene(camera);
-        renderer2D->drawGrid(40, 1.0f, glm::vec4(0.7f, 0.7f, 0.7f, 1.0f));
-        // TEMP demo: a cube sitting on the grid. Replace with MeshComponent iteration in Track B.
+        // TEMP demo: a cube. Replace with MeshComponent iteration in Track B.
         renderer2D->drawCube(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.5f, 0.0f)));
 		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 		for (auto entity : group) {

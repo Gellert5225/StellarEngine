@@ -345,6 +345,7 @@ namespace Stellar {
 				delete b.second;
 			}
 		}
+		s_UniformBuffers.clear();
 	}
 
 	const std::vector<VkPipelineShaderStageCreateInfo>& VulkanShader::getStageInfos() const {

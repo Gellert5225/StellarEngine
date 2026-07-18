@@ -8,7 +8,7 @@
 				"C:/VulkanSDK/**"
             ],
             "defines": [
-                "__STRICT_ANSI__"
+                "STLR_BUILD_DLL"
             ],
             "compilerPath": "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
             "cppStandard": "c++20",
